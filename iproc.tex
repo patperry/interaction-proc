@@ -1,0 +1,98 @@
+\documentclass[aoas,preprint]{imsart}
+\pdfoutput=1
+
+\RequirePackage[OT1]{fontenc}
+\RequirePackage{amsthm,amsmath,amssymb}
+\RequirePackage[colorlinks,citecolor=blue,urlcolor=blue]{hyperref}
+\RequirePackage{hypernat}
+\RequirePackage{graphicx}
+
+% settings
+%\pubyear{2005}
+%\volume{0}
+%\issue{0}
+%\firstpage{1}
+%\lastpage{8}
+\arxiv{0000.0000v1 [stat.ME]}
+
+\startlocaldefs
+\usepackage{iproc-macros}
+\endlocaldefs
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{A model for repeated interactions with applications to email traffic analysis\protect\thanksref{T1}}
+\runtitle{A point process model for graphs}
+\thankstext{T1}{Supported by grant\ldots}
+
+\begin{aug}
+  \author{\fnms{Patrick O.} \snm{Perry}\corref{}\ead[label=e1]{patperry@seas.harvard.edu}}
+  \and
+  \author{\fnms{Patrick J.} \snm{Wolfe}\ead[label=e2]{wolfe@stat.harvard.edu}}
+
+  \runauthor{P.\ O.\ Perry and P.\ J.\ Wolfe}
+
+  \affiliation{Harvard University}
+
+  \address{
+      Statistics and Information Sciences Laboratory \\
+      Harvard University \\
+      33 Oxford Street \\
+      Cambridge, MA 02138 \\
+      \printead{e1}\\
+      \phantom{E-mail:\ }\printead*{e2}
+  }
+\end{aug}
+
+\begin{abstract}
+Abstract.
+\end{abstract}
+
+\begin{keyword}[class=AMS]
+\kwd[Primary ]{62M30}     % Statistics:Inference from stochastic processes:Spatial processes
+\kwd[; secondary ]{62N01} % Statistics:Survival analysis and censored data:Censored data models
+\end{keyword}
+
+\begin{keyword}
+\kwd{random graphs}
+\kwd{networks}
+\kwd{point processes}
+\kwd{inference}
+\end{keyword}
+
+\end{frontmatter}
+
+\section{Introduction}
+
+Data derived from observing repeated pairwise interactions are becoming more and more common.  One obvious source are communications networks: either all of the phone calls made or the emails sent between inviduals in a small community.  More broadly, one can consider the notion of ``pairwise interaction'' to include
+
+\begin{description}
+	\item[migration patterns] where each ``individual'' is a greographical location, and each ``interaction'' is a family relocating (rehabituating) from one county to another;
+	
+	\item[collaborations] where individuals are authors and interactions are the works they coauthor; alternatively, individuals are congressmen and interactions are coauthored bills; or
+
+	\item[text analysis] where individials are works or bigrams, and interactions are co-occurrences in phrases or documents.
+\end{description}
+
+For the current treatment, we shall consider directed interactions, with each interaction having an initiator (sender) and at least one recipient (receiver).  To simplify the development, initially we focus on the single-recipient case, so that each interaction involves a single sender-receiver pair.  If we consider the first author of a work to be the initiator, and if we respect word order in a document, then all of the above interaction scenarios can be included.  Mostly, though, we will focus on communication networks.
+
+Suppose we observe a system of individuals interacting over time.  At the end of the observation period, we have witnessed a stream of interaction events of the form $(t, i, j)$.  This triple denotes that at time $t$, we observed the interaction $i \to j$, an interaction sent by individual $i$ and received by individual $j$.  We take $[0,T]$ to be the observation time period, $\{1, \ldots, I \}$ to be the set of senders, and $\{1, \ldots, J \}$ to be the set of receivers.  Oftentimes $I = J$, but not always.
+
+Given covariate information about the senders and receivers, we want to determine which characteristics and behaviors are associated with (predictive of) interaction.  We want to answer the following questions.
+
+\begin{enumerate}
+	\item If two individuals share an attribute, are they more likely to interact?  In studying human behavior, Sociologists have repeatedly found evidence of homophily, the tendency of individuals to associate with similar others \cite{mcpherson2001birds}.  We would like to know, for example, if pairs of people with the same gender interact more often then pairs of people with differing genders.
+	
+	\item If individual $i$ sends a message to individual $j$, is $j$ likely to respond?  How much more likely does the interaction $j \to i$ become, and how does this depend on time?  When I send you a message at 12:00pm on Monday, I certainly do not expect a reply before 12:01pm, but I might expect one before 12:00pm on Tuesday.  Maybe I should expect a reply before 1:00pm.  Certainly, if I haven't heard from you in two weeks, I shouldn't expect a reply the next month.  How can statements like this be made precise, and how can they be derived from data?
+	
+	\item Conversely, if individual $i$ interacts with $j$ at time $t$, is he more likely to interact with $j$ at time $t+1$?  How much more likely, and how does this affect decay over time?
+\end{enumerate}
+
+We present a simple modeling framework to facilitate inquiry into all of the above.  The framework is flexible enough to allow various forms of time-inhomogeneity and dependency, and includes the ability to handle interactions with multiple recipients.  However, we stress that without further justification, none of our conclusions imply causality---they only show association.
+
+\bibliographystyle{imsart-number}
+\bibliography{iproc-sources}
+
+\end{document}

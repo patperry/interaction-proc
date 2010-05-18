@@ -1,0 +1,16 @@
+\begin{thebibliography}{0}
+
+\bibitem{mcpherson2001birds}
+\begin{barticle}[author]
+\bauthor{\bsnm{McPherson},~\bfnm{M.}\binits{M.}},
+  \bauthor{\bsnm{Smith-Lovin},~\bfnm{L.}\binits{L.}} \AND
+  \bauthor{\bsnm{Cook},~\bfnm{J.~M.}\binits{J.~M.}}
+(\byear{2001}).
+\btitle{{Birds of a feather: Homophily in social networks}}.
+\bjournal{Annu. Rev. Sociol.}
+\bvolume{27}
+\bpages{415--444}.
+\end{barticle}
+\endbibitem
+
+\end{thebibliography}
