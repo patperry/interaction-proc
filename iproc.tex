@@ -105,6 +105,24 @@ Zhou et al. have gone through substantial work to preprocess the Enron corpus in
 We can associate a set of static covariates for each of the 156 individuals in the dataset.  Zhou et al. have extracted the employees' names, departments, and titles.  We use the first names of the employees to associate genders to the employees (e.g, John is male, Susan is female).  For ambiguously-gendered names like Dana, Robin, and Sean, we use personal pronouns in the messages to help code the genders.  We code the department as one of three categories: Legal, Trading, or Other.  Finally, we code the position as Senior (CEO, CFO, COO, Director, Managing Director, VP, President) or Junior (Administrator, Analyst, Assistant, Attorney, Counsel, Employee, Manager, Specialist, Trader).
 
 
+\section{Contingency Tables}
+
+The contingency table is an established method for analyzing homophily and group-level behavior.
+
+\section{Pitfalls of Table-Based Analyses}
+
+The table-based analysis does not account for variability in individual behavior, ignores the times of the messages, and does not handle messages with multiple recipients.
+
+\subsection{Individual Inhomogeneity}
+\subsection{Time Dependence}
+\subsection{Multiple Recipients}
+
+
+
+\section{A Point Process Model}
+
+
+
 \bibliographystyle{imsart-number}
 \bibliography{iproc-sources}
 
