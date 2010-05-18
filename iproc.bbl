@@ -1,5 +1,14 @@
 \begin{thebibliography}{0}
 
+\bibitem{cohen2009enron}
+\begin{bmisc}[author]
+\bauthor{\bsnm{Cohen},~\bfnm{W.~W.}\binits{W.~W.}}
+(\byear{2009}).
+\btitle{{Enron email dataset}}.
+\bhowpublished{\url{http://www.cs.cmu.edu/~enron/}}.
+\end{bmisc}
+\endbibitem
+
 \bibitem{mcpherson2001birds}
 \begin{barticle}[author]
 \bauthor{\bsnm{McPherson},~\bfnm{M.}\binits{M.}},
@@ -11,6 +20,20 @@
 \bvolume{27}
 \bpages{415--444}.
 \end{barticle}
+\endbibitem
+
+\bibitem{zhou2007strategies}
+\begin{binproceedings}[author]
+\bauthor{\bsnm{Zhou},~\bfnm{Y.}\binits{Y.}},
+  \bauthor{\bsnm{Goldberg},~\bfnm{M.}\binits{M.}},
+  \bauthor{\bsnm{Magdon-Ismail},~\bfnm{M.}\binits{M.}} \AND
+  \bauthor{\bsnm{Wallace},~\bfnm{W.~A.}\binits{W.~A.}}
+(\byear{2007}).
+\btitle{{Strategies for cleaning organizational emails with an application to
+  Enron email dataset}}.
+In \bbooktitle{5th Conf. of North American Association for Computational Social
+  and Organizational Science (NAACSOS 07)}.
+\end{binproceedings}
 \endbibitem
 
 \end{thebibliography}

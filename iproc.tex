@@ -64,6 +64,7 @@ Abstract.
 
 \end{frontmatter}
 
+
 \section{Introduction}
 
 Data derived from observing repeated pairwise interactions are becoming more and more common.  One obvious source are communications networks: either all of the phone calls made or the emails sent between inviduals in a small community.  More broadly, one can consider the notion of ``pairwise interaction'' to include
@@ -91,6 +92,18 @@ Given covariate information about the senders and receivers, we want to determin
 \end{enumerate}
 
 We present a simple modeling framework to facilitate inquiry into all of the above.  The framework is flexible enough to allow various forms of time-inhomogeneity and dependency, and includes the ability to handle interactions with multiple recipients.  However, we stress that without further justification, none of our conclusions imply causality---they only show association.
+
+
+\section{The Enron Email Data}
+
+Our motivating dataset is a large collection of email messages sent within the Enron corporation during the last four years of the company's existence. The Enron email corpus is a large subset of the email messages sent within the  corporation between November 1998 and June 2002.  Enron was an energy company based in Texas that became notorious in late 2001 for its fraudulent accounting practices.  These practices eventually lead to the resignation of its CEO, to an external audit into its accounting procedures, to massive readjustments to its earnings statements, and eventually to its bankruptcy. Later, many of the top executives were prosecuted and convicted of criminal fraud and insider trading.  As part of the investigation, the Federal Energy Regulatory Commission (FERC) subpoenaed the e-mail correspondences of the top employees and posted those not related to the criminal trial to their website (619,446 messages, roughly 92\% of those subpoenaed).
+
+Leslie Kaelbling, a computer scientist at MIT, purchased the corpus from the FERC with the intention of making it available to the research community.  A team of researchers at SRI International worked to fix a number of apparent integrity problems with the data, and then it was released to the public by William Cohen, at CMU.  This is the ``March 2, 2004 Version'' of the dataset. Later, a former Enron employee requested that one message be removed from the data; this removal prompted the ``August 21, 2009 Version,'' widely regarded to be the authoritative version \cite{cohen2009enron}.
+
+Zhou et al. have gone through substantial work to preprocess the Enron corpus into a useful form \cite{zhou2007strategies}.  We rely on their preprocessed version for our analysis.  They reduce the data to the set of e-mails sent by high-ranking Enron executives, eliminating messages sent by non-employees, support staff and administrative assistants.  They also filter out messages with missing timestamps.  After this culling process, there are 21,635 messages sent by 156 employees between November 13, 1998 and June 21, 2002.  Each email message has a message body consisting of text, along with header fields including \texttt{Date}, \texttt{From}, \texttt{To}, \texttt{CC}, \texttt{BCC}, and \texttt{Subject}.  The \texttt{From} field always lists a unique e-mail address, but the \texttt{To}, \texttt{CC}, and \texttt{BCC} fields sometimes specify multiple recipients.  We make no distinction between \texttt{To}, \texttt{CC}, and \texttt{BCC}, combining them all to determine the recipients of a message.
+
+We can associate a set of static covariates for each of the 156 individuals in the dataset.  Zhou et al. have extracted the employees' names, departments, and titles.  We use the first names of the employees to associate genders to the employees (e.g, John is male, Susan is female).  For ambiguously-gendered names like Dana, Robin, and Sean, we use personal pronouns in the messages to help code the genders.  We code the department as one of three categories: Legal, Trading, or Other.  Finally, we code the position as Senior (CEO, CFO, COO, Director, Managing Director, VP, President) or Junior (Administrator, Analyst, Assistant, Attorney, Counsel, Employee, Manager, Specialist, Trader).
+
 
 \bibliographystyle{imsart-number}
 \bibliography{iproc-sources}
