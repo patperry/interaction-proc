@@ -1,0 +1,6 @@
+*.aux
+*.blg
+*.log
+*.out
+*.synctex.gz
+iproc.pdf
