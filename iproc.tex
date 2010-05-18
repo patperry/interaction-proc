@@ -1,5 +1,5 @@
 \documentclass[aoas,preprint]{imsart}
-\pdfoutput=1
+\pdfoutput=1    % Make arXiv happy
 
 \RequirePackage[OT1]{fontenc}
 \RequirePackage{amsthm,amsmath,amssymb}
@@ -7,43 +7,48 @@
 \RequirePackage{hypernat}
 \RequirePackage{graphicx}
 
-% settings
-%\pubyear{2005}
-%\volume{0}
-%\issue{0}
-%\firstpage{1}
-%\lastpage{8}
-\arxiv{0000.0000v1 [stat.ME]}
+\setattribute{journal}{name}{}  % Suppress text "Submitted to..."
 
 \startlocaldefs
 \usepackage{iproc-macros}
 \endlocaldefs
 
+
 \begin{document}
 
 \begin{frontmatter}
 
-\title{A model for repeated interactions with applications to email traffic analysis\protect\thanksref{T1}}
+\title{
+    A model for repeated interactions with applications to email traffic
+    analysis\protect\thanksref{T1}
+}
+
 \runtitle{A point process model for graphs}
 \thankstext{T1}{Supported by grant\ldots}
 
 \begin{aug}
-  \author{\fnms{Patrick O.} \snm{Perry}\corref{}\ead[label=e1]{patperry@seas.harvard.edu}}
-  \and
-  \author{\fnms{Patrick J.} \snm{Wolfe}\ead[label=e2]{wolfe@stat.harvard.edu}}
+    \author{%
+        \fnms{Patrick O.} \snm{Perry}\corref{}%
+        \ead[label=e1]{patperry@seas.harvard.edu}%
+    }%
+    \and%
+    \author{%
+        \fnms{Patrick J.} \snm{Wolfe}%
+        \ead[label=e2]{wolfe@stat.harvard.edu}%
+    }%
 
-  \runauthor{P.\ O.\ Perry and P.\ J.\ Wolfe}
+    \runauthor{P.\ O.\ Perry and P.\ J.\ Wolfe}
 
-  \affiliation{Harvard University}
+    \affiliation{Harvard University}
 
-  \address{
-      Statistics and Information Sciences Laboratory \\
-      Harvard University \\
-      33 Oxford Street \\
-      Cambridge, MA 02138 \\
-      \printead{e1}\\
-      \phantom{E-mail:\ }\printead*{e2}
-  }
+    \address{
+        Statistics and Information Sciences Laboratory \\
+        Harvard University \\
+        33 Oxford Street \\
+        Cambridge, MA 02138 \\
+        \printead{e1}\\
+        \phantom{E-mail:\ }\printead*{e2}
+    }
 \end{aug}
 
 \begin{abstract}
@@ -51,15 +56,15 @@ Abstract.
 \end{abstract}
 
 \begin{keyword}[class=AMS]
-\kwd[Primary ]{62M30}     % Statistics:Inference from stochastic processes:Spatial processes
-\kwd[; secondary ]{62N01} % Statistics:Survival analysis and censored data:Censored data models
+    \kwd[Primary ]{62M30}     % Statistics:Inference from stochastic processes:Spatial processes
+    \kwd[; secondary ]{62N01} % Statistics:Survival analysis and censored data:Censored data models
 \end{keyword}
 
 \begin{keyword}
-\kwd{random graphs}
-\kwd{networks}
-\kwd{point processes}
-\kwd{inference}
+    \kwd{random graphs}
+    \kwd{networks}
+    \kwd{point processes}
+    \kwd{inference}
 \end{keyword}
 
 \end{frontmatter}
@@ -67,60 +72,148 @@ Abstract.
 
 \section{Introduction}
 
-Data derived from observing repeated pairwise interactions are becoming more and more common.  One obvious source are communications networks: either all of the phone calls made or the emails sent between inviduals in a small community.  More broadly, one can consider the notion of ``pairwise interaction'' to include
+Data derived from observing repeated pairwise interactions are becoming more
+and more common. One obvious source are communications networks: either all of
+the phone calls made or the emails sent between inviduals in a small
+community. More broadly, one can consider the notion of ``pairwise
+interaction'' to include
 
 \begin{description}
-	\item[migration patterns] where each ``individual'' is a greographical location, and each ``interaction'' is a family relocating (rehabituating) from one county to another;
-	
-	\item[collaborations] where individuals are authors and interactions are the works they coauthor; alternatively, individuals are congressmen and interactions are coauthored bills; or
 
-	\item[text analysis] where individials are works or bigrams, and interactions are co-occurrences in phrases or documents.
+    \item[migration patterns] where each ``individual'' is a greographical
+    location, and each ``interaction'' is a family relocating (rehabituating)
+    from one county to another;
+
+    \item[collaborations] where individuals are authors and interactions are
+    the works they coauthor; alternatively, individuals are congressmen and
+    interactions are coauthored bills; or
+
+    \item[text analysis] where individials are works or bigrams, and
+    interactions are co-occurrences in phrases or documents.
+
 \end{description}
 
-For the current treatment, we shall consider directed interactions, with each interaction having an initiator (sender) and at least one recipient (receiver).  To simplify the development, initially we focus on the single-recipient case, so that each interaction involves a single sender-receiver pair.  If we consider the first author of a work to be the initiator, and if we respect word order in a document, then all of the above interaction scenarios can be included.  Mostly, though, we will focus on communication networks.
+For the current treatment, we shall consider directed interactions, with each
+interaction having an initiator (sender) and at least one recipient
+(receiver). To simplify the development, initially we focus on the
+single-recipient case, so that each interaction involves a single
+sender-receiver pair. If we consider the first author of a work to be the
+initiator, and if we respect word order in a document, then all of the above
+interaction scenarios can be included. Mostly, though, we will focus on
+communication networks.
 
-Suppose we observe a system of individuals interacting over time.  At the end of the observation period, we have witnessed a stream of interaction events of the form $(t, i, j)$.  This triple denotes that at time $t$, we observed the interaction $i \to j$, an interaction sent by individual $i$ and received by individual $j$.  We take $[0,T]$ to be the observation time period, $\{1, \ldots, I \}$ to be the set of senders, and $\{1, \ldots, J \}$ to be the set of receivers.  Oftentimes $I = J$, but not always.
+Suppose we observe a system of individuals interacting over time. At the end
+of the observation period, we have witnessed a stream of interaction events of
+the form $(t, i, j)$. This triple denotes that at time $t$, we observed the
+interaction $i \to j$, an interaction sent by individual $i$ and received by
+individual $j$. We take $[0,T]$ to be the observation time period, $\{1,
+\ldots, I \}$ to be the set of senders, and $\{1, \ldots, J \}$ to be the set
+of receivers. Oftentimes $I = J$, but not always.
 
-Given covariate information about the senders and receivers, we want to determine which characteristics and behaviors are associated with (predictive of) interaction.  We want to answer the following questions.
+Given covariate information about the senders and receivers, we want to
+determine which characteristics and behaviors are associated with (predictive
+of) interaction. We want to answer the following questions.
 
 \begin{enumerate}
-	\item If two individuals share an attribute, are they more likely to interact?  In studying human behavior, Sociologists have repeatedly found evidence of homophily, the tendency of individuals to associate with similar others \cite{mcpherson2001birds}.  We would like to know, for example, if pairs of people with the same gender interact more often then pairs of people with differing genders.
-	
-	\item If individual $i$ sends a message to individual $j$, is $j$ likely to respond?  How much more likely does the interaction $j \to i$ become, and how does this depend on time?  When I send you a message at 12:00pm on Monday, I certainly do not expect a reply before 12:01pm, but I might expect one before 12:00pm on Tuesday.  Maybe I should expect a reply before 1:00pm.  Certainly, if I haven't heard from you in two weeks, I shouldn't expect a reply the next month.  How can statements like this be made precise, and how can they be derived from data?
-	
-	\item Conversely, if individual $i$ interacts with $j$ at time $t$, is he more likely to interact with $j$ at time $t+1$?  How much more likely, and how does this affect decay over time?
+
+    \item If two individuals share an attribute, are they more likely to
+    interact? In studying human behavior, Sociologists have repeatedly found
+    evidence of homophily, the tendency of individuals to associate with
+    similar others \cite{mcpherson2001birds}. We would like to know, for
+    example, if pairs of people with the same gender interact more often then
+    pairs of people with differing genders.
+
+    \item If individual $i$ sends a message to individual $j$, is $j$ likely
+    to respond? How much more likely does the interaction $j \to i$ become,
+    and how does this depend on time? When I send you a message at 12:00pm on
+    Monday, I certainly do not expect a reply before 12:01pm, but I might
+    expect one before 12:00pm on Tuesday. Maybe I should expect a reply before
+    1:00pm. Certainly, if I haven't heard from you in two weeks, I shouldn't
+    expect a reply the next month. How can statements like this be made
+    precise, and how can they be derived from data?
+
+    \item Conversely, if individual $i$ interacts with $j$ at time $t$, is he
+    more likely to interact with $j$ at time $t+1$? How much more likely, and
+    how does this affect decay over time?
+
 \end{enumerate}
 
-We present a simple modeling framework to facilitate inquiry into all of the above.  The framework is flexible enough to allow various forms of time-inhomogeneity and dependency, and includes the ability to handle interactions with multiple recipients.  However, we stress that without further justification, none of our conclusions imply causality---they only show association.
+We present a simple modeling framework to facilitate inquiry into all of the
+above. The framework is flexible enough to allow various forms of
+time-inhomogeneity and dependency, and includes the ability to handle
+interactions with multiple recipients. However, we stress that without further
+justification, none of our conclusions imply causality---they only show
+association.
 
 
 \section{The Enron Email Data}
 
-Our motivating dataset is a large collection of email messages sent within the Enron corporation during the last four years of the company's existence. The Enron email corpus is a large subset of the email messages sent within the  corporation between November 1998 and June 2002.  Enron was an energy company based in Texas that became notorious in late 2001 for its fraudulent accounting practices.  These practices eventually lead to the resignation of its CEO, to an external audit into its accounting procedures, to massive readjustments to its earnings statements, and eventually to its bankruptcy. Later, many of the top executives were prosecuted and convicted of criminal fraud and insider trading.  As part of the investigation, the Federal Energy Regulatory Commission (FERC) subpoenaed the e-mail correspondences of the top employees and posted those not related to the criminal trial to their website (619,446 messages, roughly 92\% of those subpoenaed).
+Our motivating dataset is a large collection of email messages sent within the
+Enron corporation during the last four years of the company's existence. The
+Enron email corpus is a large subset of the email messages sent within the
+corporation between November 1998 and June 2002. Enron was an energy company
+based in Texas that became notorious in late 2001 for its fraudulent
+accounting practices. These practices eventually lead to the resignation of
+its CEO, to an external audit into its accounting procedures, to massive
+readjustments to its earnings statements, and eventually to its bankruptcy.
+Later, many of the top executives were prosecuted and convicted of criminal
+fraud and insider trading. As part of the investigation, the Federal Energy
+Regulatory Commission (FERC) subpoenaed the e-mail correspondences of the top
+employees and posted those not related to the criminal trial to their website
+(619,446 messages, roughly 92\% of those subpoenaed).
 
-Leslie Kaelbling, a computer scientist at MIT, purchased the corpus from the FERC with the intention of making it available to the research community.  A team of researchers at SRI International worked to fix a number of apparent integrity problems with the data, and then it was released to the public by William Cohen, at CMU.  This is the ``March 2, 2004 Version'' of the dataset. Later, a former Enron employee requested that one message be removed from the data; this removal prompted the ``August 21, 2009 Version,'' widely regarded to be the authoritative version \cite{cohen2009enron}.
+Leslie Kaelbling, a computer scientist at MIT, purchased the corpus from the
+FERC with the intention of making it available to the research community. A
+team of researchers at SRI International worked to fix a number of apparent
+integrity problems with the data, and then it was released to the public by
+William Cohen, at CMU. This is the ``March 2, 2004 Version'' of the dataset.
+Later, a former Enron employee requested that one message be removed from the
+data; this removal prompted the ``August 21, 2009 Version,'' widely regarded
+to be the authoritative version \cite{cohen2009enron}.
 
-Zhou et al. have gone through substantial work to preprocess the Enron corpus into a useful form \cite{zhou2007strategies}.  We rely on their preprocessed version for our analysis.  They reduce the data to the set of e-mails sent by high-ranking Enron executives, eliminating messages sent by non-employees, support staff and administrative assistants.  They also filter out messages with missing timestamps.  After this culling process, there are 21,635 messages sent by 156 employees between November 13, 1998 and June 21, 2002.  Each email message has a message body consisting of text, along with header fields including \texttt{Date}, \texttt{From}, \texttt{To}, \texttt{CC}, \texttt{BCC}, and \texttt{Subject}.  The \texttt{From} field always lists a unique e-mail address, but the \texttt{To}, \texttt{CC}, and \texttt{BCC} fields sometimes specify multiple recipients.  We make no distinction between \texttt{To}, \texttt{CC}, and \texttt{BCC}, combining them all to determine the recipients of a message.
+Zhou et al. have gone through substantial work to preprocess the Enron corpus
+into a useful form \cite{zhou2007strategies}. We rely on their preprocessed
+version for our analysis. They reduce the data to the set of e-mails sent by
+high-ranking Enron executives, eliminating messages sent by non-employees,
+support staff and administrative assistants. They also filter out messages
+with missing timestamps. After this culling process, there are 21,635 messages
+sent by 156 employees between November 13, 1998 and June 21, 2002. Each email
+message has a message body consisting of text, along with header fields
+including \texttt{Date}, \texttt{From}, \texttt{To}, \texttt{CC},
+\texttt{BCC}, and \texttt{Subject}. The \texttt{From} field always lists a
+unique e-mail address, but the \texttt{To}, \texttt{CC}, and \texttt{BCC}
+fields sometimes specify multiple recipients. We make no distinction between
+\texttt{To}, \texttt{CC}, and \texttt{BCC}, combining them all to determine
+the recipients of a message.
 
-We can associate a set of static covariates for each of the 156 individuals in the dataset.  Zhou et al. have extracted the employees' names, departments, and titles.  We use the first names of the employees to associate genders to the employees (e.g, John is male, Susan is female).  For ambiguously-gendered names like Dana, Robin, and Sean, we use personal pronouns in the messages to help code the genders.  We code the department as one of three categories: Legal, Trading, or Other.  Finally, we code the position as Senior (CEO, CFO, COO, Director, Managing Director, VP, President) or Junior (Administrator, Analyst, Assistant, Attorney, Counsel, Employee, Manager, Specialist, Trader).
+We can associate a set of static covariates for each of the 156 individuals in
+the dataset. Zhou et al. have extracted the employees' names, departments, and
+titles. We use the forenames of the employees to associate genders to the
+employees (e.g, John is male, Susan is female). For ambiguously-gendered names
+like Dana, Robin, and Sean, we use personal pronouns in the messages to help
+code the genders. We code the department as one of three categories: Legal,
+Trading, or Other. Finally, we code the position as Senior (CEO, CFO, COO,
+Director, Managing Director, VP, President) or Junior (Administrator, Analyst,
+Assistant, Attorney, Counsel, Employee, Manager, Specialist, Trader).
 
 
 \section{Contingency Tables}
 
-The contingency table is an established method for analyzing homophily and group-level behavior.
+The contingency table is an established method for analyzing homophily and
+group-level behavior.
 
 \section{Pitfalls of Table-Based Analyses}
 
-The table-based analysis does not account for variability in individual behavior, ignores the times of the messages, and does not handle messages with multiple recipients.
+The table-based analysis does not account for variability in individual
+behavior, ignores the times of the messages, and does not handle messages with
+multiple recipients.
 
 \subsection{Individual Inhomogeneity}
 \subsection{Time Dependence}
 \subsection{Multiple Recipients}
 
 
-
 \section{A Point Process Model}
-
 
 
 \bibliographystyle{imsart-number}
