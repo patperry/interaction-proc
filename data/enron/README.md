@@ -1,23 +1,23 @@
 The Enron Email Corpus
 ======================
 
-The Enron email corpus is coded into three tables. The `Employees` table
+The Enron email corpus is coded into three tables. The `Employee` table
 contains the information about the 156 employees in the dataset. The
-`Messages` and `Recipients` tables together contain information about the
+`Message` and `Recipient` tables together contain information about the
 messages. It is necessary to have two tables since some messages have multiple
 recipients.
 
 
 The next example illustrates how the messages get coded in the tables.
 Message 4 was sent by employee 138 to employees 109, 49, 120, and 59. This
-gets coded as a single row in the `Messages` table and four rows in the
-`Recipients` table. The row in the `Messages` table is
+gets coded as a single row in the `Message` table and four rows in the
+`Recipient` table. The row in the `Message` table is
 
     mid  filename          unix_time  subject                 sender_id
     ---  ----------------  ---------  ----------------------  ---------
     4    taylor-m/sent/23  911874180  Re: Coral Energy, L.P.  138
     
-while the rows in the `Recipients` tables are
+while the rows in the `Recipient` tables are
 
     mid  rno  receiver_id
     ---  ---  -----------
@@ -47,9 +47,18 @@ below.
      Computational Social and Organizational Science (NAACSOS 07)_.
 
 
+SQLite
+------
 
-Employees (employees.tsv)
--------------------------
+The script `create.sh`, when run from the current directory, creates an
+SQlite3 database called `enron.db`. It then imports the data from
+`employees.tsv`, `messages.tsv`, and `recipients.tsv`. For the script to work,
+the `sqlite3` program must be in your path. See `schema.sql` for the database
+schema.
+
+
+Employee Information (employees.tsv)
+------------------------------------
 
 The table of 156 employees. Columns are as follows:
 
@@ -62,8 +71,8 @@ The table of 156 employees. Columns are as follows:
   - seniority (Junior or Senior)
   
 
-Messages (messages.tsv)
------------------------
+Message Information (messages.tsv)
+----------------------------------
 
 The table of 21,635 messages. Columns are as follows:
 
@@ -74,8 +83,8 @@ The table of 21,635 messages. Columns are as follows:
   - sender's employee id (1-156)
   
 
-Recipients (recipients.tsv)
----------------------------
+Recipient Information (recipients.tsv)
+--------------------------------------
 
 The table of 38,388 recipients for each of the messages. Columns as follows:
 
