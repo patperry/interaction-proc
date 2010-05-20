@@ -39,7 +39,7 @@ GetGenderTable <- function(send.sen = kSeniority,
             WHERE
                 M.mid = R.mid
                 AND M.from_eid = F.eid
-                AND R.to_eid = T.eid","
+                AND R.to_eid = T.eid
                 AND F.seniority", InSet(send.sen, kSeniority),"
                 AND F.department", InSet(send.dep, kDepartment),"
                 AND T.seniority", InSet(recv.sen, kSeniority),"
