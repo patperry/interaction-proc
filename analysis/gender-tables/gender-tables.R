@@ -45,8 +45,8 @@ GetGenderTable <- function(send.sen = kSeniority,
                 AND T.seniority", InSet(recv.sen, kSeniority),"
                 AND T.department", InSet(recv.dep, kDepartment),"
             GROUP BY
-                F.genF,
-                T.genF
+                F.gender,
+                T.gender
         ")
         rows <- dbGetQuery(conn, sql)
 
