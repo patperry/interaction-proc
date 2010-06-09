@@ -68,3 +68,40 @@ GetGenderTable <- function(send.sen = kSeniority,
     res
 }
 
+log.oddsratio <- c()
+ci.lo <- c()
+ci.hi <- c()
+p <- c()
+
+for (rd in kDepartment) {
+    for (rs in kSeniority) {
+        for (sd in kDepartment) {    
+            for (ss in kSeniority) {
+                table <- GetGenderTable(ss, sd, rs, rd)
+                test <- fisher.test(table)
+                log.oddsratio <- c(log.oddsratio, log(test$estimate[[1]]))
+                ci.lo <- c(ci.lo, log(test$conf.int[1]))
+                ci.hi <- c(ci.hi, log(test$conf.int[2]))
+                p <- c(p, test$p.value)
+            }
+        }
+    }
+}
+
+log.oddsratio <- matrix(log.oddsratio, 6, 6)
+stars <- matrix("", 6, 6)
+stars[p <= 0.05 & log.oddsratio < 0] <- "-"
+stars[p <= 0.01 & log.oddsratio < 0] <- "--"
+stars[p <= 0.001 & log.oddsratio < 0] <- "---"
+stars[p <= 0.0001 & log.oddsratio < 0] <- "----"
+stars[p <= 0.05 & log.oddsratio > 0] <- "+"
+stars[p <= 0.01 & log.oddsratio > 0] <- "++"
+stars[p <= 0.001 & log.oddsratio > 0] <- "+++"
+stars[p <= 0.0001 & log.oddsratio > 0] <- "++++"
+
+
+names <- kronecker(kDepartment, kSeniority, paste)
+dimnames(stars) <- list(names, names)
+dimnames(log.oddsratio) <- list(names, names)
+
+
