@@ -216,9 +216,54 @@ multiple recipients.
 
 \section{A Point Process Model}
 
-Here we introduce a more flexible modeling framework that includes time-inhomogeneity and dependence.  Initially, we focus on the single-recipient setting.
+Here we introduce a more flexible modeling framework that includes
+time-inhomogeneity and dependence.  Initially, we focus on the
+single-recipient setting.
 
-Suppose we observe interactions $(t_1, i_1, j_1), \ldots, (t_N, i_N, j_N)$. We
+The biggest challenge is finding a tractable representation of the data.
+Suppose that actors are under observation for time in the interval $[0,T]$. As
+before, $\mathcal{I}$ is the set of senders and $\mathcal{J}$ is the set of
+receivers. The data comes to us in the form of a list of interactions: $(t_1,
+i_1, j_1), \ldots, (t_N, i_N, j_N),$ with tuple $(t_l, i_l, j_l)$ denoting
+that interaction $i_l \to j_l$ happened at time $t_l$.  Encode the data as
+$\xi$, a Borel measure on $[0,T] \times \mathcal{I} \times \mathcal{J}$ given
+by
+\[
+    \xi = \sum_{l=1}^{N} \delta_{(t_l, i_l, j_l)}.
+\]
+Here and elsewhere, $\delta$ is the Dirac delta measure.  Encode the messages
+sent from sender $i$ as 
+$\xi_i(t, j) = \sum_{l=1}^N 1\{t_l \leq t, i_l = i, j_l = j\}$ and set
+$\xi_i(t) = \sum_{j \in \mathcal{J}} \xi_i(t,j)$.  Note that
+$\xi(t, i, j) = \xi_i(t, j)$.
+
+We introduce a probability space $(\Omega, \mathcal{F}, \mathbb{P})$ on which
+$\xi$ is defined, together with a filtration of $\mathcal{F},$ given as
+$\big\{ \mathcal{F}_t : t \in [0, T] \big\}$. Take $\xi$ to be adapted to $\{
+\mathcal{F}_t \}$, that is, take $\xi(t, i, j)$ to be
+$\mathcal{F}_t$-measurable. For simplicity, assume that no more than one
+interaction can take place at a given time (the times $t_1, \ldots, t_N$ are
+unique \textit{a.s.}). Under certain conditions, there exists a collection of
+non-negative predictable random processes $\lambda = \{ \lambda_{i,j} : (i,j)
+\in \mathcal{I} \times \mathcal{J} \}$, such that for fixed $i$ and $j$,
+\[
+    \xi(t, i, j) - \int_{0}^{t} \lambda_{i,j}(t) \, dt
+\]
+is a martingale.  The collection of processes, $\lambda$, is termed the
+\emph{stochastic intensity} of $\xi$; in our setting it contains all of the
+``signal'' information in $\xi$.
+
+
+\clearpage
+
+
+Suppose $[0,T]$ is the observation
+interval.  We will need a probability space
+ together with a filtration of
+$\mathcal{F}$, given by
+
+
+Suppose we observe interactions  We
 can represent these interactions by a marked point process indexed by time,
 with marks in $\mathcal{I} \times \mathcal{J}$. Alternatively, we can consider
 $I$ different point processes, each corresponding the the interactions sent by
