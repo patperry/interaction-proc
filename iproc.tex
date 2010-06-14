@@ -220,16 +220,27 @@ Here we introduce a more flexible modeling framework that includes
 time-inhomogeneity and dependence.  Initially, we focus on the
 single-recipient setting.
 
-The biggest challenge is finding a tractable representation of the data.
+For each pair of actors, $(i,j) \in \mathcal{I} \times \mathcal{J}$, and each
+time interval, $(s,t] \subset \reals_+$, let $N_{ij}\big((s,t]\big)$ denote the
+number of $i \to j$ interactions in $(s,t]$.
+
+
+This can be interpreted as a counting measure on
+$\reals_+$, with $N_{ij}\big((s,t]\big)$ defined as the
+number of $i \to j$ interactions in the time interval $(s,t]$, so that
+$N_{ij}\big((s,t]\big) = N_{ij}(t) - N_{ij}(s)$. The collection
+$N = \{ N_{ij} \}_{(i,j) \in \mathcal{I} \times \mathcal{J}}$ encodes the
+interaction process.
+
 Suppose that actors are under observation for time in the interval $[0,T]$. As
 before, $\mathcal{I}$ is the set of senders and $\mathcal{J}$ is the set of
-receivers. The data comes to us in the form of a list of interactions: $(t_1,
-i_1, j_1), \ldots, (t_N, i_N, j_N),$ with tuple $(t_l, i_l, j_l)$ denoting
+receivers. The data comes to us in the form of a list of interactions: $(T_1,
+I_1, J_1), \ldots, (T_n, I_n, j_n),$ with tuple $(t_l, i_l, j_l)$ denoting
 that interaction $i_l \to j_l$ happened at time $t_l$.  Encode the data as
-$\xi$, a Borel measure on $[0,T] \times \mathcal{I} \times \mathcal{J}$ given
+$N$, a Borel measure on $[0,T] \times \mathcal{I} \times \mathcal{J}$ given
 by
 \[
-    \xi = \sum_{l=1}^{N} \delta_{(t_l, i_l, j_l)}.
+    N_{ij}(t) = \sum_{l=1}^{n} \delta_{(t_l, i_l, j_l)}.
 \]
 Here and elsewhere, $\delta$ is the Dirac delta measure.  Encode the messages
 sent from sender $i$ as 
