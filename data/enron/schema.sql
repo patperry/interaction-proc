@@ -3,7 +3,6 @@ DROP TABLE IF EXISTS RecipientBase;
 DROP VIEW IF EXISTS Message;
 DROP INDEX IF EXISTS IX_MessageBase_unix_time;
 DROP TABLE IF EXISTS MessageBase;
-DROP VIEW IF EXISTS Actor;
 DROP VIEW IF EXISTS EmployeeWithVars;
 DROP VIEW IF EXISTS Employee;
 DROP TABLE IF EXISTS EmployeeBase;
@@ -69,11 +68,6 @@ SELECT
     genF * senJ * depT AS genF_senJ_depT
 FROM
     Employee;
-
-CREATE VIEW Actor AS
-SELECT *
-FROM
-    EmployeeWithVars;
 
 CREATE TABLE MessageBase (
     mid INTEGER,
