@@ -6,6 +6,7 @@
 \RequirePackage[colorlinks,citecolor=blue,urlcolor=blue]{hyperref}
 \RequirePackage{hypernat}
 \RequirePackage{graphicx}
+\RequirePackage{enumerate}
 
 \setattribute{journal}{name}{}  % Suppress text "Submitted to..."
 
@@ -348,6 +349,128 @@ where
 We could have included the receiver effects in $x_{i,j}(t)$, but it is more
 natural to treat them separately.
 
+\clearpage
+
+\section{Multiple recipients}
+
+Let $J_n$ be an increasing sequence of positive integers, set
+$\mathcal{J}_n = \{ 1, \ldots, J_n \}$, and
+let $x_{n,j}$ such that $1 \leq j \leq J_n$, be a triangular array of
+$p$-dimensional covariate vectors.  Let $l_m$ be a sequence of positive
+integers and $\mathcal{R}_{n,m}$ such that
+$1 \leq m \leq n$ be another triangular array, where
+$\mathcal{R}_{n,m} \in \mathcal{J}_n^{l_m}$.  The vector
+\(
+    \mathcal{R}_{n,m}
+    =
+    \big(
+        \mathcal{R}_{n,m}(1), \ldots, \mathcal{R}_{n,m}(l_m)
+    \big)
+\)
+can be considered an ordered sample of size $l_m$ from $\mathcal{J}_n$.
+
+Consider three probability laws for $\mathcal{R}_{n,m}$ indexed by
+$\beta$.  For all three, the variables $\mathcal{R}_{n,m}$ are independent.
+First, when $j \in \mathcal{J}_n$ define
+\[
+    \pi_{\beta, n}(j)
+    =
+    \frac{\exp\big\{\langle x_{n,j}, \beta \rangle\big\}}
+         {\sum_{j' \in \mathcal{J}_n}
+            \exp\big\{\langle x_{n,j'}, \beta \rangle\big\}}.
+\]
+Under $\tilde{\mathbb{P}}_\beta$, the components of $\mathcal{R}_{n,m}$ are
+drawn with replacement according to $\pi_{\beta, n}(\cdot)$:
+\begin{equation}
+    \tilde{\mathbb{P}}_\beta\big\{ \mathcal{R}_{n,m} = R \big\}
+    =
+    \prod_{i = 1}^{l_m}
+        \pi_{\beta, n}(R(i)).
+\end{equation}
+Under $\mathbb{P}_\beta$ and $\mathbb{P}^1_\beta$, the components
+of $\mathcal{R}_{n,m}$ are drawn without replacement.  Define
+$|\cdot|$ to be the number of unique components in a vector.  Then,
+\begin{align}
+    \mathbb{P}_\beta\big\{ \mathcal{R}_{n,m} = R \big\}
+        &=
+        \frac{
+            \tilde{\mathbb{P}}_\beta\big\{ \mathcal{R}_{n,m} = R \big\}
+            I_{\{|R| = l_m\}}
+        }{
+            \sum_{R' \in \mathcal{J}_n^{l_m}}
+                \tilde{\mathbb{P}}_\beta\big\{ \mathcal{R}_{n,m} = R' \big\}
+                I_{\{|R'| = l_m\}}                
+        } \\
+\intertext{and}
+    \begin{split}
+    \mathbb{P}^1_\beta\big\{ \mathcal{R}_{n,m} = R \big\}
+        &=
+        \pi_{\beta,n}\big(R(1)\big)
+        \cdot
+        \frac{
+            \pi_{\beta,n}\big(R(2)\big)
+        }{
+            1 - \pi_{\beta,n}\big(R(1)\big)
+        }
+        \cdot
+        \cdots \\
+        &\quad\cdot
+        \frac{
+            \pi_{\beta,n}\big(R(l_m)\big)
+        }{
+            1 - \pi_{\beta,n}\big(R(1)\big)
+            - \cdots - \pi_{\beta_n}\big(R(l_{m-1})\big)
+        }.
+    \end{split}
+\end{align}
+Under $\mathbb{P}^1_\beta$, the components of $\mathcal{R}_{n,m}$ are drawn
+one at a time without replacement according to weights $\pi_{\beta,n}(\cdot)$.
+Under $\mathbb{P}_\beta$, the $\mathcal{R}_{n,m}$ are drawn from
+$\tilde{\mathbb{P}}_\beta$ conditionally on each $\mathcal{R}_{n,m}$ having
+unique components.
+
+We wish to estimate $\beta$ after observing covariates
+$\{ x_{n,j} : 1 \leq j \leq J_n \}$ and samples
+$\{\mathcal{R}_{n,m} : 1 \leq m \leq n\}$.  In the setting driven by
+$\tilde{\mathbb{P}}_\beta$, the maximum likelihood estimate is easy to
+obtain.  In $\mathbb{P}_\beta$ and $\mathbb{P}^1_\beta$, though, the
+likelihood and its derivatives have combinatorially many terms
+(order $\sum_m J_n^{l_m}$ compared to order $\sum_m J_n$), and can be
+prohibitively expensive to optimize.
+
+The likelihood corresponding to $\tilde{\mathbb{P}}_\beta$ is given by
+\[
+    \tilde{L}_n(\beta ; R_1, \ldots, R_n)
+    =
+    \prod_{m=1}^{n}
+        \tilde{\mathbb{P}}_\beta\big\{ \mathcal{R}_{n,m} = R_m \}.
+\]
+Let $\hat \beta_n$ be the value that maximizes
+\(
+    \tilde{L}_n( \cdot\, ; \mathcal{R}_{n,1}, \ldots, \mathcal{R}_{n,n}).
+\)
+As $n$ increases, under $\tilde{\mathbb{P}}_\beta$ standard likelihood
+theory shows that $\hat \beta_n$ converges in probability to $\beta$ and
+that $\sqrt{n}(\beta - \hat \beta_n)$ converges in distribution to a
+mean-zero Gaussian random variable.  This fails to hold generally under
+$\mathbb{P}_\beta$ and $\mathbb{P}^1_\beta$.  However, it turns out
+that if $J_n$ diverges sufficiently fast, then the bias in $\hat \beta_n$ is
+of order $\tfrac{1}{\sqrt{n}}$, and $\sqrt{n}(\beta - \hat \beta_n)$ still
+has a Gaussian limit.
+
+\begin{theorem}
+    Under $\mathbb{P}_\beta$ and $\mathbb{P}^1_\beta$,
+    if $\max_{j \in \mathcal{J}_n} \|x_{n,j}\|_2$,
+    \(
+        \frac{1}{n} \sum_{m=1}^n l_m^2,
+    \)
+    and
+    \(
+        \frac{n}{J_n^2}
+    \)
+    are uniformly bounded in $n$, then $\hat \beta_n$ is a
+    $\sqrt{n}$-consistent estimate of $\beta$.
+\end{theorem}
 
 
 \bibliographystyle{imsart-number}
