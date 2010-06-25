@@ -137,6 +137,7 @@ SampleMultinom <- function(count, multinom, len = rep(1, count),
                 }
                 recip[b:e] <- R
             }
+
         }
     }
     
