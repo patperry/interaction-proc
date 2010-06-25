@@ -107,35 +107,36 @@ GetStep <- function(multinom, msg, alpha = 0.25, beta = 0.5)
 SampleMultinom <- function(count, multinom, len = rep(1, count),
                            strategy = c("stepwise", "together", "replace"))
 {
+    strategy <- match.arg(strategy)
+        
     prob <- multinom$prob
     recipCount <- multinom$count
 
-    sample <- switch(match.arg(strategy),
-        stepwise = function(l) {
-            sample.int(recipCount, l, replace = FALSE, prob = prob)
-        },
-        together = function(l) {
-            R <- sample.int(recipCount, l, replace = TRUE, prob = prob)
-            while (any(duplicated(R))) {
-                R <- sample.int(recipCount, l, replace = TRUE, prob = prob)
-            }
-            R
-        },
-        replace = function(l) {
-            sample.int(recipCount, l, replace = TRUE, prob = prob)
-        })
+    offset <- c(0, cumsum(len)) + 1
+    recip <- sample.int(recipCount, offset[count], replace = TRUE,
+                        prob = prob)
     
-    offset <- c(1, 1 + cumsum(len))
-    recip <- rep(NA, offset[count])
-    
-    for (m in seq_len(count)) {
-        l <- len[m]
-        if (l > 0) {
+    if (strategy == "stepwise") {
+        for (m in which(len > 1)) {
+            l <- len[m]
             b <- offset[m]
-            e <- offset[m+1] - 1
-            if (length(recip[b:e]) != l)
-                cat("b: ", b, "e: ", e, "l: ", l, "e-b+1: ", e-b+1, "b:e", b:e, "\n")
-            recip[b:e] <- sample(l)
+            e <- b+l-1
+            recip[b:e] <- sample.int(recipCount, l, replace = FALSE,
+                                     prob = prob)
+        }
+    } else if (strategy == "together") {
+        for (m in which(len > 1)) {
+            l <- len[m]
+            b <- offset[m]
+            e <- b+l-1
+            R <- recip[b:e]
+            if (any(duplicated(R))) {
+                while (any(duplicated(R))) {
+                    R <- sample.int(recipCount, l, replace = TRUE,
+                                    prob = prob)
+                }
+                recip[b:e] <- R
+            }
         }
     }
     
