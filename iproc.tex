@@ -387,9 +387,15 @@ drawn with replacement according to $\pi_{\beta, n}(\cdot)$:
     \prod_{i = 1}^{l_m}
         \pi_{\beta, n}(R(i)).
 \end{equation}
-Under $\mathbb{P}_\beta$ and $\mathbb{P}^1_\beta$, the components
-of $\mathcal{R}_{n,m}$ are drawn without replacement.  Define
-$|\cdot|$ to be the number of unique components in a vector.  Then,
+Under both $\mathbb{P}_\beta$ and $\mathbb{P}^1_\beta$, the components
+of $\mathcal{R}_{n,m}$ are unique.
+The law $\mathbb{P}_\beta$ designates that 
+$\mathcal{R}_{n,m}$ is drawn from $\tilde{\mathbb{P}}_\beta$
+conditionally on having unique components;
+the law $\mathbb{P}^1_\beta$ designates that the components of
+$\mathcal{R}_{n,m}$ are drawn one at a time without replacement according to
+weights $\pi_{\beta,n}(\cdot)$.  Formally, define $|\cdot|$ to be the number
+of unique components in a vector.  Then,
 \begin{align}
     \mathbb{P}_\beta\big\{ \mathcal{R}_{n,m} = R \big\}
         &=
@@ -402,32 +408,20 @@ $|\cdot|$ to be the number of unique components in a vector.  Then,
                 I_{\{|R'| = l_m\}}                
         } \\
 \intertext{and}
-    \begin{split}
     \mathbb{P}^1_\beta\big\{ \mathcal{R}_{n,m} = R \big\}
         &=
-        \pi_{\beta,n}\big(R(1)\big)
-        \cdot
-        \frac{
-            \pi_{\beta,n}\big(R(2)\big)
-        }{
-            1 - \pi_{\beta,n}\big(R(1)\big)
-        }
-        \cdot
-        \cdots \\
-        &\quad\cdot
-        \frac{
-            \pi_{\beta,n}\big(R(l_m)\big)
-        }{
-            1 - \pi_{\beta,n}\big(R(1)\big)
-            - \cdots - \pi_{\beta_n}\big(R(l_{m-1})\big)
-        }.
-    \end{split}
+        \frac{1}{l_m !}
+        \sum_{\sigma}
+        \prod_{k=1}^{l_m}
+            \frac{
+                \pi_{\beta,n}\big(R(\sigma(k))\big)
+            }{
+                1 - \sum_{k' = 1}^{k - 1} \pi_{\beta,n}\big(R(\sigma(k'))\big)
+            },
 \end{align}
-Under $\mathbb{P}^1_\beta$, the components of $\mathcal{R}_{n,m}$ are drawn
-one at a time without replacement according to weights $\pi_{\beta,n}(\cdot)$.
-Under $\mathbb{P}_\beta$, the $\mathcal{R}_{n,m}$ are drawn from
-$\tilde{\mathbb{P}}_\beta$ conditionally on each $\mathcal{R}_{n,m}$ having
-unique components.
+where $\sigma$ ranges over all permutations of $\{ 1, ..., l_m \}$.
+
+
 
 We wish to estimate $\beta$ after observing covariates
 $\{ x_{n,j} : 1 \leq j \leq J_n \}$ and samples
