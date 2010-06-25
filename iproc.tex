@@ -355,7 +355,7 @@ natural to treat them separately.
 
 Let $J_n$ be an increasing sequence of positive integers, set
 $\mathcal{J}_n = \{ 1, \ldots, J_n \}$, and
-let $x_{n,j}$ such that $1 \leq j \leq J_n$, be a triangular array of
+let $x_{n,j}$ such that $1 \leq j \leq J_n$ be a triangular array of
 $p$-dimensional covariate vectors.  Let $l_m$ be a sequence of positive
 integers and $\mathcal{R}_{n,m}$ such that
 $1 \leq m \leq n$ be another triangular array, where
@@ -384,8 +384,8 @@ drawn with replacement according to $\pi_{\beta, n}(\cdot)$:
 \begin{equation}
     \tilde{\mathbb{P}}_\beta\big\{ \mathcal{R}_{n,m} = R \big\}
     =
-    \prod_{i = 1}^{l_m}
-        \pi_{\beta, n}(R(i)).
+    \prod_{k = 1}^{l_m}
+        \pi_{\beta, n}(R(k)).
 \end{equation}
 Under both $\mathbb{P}_\beta$ and $\mathbb{P}^1_\beta$, the components
 of $\mathcal{R}_{n,m}$ are unique.
@@ -422,15 +422,13 @@ of unique components in a vector.  Then,
 where $\sigma$ ranges over all permutations of $\{ 1, ..., l_m \}$.
 
 
-
 We wish to estimate $\beta$ after observing covariates
 $\{ x_{n,j} : 1 \leq j \leq J_n \}$ and samples
 $\{\mathcal{R}_{n,m} : 1 \leq m \leq n\}$.  In the setting driven by
 $\tilde{\mathbb{P}}_\beta$, the maximum likelihood estimate is easy to
 obtain.  In $\mathbb{P}_\beta$ and $\mathbb{P}^1_\beta$, though, the
 likelihood and its derivatives have combinatorially many terms
-(order $\sum_m J_n^{l_m}$ compared to order $\sum_m J_n$), and can be
-prohibitively expensive to optimize.
+and can be prohibitively expensive to optimize.
 
 The likelihood corresponding to $\tilde{\mathbb{P}}_\beta$ is given by
 \[
