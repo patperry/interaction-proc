@@ -105,13 +105,29 @@ GetStep <- function(multinom, msg, alpha = 0.25, beta = 0.5)
 }
 
 SampleMultinom <- function(count, multinom, len = rep(1, count),
-                           replace = FALSE)
+                           strategy = c("stepwise", "together", "replace"))
 {
     prob <- multinom$prob
     recipCount <- multinom$count
+
+    sample <- switch(match.arg(strategy),
+        stepwise = function(l) {
+            sample.int(recipCount, l, replace = FALSE, prob = prob)
+        },
+        together = function(l) {
+            R <- sample.int(recipCount, l, replace = TRUE, prob = prob)
+            while (any(duplicated(R))) {
+                R <- sample.int(recipCount, l, replace = TRUE, prob = prob)
+            }
+            R
+        },
+        replace = function(l) {
+            sample.int(recipCount, l, replace = TRUE, prob = prob)
+        })
     
     offset <- c(1, 1 + cumsum(len))
     recip <- rep(NA, offset[count])
+    
     for (m in seq_len(count)) {
         l <- len[m]
         if (l > 0) {
@@ -119,8 +135,7 @@ SampleMultinom <- function(count, multinom, len = rep(1, count),
             e <- offset[m+1] - 1
             if (length(recip[b:e]) != l)
                 cat("b: ", b, "e: ", e, "l: ", l, "e-b+1: ", e-b+1, "b:e", b:e, "\n")
-            recip[b:e] <- sample.int(recipCount, l, replace = replace,
-                                     prob = prob)
+            recip[b:e] <- sample(l)
         }
     }
     
@@ -143,7 +158,8 @@ MessageSet <- function(sample, varset)
     msg
 }
 
-BootFitMultinom <- function(msg, varset, reps = 500, replace = FALSE)
+BootFitMultinom <- function(msg, varset, reps = 500,
+                            strategy = c("stepwise", "together", "replace"))
 {
     multinom0 <- FitMultinom(msg, varset)
     coef0 <- multinom0$coef
@@ -155,9 +171,9 @@ BootFitMultinom <- function(msg, varset, reps = 500, replace = FALSE)
     score <- matrix(NA, reps, coefCount)
     for (r in seq_len(reps)) {
         sample1 <- SampleMultinom(msg$count, multinom0, msg$length,
-                                  replace = replace)
+                                  strategy = strategy)
         msg1 <- MessageSet(sample1, varset)
-        multinom1 <- FitMultinom(msg1, varset)
+        multinom1 <- FitMultinom(msg1, varset, start = multinom0)
         coef1 <- multinom1$coef
         chol.fisher1 <- multinom1$chol.fisher
         score1 <- sqrt(count) * (chol.fisher1 %*% (coef1 - coef0))
@@ -185,16 +201,18 @@ BootFitMultinom <- function(msg, varset, reps = 500, replace = FALSE)
 
 set.seed(0, "Mersenne-Twister")
 
-recipCount <- 10
+recipCount <- 100
 coefCount <- 5
 
 coef <- rnorm(coefCount)
 varset <- matrix(rnorm(recipCount * coefCount), recipCount)
 multinom <- Multinom(coef, varset)
 
-msgCount <- 1000 # recipCount^2
-msgLength <- pmin(1 + rgeom(msgCount, 0.5), recipCount)
+msgCount <- recipCount^2
+msgLength <- pmin(1 + rgeom(msgCount, 0.7), recipCount)
 
-
-sample <- SampleMultinom(msgCount, multinom, msgLength)
+strategy <- "stepwise"
+sample <- SampleMultinom(msgCount, multinom, msgLength, strategy = strategy)
 msg <- MessageSet(sample, varset)
+boot <- BootFitMultinom(msg, varset, strategy = strategy)
+
