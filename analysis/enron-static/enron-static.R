@@ -117,30 +117,60 @@ colnames(toVars) <- lapply(colnames(emp), function(x)
 
 pairVars <- as.data.frame(cbind(fromVars, toVars))
 
-batch <- seq_len(7)
+
 varCount <- 10
-sum1 <- rep(0, varCount)
-sum2 <- matrix(0, varCount, varCount)
-
-mvars.obs <- as.matrix(pairVars[msg$from[batch]
-                                + empCount * (msg$to[batch] - 1),])
-
-mvars <- as.matrix(pairVars[rep(msg$from[batch], each = empCount)
-                            + empCount * (seq_len(empCount) - 1),])
-
-beta <- rnorm(10)
-
-eta <- mvars.obs %*% beta
 
 
-weight <- matrix(exp(mvars %*% beta), nrow = empCount)
-weightSum <- colSums(weight)
+msgCount <- msg$count
+batchSizeDefault <- 256
+batchOffset <- c(seq.int(0, msgCount, batchSizeDefault), msgCount) + 1
+batchSize <- diff(batchOffset)
+batchCount <- length(batchSize)
 
-resid <- log(weightSum) - eta
-nll <- sum(resid)
+beta <- rnorm(varCount)
 
-colSums(prob * mvars)
-prob <- as.vector(weight / weightSum)
+resid <- rep(NA, msgCount)
+n <- 0
+mean1 <- rep(0, varCount)
+mean2 <- matrix(0, varCount, varCount)
 
-sum1 <- sum1 + colSums(prob * mvars)
+
+for (b in seq_len(batchCount)) {
+    cat(".")
+    if (batchSize[b] > 0) {
+        batch <- seq.int(from = batchOffset[b],
+                         length.out = batchSize[b])
+        n.new <- batchSize[b]
+
+        mvars.obs <- as.matrix(pairVars[msg$from[batch]
+                               + empCount * (msg$to[batch] - 1),])
+        eta <- mvars.obs %*% beta
+
+
+        mvars <- as.matrix(pairVars[rep(msg$from[batch], each = empCount)
+                           + empCount * (seq_len(empCount) - 1),])
+
+        weight <- matrix(exp(mvars %*% beta), nrow = empCount)
+        weightSum <- colSums(weight)
+
+        resid[batch] <- log(weightSum) - eta
+        
+
+        prob <- as.vector(weight / weightSum)
+        mvars.wt <- prob * mvars
+        mean1.new <- colMeans(mvars.wt);
+        
+        x1 <- as.vector(mvars.wt)
+        x2 <- matrix(rep(t(mvars), each = varCount),
+                     nrow = n.new * empCount,
+                     ncol = varCount * varCount,
+                     byrow = TRUE)
+        mvars2 <- x1 * x2
+        
+        n <- n + n.new
+        mean1 <- mean1 + (mean1.new - mean1) * (n.new / n)
+        mean2 <- mean2 + (mean2.new - mean2) * (n.new / n)
+    }
+}
+cat("\n")
 
