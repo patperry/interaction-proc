@@ -122,27 +122,59 @@ pairVars <- as.data.frame(cbind(fromVars, toVars))
 varCount <- ncol(pairVars)
 
 
-msgCountWithDupes <- msg$countWithDupes
+
+sendIntervals <- 3600 * c(1, 2, 4, 8)
+sendIntervalsCount <- length(sendIntervals)
+recvIntervals <- 3600 * c(1, 2, 4, 8)
+recvIntervalsCount <- length(recvIntervals)
+
+mvars.dyn <- matrix(NA, msg$countWithDupes * empCount,
+                    sendIntervalsCount + recvIntervalsCount)
+tlast <- matrix(-Inf, empCount, empCount)
+for (m in seq_len(msg$count)) {
+    offset <- msg$offset[m]
+    len <- msg$len[m]
+    from <- msg$from[offset]
+    to <- msg$to[offset]
+    time <- msg$time[offset]
+
+    rows <- seq.int(1 + empCount * (offset - 1),
+                    length.out = empCount * len)
+    for (i in seq_len(sendIntervalsCount)) {    
+        mvars.dyn[rows, i] <-
+            time - tlast[from,] < sendIntervals[i]
+    }
+    for (i in seq_len(recvIntervalsCount)) {
+        mvars.dyn[rows, sendIntervalsCount + i] <-
+            time - tlast[,from] < recvIntervals[i]
+    }
+        
+    tlast[from,to] <- time
+}
+
+
+
+
 batchSizeDefault <- 512
-batchOffset <- (c(seq.int(0, msgCountWithDupes, batchSizeDefault),
-                  msgCountWithDupes) + 1)
+batchOffset <- (c(seq.int(0, msg$countWithDupes, batchSizeDefault),
+                  msg$countWithDupes) + 1)
 batchSize <- diff(batchOffset)
 batchCount <- length(batchSize)
 
 beta <- rnorm(varCount)
 
-resid <- rep(NA, msgCountWithDupes)
+resid <- rep(NA, msg$countWithDupes)
 n <- 0
 mean1 <- rep(0, varCount)
 mean2 <- matrix(0, varCount, varCount)
+prob <- matrix(NA, empCount, msg$countWithDupes)
 
-prob <- matrix(NA, empCount, msgCountWithDupes)
 
 for (b in seq_len(batchCount)) {
+    batch <- seq.int(from = batchOffset[b], length.out = batchSize[b])
+    
     cat(".")
     if (batchSize[b] > 0) {
-        batch <- seq.int(from = batchOffset[b],
-                         length.out = batchSize[b])
         n.new <- batchSize[b]
 
         mvars.obs <- as.matrix(pairVars[msg$from[batch]
