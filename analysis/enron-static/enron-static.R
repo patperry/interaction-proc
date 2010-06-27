@@ -103,110 +103,161 @@ msg <- MessageSet()
 hist(msg$len, breaks = seq_len(max(msg$len) + 1) - 0.5, prob = TRUE)
 
 
-emp <- model.matrix( ~ ., EmployeeSet())
-empCount <- nrow(emp)
-
-from <- rep(seq_len(empCount), times = empCount)
-fromVars <- emp[from,]
-colnames(fromVars) <- lapply(colnames(emp), function(x)
-    paste("from", x, sep="."))
-    
-to <- rep(seq_len(empCount), each = empCount)    
-toVars <- emp[to,]
-colnames(toVars) <- lapply(colnames(emp), function(x)
-    paste("to", x, sep="."))
-
-pairVars <- as.data.frame(cbind(fromVars, toVars))
 
 
 
-varCount <- ncol(pairVars)
 
+Model.static <- function(formula.from, formula.to,
+                         data.from, data.to = data.from)
+{
+    fromMatrix <- model.matrix(formula.from, data.from)
+    colnames(fromMatrix) <- lapply(colnames(fromMatrix), function(name)
+                                   paste("from", name, sep="."))
+    fromCount <- nrow(fromMatrix)
 
+    toMatrix <- model.matrix(formula.to, data.to)
+    colnames(toMatrix) <- lapply(colnames(toMatrix), function(name)
+                                 paste("to", name, sep="."))
+    toCount <- nrow(toMatrix)
 
-sendInterval <- 3600 * c(1, 2, 4, 8)
-sendIntervalCount <- length(sendInterval)
-recvInterval <- 3600 * c(1, 2, 4, 8)
-recvIntervalCount <- length(recvInterval)
+    from <- rep(seq_len(fromCount), toCount)
+    to <- rep(seq_len(toCount), each = fromCount)
 
-beta.stat <- rnorm(varCount)
-beta.dyn <- rnorm(sendIntervalCount + recvIntervalCount)
+    modelMatrix <- cbind(fromMatrix[from,], toMatrix[to,])
+    rownames(modelMatrix) <-paste(from, to, sep="->")
+    varCount <- ncol(modelMatrix)
 
-mvars.stat <- as.matrix(pairVars)
+    modelArray <- array(modelMatrix, c(fromCount, toCount, varCount))
+    dimnames(modelArray) <- list(seq_len(fromCount), seq_len(toCount),
+                                 colnames(modelMatrix))
 
-
-mvars.dyn <- matrix(NA, msg$countWithDupes * empCount,
-                    sendIntervalCount + recvIntervalCount)
-tlast <- matrix(-Inf, empCount, empCount)
-for (m in seq_len(msg$count)) {
-    offset <- msg$offset[m]
-    len <- msg$len[m]
-    from <- msg$from[offset]
-    to <- msg$to[offset]
-    time <- msg$time[offset]
-
-    rows <- seq.int(1 + empCount * (offset - 1),
-                    length.out = empCount * len)
-    for (i in seq_len(sendIntervalCount)) {    
-        mvars.dyn[rows, i] <-
-            time - tlast[from,] < sendInterval[i]
-    }
-    for (i in seq_len(recvIntervalCount)) {
-        mvars.dyn[rows, sendIntervalCount + i] <-
-            time - tlast[,from] < recvInterval[i]
-    }
-        
-    tlast[from,to] <- time
+    model <- list(fromCount = fromCount,
+                  toCount = toCount,
+                  varCount = varCount,
+                  matrix = modelMatrix,
+                  array = modelArray)
+    model
 }
 
-eta.stat.pairs <- matrix(mvars.stat %*% beta.stat, empCount, empCount)
-eta.stat <- eta.stat.pairs[msg$from,]
 
-eta.dyn <- matrix(mvars.dyn %*% beta.dyn, ncol = empCount, byrow = TRUE)
+Model.dynamic <- function(interval.send, interval.recv, message.set,
+                          actor.count = max(message.set$from, message.set$to))
+{
+    sendInterval <- interval.send
+    recvInterval <- interval.recv
+    msg <- message.set
+    fromCount <- toCount <- actor.count
 
-eta <- eta.stat + eta.dyn
+    sendCount <- length(sendInterval)
+    recvCount <- length(recvInterval)
+    varCount <- sendCount + recvCount
+    messageCount <- msg$count
+    messageCountWithDupes <- msg$countWithDupes
+    
+    fromMatrix <- matrix(0, messageCountWithDupes, fromCount)
+    modelArray <- array(NA, c(messageCountWithDupes, toCount, varCount))
+
+    tlast <- matrix(-Inf, fromCount, toCount)
+    for (m in seq_len(messageCount)) {
+        offset <- msg$offset[m]
+        len <- msg$len[m]
+        from <- msg$from[offset]
+
+        if (len > 0) {
+            time <- msg$time[offset]
+            m.set <- seq.int(offset, length.out = len)
+            
+            for (s in seq_len(sendCount)) {
+                modelArray[m.set,,s] <-
+                    (time - tlast[from,] < sendInterval[s])
+            }
+            
+            for (r in seq_len(recvCount)) {
+                modelArray[m.set,,sendCount + r] <-
+                    (time - tlast[,from] < recvInterval[r])
+            }
+
+            to.set <- msg$to[m.set]
+            tlast[from,to.set] <- time
+            fromMatrix[m.set,from] <- 1
+        }
+    }
+     
+    modelMatrix <- matrix(as.vector(modelArray),
+                          messageCountWithDupes * toCount,
+                          varCount)
+                          
+    model <- list(fromCount = fromCount,
+                  toCount = toCount,
+                  varCount = varCount,
+                  matrix = modelMatrix,
+                  array = modelArray,
+                  sendInterval = sendInterval,
+                  recvInterval = recvInterval,
+                  fromMatrix = fromMatrix)
+    model
+}
+
+
+emp <- EmployeeSet()
+msg <- MessageSet()
+static <- Model.static(~ . - 1, ~ . - 1, emp)
+dynamic <- Model.dynamic(interval.send = 3600 * c(1, 2, 4, 8),
+                         interval.recv = 3600 * c(1, 2, 4, 8),
+                         msg)
+
+
+coef.static <- rnorm(static$varCount)
+coef.dynamic <- rnorm(dynamic$varCount)
+
+fromCount <- static$fromCount
+toCount <- static$toCount
+
+
+etaMatrix.static <- matrix(static$matrix %*% coef.static, fromCount, toCount)
+etaMatrix.dynamic <- matrix(dynamic$matrix %*% coef.dynamic, ncol = toCount)
+etaMatrix <- etaMatrix.static[msg$from,] + etaMatrix.dynamic
+
 
 loop <- seq_len(msg$countWithDupes) + (msg$from - 1) * msg$countWithDupes
-eta[loop] <- -Inf
+etaMatrix[loop] <- -Inf
 
-weight <- exp(eta)
-weightSum <- weightSum <- rowSums(weight)
-prob <- weight / weightSum
-
+weightMatrix <- exp(etaMatrix)
+weightSum <- rowSums(weightMatrix)
+probMatrix <- weightMatrix / weightSum
 
 obs <- seq_len(msg$countWithDupes) + (msg$to - 1) * msg$countWithDupes
-eta.obs <- eta[obs]
-prob.obs <- prob[obs]
+eta.obs <- etaMatrix[obs]
+prob.obs <- probMatrix[obs]
 resid <- log(weightSum) - eta.obs
 
-prob.stat <- matrix(0, empCount, empCount)
-wt.obs <- prob.obs / msg$countWithDupes
 
-mvars.dyn.array <- array(mvars.dyn,
-                         c(empCount, msg$countWithDupes, ncol(mvars.dyn)))
-mean.byfrom.dyn.array <- array(0, c(empCount, empCount, ncol(mvars.dyn)))
-for (m in seq_len(msg$countWithDupes)) {
-    from <- msg$from[m]
-    to <- msg$to[m]
-    prob.stat[from,to] <- prob.stat[from,to] + prob.obs[m]
-    
-    mean.byfrom.dyn.array[from,,] <- (mean.from.dyn.array[from,,]
-                                      + prob[m,] * mvars.dyn.array[,m,])
+probByFrom <- crossprod(dynamic$fromMatrix, probMatrix)
+
+meanByFrom.dynamic <- array(NA, c(fromCount, toCount, dynamic$varCount))
+dynamicArray.wt <- as.vector(probMatrix / msg$countWithDupes) * dynamic$array
+for (j in seq_len(toCount)) {
+    meanByFrom.dynamic[,j,] <- crossprod(dynamic$fromMatrix,
+                                         dynamicArray.wt[,j,])
 }
-mean.byfrom.dyn <- matrix(mean.byfrom.dyn.array, ncol = ncol(mvars.dyn))
+meanByFrom.dynamic <- matrix(meanByFrom.dynamic, ncol = dynamic$varCount)
+                            
 
 
-stats.stat <- cov.wt(mvars.stat,
-                     wt = as.vector(prob.stat),
-                     method = "ML")
-mean.stat <- stats.stat$center
-cov.stat <- stats.stat$cov
+stats.static <- cov.wt(static$matrix,
+                        wt = as.vector(probByFrom),
+                        method = "ML")
+mean.static <- stats.static$center
+cov.static <- stats.static$cov
 
-stats.dyn <- cov.wt(mvars.dyn,
-                    wt = as.vector(t(prob)),
-                    method = "ML")
-mean.dyn <- stats.dyn$center
-cov.dyn <- stats.dyn$cov
+
+stats.dynamic <- cov.wt(dynamic$matrix,
+                        wt = as.vector(probMatrix),
+                        method = "ML")
+mean.dynamic <- stats.dynamic$center
+cov.dynamic <- stats.dynamic$cov
+
+
 
 # \sum_{ij} p_{ij} s_{ij} d_{ij}^T
 # = \sum_j \sum_f \sum_{i : from(i) = f} p_{ij} s_{fj} d_{ij}^T
@@ -214,72 +265,16 @@ cov.dyn <- stats.dyn$cov
 #
 # \sum_{ij} p_{ij} d_{ij}
 # = \sum_j \sum_f \sum_{i : from(i) = f} p_{ij} d_{ij}^T
+cov.cross <- crossprod(sweep(static$matrix, 2, mean.static),
+                       meanByFrom.dynamic)
 
-cov.cross <- crossprod(sweep(mvars.stat, 2, mean.stat),
-                       mean.byfrom.dyn)
-
-fisher <- rbind(cbind(cov.stat,     cov.cross),
-                cbind(t(cov.cross), cov.dyn))
-
-
-batchSizeDefault <- 512
-batchOffset <- (c(seq.int(0, msg$countWithDupes, batchSizeDefault),
-                  msg$countWithDupes) + 1)
-batchSize <- diff(batchOffset)
-batchCount <- length(batchSize)
+fisher <- rbind(cbind(cov.static,     cov.cross),
+                cbind(t(cov.cross), cov.dynamic))
 
 
 
-resid <- rep(NA, msg$countWithDupes)
-n <- 0
-mean1 <- rep(0, varCount)
-mean2 <- matrix(0, varCount, varCount)
-prob <- matrix(NA, empCount, msg$countWithDupes)
 
 
 
-for (b in seq_len(batchCount)) {
-    batch <- seq.int(from = batchOffset[b], length.out = batchSize[b])
-    
-    cat(".")
-    if (batchSize[b] > 0) {
-        n.new <- batchSize[b]
-
-        mvars.obs <- as.matrix(pairVars[msg$from[batch]
-                               + empCount * (msg$to[batch] - 1),])
-        eta <- mvars.obs %*% beta
 
 
-        mvars <- as.matrix(pairVars[rep(msg$from[batch], each = empCount)
-                           + empCount * (seq_len(empCount) - 1),])
-
-        # Un-normalized recv probability; exclude self-messages
-        weight <- matrix(exp(mvars %*% beta), nrow = empCount)
-        weight[msg$from[batch] + empCount * (seq_len(n.new) - 1)] <- 0
-        weightSum <- colSums(weight)
-
-        resid[batch] <- log(weightSum) - eta
-
-        prob.new <- weight / weightSum
-        prob[,batch] <- prob.new
-        prob.new <- as.vector(prob.new)
-        
-        mvars.wt <- prob.new * mvars
-        mean1.new <- colMeans(mvars.wt);
-        
-        x1 <- as.vector(mvars.wt)
-        x2 <- matrix(rep(t(mvars), each = varCount),
-                     nrow = n.new * empCount,
-                     ncol = varCount * varCount,
-                     byrow = TRUE)
-        mvars2.wt <- x1 * x2
-        mean2.new <- colMeans(mvars2.wt)
-        
-        n <- n + n.new
-        mean1 <- mean1 + (mean1.new - mean1) * (n.new / n)
-        mean2 <- mean2 + (mean2.new - mean2) * (n.new / n)
-    }
-}
-cat("\n")
-
-prob <- t(prob)
