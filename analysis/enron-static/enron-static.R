@@ -154,7 +154,6 @@ Model.dynamic <- function(interval.send, interval.recv, message.set,
     messageCount <- msg$count
     messageCountWithDupes <- msg$countWithDupes
     
-    fromMatrix <- matrix(0, messageCountWithDupes, fromCount)
     modelArray <- array(NA, c(messageCountWithDupes, toCount, varCount))
 
     tlast <- matrix(-Inf, fromCount, toCount)
@@ -179,7 +178,6 @@ Model.dynamic <- function(interval.send, interval.recv, message.set,
 
             to.set <- msg$to[m.set]
             tlast[from,to.set] <- time
-            fromMatrix[m.set,from] <- 1
         }
     }
      
@@ -193,8 +191,7 @@ Model.dynamic <- function(interval.send, interval.recv, message.set,
                   matrix = modelMatrix,
                   array = modelArray,
                   sendInterval = sendInterval,
-                  recvInterval = recvInterval,
-                  fromMatrix = fromMatrix)
+                  recvInterval = recvInterval)
     model
 }
 
@@ -213,6 +210,16 @@ coef.dynamic <- rnorm(dynamic$varCount)
 fromCount <- static$fromCount
 toCount <- static$toCount
 
+fromMatrix <- matrix(0, msg$countWithDupes, fromCount)
+fromMatrix[seq_len(msg$countWithDupes)
+           + msg$countWithDupes*(msg$from - 1)] <- 1
+toMatrix <- matrix(0, msg$countWithDupes, toCount)
+toMatrix[seq_len(msg$countWithDupes)
+         + msg$countWithDupes*(msg$to - 1)] <- 1
+
+sendCountMatrix <- crossprod(fromMatrix, toMatrix)
+sendCount <- as.vector(sendCountMatrix)
+
 
 etaMatrix.static <- matrix(static$matrix %*% coef.static, fromCount, toCount)
 etaMatrix.dynamic <- matrix(dynamic$matrix %*% coef.dynamic, ncol = toCount)
@@ -225,19 +232,24 @@ etaMatrix[loop] <- -Inf
 weightMatrix <- exp(etaMatrix)
 weightSum <- rowSums(weightMatrix)
 probMatrix <- weightMatrix / weightSum
+prob <- as.vector(probMatrix)
 
 obs <- seq_len(msg$countWithDupes) + (msg$to - 1) * msg$countWithDupes
 eta.obs <- etaMatrix[obs]
 prob.obs <- probMatrix[obs]
 resid <- log(weightSum) - eta.obs
+suff.static <- colSums((sendCount / sum(sendCount)) * static$matrix)
+suff.dynamic <- colMeans(dynamic$matrix)
+suff <- c(suff.static, suff.dynamic)
 
 
-probByFrom <- crossprod(dynamic$fromMatrix, probMatrix)
+probByFromMatrix <- crossprod(fromMatrix, probMatrix)
+probByFrom <- as.vector(probByFromMatrix)
 
 meanByFrom.dynamic <- array(NA, c(fromCount, toCount, dynamic$varCount))
-dynamicArray.wt <- as.vector(probMatrix / msg$countWithDupes) * dynamic$array
+dynamicArray.wt <- (prob / msg$countWithDupes) * dynamic$array
 for (j in seq_len(toCount)) {
-    meanByFrom.dynamic[,j,] <- crossprod(dynamic$fromMatrix,
+    meanByFrom.dynamic[,j,] <- crossprod(fromMatrix,
                                          dynamicArray.wt[,j,])
 }
 meanByFrom.dynamic <- matrix(meanByFrom.dynamic, ncol = dynamic$varCount)
@@ -245,14 +257,14 @@ meanByFrom.dynamic <- matrix(meanByFrom.dynamic, ncol = dynamic$varCount)
 
 
 stats.static <- cov.wt(static$matrix,
-                        wt = as.vector(probByFrom),
+                        wt = probByFrom,
                         method = "ML")
 mean.static <- stats.static$center
 cov.static <- stats.static$cov
 
 
 stats.dynamic <- cov.wt(dynamic$matrix,
-                        wt = as.vector(probMatrix),
+                        wt = prob,
                         method = "ML")
 mean.dynamic <- stats.dynamic$center
 cov.dynamic <- stats.dynamic$cov
@@ -272,6 +284,7 @@ fisher <- rbind(cbind(cov.static,     cov.cross),
                 cbind(t(cov.cross), cov.dynamic))
 
 
+grad <- 
 
 
 
