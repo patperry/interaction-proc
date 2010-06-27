@@ -93,7 +93,8 @@ MessageSet <- function() {
         dbDisconnect(conn)
     })
     
-    list(count = msgCount, len = msgLength, offset = msgOffset, 
+    list(count = msgCount, countWithDupes = sum(msgLength),
+         len = msgLength, offset = msgOffset, 
          time = msgTime, from = msgFrom, to = msgTo)
 }
 
@@ -118,22 +119,24 @@ colnames(toVars) <- lapply(colnames(emp), function(x)
 pairVars <- as.data.frame(cbind(fromVars, toVars))
 
 
-varCount <- 10
+varCount <- ncol(pairVars)
 
 
-msgCount <- msg$count
-batchSizeDefault <- 256
-batchOffset <- c(seq.int(0, msgCount, batchSizeDefault), msgCount) + 1
+msgCountWithDupes <- msg$countWithDupes
+batchSizeDefault <- 512
+batchOffset <- (c(seq.int(0, msgCountWithDupes, batchSizeDefault),
+                  msgCountWithDupes) + 1)
 batchSize <- diff(batchOffset)
 batchCount <- length(batchSize)
 
 beta <- rnorm(varCount)
 
-resid <- rep(NA, msgCount)
+resid <- rep(NA, msgCountWithDupes)
 n <- 0
 mean1 <- rep(0, varCount)
 mean2 <- matrix(0, varCount, varCount)
 
+prob <- matrix(NA, empCount, msgCountWithDupes)
 
 for (b in seq_len(batchCount)) {
     cat(".")
@@ -150,14 +153,18 @@ for (b in seq_len(batchCount)) {
         mvars <- as.matrix(pairVars[rep(msg$from[batch], each = empCount)
                            + empCount * (seq_len(empCount) - 1),])
 
+        # Un-normalized recv probability; exclude self-messages
         weight <- matrix(exp(mvars %*% beta), nrow = empCount)
+        weight[msg$from[batch] + empCount * (seq_len(n.new) - 1)] <- 0
         weightSum <- colSums(weight)
 
         resid[batch] <- log(weightSum) - eta
-        
 
-        prob <- as.vector(weight / weightSum)
-        mvars.wt <- prob * mvars
+        prob.new <- weight / weightSum
+        prob[,batch] <- prob.new
+        prob.new <- as.vector(prob.new)
+        
+        mvars.wt <- prob.new * mvars
         mean1.new <- colMeans(mvars.wt);
         
         x1 <- as.vector(mvars.wt)
@@ -165,7 +172,8 @@ for (b in seq_len(batchCount)) {
                      nrow = n.new * empCount,
                      ncol = varCount * varCount,
                      byrow = TRUE)
-        mvars2 <- x1 * x2
+        mvars2.wt <- x1 * x2
+        mean2.new <- colMeans(mvars2.wt)
         
         n <- n + n.new
         mean1 <- mean1 + (mean1.new - mean1) * (n.new / n)
@@ -174,3 +182,4 @@ for (b in seq_len(batchCount)) {
 }
 cat("\n")
 
+prob <- t(prob)
