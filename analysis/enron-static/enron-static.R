@@ -398,8 +398,8 @@ emp <- EmployeeSet()
 msg <- MessageSet()
 formula <- ~ .
 static <- Model.static(formula, formula, emp)
-dynamic <- Model.dynamic(interval.send = 3600 * 2^seq(-6, 10),
-                         interval.recv = 3600 * 2^seq(-6, 10),
+dynamic <- Model.dynamic(interval.send = 3600 * 2^seq(-5, 5),
+                         interval.recv = 3600 * 2^seq(-5, 5),
                          msg)
 self.loops <- FALSE
 
