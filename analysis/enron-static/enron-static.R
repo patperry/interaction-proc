@@ -110,21 +110,24 @@ hist(msg$len, breaks = seq_len(max(msg$len) + 1) - 0.5, prob = TRUE)
 Model.static <- function(formula.from, formula.to,
                          data.from, data.to = data.from)
 {
-    fromMatrix <- model.matrix(formula.from, data.from)
-    colnames(fromMatrix) <- lapply(colnames(fromMatrix), function(name)
-                                   paste("from", name, sep="."))
+    # remove the intercept
+    fromMatrix <- model.matrix(formula.from, data.from)[,-1]
     fromCount <- nrow(fromMatrix)
+    fromVarCount <- ncol(fromMatrix)
 
     toMatrix <- model.matrix(formula.to, data.to)
-    colnames(toMatrix) <- lapply(colnames(toMatrix), function(name)
-                                 paste("to", name, sep="."))
     toCount <- nrow(toMatrix)
+    toVarCount <- ncol(toMatrix)
 
     from <- rep(seq_len(fromCount), toCount)
     to <- rep(seq_len(toCount), each = fromCount)
 
-    modelMatrix <- cbind(fromMatrix[from,], toMatrix[to,])
-    rownames(modelMatrix) <-paste(from, to, sep="->")
+    fromMatrix <- fromMatrix[from, rep(seq_len(fromVarCount), toVarCount)]
+    toMatrix <- toMatrix[to, rep(seq_len(toVarCount), each = fromVarCount)]    
+    modelMatrix <- fromMatrix * toMatrix
+    rownames(modelMatrix) <- paste(from, to, sep="->")
+    colnames(modelMatrix) <- paste(colnames(fromMatrix),colnames(toMatrix), sep="->")
+
     varCount <- ncol(modelMatrix)
 
     modelArray <- array(modelMatrix, c(fromCount, toCount, varCount))
@@ -134,6 +137,8 @@ Model.static <- function(formula.from, formula.to,
     model <- list(fromCount = fromCount,
                   toCount = toCount,
                   varCount = varCount,
+                  fromVarCount = fromVarCount,
+                  toVarCount = toVarCount,
                   matrix = modelMatrix,
                   array = modelArray)
     model
@@ -189,7 +194,6 @@ Model.dynamic <- function(interval.send, interval.recv, message.set,
                   toCount = toCount,
                   varCount = varCount,
                   matrix = modelMatrix,
-                  array = modelArray,
                   sendInterval = sendInterval,
                   recvInterval = recvInterval)
     model
@@ -245,16 +249,17 @@ NegLogLik <- function(coef, static, dynamic, msg,
     if (derivatives) {
         probByFromMatrix <- crossprod(fromMatrix, probMatrix)
         probByFrom <- as.vector(probByFromMatrix)
+        wt <- prob / msg$countWithDupes
 
         meanByFrom.dynamic <- array(NA, c(fromCount, toCount, dynamic$varCount))
-        dynamicArray.wt <- (prob / msg$countWithDupes) * dynamic$array
         for (j in seq_len(toCount)) {
-            meanByFrom.dynamic[,j,] <- crossprod(fromMatrix,
-                                                 dynamicArray.wt[,j,])
+            m.set <- seq.int(1 + (j - 1) * (msg$countWithDupes),
+                             length.out = msg$countWithDupes)
+            x <- wt[m.set] * dynamic$matrix[m.set,]
+            meanByFrom.dynamic[,j,] <- crossprod(fromMatrix, x)
         }
         meanByFrom.dynamic <- matrix(meanByFrom.dynamic,
                                      ncol = dynamic$varCount)
-        rm(dynamicArray.wt) # free up space
 
         stats.static <- cov.wt(static$matrix,
                                 wt = probByFrom,
@@ -265,11 +270,15 @@ NegLogLik <- function(coef, static, dynamic, msg,
         mean.dynamic <- colSums(meanByFrom.dynamic)
         grad <- suff - c(mean.static, mean.dynamic)
 
-        stats.dynamic <- cov.wt(dynamic$matrix,
-                                wt = prob,
-                                method = "ML")
-        mean.dynamic <- stats.dynamic$center
-        cov.dynamic <- stats.dynamic$cov
+        wt.sqrt <- sqrt(wt)
+        cov.dynamic <- matrix(0, dynamic$varCount, dynamic$varCount)
+        for (j in seq_len(toCount)) {
+            m.set <- seq.int(1 + (j - 1) * (msg$countWithDupes),
+                             length.out = msg$countWithDupes)
+            x <- (wt.sqrt[m.set]
+                  * sweep(dynamic$matrix[m.set,], 2, mean.dynamic))
+            cov.dynamic <- cov.dynamic + crossprod(x)
+        }
 
         # \sum_{ij} p_{ij} s_{ij} d_{ij}^T
         # = \sum_j \sum_f \sum_{i : from(i) = f} p_{ij} s_{fj} d_{ij}^T
@@ -297,7 +306,7 @@ NegLogLik <- function(coef, static, dynamic, msg,
 
 
 GetStep <- function(coef, static, dynamic, msg, self.loops = FALSE,
-                    penalty = rep(1e-8, length(coef)),
+                    penalty = rep(1e-5, length(coef)),
                     alpha = 0.25, beta = 0.5)
 {
     nll <- NegLogLik(coef, static, dynamic, msg, self.loops = self.loops)
@@ -322,7 +331,7 @@ GetStep <- function(coef, static, dynamic, msg, self.loops = FALSE,
     while (!done && t > 5e-2) {
         coef1 <- coef + t * search
         
-        if (max(abs(coef1)) < 30) {
+        if (max(abs(t * search)) < 2) {
             nll1 <- NegLogLik(coef1, static, dynamic, msg,
                               self.loops = self.loops,
                               derivatives = FALSE)$value
@@ -343,7 +352,7 @@ GetStep <- function(coef, static, dynamic, msg, self.loops = FALSE,
 
 Fit <- function(static, dynamic, msg, self.loops = FALSE,
                 start = NULL,
-                penalty = rep(1e-8, static$varCount + dynamic$varCount),
+                penalty = rep(1, static$varCount + dynamic$varCount),
                 control = glm.control(),
                 alpha = 0.25, beta = 0.5)
 {
@@ -373,7 +382,7 @@ Fit <- function(static, dynamic, msg, self.loops = FALSE,
                     " decrement:", step$dec, "\n")
             }
 
-            if (step$dec < epsilon)
+            if (step$dec < epsilon * (msg$countWithDupes))
                 converged <- TRUE
 
             coef0 <- coef1
@@ -387,9 +396,10 @@ Fit <- function(static, dynamic, msg, self.loops = FALSE,
 
 emp <- EmployeeSet()
 msg <- MessageSet()
-static <- Model.static(~ . - 1, ~ . - 1, emp)
-dynamic <- Model.dynamic(interval.send = 3600 * c(1, 2, 4, 8),
-                         interval.recv = 3600 * c(1, 2, 4, 8),
+formula <- ~ .
+static <- Model.static(formula, formula, emp)
+dynamic <- Model.dynamic(interval.send = 3600 * 2^seq(-6, 10),
+                         interval.recv = 3600 * 2^seq(-6, 10),
                          msg)
 self.loops <- FALSE
 
@@ -397,8 +407,5 @@ coef.static <- rnorm(static$varCount)
 coef.dynamic <- rnorm(dynamic$varCount)
 coef <- c(coef.static, coef.dynamic)
 
-#step <- GetStep(coef, static, dynamic, msg, self.loops)
-#step1 <- GetStep(step$coef, static, dynamic, msg, self.loops)
-#step2 <- GetStep(step1$coef, static, dynamic, msg, self.loops)
 
 fit <- Fit(static, dynamic, msg, self.loops)
