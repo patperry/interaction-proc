@@ -113,7 +113,7 @@ GetActorVars <- function(gen = kGender,
     vars
 }
 
-GetProbTable <- function(coefMatrix)
+GetProbTable <- function(coefMatrix, weight = FALSE)
 {
     gender <- rep(kGender, kSeniorityCount * kDepartmentCount)
     seniority <- rep(rep(kSeniority, each = kGenderCount), kDepartmentCount)
@@ -136,11 +136,15 @@ GetProbTable <- function(coefMatrix)
     }
     
     wt <- exp(logwt)
-    wt <- wt %*% diag(kEmployeeCount)
+    for (i in seq_len(nrow(wt))) {
+        n <- kEmployeeCount
+        n[i] <- n[i] - 1 # adjustment for self-loops
+        wt[i,] <- wt[i,] * n
+    }
     
     prob <- wt / apply(wt, 1, sum)
-                       
-    prob
+    
+    if (weight) wt else prob                   
 }
 
 GetGenderTable <- function(coefMatrix)
