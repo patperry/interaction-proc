@@ -113,7 +113,7 @@ GetActorVars <- function(gen = kGender,
     vars
 }
 
-GetProbTable <- function(coefMatrix, invFisher)
+PrintProbTable <- function(coefMatrix, invFisher)
 {
     gender <- rep(kGender, kSeniorityCount * kDepartmentCount)
     seniority <- rep(rep(kSeniority, each = kGenderCount), kDepartmentCount)
@@ -210,27 +210,41 @@ GetProbTable <- function(coefMatrix, invFisher)
     logratioAvgProb.fm <- log(ratioAvgProb.fm)
     logratioAvgProbCov.fm <- (diag(1/ratioAvgProb.fm)
                               %*% ratioAvgProbCov.fm
-                              %*% (1/ratioAvgProb.fm))
+                              %*% diag(1/ratioAvgProb.fm))
     
-    browser()
+    cat("avg prob:\n")
+    print(avgProb.fm)
+    cat("\n(SE):\n")
+    print(matrix(sqrt(diag(avgProbCov.fm)), 2, 2))
+    cat("\nlog(ratio(avgProb)):\n")
+    est <- as.numeric(logratioAvgProb.fm)
+    print(est)
+    cat("\n(SE):\n")
+    se <- as.numeric(sqrt(diag(logratioAvgProbCov.fm)))
+    print(se)
+    ci <- rbind(est + qnorm(.025) * se,
+                est - qnorm(.025) * se)
+    rownames(ci) <- c("lower", "upper")
+    colnames(ci) <- c("female", "male")
+
+    cat("\n95% CI:\n")
+    print(ci)
 }
 
-GetGenderTable <- function(coefMatrix)
-{
-    gender <- rep(kGender, kSeniorityCount * kDepartmentCount)
+cat("\nemployees")
+cat("\n---------\n")
 
-    probTable <- GetProbTable(coefMatrix)
-    
-    genderTable <- matrix(NA, kGenderCount, kGenderCount)
-    for (j in seq_len(kGenderCount)) {
-        for (i in seq_len(kGenderCount)) {
-            genderTable[i,j] <-
-                (rowSums(probTable[gender == gender[i], gender == gender[j]])
-                 %*% (kEmployeeCount[gender == gender[i]]
-                      / sum(kEmployeeCount[gender == gender[i]])))
-        }
-    }
-    genderTable
-    dimnames(genderTable) <- list(kGender, kGender)
-    genderTable
-}
+f <- sum(kEmployeeCount[kGender == "Female"])
+m <- sum(kEmployeeCount[kGender == "Male"])
+cat("Female: ", f, "\n")
+cat("Male: ", m, "\n")
+cat("Ratio: ", f/m, "\n")
+cat("log(Ratio): ", log(f/m), "\n")
+
+cat("\nstatic")
+cat("\n------\n");
+PrintProbTable(coefMatrix0, invFisher0)
+
+cat("\n\ndynamic")
+cat(  "\n-------\n");
+PrintProbTable(coefMatrix1, invFisher1)
