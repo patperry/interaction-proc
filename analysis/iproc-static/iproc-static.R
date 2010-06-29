@@ -113,7 +113,7 @@ GetActorVars <- function(gen = kGender,
     vars
 }
 
-GetProbTable <- function(coefMatrix, weight = FALSE)
+GetProbTable <- function(coefMatrix, invFisher)
 {
     gender <- rep(kGender, kSeniorityCount * kDepartmentCount)
     seniority <- rep(rep(kSeniority, each = kGenderCount), kDepartmentCount)
@@ -127,24 +127,92 @@ GetProbTable <- function(coefMatrix, weight = FALSE)
     
     logwt <- matrix(NA, nrow(coefMatrix), ncol(coefMatrix))
     dimnames(logwt) <- varnames2
+    
+    # get relative individual-level log-intensity
+    R <- matrix(NA, nrow(coefMatrix), ncol(coefMatrix))
     for (j in seq_len(ncol(coefMatrix))) {
-        to <- GetActorVars(gender[j], seniority[j], department[j])
-        for (i in seq_len(nrow(coefMatrix))) {
-            from <- GetActorVars(gender[i], seniority[i], department[i])
-            logwt[i,j] <- t(from) %*% coefMatrix %*% to
-        }
+        R[,j] <- GetActorVars(gender[j], seniority[j], department[j])
     }
+    S <- R
+    R[,1] <- 0 # no receiver intercept
+    etaMatrix.indiv <- S %*% coefMatrix %*% t(R)
+    etaCov.indiv <- kronecker(R, S) %*% invFisher %*% t(kronecker(R, S))
     
-    wt <- exp(logwt)
-    for (i in seq_len(nrow(wt))) {
-        n <- kEmployeeCount
-        n[i] <- n[i] - 1 # adjustment for self-loops
-        wt[i,] <- wt[i,] * n
-    }
+    # get group-level log-intensity (adjust for self-loops)
+    etaMatrix.gp <- (etaMatrix.indiv
+                     + log(matrix(kEmployeeCount, byrow = TRUE,
+                                  nrow(coefMatrix), ncol(coefMatrix))
+                           - diag(1, nrow(coefMatrix))))
+    etaCov.gp <- etaCov.indiv
     
-    prob <- wt / apply(wt, 1, sum)
+    # get (relative) group-level intensity
+    lambdaMatrix.gp.logscale <- apply(etaMatrix.gp, 1, max)
+    lambdaMatrix.gp <- exp(etaMatrix.gp - lambdaMatrix.gp.logscale)
+    lambda.gp <- as.vector(lambdaMatrix.gp)
+    lambdaCov.gp <- diag(lambda.gp) %*% etaCov.gp %*% diag(lambda.gp)
     
-    if (weight) wt else prob                   
+    # get (relative) gender-level intensities
+    female <- gender == "Female"
+    male <- !female
+    fm <- cbind(female, male)
+    lambdaMatrix.fm <- lambdaMatrix.gp %*% fm
+    lambda.fm <- as.vector(lambdaMatrix.fm)
+    lambdaCov.fm <- (kronecker(t(fm), diag(1, nrow(lambdaMatrix.gp)))
+                     %*% lambdaCov.gp
+                     %*% t(kronecker(t(fm), diag(1, nrow(lambdaMatrix.gp)))))
+
+    # get gender-level probabilities
+    probMatrix.fm <- lambdaMatrix.fm / rowSums(lambdaMatrix.fm)
+    grad <- (rbind(cbind(diag( probMatrix.fm[,2]), diag(-probMatrix.fm[,1])),
+                   cbind(diag(-probMatrix.fm[,2]), diag( probMatrix.fm[,1])))
+             / rowSums(lambdaMatrix.fm))
+    probCov.fm <- grad %*% lambdaCov.fm %*% t(grad)
+
+    # get (relative) gender-level log(intensities)
+    etaMatrix.fm <- log(lambdaMatrix.fm)
+    etaCov.fm <- diag(1/lambda.fm) %*% lambdaCov.fm %*% diag(1/lambda.fm)
+    
+    # get gender-level log(odds)
+    logodds.fm <- etaMatrix.fm[,1] - etaMatrix.fm[,2]
+    grad <- kronecker(cbind(1,-1), diag(1, length(logodds.fm)))
+    logoddsCov.fm <- grad %*% etaCov.fm %*% t(grad)
+    
+    # get gender-level odds
+    odds.fm <- exp(logodds.fm)
+    oddsCov.fm <- diag(odds.fm) %*% logoddsCov.fm %*% diag(odds.fm)
+    
+    # get average gender-level log(odds)
+    wt <- kEmployeeCount
+    grad <- rbind(wt * female / sum(wt[female]),
+                  wt * male / sum(wt[male]))
+    avgLogodds.fm <- grad %*% logodds.fm
+    avgLogoddsCov.fm <- grad %*% logoddsCov.fm %*% t(grad)
+
+    # get averarge gender-level odds (Note: these values seem too high)
+    grad <- rbind(wt * female / sum(wt[female]),
+                  wt * male / sum(wt[male]))
+    avgOdds.fm <- grad %*% odds.fm
+    avgOddsCov.fm <- grad %*% oddsCov.fm %*% t(grad)
+    
+    # get average gender-level probabilities
+    grad <- rbind(wt * female / sum(wt[female]),
+                  wt * male / sum(wt[male]))
+    avgProb.fm <- grad %*% probMatrix.fm
+    grad <- kronecker(diag(2), grad)
+    avgProbCov.fm <- grad %*% probCov.fm %*% t(grad)
+    
+    # get ratio of average gender-level probabilities 
+    ratioAvgProb.fm <- avgProb.fm[,1] / avgProb.fm[,2]
+    grad <- cbind(diag(1, 2), diag(-ratioAvgProb.fm)) / avgProb.fm[,2]
+    ratioAvgProbCov.fm <- grad %*% avgProbCov.fm %*% t(grad)
+
+    # get log(ratio of average gender-level probabilities)
+    logratioAvgProb.fm <- log(ratioAvgProb.fm)
+    logratioAvgProbCov.fm <- (diag(1/ratioAvgProb.fm)
+                              %*% ratioAvgProbCov.fm
+                              %*% (1/ratioAvgProb.fm))
+    
+    browser()
 }
 
 GetGenderTable <- function(coefMatrix)
