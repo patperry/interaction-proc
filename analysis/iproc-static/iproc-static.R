@@ -134,9 +134,11 @@ PrintProbTable <- function(coefMatrix, invFisher)
         R[,j] <- GetActorVars(gender[j], seniority[j], department[j])
     }
     S <- R
-    R[,1] <- 0 # no receiver intercept
-    etaMatrix.indiv <- S %*% coefMatrix %*% t(R)
-    etaCov.indiv <- kronecker(R, S) %*% invFisher %*% t(kronecker(R, S))
+    S[,1] <- 0 # no sender intercept
+    etaMatrix.indiv <- t(S) %*% coefMatrix %*% R
+    etaCov.indiv <- (kronecker(t(R), t(S))
+                     %*% invFisher
+                     %*% t(kronecker(t(R), t(S))))
     
     # get group-level log-intensity (adjust for self-loops)
     etaMatrix.gp <- (etaMatrix.indiv
@@ -227,6 +229,34 @@ PrintProbTable <- function(coefMatrix, invFisher)
     rownames(ci) <- c("lower", "upper")
     colnames(ci) <- c("female", "male")
 
+    cat("\n95% CI:\n")
+    print(ci)
+    
+    cat("\navg(log(odds)):\n")
+    est <- as.numeric(avgLogodds.fm)
+    print(est)
+    cat("\n(SE):\n")
+    se <- as.numeric(sqrt(diag(avgLogoddsCov.fm)))
+    print(se)
+    ci <- rbind(est + qnorm(.025) * se,
+                est - qnorm(.025) * se)
+    rownames(ci) <- c("lower", "upper")
+    colnames(ci) <- c("female", "male")
+
+    cat("\n95% CI:\n")
+    print(ci)
+    
+    est <- as.numeric(log(avgOdds.fm))
+    se <- as.numeric(sqrt(diag(avgOddsCov.fm)) / avgOdds.fm)
+    ci <- rbind(est + qnorm(.025) * se,
+                est - qnorm(.025) * se)
+    rownames(ci) <- c("lower", "upper")
+    colnames(ci) <- c("female", "male")
+
+    cat("\nlog(avg(odds)):\n")
+    print(est)
+    cat("\n(SE):\n")
+    print(se)
     cat("\n95% CI:\n")
     print(ci)
 }
