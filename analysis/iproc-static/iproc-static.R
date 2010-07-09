@@ -134,7 +134,7 @@ PrintProbTable <- function(coefMatrix, invFisher)
         R[,j] <- GetActorVars(gender[j], seniority[j], department[j])
     }
     S <- R
-    S[,1] <- 0 # no sender intercept
+    R[1,] <- 0 # no receiver intercept
     etaMatrix.indiv <- t(S) %*% coefMatrix %*% R
     etaCov.indiv <- (kronecker(t(R), t(S))
                      %*% invFisher
