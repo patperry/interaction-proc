@@ -100,7 +100,7 @@ MessageSet <- function() {
 
 
 msg <- MessageSet()
-hist(msg$len, breaks = seq_len(max(msg$len) + 1) - 0.5, prob = TRUE)
+#hist(msg$len, breaks = seq_len(max(msg$len) + 1) - 0.5, prob = TRUE)
 
 
 
@@ -150,16 +150,19 @@ Model.dynamic <- function(interval.send, interval.recv, message.set,
 {
     sendInterval <- interval.send
     recvInterval <- interval.recv
+    
     msg <- message.set
     fromCount <- toCount <- actor.count
 
     sendCount <- length(sendInterval)
     recvCount <- length(recvInterval)
+    sendIx <- 1
+    recvIx <- 2
     varCount <- sendCount + recvCount
     messageCount <- msg$count
     messageCountWithDupes <- msg$countWithDupes
     
-    modelArray <- array(NA, c(messageCountWithDupes, toCount, varCount))
+    modelArray <- array(NA, c(messageCountWithDupes, toCount, 2))
 
     tlast <- matrix(-Inf, fromCount, toCount)
     for (m in seq_len(messageCount)) {
@@ -171,29 +174,30 @@ Model.dynamic <- function(interval.send, interval.recv, message.set,
             time <- msg$time[offset]
             m.set <- seq.int(offset, length.out = len)
             
-            for (s in seq_len(sendCount)) {
-                modelArray[m.set,,s] <-
-                    (time - tlast[from,] < sendInterval[s])
-            }
-            
-            for (r in seq_len(recvCount)) {
-                modelArray[m.set,,sendCount + r] <-
-                    (time - tlast[,from] < recvInterval[r])
+            delta.send <- time - tlast[from,]
+            delta.recv <- time - tlast[,from]
+            for (j in seq_len(toCount)) {
+                modelArray[m.set,j,sendIx] <-
+                    (which.max(delta.send[j] < sendInterval))
+                modelArray[m.set,j,recvIx] <-
+                    (which.max(delta.recv[j] < recvInterval))
             }
 
             to.set <- msg$to[m.set]
             tlast[from,to.set] <- time
         }
     }
-     
+
     modelMatrix <- matrix(as.vector(modelArray),
                           messageCountWithDupes * toCount,
-                          varCount)
+                          2)
                           
     model <- list(fromCount = fromCount,
                   toCount = toCount,
                   varCount = varCount,
                   matrix = modelMatrix,
+                  sendIx = sendIx,
+                  recvIx = recvIx,
                   sendInterval = sendInterval,
                   recvInterval = recvInterval)
     model
@@ -219,14 +223,21 @@ NegLogLik <- function(coef, static, dynamic, msg,
     sendCount <- as.vector(sendCountMatrix)
 
     suff.static <- colSums((sendCount / sum(sendCount)) * static$matrix)
-    suff.dynamic <- colMeans(dynamic$matrix)
+    suff.dynamic <- (c(tabulate(dynamic$matrix[,dynamic$sendIx],
+                                length(dynamic$sendInterval)),
+                       tabulate(dynamic$matrix[,dynamic$recvIx],
+                                length(dynamic$recvInterval)))
+                     / nrow(dynamic$matrix))
     suff <- c(suff.static, suff.dynamic)
-
 
     etaMatrix.static <- matrix(static$matrix %*% coef.static,
                                fromCount, toCount)
-    etaMatrix.dynamic <- matrix(dynamic$matrix %*% coef.dynamic,
-                                ncol = toCount)
+    etaMatrix.dynamic <-
+        matrix(coef.dynamic[dynamic$matrix[,dynamic$sendIx]]
+               + coef.dynamic[dynamic$matrix[,dynamic$recvIx]
+                              + length(dynamic$sendInterval)],
+               ncol = toCount)
+                        
     etaMatrix <- etaMatrix.static[msg$from,] + etaMatrix.dynamic
 
     if (!self.loops) {
@@ -255,8 +266,18 @@ NegLogLik <- function(coef, static, dynamic, msg,
         for (j in seq_len(toCount)) {
             m.set <- seq.int(1 + (j - 1) * (msg$countWithDupes),
                              length.out = msg$countWithDupes)
-            x <- wt[m.set] * dynamic$matrix[m.set,]
-            meanByFrom.dynamic[,j,] <- crossprod(fromMatrix, x)
+            for (s in seq_len(length(dynamic$sendInterval))) {
+                m.set.s <- dynamic$matrix[m.set,dynamic$sendIx] == s
+                x <- wt[m.set] * m.set.s
+                meanByFrom.dynamic[,j,s] <- crossprod(fromMatrix, x)
+            }
+
+            for (r in seq_len(length(dynamic$recvInterval))) {
+                m.set.r <- dynamic$matrix[m.set,dynamic$recvIx] == r
+                x <- wt[m.set] * m.set.r
+                meanByFrom.dynamic[,j,r + length(dynamic$sendInterval)] <-
+                    crossprod(fromMatrix, x)
+            }
         }
         meanByFrom.dynamic <- matrix(meanByFrom.dynamic,
                                      ncol = dynamic$varCount)
@@ -270,15 +291,35 @@ NegLogLik <- function(coef, static, dynamic, msg,
         mean.dynamic <- colSums(meanByFrom.dynamic)
         grad <- suff - c(mean.static, mean.dynamic)
 
-        wt.sqrt <- sqrt(wt)
-        cov.dynamic <- matrix(0, dynamic$varCount, dynamic$varCount)
-        for (j in seq_len(toCount)) {
-            m.set <- seq.int(1 + (j - 1) * (msg$countWithDupes),
-                             length.out = msg$countWithDupes)
-            x <- (wt.sqrt[m.set]
-                  * sweep(dynamic$matrix[m.set,], 2, mean.dynamic))
-            cov.dynamic <- cov.dynamic + crossprod(x)
+        cov.dynamic <- (diag(mean.dynamic, length(mean.dynamic))
+                        - mean.dynamic %*% t(mean.dynamic))
+        cov.dynamic.cross <- matrix(0,
+                                    length(dynamic$sendInterval),
+                                    length(dynamic$recvInterval))
+        for (r in seq_len(length(dynamic$recvInterval))) {
+            m.set.r <- dynamic$matrix[,dynamic$recvIx] == r
+            for (s in seq_len(length(dynamic$sendInterval))) {
+                m.set.s <- dynamic$matrix[,dynamic$sendIx] == s
+                m.set.rs <- m.set.r & m.set.s
+                cov.dynamic.cross[s,r] <- sum(wt[m.set.rs])
+            }
         }
+        ss <- seq_len(length(dynamic$sendInterval))
+        rs <- (length(dynamic$sendInterval)
+               + seq_len(length(dynamic$recvInterval)))
+        cov.dynamic[ss,rs] <- cov.dynamic[ss,rs] + cov.dynamic.cross
+        cov.dynamic[rs,ss] <- t(cov.dynamic[ss,rs])
+        
+
+        
+        #browser()
+        #for (j in seq_len(toCount)) {
+        #    m.set <- seq.int(1 + (j - 1) * (msg$countWithDupes),
+        #                     length.out = msg$countWithDupes)
+        #    x <- (wt.sqrt[m.set]
+        #          * sweep(dynamic$matrix[m.set,], 2, mean.dynamic))
+        #    cov.dynamic <- cov.dynamic + crossprod(x)
+        #}
 
         # \sum_{ij} p_{ij} s_{ij} d_{ij}^T
         # = \sum_j \sum_f \sum_{i : from(i) = f} p_{ij} s_{fj} d_{ij}^T
@@ -398,9 +439,10 @@ emp <- EmployeeSet()
 msg <- MessageSet()
 formula <- ~ .
 static <- Model.static(formula, formula, emp)
-dynamic <- Model.dynamic(interval.send = 3600 * 2^seq(-5, 5),
-                         interval.recv = 3600 * 2^seq(-5, 5),
-                         msg)
+dynamic <- Model.dynamic(
+    interval.send = c(3600 * 2^c(seq(-7, 2), seq(4,13)), Inf),
+    interval.recv = c(3600 * 2^seq(-7, 11), Inf),
+    msg)
 self.loops <- FALSE
 
 coef.static <- rnorm(static$varCount)
