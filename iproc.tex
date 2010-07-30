@@ -217,137 +217,156 @@ multiple recipients.
 
 \section{A Point Process Model}
 
-Here we introduce a more flexible modeling framework that includes
-time-inhomogeneity and dependence.  Initially, we focus on the
-single-recipient setting.
-
-For each pair of actors, $(i,j) \in \mathcal{I} \times \mathcal{J}$, and each
-time interval, $(s,t] \subset \reals_+$, let $N_{ij}\big((s,t]\big)$ denote the
-number of $i \to j$ interactions in $(s,t]$.
-
-
-This can be interpreted as a counting measure on
-$\reals_+$, with $N_{ij}\big((s,t]\big)$ defined as the
-number of $i \to j$ interactions in the time interval $(s,t]$, so that
-$N_{ij}\big((s,t]\big) = N_{ij}(t) - N_{ij}(s)$. The collection
-$N = \{ N_{ij} \}_{(i,j) \in \mathcal{I} \times \mathcal{J}}$ encodes the
-interaction process.
-
-Suppose that actors are under observation for time in the interval $[0,T]$. As
-before, $\mathcal{I}$ is the set of senders and $\mathcal{J}$ is the set of
-receivers. The data comes to us in the form of a list of interactions: $(T_1,
-I_1, J_1), \ldots, (T_n, I_n, j_n),$ with tuple $(t_l, i_l, j_l)$ denoting
-that interaction $i_l \to j_l$ happened at time $t_l$.  Encode the data as
-$N$, a Borel measure on $[0,T] \times \mathcal{I} \times \mathcal{J}$ given
-by
+Every interaction process can be encoded by a set of counting measures.
+For this section, assume that each message has a single recipient.
+Let $i$ be a sender in $\mathcal{I}$, let $j$ be a receiver in $\mathcal{J}$,
+and let $t$ be a positive time in $\reals_+$.  Denote the number of
+messages sent from $i$ to $j$ in $(0,t]$ by $N_t(i,j)$, the
+number of messages sent from $i$ to any receiver in $(0,t]$ by $N_t(i)$, and
+the number of messages sent from any sender to any receiver in $(0,t]$ by
+$N_t$.  Thus,
 \[
-    N_{ij}(t) = \sum_{l=1}^{n} \delta_{(t_l, i_l, j_l)}.
+    N_t(i) = \sum_{j\in \mathcal{J}} N_t(i,j),
+    \qquad
+    N_t = \sum_{i\in \mathcal{I}} N_t(i).
 \]
-Here and elsewhere, $\delta$ is the Dirac delta measure.  Encode the messages
-sent from sender $i$ as 
-$\xi_i(t, j) = \sum_{l=1}^N 1\{t_l \leq t, i_l = i, j_l = j\}$ and set
-$\xi_i(t) = \sum_{j \in \mathcal{J}} \xi_i(t,j)$.  Note that
-$\xi(t, i, j) = \xi_i(t, j)$.
+Each of these, when considered as a function of $t$, is right-continuous with
+left-hand limits.
 
-We introduce a probability space $(\Omega, \mathcal{F}, \mathbb{P})$ on which
-$\xi$ is defined, together with a filtration of $\mathcal{F},$ given as
-$\big\{ \mathcal{F}_t : t \in [0, T] \big\}$. Take $\xi$ to be adapted to $\{
-\mathcal{F}_t \}$, that is, take $\xi(t, i, j)$ to be
-$\mathcal{F}_t$-measurable. For simplicity, assume that no more than one
-interaction can take place at a given time (the times $t_1, \ldots, t_N$ are
-unique \textit{a.s.}). Under certain conditions, there exists a collection of
-non-negative predictable random processes $\lambda = \{ \lambda_{i,j} : (i,j)
-\in \mathcal{I} \times \mathcal{J} \}$, such that for fixed $i$ and $j$,
-\[
-    \xi(t, i, j) - \int_{0}^{t} \lambda_{i,j}(t) \, dt
-\]
-is a martingale.  The collection of processes, $\lambda$, is termed the
-\emph{stochastic intensity} of $\xi$; in our setting it contains all of the
-``signal'' information in $\xi$.
+% Suppose $(t_1, i_1, j_1), \ldots, (t_M, i_M, j_M)$ is the sequence of observed
+% messages, where tuple $(t,i,j)$ encodes that at time $t$, sender $i$ sent a
+% message to receiver $j$.  Define the following message sets:
+% \begin{align*}
+%     \mathcal{M}_t(i,j)
+%         &= \{ m : t_m \leq t, \, i_m = i, \, j_m = j \}, \\
+%     \mathcal{M}_t(i)
+%         &= \cup_{j \in \mathcal{J}} \mathcal{M}_t(i,j), \\
+%     \mathcal{M}_t
+%         &= \cup_{i \in \mathcal{I}} \mathcal{M}_t(i).
+% \end{align*}
+% It follows that
+% \begin{align*}
+%     N_t(i,j) &= |\mathcal{M}_t(i,j)|, \\
+%     N_t(i) &= |\mathcal{M}_t(i)|, \\
+%     N_t &= |\mathcal{M}_t|.
+% \end{align*}
 
+% The reverse procedure works as well: given $N_\cdot(\cdot, \cdot)$, there
+% is a sequence of messages and a set function $\mathcal{M}_\cdot(\cdot,\cdot)$
+% such that $\mathcal{M}_s(i,j) \subseteq \mathcal{M}_t(i,j)$ for $s \leq t$,
+% consistent with the equation $N_t(i,j) = |\mathcal{M}_t(i,j)|$.  If the
+% times are all distinct then this construction is unique; otherwise it is
+% unique up to time-fixing permutations of message indices.
 
-\clearpage
+To model the interaction process, we take the message events to be random.
+Formally, suppose that the interaction process is defined on a
+probability space $(\Omega, \mathcal{F}, \mathbb{P})$.  Let
+$\big\{ \mathcal{F}_t : t \geq 0 \big\}$ be a filtration of $\mathcal{F}$
+such that $N_t(i,j)$ is $\mathcal{F}_t$-measurable when
+$(t,i,j) \in \reals_+ \times \mathcal{I} \times \mathcal{J}$.  Further,
+assume that $N_0 = 0$, that $N_t < \infty$ a.s. for all $t$, and that 
+$N_\cdot$ is piecewise constant with jumps of size $1$.  Thus, the message
+arrival times are all distinct.
 
-
-Suppose $[0,T]$ is the observation
-interval.  We will need a probability space
- together with a filtration of
-$\mathcal{F}$, given by
-
-
-Suppose we observe interactions  We
-can represent these interactions by a marked point process indexed by time,
-with marks in $\mathcal{I} \times \mathcal{J}$. Alternatively, we can consider
-$I$ different point processes, each corresponding the the interactions sent by
-a particular individual $i \in \mathcal{I}$, with marks in $\mathcal{J}$. For
-sender $i \in \mathcal{I}$ we let $\xi_i$ be the point process of interactions
-sent by $i$. Formally, $\xi_i$ is an integer-valued Borel measure on $[0,T]
-\times \mathcal{J}$. If $(t_{1,i}, i, j_{1,i}), \ldots, (t_{N_i, i}, i,
-j_{N_i,i})$ are the interactions sent by $i$, then
-\[
-    \xi_i = \sum_{l=1}^{N_i} \delta_{(t_{l,i}, j_{l,i})},
-\]
-where $\delta$ is the Dirac delta.  Similarly, we let $\xi$ be the point
-process of all interactions:
-\[
-    \xi = \sum_{l=1}^{N} \delta_{(t_l, i_l, j_l)},
-\]
-so that
-\[
-    \xi(t, i, j) = \xi_i(t, j).
-\]
-
-Our model is that the times of the interactions sent by $i$ come from an inhomogeneous Poisson process with intensity $\lambda_i(\cdot)$.  Thus,
-for $A \subset [0,T]$, the number of interactions sent by $i$ for time
-in $A$ is a Poisson random variable with mean $\int_A \lambda_i(t) \, dt$.
-Note that this random variable is equivalent to
+The process $N(i,j)$ is a local submartingale and thus has a 
+nondecreasing predictable compensator, $\Lambda(i,j)$.  Predictability
+means roughly that $\Lambda_t(i,j)$ is known just before time $t$.  The
+compensator satisfies $\Lambda_0(i,j) = 0$ and is such that
 \(
-    \xi_i(A \times \mathcal{J}).
+    N(i,j) - \Lambda(i,j)
 \)
-The Poisson process assumption also implies that if $B$ is another subset 
-of $[0,T]$ with $A \cap B = \emptyset$, then
-\(
-    \xi_i(A \times \mathcal{J})
-\)
-and
-\(
-    \xi_i(B \times \mathcal{J})
-\)
-are independent.
-
-We take $\mathcal{F}_t$ to be the sigma algebra generated by the
-random variables $\xi(A, i, j)$ for $A \subset [0,t]$ an open set.
-
-We next describe the distribution of the marks (receivers). We suppose that
-conditionally on the existence of an interaction sent by $i$ at time $t$, the
-receiver, $j$ is chosen from a multinomial distribution on $\mathcal{J}$ with
-probabilities $\pi_{j | i}(t)$. Formally, we will require that $\pi_{j |
-i}(t)$ be predictable (measurable with respect to $\mathcal{F}_{t^-}$).
-
-Suppose at time $t$ we have covariates for each pair of sender $i$ and
-receiver $j$, denoted $x_{i,j}(t) \in \reals^K$. For example $x_{i,j}(t)$ can
-have a covariate indicating if $i$ and $j$ share the same gender. Also,
-$x_{i,j}(t)$ can have a covariate indicating if an interaction $i \to j$ has
-occurred in the week preceding time $t$. The first case is an example of a
-static covariate (one that does not change with time), and the second case is
-an example of a dynamic covariate. Our only restriction on $x_{i,j}(\cdot)$ is
-that it be predictable.
-
-Introduce receiver effects $\beta_1, \ldots, \beta_J$.  Effect $\beta_j$ is
-a measure of the ``popularity'' of receiver $j$.  Also, let $\theta \in \reals^K$ be a fixed vector of coefficients.  We choose the probabilities so that $\log \pi_{j|i}(t)$ is proportional to $\beta_j + \langle x_{ij}(t), \theta \rangle$.  Since $\sum_{j=1}^{J} \pi_{j|i}(t) = 1$, we must have
+is a local martingale.  Assume $\Lambda(i,j)$ is absolutely continuous,
+so that there exists a predictable stochastic intensity process $\lambda(i,j)$
+such that
 \[
-    \log \pi_{j|i}(t)
-    = \alpha_i(t) + \beta_j + \langle x_{ij}(t), \theta \rangle
+    \Lambda_t = \int_0^t \lambda_s(i,j) \, ds.
 \]
-where
+The intuition is
 \[
-    \alpha_i(t)
-    = -\log\Big[
-        \sum_{j=1}^J \exp\{\beta_j +  \langle x_{ij}(t), \theta \rangle\}
-    \Big].
+    \lambda_t(i,j) \, dt
+        =
+        \mathbb{P}\{
+            \text{$i$ sends $j$ a message in $[t,t+dt)$}
+        \}.
 \]
-We could have included the receiver effects in $x_{i,j}(t)$, but it is more
-natural to treat them separately.
+See Martinussen and Scheike for more details~\cite{martinussen2006dynamic}.
+
+Suppose sender $i$ only sends messages to a subset of the receivers.  Denote
+this subset by $\mathcal{J}(i)$.  For sender $i$, receiver $j$, and positive
+time $t$, let $x_t(i,j)$ be a predictable vector of covariates in $\reals^p$.
+Let $\beta$ be an unknown parameter vector in $\reals^p$ and let
+$\lambda_t(i)$ be the baseline intensity for sender $i$, deterministic but
+unknown.  We assume $\lambda_t(i,j)$ has the form
+\begin{equation}
+    \lambda_t(i,j)
+        = 
+        \begin{cases}
+            \lambda_t(i)
+            \cdot
+            \exp\{ \langle x_t(i,j), \, \beta \rangle \}
+                &\text{when $j \in \mathcal{J}(i)$,} \\
+            0
+                &\text{otherwise.}
+        \end{cases}
+\end{equation}
+This is a version of the Cox proportional hazards
+model~\cite{cox1972regression}.
+
+The likelihood of the interaction process is a function of the unknown
+parameter vector $\beta$ and the sender-specific baseline
+intensities $\lambda(1), \ldots, \lambda(I)$.  After observing the process
+up to time $t$, the likelihood is
+\begin{multline*}
+    L_t\big(\beta, \lambda(1), \ldots, \lambda(I)\big) \\
+        =
+        \exp\bigg\{
+            \sum_{i \in \mathcal{I}}
+            \sum_{j \in \mathcal{J}}
+            \int_0^t
+                \log \lambda_s(i,j) \, dN_s(i,j)
+            -
+            \int_0^t
+                \lambda_s(i,j) \, ds
+        \bigg\}.
+\end{multline*}
+This factors into two terms, one which depends on all of the parameters,
+and one which depends on $\beta$ alone.  We estimate $\beta$ by maximizing
+the latter term, the partial likelihood, denoted $\mathit{PL}_t(\beta)$.
+Define
+\begin{gather*}
+    w_{\beta,t}(i,j) = \exp\{ \langle x_t(i,j), \, \beta \rangle \},
+    \qquad
+    W_{\beta,t}(i) = \sum_{j \in \mathcal{J}(i)} w_{\beta,t}(i,j), \\
+    \tilde \lambda_{\beta,t}(i)
+        = \lambda_t(i) \cdot W_{\beta,t}(i).
+\end{gather*}
+The factorization is
+\begin{align*}
+    \begin{split}
+    L_t\big(\beta, \lambda(1), \ldots&, \lambda(I)\big) \\
+        &=
+        \exp\bigg\{
+            \sum_{i \in \mathcal{I}}
+            \int_0^t
+                \log \tilde \lambda_{\beta,s}(i) \, dN_s(i,j)
+            -
+            \int_0^t
+                \tilde \lambda_{\beta,s}(i) \, ds
+        \bigg\}
+        \cdot
+        \mathit{PL}_t(\beta),
+    \end{split} \\
+    \mathit{PL}_t(\beta)
+        &=
+        \exp\bigg\{
+            \sum_{i \in \mathcal{I}}
+            \sum_{j \in \mathcal{J}}
+            \int_0^t
+                \log \frac{w_{\beta,s}(i,j)}
+                          {W_{\beta,s}(i)}
+                \, dN_s(i,j)
+        \bigg\}.
+\end{align*}
 
 \clearpage
 

@@ -9,6 +9,26 @@
 \end{bmisc}
 \endbibitem
 
+\bibitem{cox1972regression}
+\begin{barticle}[author]
+\bauthor{\bsnm{Cox},~\bfnm{D.~R.}\binits{D.~R.}}
+(\byear{1972}).
+\btitle{{Regression models and life-tables (with discussion)}}.
+\bjournal{J. R. Statist. Soc. B}
+\bpages{187-220}.
+\end{barticle}
+\endbibitem
+
+\bibitem{martinussen2006dynamic}
+\begin{bbook}[author]
+\bauthor{\bsnm{Martinussen},~\bfnm{T.}\binits{T.}} \AND
+  \bauthor{\bsnm{Scheike},~\bfnm{T.~H.}\binits{T.~H.}}
+(\byear{2006}).
+\btitle{{Dynamic Regression Models for Survival Data}}.
+\bpublisher{Springer}.
+\end{bbook}
+\endbibitem
+
 \bibitem{mcpherson2001birds}
 \begin{barticle}[author]
 \bauthor{\bsnm{McPherson},~\bfnm{M.}\binits{M.}},
