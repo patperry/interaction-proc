@@ -368,6 +368,317 @@ The factorization is
         \bigg\}.
 \end{align*}
 
+Suppose $(t_1, i_1, j_1), \ldots, (t_M, i_M, j_M)$ is the sequence of observed
+messages, where tuple $(t,i,j)$ indicates that at time $t$, sender $i$ sent a
+message to receiver $j$.  Define the following message sets:
+\begin{align*}
+  \mathcal{M}_t(i,j)
+    &= \{ m : t_m \leq t, \, i_m = i, \, j_m = j \}, \\
+  \mathcal{M}_t(i)
+    &= \cup_{j \in \mathcal{J}} \mathcal{M}_t(i,j), \\
+  \mathcal{M}_t
+    &= \cup_{i \in \mathcal{I}} \mathcal{M}_t(i).
+\end{align*}
+The partial likelihood factors a a product of terms, one for each sender:
+\begin{align*}
+    \mathit{PL}_t(\beta)
+        &=
+        \,\,
+        \prod_{i \in \mathcal{I}}
+            \,\,
+            \mathit{PL}_t(\beta, i), \\
+    \mathit{PL}_t(\beta, i)
+        &=
+        \!\!\!\!
+        \prod_{m \in \mathcal{M}_t(i)}
+            \!\!\!
+            \frac{w_{\beta, t_m} (i, j_m)}
+                 {W_{\beta, t_m}}.
+\end{align*}
+This factorization allows us to compute $\log \mathit{PL}_t(\beta)$ and
+its derivatives by computing the sender-specific terms in parallel and
+then adding them together.
+
+The sender-specific log-partial likelihood and its derivatives are
+\begin{align*}
+    \log \mathit{PL}_t(\beta, i)
+        &=
+        \!\!\!\!
+        \sum_{m \in \mathcal{M}_t(i)}
+            \!\!\!        
+            \langle x_{t_m}\!(i, j_m), \, \beta \rangle
+            \,
+            -
+            \,
+            \log W_{\beta, t_m}\!(i), \\
+    \nabla [ \log \mathit{PL}_t(\beta, i) ]
+        &=
+        \!\!\!\!        
+        \sum_{m \in \mathcal{M}_t(i)}
+            \!\!\!
+            x_{t_m}\!(i,j_m)
+            \,
+            -
+            \,
+            \frac{1}{W_{t_m}\!(i)}
+                \sum_{j \in \mathcal{J}(i)}
+                    w_{t_m}\!(i,j) \,
+                    x_{t_m}\!(i,j), \\
+    \begin{split}
+    \nabla^2 [ \log \mathit{PL}_t(\beta, i) ]
+        &=
+        -
+        \!\!\!\!
+        \sum_{m \in \mathcal{M}_t(i)}
+            \!\!
+            \bigg\{
+            \frac{1}{W_{t_m}\!(i)}
+            \sum_{j \in \mathcal{J}(i)}
+                w_{t_m}\!(i,j) \,
+                \big[
+                    x_{t_m}\!(i,j)
+                \big]^{\otimes 2} \\
+        &\qquad\qquad\qquad-
+            \Big[
+                \frac{1}{W_{t_m}\!(i)}
+                \sum_{j \in \mathcal{J}(i)}
+                    w_{t_m}\!(i,j) \,
+                    x_{t_m}\!(i,j)
+            \Big]^{\otimes 2}
+            \bigg\},
+    \end{split}
+\end{align*}
+where $a^{\otimes 2} = a a^\trans$.  When $x_t(i,j)$ is constant over time,
+there are sufficient statistics for $\beta$ and these formulas reduce.
+Otherwise, computing $\log \mathit{PL}_t(\beta,i)$ and its derivatives
+requires iterating over all messages, potentially taking time
+$\Oh(|\mathcal{M}_t(i)| \cdot |\mathcal{J}(i)| \cdot p^2)$.  
+The serial computation time for computing the full partial likelihood
+and its derivatives is $\Oh(M \cdot J \cdot p^2)$.
+For the Enron data, $M \approx 20,\!000$, $J \approx 150$,
+and $p \approx 200$.  This is relatively small by modern standards.  Often
+$M$ on the order of $10^9$ and $J$ on the order of $10^6$.  Computations
+taking time $\Oh(M \cdot J)$ are prohibitive for large datasets.
+
+Taking advantage of sparsity, the serial computation time reduces to
+$\Oh(M \cdot p^2 + I \cdot J)$.  Decompose $x$ into its static
+(non time-varying) and dynamic parts:
+\[
+    x_t(i,j)
+        = x_0(i,j) + d_t(i,j).
+\]
+Typically, the dynamic part, $d_t(i,j)$, is sparse, with at most $\bar p$
+nonzero components.  Moreover $d_t(i,j)$ is zero for most $(i,j)$ pairs
+--- often $d_t(i,j)$ is zero unless $i$ and $j$ have exchanged
+messages in the past.  Let
+\[
+    \mathcal{\bar J}(i)
+        =
+        \{
+            j \in \mathcal{J}(i) : d_t(i,j) \neq 0 
+            \,\,
+            \text{for some $t$}
+        \}.
+\]
+Assume $|\mathcal{\bar J}(i)| \ll |\mathcal{J}(i)|$ and that 
+computing $d_t(i,j)$ takes amortized time $\Oh(\bar p)$ for each
+$(t,i,j)$ triple.
+
+Notice
+\begin{align*}
+    w_{\beta,t}(i,j)
+        &=
+            w_{\beta,0}(i,j)
+            \cdot
+            \exp\{ \langle d_t(i,j), \beta \rangle \}, \\
+    W_{\beta,t}(i)
+        &=
+            W_{\beta,0}(i)
+            +
+            \sum_{j \in \mathcal{\bar J}(i)}
+                w_{\beta,t}(i,j) - w_{\beta,0}(i,j)
+\end{align*}
+It takes time $\Oh(|\mathcal{J}(i)| \cdot p)$ to compute the values of
+$W_{\beta,0}(i)$ and $w_{\beta,0}(i,j)$ for any $i$ and all
+$j$ in $\mathcal{J}(i)$; once these values are known, computing the values
+of $W_{\beta,t}(i)$ and $w_{\beta,t}(i,j)$ takes time
+\(
+    \Oh(|\mathcal{\bar J}(i)| \cdot \bar p).
+\)
+Since
+\[
+    \sum_{m\in \mathcal{M}_t(i)}
+        x_{t_m}\!(i,j_m)
+        =
+            \sum_{j \in \mathcal{J}(i)}
+                \mathcal{M}_t(i,j) \, x_0(i,j)
+            \,\,\,
+            +
+            \sum_{m \in \mathcal{M}_t(i)}
+                d_{t_m}\!(i,j),
+\]
+%computing sum on the left hand side takes time
+%\(
+%    \Oh(|\mathcal{M}_t(i)| \cdot \bar p + |\mathcal{J}(i)| \cdot p);
+%\)
+computing $\log \mathit{PL}_t(\beta, i)$ takes time
+\(
+    \Oh(
+        |\mathcal{M}_t(i)| \cdot |\mathcal{\bar J}(i)| \cdot \bar p
+        +
+        |\mathcal{J}(i)| \cdot p
+    ).
+\)
+
+The second term in the gradient is
+\begin{multline*}
+    \sum_{m \in \mathcal{M}_t(i)}
+        \frac{1}{W_{\beta,t_m}\!(i)}
+        \sum_{j \in \mathcal{J}(i)}
+            w_{\beta,t_m}\!(i,j)
+            \,
+            x_{t_m}\!(i,j) \\
+    =
+    \sum_{j \in \mathcal{J}(i)}
+    \bigg[
+        \sum_{m \in \mathcal{M}_t(i)}
+            \frac{w_{\beta,t_m}\!(i,j)}{W_{\beta,t_m}\!(i)}
+    \bigg]
+    \cdot
+    x_0(i,j) \\
+    +
+    \sum_{m \in \mathcal{M}_t(i)}
+        \frac{1}{W_{\beta, t_m}\!(i)}
+        \sum_{j \in \mathcal{\bar J}(i)}
+            w_{\beta,t_m}\!(i,j)
+            \,
+            d_{t_m}\!(i,j).
+\end{multline*}
+Also,
+\[
+    \sum_{m \in \mathcal{M}_t(i)}
+        \frac{w_{\beta,t_m}\!(i,j)}{W_{\beta,t_m}\!(i)}
+    =
+        w_{\beta,0}(i,j)
+        \cdot
+        \sum_{m \in \mathcal{M}_t(i)}
+            \frac{
+                \exp\{\langle d_{t_m}\!(i,j), \, \beta \rangle \}
+            }{
+                W_{\beta,t_m}\!(i)
+            };
+\]
+the latter term is constant when $j \notin \mathcal{\bar J}(i)$.
+Organizing the computations as suggested by these formula,
+the additional overhead for computing the gradient of
+$\log \mathit{PL}_t(\beta,i)$ is
+\(
+    \Oh(
+        |\mathcal{M}_t(i)| \cdot |\mathcal{\bar J}(i)| \cdot \bar p
+        +
+        |\mathcal{J}(i)| \cdot p
+    )
+\).
+This is the same computational complexity as for computing
+$\log \mathit{PL}_t(\beta,i)$.
+
+To compute the Hessian, write
+\begin{multline*}
+    \big[ x_t(i,j) \big]^{\otimes 2}
+    =
+    \big[ x_0(i,j) \big]^{\otimes 2}
+    +
+    \big[ d_t(i,j) \big]^{\otimes 2} \\
+    + 
+    \big[
+        x_0(i,j) \otimes d_t(i,j)
+    \big]
+    +
+    \big[
+        x_0(i,j) \otimes d_t(i,j)
+    \big]^\trans
+\end{multline*}
+Once we have the gradient of $\log \mathit{PL}_t(\beta,i)$,
+the additional term needed to compute the Hessian is
+\[
+    \sum_{m \in \mathcal{M}_t(i)}
+        \frac{1}{W_{\beta,t_m}\!(i)}
+        \sum_{j \in \mathcal{J}(i)}
+            w_{\beta,t_m}\!(i,j) \,
+            \big[
+                x_{t_m}\!(i,j)
+            \big]^{\otimes 2}.
+\]
+The part involving
+$\big[ x_0(i,j) \big]^{\otimes 2} + \big[ d_t(i,j) \big]^{\otimes 2}$
+can be gotten similarly to the term from the gradient in time
+\(
+    \Oh(
+        |\mathcal{M}_t(i)| \cdot |\mathcal{\bar J}(i)| \cdot \bar p^2
+        +
+        |\mathcal{J}(i)| \cdot p^2
+    ).
+\)
+The cross term factors as
+\begin{multline*}
+    \sum_{m \in \mathcal{M}_t(i)}
+        \frac{1}{W_{\beta,t_m}\!(i)}
+        \sum_{j \in \mathcal{J}(i)}
+            w_{\beta,t_m}\!(i,j) \,
+            \big[
+                x_{0}(i,j)
+                \otimes
+                d_{t_m}\!(i,j)
+            \big] \\
+        =
+        \sum_{j \in \mathcal{J}(i)}
+            x_{0}(i,j)
+            \otimes
+            \bigg[
+                \sum_{m \in \mathcal{M}_t(i)}
+                    \frac{w_{\beta,t_m}\!(i,j)}{W_{\beta,t_m}\!(i)}
+                    \,
+                    d_{t_m}\!(i,j)
+            \bigg].
+\end{multline*}
+Thus, the total computation time for computing $\log \mathit{PL}_t(\beta,i)$,
+its gradient, and its hessian, is
+\(
+    \Oh(
+        |\mathcal{M}_t(i)| \cdot |\mathcal{\bar J}(i)| \cdot \bar p^2
+        +
+        |\mathcal{J}(i)| \cdot p^2
+    ).
+\)
+
+Suppose $|\mathcal{J}(i)| \leq J$, $|\mathcal{\bar J}(i)| \leq \bar J$,
+and $|\mathcal{M}_t(i)| \leq M$.  By organizing the computations as describe
+above, we can compute $\log \mathit{PL}_t(\beta)$ and its first
+two derivatives in serial time
+\(
+    \Oh(
+        | \mathcal{I} |
+        \cdot
+        M
+        \cdot
+        \bar J
+        \cdot
+        \bar p^2
+        +
+        |\mathcal{I}| \cdot J \cdot p^2
+    ).
+\)
+With $\Oh(|\mathcal{I}|)$ processors, we can compute these quantities in time
+\(
+    \Oh(
+        M \cdot \bar J \cdot \bar p^2
+        +
+        J \cdot p^2
+        +
+        |\mathcal{I}| \cdot p^2
+    ).
+\)
+
 \clearpage
 
 \section{Multiple recipients}
