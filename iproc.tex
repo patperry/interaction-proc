@@ -215,7 +215,7 @@ multiple recipients.
 \subsection{Multiple Recipients}
 
 
-\section{A Point Process Model}
+\section{A Point Process Model}\label{S:point-process-model}
 
 Every interaction process can be encoded by a set of counting measures.
 For this section, assume that each message has a single recipient.
@@ -652,7 +652,7 @@ its gradient, and its hessian, is
 \)
 
 Suppose $|\mathcal{J}(i)| \leq J$, $|\mathcal{\bar J}(i)| \leq \bar J$,
-and $|\mathcal{M}_t(i)| \leq M$.  By organizing the computations as describe
+and $|\mathcal{M}_t(i)| \leq M$.  By organizing the computations as described
 above, we can compute $\log \mathit{PL}_t(\beta)$ and its first
 two derivatives in serial time
 \(
@@ -682,6 +682,106 @@ With $\Oh(|\mathcal{I}|)$ processors, we can compute these quantities in time
 \clearpage
 
 \section{Multiple recipients}
+
+To this point, we have assumed that each message has a single recipient.
+Often, messages have multiple recipients.  In the Enron dataset,
+approximately 30\% of messages have more than one recipient, with
+a few messages having more than fifty recipients.  One way of dealing
+with multiple recipients is, for example, treating a message with three
+recipients as three separate single-recipient messages.  A less ad-hoc
+approach is to explicitly take multiple recipients into account at the
+modeling stage.
+
+Introduce $\lambda_t(i ; R)$ as the baseline intensity at time $t$ for
+messages sent by sender $i$ with $R$ recipients.  Let $J$ be any
+subset of $\mathcal{J}(i)$ and model the rate at which $i$ sends messages to
+recipient set $J$ as
+\begin{equation}\label{E:intensity-multiple}
+    \lambda_t(i,J)
+        =
+        \lambda_t(i ; |J|)
+        \cdot
+        \exp\Big\{
+            \sum_{j \in J}
+                \langle x_t(i,j), \, \beta \rangle
+        \Big\}.
+\end{equation}
+We have chosen this form for ease of interpretability.  At time
+$t$, changing receiver $j$'s covariates from $x_t(i,j)$ to
+$x'_t(i,j)$ results in scaling the the rate at
+which $i$ sends him messages by
+\(
+    \exp\{ \langle x'_t(i,j) - x_t(i,j), \beta \rangle \};
+\)
+importantly, this does not depend on $\lambda_t(i; R)$.
+
+The partial likelihood is nearly the same as in the single-recipient
+setting from Section~\ref{S:point-process-model}.
+Let $(t_1, i_1, J_1), \ldots, (t_M, i_M, J_M)$ be the sequence of
+observed messages, with tuple $(t, i, J)$ indicating that at time $t$
+sender $i$ sent a message with recipient set
+$J$, a subset of $\mathcal{J}$.  Define sets
+\begin{align*}
+    \mathcal{M}_t(i, J)
+        &= \{ m : t_m \leq t, i_m = i, J_m = J \}, \\
+    \mathcal{M}_t(i)
+        &= \cup_{J \subseteq \mathcal{J}} \mathcal{M}_t(i, J), \\
+    \mathcal{M}_t
+        &= \cup_{i \in \mathcal{I}} \mathcal{M}_t(i).
+\end{align*}
+When $i \in \mathcal{I}$, $j \in \mathcal{J}(i)$, and $R \geq 1$, define
+\[
+    w_{\beta,t}(i,j) = \exp\{ \langle x_t(i,j), \, \beta \rangle \},
+    \quad
+    W_{\beta,t}(i; R)
+    =
+    \!\!
+    \sum_{\substack{J \subseteq \mathcal{J}(i)\\ |J| = R}}
+        \prod_{j \in J}
+            w_{\beta,t}(i,j).
+\]
+The log partial likelihood at time $t$ is
+\begin{equation}\label{E:log-pl-multiple}
+    \log \mathit{PL}_t(\beta)
+        =
+        \sum_{i \in \mathcal{I}}
+        \log \mathit{PL}_t(\beta, i),
+\end{equation}
+where the sender-specific part is
+\begin{equation}\label{E:sender-log-pl-multiple}
+    \log \mathit{PL}_t(\beta, i)
+        =
+        \sum_{m \in \mathcal{M}_t(i)}
+        \Big[
+            \sum_{j \in J_m}
+                \langle x_{t_m}\!(i, j), \, \beta \rangle
+        \Big]
+            -
+            \log W_{\beta,t_m} (i ; |J_m|).
+\end{equation}
+Consistency and asymptotic normality of the maximum partial likelihood
+estimator follow from standard arguments.  We state this result and
+sketch its proof below.
+
+\begin{theorem}
+    Assume messages are sent from senders in $\mathcal{I}$ to
+    subsets of the receiver set $\mathcal{J}$ with sender-receiver
+    intensity as in~\eqref{E:intensity-multiple}.  Let $\hat \beta_t$
+    be the maximizer of $\log \mathit{PL}_t(\cdot)$, defined
+    in~\eqref{E:log-pl-multiple}.  Suppose the following conditions
+    hold:
+    \begin{enumerate}[(a)]
+        \item $|\mathcal{M}_t| \to \infty$ as $t\to \infty$.
+    \end{enumerate}
+    As $t \to \infty$
+    \begin{enumerate}[(i)]
+        \item $\hat \beta_t \toP \beta$
+        \item
+    \end{enumerate}
+\end{theorem}
+
+
+\clearpage
 
 Let $J_n$ be an increasing sequence of positive integers, set
 $\mathcal{J}_n = \{ 1, \ldots, J_n \}$, and
