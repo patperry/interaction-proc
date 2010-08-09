@@ -763,23 +763,129 @@ Consistency and asymptotic normality of the maximum partial likelihood
 estimator follow from standard arguments.  We state this result and
 sketch its proof below.
 
-\begin{theorem}
-    Assume messages are sent from senders in $\mathcal{I}$ to
-    subsets of the receiver set $\mathcal{J}$ with sender-receiver
-    intensity as in~\eqref{E:intensity-multiple}.  Let $\hat \beta_t$
-    be the maximizer of $\log \mathit{PL}_t(\cdot)$, defined
-    in~\eqref{E:log-pl-multiple}.  Suppose the following conditions
-    hold:
-    \begin{enumerate}[(a)]
-        \item $|\mathcal{M}_t| \to \infty$ as $t\to \infty$.
-    \end{enumerate}
-    As $t \to \infty$
-    \begin{enumerate}[(i)]
-        \item $\hat \beta_t \toP \beta$
-        \item
-    \end{enumerate}
-\end{theorem}
+\subsection{The general case}
+Let $\mathcal{I}$ be a set of senders and $\mathcal{J}$ be a set of
+receivers.  
+For each sender $i$, let $\bar \lambda_t(i)$ be a non-negative predictable
+process called the baseline intensity of sender $i$; let
+$\mathcal{J}_t(i)$ be a predictable subset of $\mathcal{J}$ called the 
+recipient set of sender $i$.
+For each sender-receiver pair $(i,j)$, let $x_t(i,j)$ in $\reals^p$ be a
+locally bounded predictable vector of covariates.  Let $\beta$ in $\reals^p$
+be an unknown vector of coefficients.
 
+Suppose $N$ is a multivariate counting process on 
+$\reals_+ \times \mathcal{I} \times \mathcal{J}$,
+with stochastic intensity
+\begin{equation}
+    \lambda_t(i,j)
+        =
+        \bar \lambda_t(i)
+        \exp\{ \beta^\trans x_t(i, j) \}
+        \cdot
+        1{\{j \in \mathcal{J}_t(i)\}}.
+\end{equation}
+The integer $N_t(i,j)$ is the number of events marked $(i,j)$ having
+times in  $[0,t]$, with $N_0(i,j)$ assumed to be zero.
+Interpret event $(t, i, j)$ as a message sent from $i$ to $j$ at
+time $t$.  Define
+\(
+    N_t(i) = \sum_{j \in \mathcal{J}} N_t(i,j)
+\)
+and
+\(
+    N_t = \sum_{i \in \mathcal{I}} N_t(i).
+\)
+The process $N_t(i,j)$ has compensator
+\begin{equation}
+    \Lambda_t(i,j)
+        =
+            \int_0^t \lambda_s(i,j) \, ds;
+\end{equation}
+similarly, processes $N_t(i)$ and $N_t$ have compensators
+$\Lambda_t(i) = \sum_{j \in \mathcal{J}} \Lambda_t(i,j)$
+and $\Lambda_t = \sum_{i \in \mathcal{I}} \Lambda_t(i)$.
+  
+If $\{ (t_m, i_m, j_m) \}$ is the set of observed messages, then
+the log partial likelihood at time $t$, evaluated at $\beta$, is
+\begin{equation}
+    \log
+    \mathit{PL}_t(\beta)
+        =
+        \sum_{t_m \leq t}
+        \bigg\{
+            \beta^\trans x_{t_m}\!(i_m, j_m)
+            -
+            \log\big[
+                \!\!\!\!
+                \sum_{j \in \mathcal{J}_{t_m}\!(i_m)}
+                    \exp\{ \beta^\trans x_{t_m}\!(i_m, j)
+            \big]
+        \bigg\}.
+\end{equation}
+Define
+\begin{equation}
+    w_{t}(\beta, i,j)
+        =
+        \exp\{ \beta^\trans x_t(i,j) \}, \qquad
+    W_{t}(\beta, i)
+        =
+        \sum_{j \in \mathcal{J}_t(i)} w_{t}(\beta, i,j).
+\end{equation}
+Note the inner sum in $\log \mathit{PL}_t(\beta)$ is
+$W_{t_m}\!(\beta, i_m)$.  The function 
+$\log W_{t}(\cdot, i)$ has gradient $E_{t}(\cdot, i)$ and Hessian 
+$V_{t}(\cdot, i)$, given by
+\begin{gather}
+    E_{t}(\beta, i)
+        =
+        \frac{1}{W_{t}(\beta, i)}
+        \sum_{j \in \mathcal{J}_t(i)}
+            w_{t}(\beta, i,j) \, x_{t}(i,j), \\
+    V_{t}(\beta, i)
+        =
+        \frac{1}{W_{t}(\beta, i)}
+        \sum_{j \in \mathcal{J}_t(i)}
+            w_{t}(\beta, i,j) 
+            \Big[ x_{t}(i,j) - E_{t}(\beta, i)\Big]^{\otimes 2},
+\end{gather}
+where $a^{\otimes 2} = a \otimes a = a a^\trans$.
+The gradient and negative Hessian of $\log \mathit{PL}_t(\cdot)$ are
+\begin{gather}
+    U_t(\beta)
+        =
+        \nabla \big[ \log \mathit{PL}_t(\beta) \big]
+        =
+        \sum_{t_m \leq t}
+            x_{t_m}(i_m, j_m) - E_{t_m}(\beta, i_m), \\
+    I_t(\beta)
+        =
+        -\nabla^2 \big[ \log \mathit{PL}_t(\beta) \big]
+        =
+        \sum_{t_m \leq t}
+            V_{t_m}(\beta, i_m).
+\end{gather}
+We call $U_t(\beta)$ the unnormalized score function and $I_t(\beta)$
+the Fisher information matrix.  Let $\hat \beta_t$ be the value that
+maximizes $\log \mathit{PL}_t(\cdot)$, called the maximum partial
+likelihood estimator (MPLE).  Set $\hat U_t = U_t(\hat \beta_t)$ and
+$\hat I_t = I_t(\hat \beta_t)$ to be the estimated score and Fisher
+information.
+
+Typically, one proves consistency of $\hat \beta_t$ by keeping $t$ fixed
+and letting $|\mathcal{I}|$ go to infinity
+\cite{andersen1993statistical,cook2007statistical,fleming1991counting,
+martinussen2006dynamic}.  This makes sense in the context of clinical trial
+data, where $\mathcal{I}$ corresponds to the set of patients.  In interaction
+data, $|\mathcal{I}|$ is either fixed, or $t$ and $|\mathcal{I}|$ increase
+simultaneously.  It is more natural to look at what happens as time increases.
+Increasing sender sets can be handled by assuming $|\mathcal{I}|$ is infinite
+and for most senders $\bar \lambda_t(i)$ is zero during the initial
+part of the observation period; increasing $|\mathcal{J}|$ can be handled
+similarly through $\mathcal{J}_t(i)$.
+
+Define the sequence of stopping times
+$\tau(n) = \inf \{ t : N_t \geq n \}$.
 
 \clearpage
 

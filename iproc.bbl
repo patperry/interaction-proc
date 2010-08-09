@@ -1,5 +1,17 @@
 \begin{thebibliography}{0}
 
+\bibitem{andersen1993statistical}
+\begin{bbook}[author]
+\bauthor{\bsnm{Andersen},~\bfnm{P.~K.}\binits{P.~K.}},
+  \bauthor{\bsnm{Borgan},~\bfnm{O.}\binits{O.}},
+  \bauthor{\bsnm{Gill},~\bfnm{R.D.}\binits{R.}} \AND
+  \bauthor{\bsnm{Keiding},~\bfnm{N.}\binits{N.}}
+(\byear{1993}).
+\btitle{{Statistical Models Based on Counting Processes}}.
+\bpublisher{Springer-Verlag}.
+\end{bbook}
+\endbibitem
+
 \bibitem{cohen2009enron}
 \begin{bmisc}[author]
 \bauthor{\bsnm{Cohen},~\bfnm{W.~W.}\binits{W.~W.}}
@@ -9,14 +21,35 @@
 \end{bmisc}
 \endbibitem
 
+\bibitem{cook2007statistical}
+\begin{bbook}[author]
+\bauthor{\bsnm{Cook},~\bfnm{R.~J.}\binits{R.~J.}} \AND
+  \bauthor{\bsnm{Lawless},~\bfnm{J.~F.}\binits{J.~F.}}
+(\byear{2007}).
+\btitle{{The Statistical Analysis of Recurrent Events}}.
+\bpublisher{Springer}.
+\end{bbook}
+\endbibitem
+
 \bibitem{cox1972regression}
 \begin{barticle}[author]
 \bauthor{\bsnm{Cox},~\bfnm{D.~R.}\binits{D.~R.}}
 (\byear{1972}).
 \btitle{{Regression models and life-tables (with discussion)}}.
 \bjournal{J. R. Statist. Soc. B}
+\bvolume{34}
 \bpages{187-220}.
 \end{barticle}
+\endbibitem
+
+\bibitem{fleming1991counting}
+\begin{bbook}[author]
+\bauthor{\bsnm{Fleming},~\bfnm{T.~R.}\binits{T.~R.}} \AND
+  \bauthor{\bsnm{Harrington},~\bfnm{D.~P.}\binits{D.~P.}}
+(\byear{1991}).
+\btitle{{Counting Processes and Survival Analysis}}.
+\bpublisher{John Wiley \& Sons}.
+\end{bbook}
 \endbibitem
 
 \bibitem{martinussen2006dynamic}
