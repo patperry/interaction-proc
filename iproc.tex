@@ -771,7 +771,7 @@ process called the baseline intensity of sender $i$; let
 $\mathcal{J}_t(i)$ be a predictable subset of $\mathcal{J}$ called the 
 recipient set of sender $i$.
 For each sender-receiver pair $(i,j)$, let $x_t(i,j)$ in $\reals^p$ be a
-locally bounded predictable vector of covariates.  Let $\beta$ in $\reals^p$
+predictable vector of covariates.  Let $\beta_0$ in $\reals^p$
 be an unknown vector of coefficients.
 
 Suppose $N$ is a multivariate counting process on 
@@ -781,7 +781,7 @@ with stochastic intensity
     \lambda_t(i,j)
         =
         \bar \lambda_t(i)
-        \exp\{ \beta^\trans x_t(i, j) \}
+        \exp\{ \beta_0^\trans x_t(i, j) \}
         \cdot
         1{\{j \in \mathcal{J}_t(i)\}}.
 \end{equation}
@@ -796,15 +796,7 @@ and
 \(
     N_t = \sum_{i \in \mathcal{I}} N_t(i).
 \)
-The process $N_t(i,j)$ has compensator
-\begin{equation}
-    \Lambda_t(i,j)
-        =
-            \int_0^t \lambda_s(i,j) \, ds;
-\end{equation}
-similarly, processes $N_t(i)$ and $N_t$ have compensators
-$\Lambda_t(i) = \sum_{j \in \mathcal{J}} \Lambda_t(i,j)$
-and $\Lambda_t = \sum_{i \in \mathcal{I}} \Lambda_t(i)$.
+
   
 If $\{ (t_m, i_m, j_m) \}$ is the set of observed messages, then
 the log partial likelihood at time $t$, evaluated at $\beta$, is
@@ -823,15 +815,17 @@ the log partial likelihood at time $t$, evaluated at $\beta$, is
             \big]
         \bigg\}.
 \end{equation}
-Define
-\begin{equation}
+Define weights
+\begin{gather}
     w_{t}(\beta, i,j)
         =
-        \exp\{ \beta^\trans x_t(i,j) \}, \qquad
+        \exp\{ \beta^\trans x_t(i,j) \}
+        \cdot
+        1\{ j \in \mathcal{J}_t(i)\}, \\
     W_{t}(\beta, i)
         =
-        \sum_{j \in \mathcal{J}_t(i)} w_{t}(\beta, i,j).
-\end{equation}
+        \sum_{j \in \mathcal{J}} w_{t}(\beta, i,j).
+\end{gather}
 Note the inner sum in $\log \mathit{PL}_t(\beta)$ is
 $W_{t_m}\!(\beta, i_m)$.  The function 
 $\log W_{t}(\cdot, i)$ has gradient $E_{t}(\cdot, i)$ and Hessian 
@@ -884,10 +878,282 @@ and for most senders $\bar \lambda_t(i)$ is zero during the initial
 part of the observation period; increasing $|\mathcal{J}|$ can be handled
 similarly through $\mathcal{J}_t(i)$.
 
-Define the sequence of stopping times
-$\tau(n) = \inf \{ t : N_t \geq n \}$.
+Let $\tau_n$ be an increasing sequence of stopping times and $\mathcal{B}$ be
+a neighborhood of $\beta_0$.  Assume the following conditions hold:
+\begin{enumerate}[(1)]
+    \item \textbf{The covariates are locally uniformly bounded.}  That is,
+    \[
+        \sup_{\substack{i \in \mathcal{I} \\ j \in \mathcal{J}}} x_t(i,j)
+        \,\,\text{is locally bounded.}
+    \]
+    \item \textbf{The stopping times are finite.}  For each $n$,
+    \[
+        \mathbb{P}\{\tau_n < \infty\} = 1.
+    \]
+    \item \textbf{The cumulative baseline intensity has at most linear growth.}
+    \[
+        \limsup_{n\to\infty}
+            \frac{1}{n} \sum_{i \in \mathcal{I}}
+            \int_0^{\tau(n)} \bar \lambda_s(i) \, ds < \infty.
+    \]
+    \item \textbf{The integrated covariance function is well-behaved.}
+    For $\beta \in \mathcal{B}$ and $\alpha \in [0,1]$, as $ n \to \infty$,
+    \[
+        \frac{1}{n}
+        \sum_{i \in \mathcal{I}}
+        \int_0^{\tau_{\lfloor \alpha n \rfloor}}
+            V_s(\beta,i)
+            \, W_s(\beta,i)
+            \, \bar \lambda(i)
+            \, ds
+        \toP
+        \Sigma_\alpha(\beta),
+    \]
+    where $\Sigma_\alpha(\cdot)$ is locally bounded and Lipschitz.
+    
+    \item \textbf{The covariates satisfy a Lindeberg condition.}
+    For any multivariate predictable process $\pi$ satisfying
+    $\pi_t(i, j) \geq 0$ and $\sum_{j \in \mathcal{J}} \pi_t(i, j) = 1$,
+    there exists a $\delta > 0$ such that 
+    \[
+        \frac{1}{\sqrt{n}}
+            \sup_{\substack{i \in \mathcal{I} \\ 0 \leq t \leq \tau_n}}
+            \| y_{t}(i) \|
+            \cdot
+            I_{\{
+                \sum_{j \in \mathcal{J}_s(i)} \beta_0^\trans  x_t(i,j)
+                \,>\, -\delta \, \| y_t(i) \|
+            \}}
+        \toP
+        0,
+    \]
+    where $y_t(i) = \sum_{j \in \mathcal{J}} \pi_t(i, j) \, x_t(i,j)$.
+\end{enumerate}
+
+The process $N_t(i,j)$ has compensator
+\begin{equation}
+    \Lambda_t(i,j)
+        =
+            \int_0^t \lambda_s(i,j) \, ds;
+\end{equation}
+similarly, processes $N_t(i)$ and $N_t$ have compensators
+$\Lambda_t(i) = \sum_{j \in \mathcal{J}} \Lambda_t(i,j)$
+and $\Lambda_t = \sum_{i \in \mathcal{I}} \Lambda_t(i)$.  Define local
+martintagles $M_t(i,j) = N_t(i,j) - \Lambda_t(i,j)$,
+$M_t(i) = N_t(i) - \Lambda_t(i)$, and 
+$M_t = N_t - \Lambda_t$.  Since $N_t(i,j)$ is a counting process,
+$\Lambda_t(i,j)$ is locally bounded 
+\cite[Thm.~IV.12]{meyer1976cours}
+and $M_t(i,j)$ is locally square-integrable
+\cite[Thm.~2.3.1]{fleming1991counting}.
+
+The score function evaluated at the true parameter vector has a simple
+representation in terms of these martingales.  Set
+$H_t(i,j) = x_t(i,j) - E_t(\beta_0,i)$.  Since $x$ is locally uniformly
+bounded, $H$ is as well.  Using the identity
+\(
+    \sum_{j \in \mathcal{J}}
+    \int_0^t
+        H_s(i,j) \,
+        d\Lambda_s(i,j)
+    =
+    0,
+\)
+the score can be written as
+\begin{align*}
+    U_t(\beta_0)
+        &=
+        \sum_{i \in \mathcal{I}}
+        \sum_{j \in \mathcal{J}}
+        \int_0^t
+            H_s(i,j) \, dN_s(i,j) \\
+        &=
+        \sum_{i \in \mathcal{I}}
+        \sum_{j \in \mathcal{J}}
+        \int_0^t
+            H_s(i,j) \, dM_s(i,j).
+\end{align*}
+Each term in the sum is locally square integrable, with predictable
+covariations
+\begin{align*}
+    \begin{split}
+        \bigg\langle
+            \int
+                H_s(i,j) \, dM_s(i,j)
+        &, \, \,
+            \int
+                H_s(i',j') \, dM_s(i',j')
+        \bigg\rangle_t \\
+        &=
+            \int_0^t
+                H_s(i,j) \otimes H_s(i',j') \,
+                d\big\langle M(i,j), M(i',j')\big\rangle_s
+    \end{split} \\
+        &=
+            \int_0^t
+                \big[ H_s(i,j) \big]^{\otimes 2} \,
+                d\Lambda_s(i,j)
+            \cdot
+            I_{\{ i = i', j = j' \}}
+\end{align*}
+\cite[Thm.~2.4.3]{fleming1991counting}.  There exists a sequence
+of stopping times localizing all $H(i,j)$ and $M(i,j)$ processes
+simultaneously, so $U(\beta_0)$ is locally square integrable
+with predictable variation
+\begin{align*}
+    \big\langle U(\beta_0) \big\rangle_t
+        &=
+            \sum_{i \in \mathcal{I}}
+            \sum_{j \in \mathcal{J}}
+            \int_0^t
+                \big[ H_s(i,j) \big]^{\otimes 2} \,
+                d\Lambda_s(i,j) \\
+        &=
+            \sum_{i \in \mathcal{I}}
+            \int_0^t
+                V_s(\beta_0, i) \,
+                d\Lambda_s(i). \\
+\intertext{Note}
+    I_t(\beta)
+        &=
+            \sum_{i \in \mathcal{I}}
+            \int_0^t
+                V_s(\beta, i) \,
+                dN_s(i).
+\end{align*}
+
+At this point, we rescale time to make the message arrivals uniform.  Define
+the sequence of stopping times $\tau_n = \sup\{ t : N_t < n \}$.  The idea
+is to change time from the original scale to a scale on which $\tau_n = n$.
+We will need the following lemmas.
+
+\begin{lemma}
+    Let $N$ be a any local submartingale with localizing sequence $\tau_n$
+    and compensator $A$.  If $T$ is a stopping time, then, $N_{t\wedge T}$ is
+    a local submartingale with localizing sequence $\tau_n$
+    and compensator $A_{t \wedge T}$.
+\end{lemma}
+\begin{proof}
+    The Doob-Meyer decomposition ensures
+    $N_{t \wedge \tau_n} - A_{t \wedge \tau_n}$ is a martingale.  Thus,
+    the Optional Stopping Theorem guarantees that the stopped processes
+    $N_{t \wedge T \wedge \tau_n}$ and
+    $N_{t \wedge T \wedge \tau_n} - A_{t \wedge T \wedge \tau_n}$ are
+    a submartingale and a martingale, respectively.  
+    A stopped predictable process is predictable
+    \cite[Prop. 2.4]{jacod1987limit}, so that $A_{t \wedge T \wedge \tau_n}$
+    must be the compensator of $N_{t \wedge T \wedge \tau_n}$.
+    Hence,
+    $N_{t \wedge T}$ is a local submartingale with
+    localizing sequence $\tau_n$ and compensator $A_{t \wedge T}$.
+\end{proof}
+
+\begin{lemma}\label{L:expect-stopped}
+    Let $N$ be a counting process with locally bounded compensator $A$, and
+    let $T$ be a stopping time.  If $N_{t \wedge T}$ is uniformly integrable,
+    then $\mathbb{E} N_T = \mathbb{E} A_T$.  Moreover,
+    $\mathbb{E} A_T < \infty$.
+\end{lemma}
+\begin{proof}
+    Set $M = N - A$.  Let $\tau_n$ be a sequence of stopping times
+    localizing $M$, with $A_{t \wedge \tau_n}$ bounded.    We claim
+    $M_{t \wedge T \wedge \tau_n}$ is uniformly integrable:
+    \begin{align*}
+        \lim_{K \to \infty} \sup_t \,
+            \mathbb{E}\Big[
+                &|M_{t \wedge T \wedge \tau_n}|
+                \cdot
+                I_{\{|M_{t \wedge T \wedge \tau_n}| > K\}}
+            \Big] \\
+        \begin{split}
+        &\leq
+            \lim_{K \to \infty} \sup_t
+            \mathbb{E}\Big[
+                2 \cdot |N_{t \wedge T \wedge \tau_n}|
+                \cdot
+                I_{\{|N_{t \wedge T \wedge \tau_n}| > K/2 \}} \\
+                &\qquad\qquad\qquad\quad+
+                2 \cdot |A_{t \wedge T \wedge \tau_n}|
+                \cdot
+                I_{\{|A_{t \wedge T \wedge \tau_n}| > K/2 \}}
+            \Big]
+        \end{split} \\
+        &= 0.
+    \end{align*}
+    The Optional Sampling Theorem gives that
+    \(
+        \mathbb{E}\big[ M_{T \wedge \tau_n} \big] = 0,
+    \)
+    equivalently
+    \(
+        \mathbb{E}\big[ N_{T \wedge \tau_n} \big]
+        =
+        \mathbb{E}\big[ A_{T \wedge \tau_n} \big].
+    \)
+    Two applications of the Monotone Convergence Theorem give
+    \(
+        \mathbb{E}\big[ N_{T} \big]
+        =
+        \lim_{n \to \infty}
+        \mathbb{E}\big[ N_{T \wedge \tau_n} \big]
+        =
+        \lim_{n \to \infty}        
+        \mathbb{E}\big[ A_{T \wedge \tau_n} \big]
+        =
+        \mathbb{E}\big[ A_{T} \big].
+    \)
+    Finiteness of $\mathbb{E} A_{T}$ follows from the
+    uniform integrability assumption on $N_{t \wedge T}$ since
+    \(
+        \mathbb{E} N_T
+            = \lim_{t \to \infty} \mathbb{E} N_{t \wedge T}
+            \leq \sup_t \mathbb{E} N_{t \wedge T}.
+    \)
+\end{proof}
+
+\begin{lemma}
+    Let $N$ be a counting process with locally bounded compensator $A$, and
+    let $T$ and $T'$ be stopping times with $T \leq T'$.  Let $M = N - A$
+    and let $\mathcal{F}_T$ be the $\sigma$-algebra of events prior to $T$.
+    If $N_{t \wedge T'}$ is uniformly integrable,
+    then $\mathbb{E} [ M_{T'} \mid \mathcal{F}_T ] = M_T$.
+\end{lemma}
+
+\begin{proof}
+    Let $\tau_n$ localize $M$ and be such that $A$ is bounded.
+    As in the proof of Lemma~\ref{L:expect-stopped}, the stopped process
+    $M_{t \wedge T' \wedge \tau_n}$ is uniformly integrable.
+    By the Optional Sampling Theorem,
+    \(
+        \mathbb{E} [ M_{T'^\wedge \tau_n} \mid \mathcal{F}_T ]
+            = M_{T \wedge \tau_n}.
+    \)
+    Since
+    \(
+        |M_{t \wedge T' \wedge \tau_n}|
+        \leq
+        |N_{T'}|
+        +
+        |A_{T'}|
+    \)
+    and $| M_{T \wedge \tau_n}| \leq |N_T| + |A_T|$,
+    two applications of the Dominated Convergence Theorem give
+    \(
+        \mathbb{E} [ M_{T'} \mid \mathcal{F}_T ]
+        =
+        \lim_{n \to \infty}
+        \mathbb{E} [ M_{T'^\wedge \tau_n} \mid \mathcal{F}_T ]
+        =
+        \lim_{n \to \infty}
+        M_{T \wedge \tau_n}
+        =
+        M_T.
+    \)
+\end{proof}
 
 \clearpage
+
+
 
 Let $J_n$ be an increasing sequence of positive integers, set
 $\mathcal{J}_n = \{ 1, \ldots, J_n \}$, and

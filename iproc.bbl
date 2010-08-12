@@ -52,6 +52,16 @@
 \end{bbook}
 \endbibitem
 
+\bibitem{jacod1987limit}
+\begin{bbook}[author]
+\bauthor{\bsnm{Jacod},~\bfnm{J.}\binits{J.}} \AND
+  \bauthor{\bsnm{Shiryayvev},~\bfnm{A.~N.}\binits{A.~N.}}
+(\byear{1987}).
+\btitle{{Limit Theorems for Stochastic Processes}}.
+\bpublisher{Springer-Verlag}.
+\end{bbook}
+\endbibitem
+
 \bibitem{martinussen2006dynamic}
 \begin{bbook}[author]
 \bauthor{\bsnm{Martinussen},~\bfnm{T.}\binits{T.}} \AND
@@ -73,6 +83,18 @@
 \bvolume{27}
 \bpages{415--444}.
 \end{barticle}
+\endbibitem
+
+\bibitem{meyer1976cours}
+\begin{binbook}[author]
+\bauthor{\bsnm{Meyer},~\bfnm{P.~A.}\binits{P.~A.}}
+(\byear{1976}).
+\btitle{{Un cours sur les int\'egrales stochastiques.}}
+\bseries{Lecture Notes in Mathematics}
+\bvolume{511}
+\bpages{245--400}.
+\bpublisher{Springer-Verlag}.
+\end{binbook}
 \endbibitem
 
 \bibitem{zhou2007strategies}
