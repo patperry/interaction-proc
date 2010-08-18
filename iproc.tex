@@ -997,7 +997,7 @@ covariations
             I_{\{ i = i', j = j' \}}
 \end{align*}
 \cite[Thm.~2.4.3]{fleming1991counting}.  There exists a sequence
-of stopping times localizing all $H(i,j)$ and $M(i,j)$ processes
+of stopping times localizing all $H(i,j)$ and $M(i,j)$
 simultaneously, so $U(\beta_0)$ is locally square integrable
 with predictable variation
 \begin{align*}
@@ -1023,9 +1023,169 @@ with predictable variation
 \end{align*}
 
 At this point, we rescale time to make the message arrivals uniform.  Define
-the sequence of stopping times $\tau_n = \sup\{ t : N_t < n \}$.  The idea
-is to change time from the original scale to a scale on which $\tau_n = n$.
-We will need the following lemmas.
+the sequence of stopping times $\tau_n = \sup\{ t : N_t < n \}$, and let
+$\mathcal{F}_{\tau_n}$ be the $\sigma$-algebra of events prior to $\tau_n$.
+The idea is to change time from the original scale to a scale on which
+$\tau_{n'} - \tau_n$ is proportional to $n' - n$.
+
+Since $N_{t \wedge \tau_n}$ is a bounded right-continuous nonnegative
+submartingale, the Doob-Meyer decomposition ensures
+$M_{t \wedge \tau_n}$ is a uniformly integrable martingale.  Thus, the
+Optional Sampling Theorem gives
+$\E[M_{\tau_{n}} | \mathcal{F}_{\tau_{n-1}} ] = M_{\tau_{n-1}}$.
+Similar properties hold for $M(i)$, $M(i,j)$, $\Lambda(i)$, and
+$\Lambda(i,j)$.
+
+Define the sequence of random time changes $t_n : [0,1] \to [0, \tau_n]$ by
+sending $\tfrac{k}{n}$ to $\tau_k$ and interpolating linearly otherwise:
+\[
+    t_n(\alpha)
+        =
+        \tau_{\lfloor \alpha n \rfloor}
+        +
+        (\alpha n - \lfloor \alpha n \rfloor)
+        (\tau_{\lfloor \alpha n \rfloor + 1}
+         -
+         \tau_{\lfloor \alpha n \rfloor}).
+\]
+We claim $M_{t_n(\alpha)}$ is a local square-integrable martingale.
+It inherits local square-integrability from $M_{t \wedge \tau_n}$.  For
+the martingale property, say $\alpha \leq \alpha'$.
+
+\clearpage
+
+Define the sequence of stopping times $\tau_n = \sup\{ t : N_t < n \}$.
+Rescale time with the message arrivals and normalize the score. 
+Specifically, when $n > 0$ and $\alpha \in [0,1]$, define
+\begin{equation}
+    U^{(n)}_{\alpha}(\beta_0)
+    = 
+    n^{-1/2} U_{\lfloor \alpha \tau_n \rfloor}(\beta_0)
+\end{equation}
+By the Optional Stopping Theorem, $U_{t \wedge \tau_n}(\beta_0)$ is a local
+square-integrable martingale, so $U^{(n)}_{\alpha}(\beta_0)$ is, as well.
+Its predictable variation is
+\begin{equation}
+     \langle U^{(n)}(\beta_0) \rangle_\alpha
+     =
+     \frac{1}{n}
+     \sum_{i \in \mathcal{I}}
+     \int_0^{\alpha \tau_n}
+        V_s(\beta_0, i)
+        \, d\Lambda_s(i).
+\end{equation}
+
+
+
+
+ Actually, the following Lemma shows
+that these quantities are all square-integrable.
+
+\begin{lemma}
+    If $N$ is an arbitrary bounded counting process with compensator
+    $\Lambda$, then $M = N - \Lambda$ is a square-integrable
+    martingale and $\Lambda$ is square-integrable.
+\end{lemma}
+\begin{proof}
+    The proof involves several results from Fleming and Harrington
+    \cite{fleming1991counting}. Since $N$ is a bounded counting process,
+    $\Lambda$ is locally bounded (Thm 2.3.2, p. 61) and
+    integrable (Thm 1.4.1, p. 37).  Thus, $M$ is locally square integrable
+    (Thm 2.3.1, p. 61).  Since $M$ is also right-continuous,
+    $\E M^2_t \leq \E \Lambda_t$, and hence $M$ is square-integrable.
+    Since $N$ is bouned and $\Lambda$ is integrable,
+    this inequality also gives
+    \(
+        \E \Lambda_t^2
+            \leq \E \Lambda_t + 2 \E N_t \Lambda_t - \E N_t^2
+            < \infty,
+    \)
+    so $\Lambda$ is square-integrable.
+\end{proof}
+
+\begin{lemma}
+    If
+    \(
+        \E\left[ \sup_{t,i,j} \| x_{t \wedge \tau_n} (i,j) \|_2^4 \right]
+        <
+        \infty,
+    \)
+    then $U_{t \wedge \tau_n}(\beta_0)$ and
+    \(
+        U_{t \wedge \tau_n}^2(\beta_0)
+        -
+        \langle U(\beta_0) \rangle_{t \wedge \tau_n}
+    \)
+    are uniformly integrable martingales.
+\end{lemma}
+
+
+The normalized stopped score
+\(
+    U^{(n)}_{t}(\beta_0)
+    = 
+    n^{-1/2} U_{t \wedge \tau_n}(\beta_0)
+\) has
+predictable variation
+\[
+     \langle U^{(n)}(\beta_0) \rangle_t
+     =
+     \frac{1}{n}
+     \sum_{i \in \mathcal{I}}
+     \int_0^{t \wedge \tau_n}
+        V_s(\beta_0, i)
+        \, d\Lambda_s(i).
+\]
+We have already shown that $U_t(\beta_0)$ is a local square-integrable
+martingale.  Under the fourth moment condition on $x$, the stopped score,
+$U_{t \wedge \tau_n}(\beta_0)$ is a square-integrable martingale.
+
+
+\clearpage
+
+The discrete-time process
+$\tilde M_n = M_{\tau_n}$ is a local martingale with respect to 
+filtration $\mathcal{\tilde F}_n = \mathcal{F}_{\tau_n}$ since
+the Optional Sampling Theorem gives
+$\mathbb{E}[M_{\tau_{n+1}} \mid \mathcal{F}_{\tau_n}] = M_{\tau_n}$.
+In particular, this gives that $\tilde \Lambda_n = \Lambda_{\tau_n}$ is
+a local $\mathcal{\tilde F}_n$-submartingale with compensator $n$.
+Define $\tilde M_n(i)$ and $\tilde M_n(i,j)$ similarly to $\tilde M_n$;
+these are also local $\mathcal{\tilde F}_n$-martingales.
+
+The score has an alternative representation in terms of the time-scaled
+processes:
+\[
+    \tilde U_n(\beta_0)
+        = U_{\tau_n}(\beta_0)
+        =
+        \sum_{i \in \mathcal{I}}
+        \sum_{j \in \mathcal{J}}
+        \sum_{m = 1}^{n}
+            \cdot
+            \int_{\tau_{m-1}}^{\tau_m}
+                H_{s}(i,j)
+                \, dM_{s}(i,j).
+\]
+Its predictable variation is
+\[
+    \langle \tilde U(\beta_0) \rangle_n
+        =
+        \sum_{i \in \mathcal{I}}
+        \sum_{m = 1}^{n}
+            \int_{\tau_{m-1}}^{\tau_m}
+                V_{s}(\beta_0, i)
+                \, d\Lambda_s(i,j)
+\]
+for some non-negative increasing $\mathcal{\tilde F}_m$-predictable
+process $\tilde \Lambda_{m}$.
+
+At this point, we rescale time to make the message arrivals uniform.  Define
+the sequence of stopping times $\tau_n = \sup\{ t : N_t < n \}$, and let
+$\mathcal{F}_{\tau_n}$ be the $\sigma$-algebra of events prior to $\tau_n$.
+The idea is to change time from the original scale to a scale on which
+$\tau_n = n$.
+We will need the following lemmas.  
 
 \begin{lemma}
     Let $N$ be a any local submartingale with localizing sequence $\tau_n$
