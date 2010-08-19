@@ -85,16 +85,14 @@
 \end{barticle}
 \endbibitem
 
-\bibitem{meyer1976cours}
-\begin{binbook}[author]
-\bauthor{\bsnm{Meyer},~\bfnm{P.~A.}\binits{P.~A.}}
-(\byear{1976}).
-\btitle{{Un cours sur les int\'egrales stochastiques.}}
-\bseries{Lecture Notes in Mathematics}
-\bvolume{511}
-\bpages{245--400}.
-\bpublisher{Springer-Verlag}.
-\end{binbook}
+\bibitem{rebolledo1980central}
+\begin{barticle}[author]
+\bauthor{\bsnm{Rebolledo},~\bfnm{R.}\binits{R.}}
+\btitle{{Central limit theorems for local martingales}}.
+\bjournal{Probabl. Theory Rel.}
+\bvolume{51}
+\bpages{269-286}.
+\end{barticle}
 \endbibitem
 
 \bibitem{zhou2007strategies}

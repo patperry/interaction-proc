@@ -881,10 +881,10 @@ similarly through $\mathcal{J}_t(i)$.
 Let $\tau_n$ be an increasing sequence of stopping times and $\mathcal{B}$ be
 a neighborhood of $\beta_0$.  Assume the following conditions hold:
 \begin{enumerate}[(1)]
-    \item \textbf{The covariates are locally uniformly bounded.}  That is,
+    \item \textbf{The covariates are uniformly bounded.}  That is,
     \[
         \sup_{\substack{i \in \mathcal{I} \\ j \in \mathcal{J}}} x_t(i,j)
-        \,\,\text{is locally bounded.}
+        \,\,\text{is bounded.}
     \]
     \item \textbf{The stopping times are finite.}  For each $n$,
     \[
@@ -941,15 +941,11 @@ $\Lambda_t(i) = \sum_{j \in \mathcal{J}} \Lambda_t(i,j)$
 and $\Lambda_t = \sum_{i \in \mathcal{I}} \Lambda_t(i)$.  Define local
 martintagles $M_t(i,j) = N_t(i,j) - \Lambda_t(i,j)$,
 $M_t(i) = N_t(i) - \Lambda_t(i)$, and 
-$M_t = N_t - \Lambda_t$.  Since $N_t(i,j)$ is a counting process,
-$\Lambda_t(i,j)$ is locally bounded 
-\cite[Thm.~IV.12]{meyer1976cours}
-and $M_t(i,j)$ is locally square-integrable
-\cite[Thm.~2.3.1]{fleming1991counting}.
+$M_t = N_t - \Lambda_t$.  
 
 The score function evaluated at the true parameter vector has a simple
 representation in terms of these martingales.  Set
-$H_t(i,j) = x_t(i,j) - E_t(\beta_0,i)$.  Since $x$ is locally uniformly
+$H_t(i,j) = x_t(i,j) - E_t(\beta_0,i)$.  Since $x$ is uniformly
 bounded, $H$ is as well.  Using the identity
 \(
     \sum_{j \in \mathcal{J}}
@@ -974,7 +970,7 @@ the score can be written as
             H_s(i,j) \, dM_s(i,j).
 \end{align*}
 Each term in the sum is locally square integrable, with predictable
-covariations
+covariation
 \begin{align*}
     \begin{split}
         \bigg\langle
@@ -997,9 +993,8 @@ covariations
             I_{\{ i = i', j = j' \}}
 \end{align*}
 \cite[Thm.~2.4.3]{fleming1991counting}.  There exists a sequence
-of stopping times localizing all $H(i,j)$ and $M(i,j)$
-simultaneously, so $U(\beta_0)$ is locally square integrable
-with predictable variation
+of stopping times localizing all $M(i,j)$ simultaneously, so $U(\beta_0)$ is
+locally square integrable with predictable variation
 \begin{align*}
     \big\langle U(\beta_0) \big\rangle_t
         &=
@@ -1024,33 +1019,147 @@ with predictable variation
 
 At this point, we rescale time to make the message arrivals uniform.  Define
 the sequence of stopping times $\tau_n = \sup\{ t : N_t < n \}$, and let
-$\mathcal{F}_{\tau_n}$ be the $\sigma$-algebra of events prior to $\tau_n$.
-The idea is to change time from the original scale to a scale on which
-$\tau_{n'} - \tau_n$ is proportional to $n' - n$.
+$\mathcal{F}_{\tau_n}$ be the $\sigma$-algebra of events
+prior to $\tau_n$. The idea is to change time from the original scale to a scale
+on which $\tau_{n} - \tau_{n'}$ is proportional to $n - n'$.
+
+For each positive $n$ define a discretized time-scaled version of the score.  
+The process is defined for times in $[0,1]$; between times in
+$[\tfrac{k}{n}, \tfrac{k+1}{n})$, it takes the value $U_{\tau_k}$.  That is,
+\[
+    \tilde U_{\alpha}^{(n)}(\beta)
+        = U_{\lfloor \alpha \tau_n \rfloor}(\beta).
+\]
+This is right-continuous with limits from the left.
+
+We claim $\tilde U_\alpha^{(n)}(\beta_0)$ is a square-integrable martingale
+adapted to
+\(
+    \mathcal{\tilde F}^{(n)}_\alpha
+        =
+        \mathcal{F}_{\lfloor \alpha \tau_n \rfloor}.
+\)
+The conditional expectation property holds provided
+\(
+    \E[ U_{\tau_{n}}(\beta_0) \mid \mathcal{F}_{\tau_{n-1}} ]
+        = U_{\tau_{n-1}}(\beta_0).
+\)
+Define $K = \sup_{t,i,j} \| x_{t}(i,j) \|_2$.
+Note that $\|H_{t}(i,j)\|_2 \leq 2 K$.  Thus,
+\begin{align*}
+    \| U_{t \wedge \tau_n} (\beta_0) \|_2
+        &\leq
+            2 K
+            \big(
+                N_{t \wedge \tau_n}
+                +
+                \Lambda_{t \wedge \tau_n}
+            \big), \\
+\intertext{so that}
+    \E \left[
+        \sup_t
+        \| U_{t \wedge \tau_n} (\beta_0) \|_2^2
+    \right]
+        &\leq
+            8 \cdot \big(\E K^2\big)^{1/2} \cdot
+            \big(
+              \E N_{\tau_n}^2
+              +
+              \E \Lambda_{\tau_n}^2              
+            \big)^{1/2}.
+\end{align*}
+By assumption, $\E K^2$ is finite, and by construction, $N_{\tau_n}$ is
+bounded.  Since $N_{t \wedge \tau_n}$ is a counting process,
+$\E \Lambda_{\tau_n}^2$ is finite, too
+(this follows from results in Section 2.3 of Fleming and Harrington
+\cite{fleming1991counting}).  Thus, $U_{t \wedge \tau_n}(\beta_0)$
+is uniformly integrable.  The Optional Sampling Theorem now applies to
+give the conditional expectation property of $\tilde U^{(n)}(\beta_0)$.  For
+square integrability, note
+\(
+    \sup_{1 \leq m \leq n}
+    \E \| U_{\tau_m} \|_2^2
+        \leq
+        \E \left[
+           \sup_t
+           \| U_{t \wedge \tau_n} (\beta_0) \|_2^2
+        \right].
+\)
+
+Since it only depends on values at jump times, the
+quadratic variation of $\tilde U^{(n)}(\beta_0)$ at time $\alpha$ is
+equal to the quadratic variation of $U(\beta_0)$ at time
+$\tau_{\lfloor \alpha n \rfloor}$.  Therefore, since quadratic and predictable
+variation have the same limit when it exists
+\cite[Prop. 1]{rebolledo1980central},
+\(
+    \langle \frac{1}{\sqrt{n}} \tilde U^{(n)}(\beta_0) \rangle_\alpha
+        \toP
+            \Sigma_\alpha(\beta_0).
+\)
+When $\frac{1}{\sqrt{n}} \tilde U^{(n)}(\beta_0)$ satisfies a Lindeberg condition,
+the process converges in distribution to a Gaussian process with covariance
+function $\Sigma(\beta_0).$
+
+The Lindeberg condition is
+\[
+    \frac{1}{n}
+    \sum_{i,j}
+    \int_{0}^{\tau_n}
+        \| H_s(i,j) \|_2^2
+        \, I_{\{\| H_s(i,j) \|_2 > \sqrt{n} \varepsilon \}}
+        \, d\Lambda_s(i,j)
+        \toP
+        0.
+\]
+With $K = \sup_{t,i,j} \| x_t(i,j)\|_2$ as above, the integral is bounded by
+\(
+    4 \, K^2 \, I_{\{n^{-1/2} K > \varepsilon / 2\}}
+    \cdot
+    \frac{\Lambda_{\tau_n}}{n}.
+\)
+Since $\E K^2 < \infty$, the first term converges to zero in probability.
+Since $\E \Lambda_{\tau_n} = \E N_{\tau_n} = n$, the product of the two also
+converges to zero in probability.  Thus, the Lindeberg condition is satisfied.
+
+
+\clearpage
 
 Since $N_{t \wedge \tau_n}$ is a bounded right-continuous nonnegative
 submartingale, the Doob-Meyer decomposition ensures
-$M_{t \wedge \tau_n}$ is a uniformly integrable martingale.  Thus, the
-Optional Sampling Theorem gives
-$\E[M_{\tau_{n}} | \mathcal{F}_{\tau_{n-1}} ] = M_{\tau_{n-1}}$.
-Similar properties hold for $M(i)$, $M(i,j)$, $\Lambda(i)$, and
-$\Lambda(i,j)$.
+$M_{t \wedge \tau_n}$ is a uniformly integrable martingale and
+$\Lambda_{t \wedge \tau_n}$ is integrable.  Actually, since $N_{t \wedge \tau_n}$
+is a counting process, Lemma~\ref{L:bouned-count-sqint}, shows that
+these quantities are square integrable.  Similar properties hold for
+$M(i)$, $M(i,j)$, $\Lambda(i)$, and $\Lambda(i,j)$.
 
-Define the sequence of random time changes $t_n : [0,1] \to [0, \tau_n]$ by
-sending $\tfrac{k}{n}$ to $\tau_k$ and interpolating linearly otherwise:
-\[
-    t_n(\alpha)
-        =
-        \tau_{\lfloor \alpha n \rfloor}
-        +
-        (\alpha n - \lfloor \alpha n \rfloor)
-        (\tau_{\lfloor \alpha n \rfloor + 1}
-         -
-         \tau_{\lfloor \alpha n \rfloor}).
-\]
-We claim $M_{t_n(\alpha)}$ is a local square-integrable martingale.
-It inherits local square-integrability from $M_{t \wedge \tau_n}$.  For
-the martingale property, say $\alpha \leq \alpha'$.
+\begin{lemma}\label{L:bouned-count-sqint}
+    If $N$ is an arbitrary bounded counting process with compensator
+    $\Lambda$, then $M = N - \Lambda$ is a square-integrable
+    martingale and $\Lambda$ is square-integrable.
+\end{lemma}
+\begin{proof}
+    The proof involves several results from Fleming and Harrington
+    \cite{fleming1991counting}. Since $N$ is a bounded counting process,
+    $\Lambda$ is locally bounded (Thm 2.3.2, p. 61) and
+    integrable (Thm 1.4.1, p. 37).  Thus, $M$ is locally square integrable
+    (Thm 2.3.1, p. 61).  Since $M$ is also right-continuous,
+    $\E M^2_t \leq \E \Lambda_t$, and hence $M$ is square-integrable.
+    Since $N$ is bouned and $\Lambda$ is integrable,
+    this inequality also gives
+    \(
+        \E \Lambda_t^2
+            \leq \E \Lambda_t + 2 \E N_t \Lambda_t - \E N_t^2
+            < \infty,
+    \)
+    so $\Lambda$ is square-integrable.
+\end{proof}
+
+
+
+
+
+
 
 \clearpage
 
@@ -1081,27 +1190,7 @@ Its predictable variation is
  Actually, the following Lemma shows
 that these quantities are all square-integrable.
 
-\begin{lemma}
-    If $N$ is an arbitrary bounded counting process with compensator
-    $\Lambda$, then $M = N - \Lambda$ is a square-integrable
-    martingale and $\Lambda$ is square-integrable.
-\end{lemma}
-\begin{proof}
-    The proof involves several results from Fleming and Harrington
-    \cite{fleming1991counting}. Since $N$ is a bounded counting process,
-    $\Lambda$ is locally bounded (Thm 2.3.2, p. 61) and
-    integrable (Thm 1.4.1, p. 37).  Thus, $M$ is locally square integrable
-    (Thm 2.3.1, p. 61).  Since $M$ is also right-continuous,
-    $\E M^2_t \leq \E \Lambda_t$, and hence $M$ is square-integrable.
-    Since $N$ is bouned and $\Lambda$ is integrable,
-    this inequality also gives
-    \(
-        \E \Lambda_t^2
-            \leq \E \Lambda_t + 2 \E N_t \Lambda_t - \E N_t^2
-            < \infty,
-    \)
-    so $\Lambda$ is square-integrable.
-\end{proof}
+
 
 \begin{lemma}
     If
