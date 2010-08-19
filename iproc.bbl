@@ -12,6 +12,18 @@
 \end{bbook}
 \endbibitem
 
+\bibitem{andersen1982cox}
+\begin{barticle}[author]
+\bauthor{\bsnm{Andersen},~\bfnm{P.~K.}\binits{P.~K.}} \AND
+  \bauthor{\bsnm{Gill},~\bfnm{R.~D.}\binits{R.~D.}}
+(\byear{1982}).
+\btitle{{Cox's regrssion model for counting processes: a large sample study}}.
+\bjournal{Ann. Statist.}
+\bvolume{10}
+\bpages{1100--1120}.
+\end{barticle}
+\endbibitem
+
 \bibitem{cohen2009enron}
 \begin{bmisc}[author]
 \bauthor{\bsnm{Cohen},~\bfnm{W.~W.}\binits{W.~W.}}

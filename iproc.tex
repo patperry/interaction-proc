@@ -293,10 +293,10 @@ See Martinussen and Scheike for more details~\cite{martinussen2006dynamic}.
 
 Suppose sender $i$ only sends messages to a subset of the receivers.  Denote
 this subset by $\mathcal{J}(i)$.  For sender $i$, receiver $j$, and positive
-time $t$, let $x_t(i,j)$ be a predictable vector of covariates in $\reals^p$.
-Let $\beta$ be an unknown parameter vector in $\reals^p$ and let
-$\lambda_t(i)$ be the baseline intensity for sender $i$, deterministic but
-unknown.  We assume $\lambda_t(i,j)$ has the form
+time $t$, let $x_t(i,j)$ be a locally bounded predictable vector of
+covariates in $\reals^p$.  Let $\beta$ be an unknown parameter vector in
+$\reals^p$ and let $\lambda_t(i)$ be the baseline intensity for sender $i$,
+deterministic but unknown.  We assume $\lambda_t(i,j)$ has the form
 \begin{equation}
     \lambda_t(i,j)
         = 
@@ -771,13 +771,13 @@ process called the baseline intensity of sender $i$; let
 $\mathcal{J}_t(i)$ be a predictable subset of $\mathcal{J}$ called the 
 recipient set of sender $i$.
 For each sender-receiver pair $(i,j)$, let $x_t(i,j)$ in $\reals^p$ be a
-predictable vector of covariates.  Let $\beta_0$ in $\reals^p$
+locally bounded predictable vector of covariates.  Let $\beta_0$ in $\reals^p$
 be an unknown vector of coefficients.
 
 Suppose $N$ is a multivariate counting process on 
 $\reals_+ \times \mathcal{I} \times \mathcal{J}$,
 with stochastic intensity
-\begin{equation}
+\begin{equation}\label{E:cox-intensity}
     \lambda_t(i,j)
         =
         \bar \lambda_t(i)
@@ -811,7 +811,7 @@ the log partial likelihood at time $t$, evaluated at $\beta$, is
             \log\big[
                 \!\!\!\!
                 \sum_{j \in \mathcal{J}_{t_m}\!(i_m)}
-                    \exp\{ \beta^\trans x_{t_m}\!(i_m, j)
+                    \exp\{ \beta^\trans x_{t_m}\!(i_m, j)\}
             \big]
         \bigg\}.
 \end{equation}
@@ -846,12 +846,14 @@ $V_{t}(\cdot, i)$, given by
 where $a^{\otimes 2} = a \otimes a = a a^\trans$.
 The gradient and negative Hessian of $\log \mathit{PL}_t(\cdot)$ are
 \begin{gather}
+    \label{E:pl-gradient}
     U_t(\beta)
         =
         \nabla \big[ \log \mathit{PL}_t(\beta) \big]
         =
         \sum_{t_m \leq t}
             x_{t_m}(i_m, j_m) - E_{t_m}(\beta, i_m), \\
+    \label{E:pl-neg-hessian}            
     I_t(\beta)
         =
         -\nabla^2 \big[ \log \mathit{PL}_t(\beta) \big]
@@ -862,42 +864,50 @@ The gradient and negative Hessian of $\log \mathit{PL}_t(\cdot)$ are
 We call $U_t(\beta)$ the unnormalized score function and $I_t(\beta)$
 the Fisher information matrix.  Let $\hat \beta_t$ be the value that
 maximizes $\log \mathit{PL}_t(\cdot)$, called the maximum partial
-likelihood estimator (MPLE).  Set $\hat U_t = U_t(\hat \beta_t)$ and
-$\hat I_t = I_t(\hat \beta_t)$ to be the estimated score and Fisher
-information.
+likelihood estimator (MPLE).  Set $\hat I_t = I_t(\hat \beta_t)$ to be
+the estimated score and Fisher information.
 
 Typically, one proves consistency of $\hat \beta_t$ by keeping $t$ fixed
 and letting $|\mathcal{I}|$ go to infinity
-\cite{andersen1993statistical,cook2007statistical,fleming1991counting,
+\cite{andersen1993statistical,andersen1982cox,cook2007statistical,fleming1991counting,
 martinussen2006dynamic}.  This makes sense in the context of clinical trial
 data, where $\mathcal{I}$ corresponds to the set of patients.  In interaction
 data, $|\mathcal{I}|$ is either fixed, or $t$ and $|\mathcal{I}|$ increase
 simultaneously.  It is more natural to look at what happens as time increases.
 Increasing sender sets can be handled by assuming $|\mathcal{I}|$ is infinite
-and for most senders $\bar \lambda_t(i)$ is zero during the initial
-part of the observation period; increasing $|\mathcal{J}|$ can be handled
-similarly through $\mathcal{J}_t(i)$.
+(for most senders $\bar \lambda_t(i)$ is zero during the initial
+part of the observation period); increasing receiver sets can be
+handled similarly.
 
-Let $\tau_n$ be an increasing sequence of stopping times and $\mathcal{B}$ be
-a neighborhood of $\beta_0$.  Assume the following conditions hold:
-\begin{enumerate}[(1)]
-    \item \textbf{The covariates are uniformly bounded.}  That is,
+The main idea of the consistency proof is to rescale time to make the message
+arrivals uniform.  This is the main difference between our proof and
+Andersen and Gill's original proof \cite{andersen1982cox}; otherwise, the
+outline of the two are roughly the same.  Define the sequence of stopping
+times
+\begin{equation}\label{E:message-times}
+    \tau_n = \sup\{ t : N_t < n \},
+\end{equation}
+and let $\mathcal{F}_{\tau_n}$ be the $\sigma$-algebra of events prior to
+$\tau_n$. The idea is to change time from the original scale to a scale on
+which $\tau_{n} - \tau_{n'}$ is proportional to $n - n'$.
+
+Let $\mathcal{B}$ be a neighborhood of $\beta_0$.  Assume the following
+conditions hold:
+\begin{enumerate}[{A}1.]
+    \item \label{A:square-int}
+    \textbf{The covariates are uniformly square-integrable.}  That is,
     \[
-        \sup_{\substack{i \in \mathcal{I} \\ j \in \mathcal{J}}} x_t(i,j)
+        \E\left[
+            \sup_{t, i, j} \| x_{t}(i,j) \|^2
+        \right]
         \,\,\text{is bounded.}
     \]
-    \item \textbf{The stopping times are finite.}  For each $n$,
+    \item \textbf{The message arrival times are finite.}  For each $n$,
     \[
         \mathbb{P}\{\tau_n < \infty\} = 1.
     \]
-    \item \textbf{The cumulative baseline intensity has at most linear growth.}
-    \[
-        \limsup_{n\to\infty}
-            \frac{1}{n} \sum_{i \in \mathcal{I}}
-            \int_0^{\tau(n)} \bar \lambda_s(i) \, ds < \infty.
-    \]
     \item \textbf{The integrated covariance function is well-behaved.}
-    For $\beta \in \mathcal{B}$ and $\alpha \in [0,1]$, as $ n \to \infty$,
+    When $\beta \in \mathcal{B}$ and $\alpha \in [0,1]$, as $ n \to \infty$,
     \[
         \frac{1}{n}
         \sum_{i \in \mathcal{I}}
@@ -911,25 +921,52 @@ a neighborhood of $\beta_0$.  Assume the following conditions hold:
     \]
     where $\Sigma_\alpha(\cdot)$ is locally bounded and Lipschitz.
     
-    \item \textbf{The covariates satisfy a Lindeberg condition.}
-    For any multivariate predictable process $\pi$ satisfying
-    $\pi_t(i, j) \geq 0$ and $\sum_{j \in \mathcal{J}} \pi_t(i, j) = 1$,
-    there exists a $\delta > 0$ such that 
+    \item \label{A:var-equicont}
+    \textbf{The variance function is equicontinous.}
+    More precisely,
     \[
-        \frac{1}{\sqrt{n}}
-            \sup_{\substack{i \in \mathcal{I} \\ 0 \leq t \leq \tau_n}}
-            \| y_{t}(i) \|
-            \cdot
-            I_{\{
-                \sum_{j \in \mathcal{J}_s(i)} \beta_0^\trans  x_t(i,j)
-                \,>\, -\delta \, \| y_t(i) \|
-            \}}
-        \toP
-        0,
+        \Big\{
+            V_{\tau_n}(\cdot, i)
+            :
+            n \geq 1, i \in \mathcal{I}
+        \Big\}
     \]
-    where $y_t(i) = \sum_{j \in \mathcal{J}} \pi_t(i, j) \, x_t(i,j)$.
+    is equicontinous.
 \end{enumerate}
 
+\begin{theorem}\label{T:score-fisher}
+    Let $N$ be a multivariate counting process on with stochastic
+    intensity as given in~\eqref{E:cox-intensity}, with true parameter
+    vector $\beta_0$.  Let $\tau_n$ be the sequence of message arrival times
+    defined in~\eqref{E:message-times}, set $U_t(\beta)$ and $I_t(\beta)$ to
+    be the gradient and negative Hessian of the partial likelihood function
+    as given in~(\ref{E:pl-gradient}--\ref{E:pl-neg-hessian}).  If assumptions
+    A\ref{A:square-int}--A\ref{A:var-equicont} hold, then the following are
+    true as $n \to \infty$:
+    \begin{enumerate}[(i)]
+        \item \label{I:score-part}
+        $n^{-1/2} \, U_{\lfloor \alpha \tau_n \rfloor}(\beta_0)$
+        converges weakly to a Gaussian process on $[0,1]$ with
+        covariance function $\Sigma_\alpha(\beta_0)$;
+        
+        \item \label{I:fisher-part}
+        if $\hat \beta_t$ is any consistent estimator of $\beta_0$,
+        then
+        \[
+            \sup_{\alpha \in [0,1]}
+            \left\|
+                \tfrac{1}{n}
+                I_{\lfloor \alpha \tau_n \rfloor}(\hat \beta_{\tau_n})
+                -
+                \Sigma_\alpha(\beta_0)
+            \right\|
+            \toP
+            0.
+        \]
+    \end{enumerate}
+\end{theorem}
+
+\begin{proof}[Proof of Part \textit{(\ref{I:score-part})}]
 The process $N_t(i,j)$ has compensator
 \begin{equation}
     \Lambda_t(i,j)
@@ -1017,12 +1054,7 @@ locally square integrable with predictable variation
                 dN_s(i).
 \end{align*}
 
-At this point, we rescale time to make the message arrivals uniform.  Define
-the sequence of stopping times $\tau_n = \sup\{ t : N_t < n \}$, and let
-$\mathcal{F}_{\tau_n}$ be the $\sigma$-algebra of events
-prior to $\tau_n$. The idea is to change time from the original scale to a scale
-on which $\tau_{n} - \tau_{n'}$ is proportional to $n - n'$.
-
+Now we rescale time.
 For each positive $n$ define a discretized time-scaled version of the score.  
 The process is defined for times in $[0,1]$; between times in
 $[\tfrac{k}{n}, \tfrac{k+1}{n})$, it takes the value $U_{\tau_k}$.  That is,
@@ -1121,17 +1153,20 @@ With $K = \sup_{t,i,j} \| x_t(i,j)\|_2$ as above, the integral is bounded by
 Since $\E K^2 < \infty$, the first term converges to zero in probability.
 Since $\E \Lambda_{\tau_n} = \E N_{\tau_n} = n$, the product of the two also
 converges to zero in probability.  Thus, the Lindeberg condition is satisfied.
+The weak convergence result now follows from Rebolledo's Martingale Central
+Limit Theorem~\cite{rebolledo1980central}.
+\end{proof}
+
+\begin{proof}[Proof of Part \textit{(\ref{I:fisher-part})}]
+Part~\textit{(\ref{I:fisher-part})} is a consequence of equicontinuity (assumption~A\ref{A:var-equicont})
+and Lenglart's Theorem. 
+    
+\end{proof}
+
+
 
 
 \clearpage
-
-Since $N_{t \wedge \tau_n}$ is a bounded right-continuous nonnegative
-submartingale, the Doob-Meyer decomposition ensures
-$M_{t \wedge \tau_n}$ is a uniformly integrable martingale and
-$\Lambda_{t \wedge \tau_n}$ is integrable.  Actually, since $N_{t \wedge \tau_n}$
-is a counting process, Lemma~\ref{L:bouned-count-sqint}, shows that
-these quantities are square integrable.  Similar properties hold for
-$M(i)$, $M(i,j)$, $\Lambda(i)$, and $\Lambda(i,j)$.
 
 \begin{lemma}\label{L:bouned-count-sqint}
     If $N$ is an arbitrary bounded counting process with compensator
@@ -1154,127 +1189,6 @@ $M(i)$, $M(i,j)$, $\Lambda(i)$, and $\Lambda(i,j)$.
     \)
     so $\Lambda$ is square-integrable.
 \end{proof}
-
-
-
-
-
-
-
-\clearpage
-
-Define the sequence of stopping times $\tau_n = \sup\{ t : N_t < n \}$.
-Rescale time with the message arrivals and normalize the score. 
-Specifically, when $n > 0$ and $\alpha \in [0,1]$, define
-\begin{equation}
-    U^{(n)}_{\alpha}(\beta_0)
-    = 
-    n^{-1/2} U_{\lfloor \alpha \tau_n \rfloor}(\beta_0)
-\end{equation}
-By the Optional Stopping Theorem, $U_{t \wedge \tau_n}(\beta_0)$ is a local
-square-integrable martingale, so $U^{(n)}_{\alpha}(\beta_0)$ is, as well.
-Its predictable variation is
-\begin{equation}
-     \langle U^{(n)}(\beta_0) \rangle_\alpha
-     =
-     \frac{1}{n}
-     \sum_{i \in \mathcal{I}}
-     \int_0^{\alpha \tau_n}
-        V_s(\beta_0, i)
-        \, d\Lambda_s(i).
-\end{equation}
-
-
-
-
- Actually, the following Lemma shows
-that these quantities are all square-integrable.
-
-
-
-\begin{lemma}
-    If
-    \(
-        \E\left[ \sup_{t,i,j} \| x_{t \wedge \tau_n} (i,j) \|_2^4 \right]
-        <
-        \infty,
-    \)
-    then $U_{t \wedge \tau_n}(\beta_0)$ and
-    \(
-        U_{t \wedge \tau_n}^2(\beta_0)
-        -
-        \langle U(\beta_0) \rangle_{t \wedge \tau_n}
-    \)
-    are uniformly integrable martingales.
-\end{lemma}
-
-
-The normalized stopped score
-\(
-    U^{(n)}_{t}(\beta_0)
-    = 
-    n^{-1/2} U_{t \wedge \tau_n}(\beta_0)
-\) has
-predictable variation
-\[
-     \langle U^{(n)}(\beta_0) \rangle_t
-     =
-     \frac{1}{n}
-     \sum_{i \in \mathcal{I}}
-     \int_0^{t \wedge \tau_n}
-        V_s(\beta_0, i)
-        \, d\Lambda_s(i).
-\]
-We have already shown that $U_t(\beta_0)$ is a local square-integrable
-martingale.  Under the fourth moment condition on $x$, the stopped score,
-$U_{t \wedge \tau_n}(\beta_0)$ is a square-integrable martingale.
-
-
-\clearpage
-
-The discrete-time process
-$\tilde M_n = M_{\tau_n}$ is a local martingale with respect to 
-filtration $\mathcal{\tilde F}_n = \mathcal{F}_{\tau_n}$ since
-the Optional Sampling Theorem gives
-$\mathbb{E}[M_{\tau_{n+1}} \mid \mathcal{F}_{\tau_n}] = M_{\tau_n}$.
-In particular, this gives that $\tilde \Lambda_n = \Lambda_{\tau_n}$ is
-a local $\mathcal{\tilde F}_n$-submartingale with compensator $n$.
-Define $\tilde M_n(i)$ and $\tilde M_n(i,j)$ similarly to $\tilde M_n$;
-these are also local $\mathcal{\tilde F}_n$-martingales.
-
-The score has an alternative representation in terms of the time-scaled
-processes:
-\[
-    \tilde U_n(\beta_0)
-        = U_{\tau_n}(\beta_0)
-        =
-        \sum_{i \in \mathcal{I}}
-        \sum_{j \in \mathcal{J}}
-        \sum_{m = 1}^{n}
-            \cdot
-            \int_{\tau_{m-1}}^{\tau_m}
-                H_{s}(i,j)
-                \, dM_{s}(i,j).
-\]
-Its predictable variation is
-\[
-    \langle \tilde U(\beta_0) \rangle_n
-        =
-        \sum_{i \in \mathcal{I}}
-        \sum_{m = 1}^{n}
-            \int_{\tau_{m-1}}^{\tau_m}
-                V_{s}(\beta_0, i)
-                \, d\Lambda_s(i,j)
-\]
-for some non-negative increasing $\mathcal{\tilde F}_m$-predictable
-process $\tilde \Lambda_{m}$.
-
-At this point, we rescale time to make the message arrivals uniform.  Define
-the sequence of stopping times $\tau_n = \sup\{ t : N_t < n \}$, and let
-$\mathcal{F}_{\tau_n}$ be the $\sigma$-algebra of events prior to $\tau_n$.
-The idea is to change time from the original scale to a scale on which
-$\tau_n = n$.
-We will need the following lemmas.  
 
 \begin{lemma}
     Let $N$ be a any local submartingale with localizing sequence $\tau_n$
