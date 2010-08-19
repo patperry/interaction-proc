@@ -891,8 +891,9 @@ and let $\mathcal{F}_{\tau_n}$ be the $\sigma$-algebra of events prior to
 $\tau_n$. The idea is to change time from the original scale to a scale on
 which $\tau_{n} - \tau_{n'}$ is proportional to $n - n'$.
 
-Let $\mathcal{B}$ be a neighborhood of $\beta_0$.  Assume the following
-conditions hold:
+Let $\mathcal{B}$ be a neighborhood of $\beta_0$.  For a vector, $a$, let
+$\| a \|$ denote its Euclidean norm; for a matrix, $A$, let $\| A \|$ denote
+its spectral norm (largest eigenvalue).  We will make the following assumptions:
 \begin{enumerate}[{A}1.]
     \item \label{A:square-int}
     \textbf{The covariates are uniformly square-integrable.}  That is,
@@ -902,11 +903,13 @@ conditions hold:
         \right]
         \,\,\text{is bounded.}
     \]
-    \item \textbf{The message arrival times are finite.}  For each $n$,
+    \item \label{A:message-times-finite}
+    \textbf{The message arrival times are finite.}  For each $n$,
     \[
         \mathbb{P}\{\tau_n < \infty\} = 1.
     \]
-    \item \textbf{The integrated covariance function is well-behaved.}
+    \item \label{A:integrated-cov-limit}
+    \textbf{The integrated covariance function is well-behaved.}
     When $\beta \in \mathcal{B}$ and $\alpha \in [0,1]$, as $ n \to \infty$,
     \[
         \frac{1}{n}
@@ -919,7 +922,7 @@ conditions hold:
         \toP
         \Sigma_\alpha(\beta),
     \]
-    where $\Sigma_\alpha(\cdot)$ is locally bounded and Lipschitz.
+    where $\Sigma$ is locally bounded and Lipschitz in both arguments.
     
     \item \label{A:var-equicont}
     \textbf{The variance function is equicontinous.}
@@ -1076,10 +1079,10 @@ The conditional expectation property holds provided
     \E[ U_{\tau_{n}}(\beta_0) \mid \mathcal{F}_{\tau_{n-1}} ]
         = U_{\tau_{n-1}}(\beta_0).
 \)
-Define $K = \sup_{t,i,j} \| x_{t}(i,j) \|_2$.
-Note that $\|H_{t}(i,j)\|_2 \leq 2 K$.  Thus,
+Define $K = \sup_{t,i,j} \| x_{t}(i,j) \|$.
+Note that $\|H_{t}(i,j)\| \leq 2 K$.  Thus,
 \begin{align*}
-    \| U_{t \wedge \tau_n} (\beta_0) \|_2
+    \| U_{t \wedge \tau_n} (\beta_0) \|
         &\leq
             2 K
             \big(
@@ -1090,7 +1093,7 @@ Note that $\|H_{t}(i,j)\|_2 \leq 2 K$.  Thus,
 \intertext{so that}
     \E \left[
         \sup_t
-        \| U_{t \wedge \tau_n} (\beta_0) \|_2^2
+        \| U_{t \wedge \tau_n} (\beta_0) \|^2
     \right]
         &\leq
             8 \cdot \big(\E K^2\big)^{1/2} \cdot
@@ -1110,11 +1113,11 @@ give the conditional expectation property of $\tilde U^{(n)}(\beta_0)$.  For
 square integrability, note
 \(
     \sup_{1 \leq m \leq n}
-    \E \| U_{\tau_m} \|_2^2
+    \E \| U_{\tau_m} \|^2
         \leq
         \E \left[
            \sup_t
-           \| U_{t \wedge \tau_n} (\beta_0) \|_2^2
+           \| U_{t \wedge \tau_n} (\beta_0) \|^2
         \right].
 \)
 
@@ -1133,18 +1136,18 @@ When $\frac{1}{\sqrt{n}} \tilde U^{(n)}(\beta_0)$ satisfies a Lindeberg conditio
 the process converges in distribution to a Gaussian process with covariance
 function $\Sigma(\beta_0).$
 
-The Lindeberg condition is
+The Lindeberg condition is that for any positive $\varepsilon$,
 \[
     \frac{1}{n}
     \sum_{i,j}
     \int_{0}^{\tau_n}
-        \| H_s(i,j) \|_2^2
-        \, I_{\{\| H_s(i,j) \|_2 > \sqrt{n} \varepsilon \}}
+        \| H_s(i,j) \|^2
+        \, I_{\{\| H_s(i,j) \| > \sqrt{n} \varepsilon \}}
         \, d\Lambda_s(i,j)
         \toP
         0.
 \]
-With $K = \sup_{t,i,j} \| x_t(i,j)\|_2$ as above, the integral is bounded by
+With $K = \sup_{t,i,j} \| x_t(i,j)\|$ as above, the integral is bounded by
 \(
     4 \, K^2 \, I_{\{n^{-1/2} K > \varepsilon / 2\}}
     \cdot
@@ -1158,9 +1161,99 @@ Limit Theorem~\cite{rebolledo1980central}.
 \end{proof}
 
 \begin{proof}[Proof of Part \textit{(\ref{I:fisher-part})}]
-Part~\textit{(\ref{I:fisher-part})} is a consequence of equicontinuity (assumption~A\ref{A:var-equicont})
-and Lenglart's Theorem. 
-    
+Part~\textit{(\ref{I:fisher-part})} is a consequence of equicontinuity
+(assumption~A\ref{A:var-equicont}) and Lenglart's
+Inequality~\cite{lenglart1977relation}.  As in the proof of
+part~\textit{(\ref{I:score-part})}, set $K = \sup_{t,i,j} \| x_t(i,j) \|$.
+
+When $\alpha \in [0, 1]$,
+\begin{align*}
+    \left\|
+        \tfrac{1}{n} I_{\lfloor \alpha \tau_n \rfloor}(\hat \beta_{\tau_n})
+        -
+        \Sigma_{\alpha} (\beta_0)
+    \right\|
+        &\leq
+        \left\|
+            \frac{1}{n}
+            \int_0^{\lfloor \alpha \tau_n \rfloor}
+                \{
+                    V_s(\hat \beta_{\tau_n}, i)
+                    -
+                    V_s(\beta_0, i)
+                \} \, dN_s(i)
+        \right\| \\
+        &\quad+
+        \left\|
+            \frac{1}{n}
+            \sum_i
+            \int_0^{\lfloor \alpha \tau_n \rfloor}
+                V_s(\beta_0, i) \, dM_s(i)
+        \right\| \\
+        &\quad+
+        \left\|
+            \frac{1}{n}
+            \sum_i
+            \int_0^{\lfloor \alpha \tau_n \rfloor}
+                V_s(\beta_0)
+                \, d\Lambda_s(i)
+            -
+            \Sigma_{\alpha}(\beta_0)
+        \right\|.
+\end{align*}
+The first term is uniformly bounded by 
+\(
+    \sup_{n',i}
+        \|
+            V_{\tau_{n'}}(\hat \beta_{\tau_n}, i)
+            -
+            V_{\tau_{n'}}(\beta_0, i)
+        \|,
+\)
+which converges to zero since $\hat \beta_t \toP \beta_0$ and
+$\{ V_{\tau_{n'}}(\cdot, i) \}$ is an equicontinuous family.
+The third term converges to zero by assumption~A\ref{A:integrated-cov-limit}.
+Lenglart's Inequality and assumption~A\ref{A:message-times-finite} imply that for
+any postive $\rho$ and $\delta$,
+\begin{multline*}
+    \mathbb{P}\left\{
+        \sup_{t \in [0,\tau_n]}
+        \left\|
+            \frac{1}{n}
+            \sum_{i}
+            \int_{0}^{t}
+                V_s(\beta_0, i) \, dM_s(i)
+        \right\|
+        \geq \rho
+    \right\} \\
+    \leq
+    \frac{\delta}{\rho^2}
+    +
+    \mathbb{P}\left\{
+        \frac{1}{n^2}
+        \sum_{i}
+        \int_{0}^{\tau_n}
+            \| V_s (\beta_0, i) \|^2
+            \, d\Lambda_s(i)
+        \geq
+        \delta
+    \right\}.
+\end{multline*}
+(see Fleming and Harrington's Cor.~3.4.1 for a related proof
+\cite{fleming1991counting}).  The sum in the second term is bounded by
+$\frac{K^4}{n} \cdot \frac{\Lambda_{\tau_n}}{n}$.  Since $n^{-1/2} K^2 \toP 0$
+and $\E \Lambda_{\tau_n} = n$, the right hand side of the inequality converges
+to $\frac{\delta}{\rho^2}$.  Since $\delta$ is arbitrary, the right hand side
+must converge to zero.  This proves that the second term in the bound on
+\(
+    \left\|
+        \tfrac{1}{n} I_{\lfloor \alpha \tau_n \rfloor}(\hat \beta_{\tau_n})
+        -
+        \Sigma_{\alpha} (\beta_0)
+    \right\|
+\)
+converges to zero uniformly in $\alpha$ and concludes the proof.
+
 \end{proof}
 
 
@@ -1417,7 +1510,7 @@ has a Gaussian limit.
 
 \begin{theorem}
     Under $\mathbb{P}_\beta$ and $\mathbb{P}^1_\beta$,
-    if $\max_{j \in \mathcal{J}_n} \|x_{n,j}\|_2$,
+    if $\max_{j \in \mathcal{J}_n} \|x_{n,j}\|$,
     \(
         \frac{1}{n} \sum_{m=1}^n l_m^2,
     \)

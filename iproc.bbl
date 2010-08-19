@@ -74,6 +74,17 @@
 \end{bbook}
 \endbibitem
 
+\bibitem{lenglart1977relation}
+\begin{barticle}[author]
+\bauthor{\bsnm{Lenglart},~\bfnm{E.}\binits{E.}}
+(\byear{1977}).
+\btitle{{Relation de domination entre deux processus}}.
+\bjournal{Ann. Inst. Henri Poincar\'e}
+\bvolume{13}
+\bpages{171--9}.
+\end{barticle}
+\endbibitem
+
 \bibitem{martinussen2006dynamic}
 \begin{bbook}[author]
 \bauthor{\bsnm{Martinussen},~\bfnm{T.}\binits{T.}} \AND
