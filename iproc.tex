@@ -273,7 +273,7 @@ and
   
 If $\{ (t_m, i_m, j_m) \}$ is the set of observed messages, then
 the log partial likelihood at time $t$, evaluated at $\beta$, is
-\begin{equation}
+\begin{equation}\label{E:log-pl}
     \log
     \mathit{PL}_t(\beta)
         =
@@ -319,14 +319,14 @@ $V_{t}(\cdot, i)$, given by
 where $a^{\otimes 2} = a \otimes a = a a^\trans$.
 The gradient and negative Hessian of $\log \mathit{PL}_t(\cdot)$ are
 \begin{gather}
-    \label{E:pl-gradient}
+    \label{E:log-pl-gradient}
     U_t(\beta)
         =
         \nabla \big[ \log \mathit{PL}_t(\beta) \big]
         =
         \sum_{t_m \leq t}
             x_{t_m}(i_m, j_m) - E_{t_m}(\beta, i_m), \\
-    \label{E:pl-neg-hessian}            
+    \label{E:log-pl-neg-hessian}            
     I_t(\beta)
         =
         -\nabla^2 \big[ \log \mathit{PL}_t(\beta) \big]
@@ -392,9 +392,8 @@ its spectral norm (largest eigenvalue).  We will make the following assumptions:
             \, \bar \lambda(i)
             \, ds
         \toP
-        \Sigma_\alpha(\beta),
+        \Sigma_\alpha(\beta).
     \]
-    where $\Sigma$ is locally bounded and Lipschitz in both arguments.
     
     \item \label{A:var-equicont}
     \textbf{The variance function is equicontinuous.}
@@ -415,9 +414,9 @@ its spectral norm (largest eigenvalue).  We will make the following assumptions:
     vector $\beta_0$.  Let $\tau_n$ be the sequence of message arrival times
     defined in~\eqref{E:message-times}, set $U_t(\beta)$ and $I_t(\beta)$ to
     be the gradient and negative Hessian of the partial likelihood function
-    as given in~(\ref{E:pl-gradient}--\ref{E:pl-neg-hessian}).  If assumptions
-    A\ref{A:square-int}--A\ref{A:var-equicont} hold, then the following are
-    true as $n \to \infty$:
+    as given in~(\ref{E:log-pl-gradient}--\ref{E:log-pl-neg-hessian}).  If
+    assumptions A\ref{A:square-int}--A\ref{A:var-equicont} hold, then the
+    following are true as $n \to \infty$:
     \begin{enumerate}[(i)]
         \item \label{I:score-part}
         $n^{-1/2} \, U_{\lfloor \alpha \tau_n \rfloor}(\beta_0)$
@@ -634,8 +633,7 @@ Limit Theorem~\cite{rebolledo1980central}.
 
 \begin{proof}[Proof of Part \textit{(\ref{I:fisher-part})}]
 Part~\textit{(\ref{I:fisher-part})} is a consequence of equicontinuity
-(assumption~A\ref{A:var-equicont}) and Lenglart's
-Inequality~\cite{lenglart1977relation}.  As in the proof of
+and Lenglart's Inequality~\cite{lenglart1977relation}.  As in the proof of
 part~\textit{(\ref{I:score-part})}, set $K = \sup_{t,i,j} \| x_t(i,j) \|$.
 
 When $\alpha \in [0, 1]$,
@@ -683,7 +681,8 @@ The first term is uniformly bounded by
         \|,
 \)
 which converges to zero since $\hat \beta_t \toP \beta_0$ and
-$\{ V_{\tau_{n'}}(\cdot, i) \}$ is an equicontinuous family.
+$\{ V_{\tau_{n'}}(\cdot, i) \}$ is an equicontinuous family
+(assumption~A\ref{A:var-equicont}).
 The third term converges to zero by assumption~A\ref{A:integrated-cov-limit}.
 Lenglart's Inequality and assumption~A\ref{A:message-times-finite} imply that for
 any postive $\rho$ and $\delta$,
@@ -729,6 +728,49 @@ converges to zero uniformly in $\alpha$, concluding the proof.
 \end{proof}
 
 \clearpage
+
+
+\begin{theorem}\label{T:consistency}
+    Let $N$ be a multivariate counting process on with stochastic
+    intensity as given in~\eqref{E:cox-intensity}, with true parameter
+    vector $\beta_0$.  Let the log partial likelihood,
+    $\log \mathit{PL}_t(\cdot)$, be as defined in \eqref{E:log-pl}.
+    Let $\tau_n$ be the sequence of message arrival times defined
+    in~\eqref{E:message-times}.
+    
+    Assume for $\beta$ in a
+    neighborhood of $\beta_0$ that
+    \(
+        -\tfrac{1}{n} \nabla^2 [ \log \mathit{PL}_{\tau_n}(\beta)]
+            \toP \Sigma_1(\beta),
+    \)
+    where $\| \Sigma_1(\cdot) \|$ is locally Lipschitz and bounded
+    away from zero.
+    If $\hat \beta_n$ maximizes $\log \mathit{PL}_{\tau_n}(\cdot)$
+    and the conclusions of Theorem~\ref{T:score-fisher} hold, then
+    the following are true as $n\to\infty$:
+    \begin{enumerate}[(i)]
+        \item $\hat \beta_n$ is a consistent estimator of $\beta_0$;
+        \item $\sqrt{n} \, (\hat \beta_n - \beta_0)$ converges weakly
+            to a mean-zero Gaussian random variable with covariance
+            $[\Sigma_1(\beta_0)]^{-1}$.
+    \end{enumerate}
+\end{theorem}
+
+We follow Haberman's approach to proving
+consistency, which relies on Kantorovich's analysis
+of Newton's method.  Tapia gives an elementary proof of the Kantorovich
+Thereom~\cite{haberman1977maximum,kantorovich1952functional,tapia1971kantorovich}.
+We state the result as a lemma.
+
+\begin{lemma}[Kantorovich Theorem]
+    Let $f$.
+\end{lemma}
+
+its gradient, $U_t(\cdot)$,
+    and negative Hessian, $I_t(\cdot)$, be defined as in
+    , \eqref{E:log-pl-gradient}, and
+    \eqref{E:log-pl-neg-hessian}
 
 
 \clearpage
@@ -814,8 +856,6 @@ where the sender-specific part is
 Consistency and asymptotic normality of the maximum partial likelihood
 estimator follow from standard arguments.  We state this result and
 sketch its proof below.
-
-
 
 
 \clearpage

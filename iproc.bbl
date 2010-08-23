@@ -64,13 +64,23 @@
 \end{bbook}
 \endbibitem
 
-\bibitem{jacod1987limit}
+\bibitem{haberman1977maximum}
+\begin{barticle}[author]
+\bauthor{\bsnm{Haberman},~\bfnm{S.~J.}\binits{S.~J.}}
+(\byear{1977}).
+\btitle{{Maximum likelihood estimates in exponential response models}}.
+\bjournal{Ann. Statist.}
+\bvolume{5}
+\bpages{815--841}.
+\end{barticle}
+\endbibitem
+
+\bibitem{kantorovich1952functional}
 \begin{bbook}[author]
-\bauthor{\bsnm{Jacod},~\bfnm{J.}\binits{J.}} \AND
-  \bauthor{\bsnm{Shiryayvev},~\bfnm{A.~N.}\binits{A.~N.}}
-(\byear{1987}).
-\btitle{{Limit Theorems for Stochastic Processes}}.
-\bpublisher{Springer-Verlag}.
+\bauthor{\bsnm{Kantorovich},~\bfnm{L.~V.}\binits{L.~V.}}
+(\byear{1952}).
+\btitle{{Functional Analysis and Applied Mathematics}}.
+\bnote{translated by C. D. Benster, National Bureau of Standards Report 1509}.
 \end{bbook}
 \endbibitem
 
@@ -111,10 +121,22 @@
 \bibitem{rebolledo1980central}
 \begin{barticle}[author]
 \bauthor{\bsnm{Rebolledo},~\bfnm{R.}\binits{R.}}
+(\byear{1980}).
 \btitle{{Central limit theorems for local martingales}}.
 \bjournal{Probabl. Theory Rel.}
 \bvolume{51}
 \bpages{269-286}.
+\end{barticle}
+\endbibitem
+
+\bibitem{tapia1971kantorovich}
+\begin{barticle}[author]
+\bauthor{\bsnm{Tapia},~\bfnm{R.~A.}\binits{R.~A.}}
+(\byear{1971}).
+\btitle{{The Kantorovich theorem for Newton's method}}.
+\bjournal{Am. Math. Mon.}
+\bvolume{78}
+\bpages{389--392}.
 \end{barticle}
 \endbibitem
 
