@@ -107,10 +107,7 @@ Suppose we observe a system of individuals interacting over time. At the end
 of the observation period, we have witnessed a stream of interaction events of
 the form $(t, i, j)$. This triple denotes that at time $t$, we observed the
 interaction $i \to j$, an interaction sent by individual $i$ and received by
-individual $j$. We take $[0,T]$ to be the observation time period,
-$\mathcal{I} = \{1, \ldots, I \}$ to be the set of senders, and $\mathcal{J} =
-\{1, \ldots, J \}$ to be the set of receivers. Oftentimes $\mathcal{I} =
-\mathcal{J}$, but not always.
+individual $j$.
 
 Given covariate information about the senders and receivers, we want to
 determine which characteristics and behaviors are associated with (predictive
@@ -217,562 +214,41 @@ multiple recipients.
 
 \section{A Point Process Model}\label{S:point-process-model}
 
-Every interaction process can be encoded by a set of counting measures.
-For this section, assume that each message has a single recipient.
-Let $i$ be a sender in $\mathcal{I}$, let $j$ be a receiver in $\mathcal{J}$,
-and let $t$ be a positive time in $\reals_+$.  Denote the number of
-messages sent from $i$ to $j$ in $(0,t]$ by $N_t(i,j)$, the
-number of messages sent from $i$ to any receiver in $(0,t]$ by $N_t(i)$, and
-the number of messages sent from any sender to any receiver in $(0,t]$ by
-$N_t$.  Thus,
+Every interaction process can be encoded by a multivariate counting measure.
+For sender, $i$, receiver, $j$, and positive time, $t$, we define
 \[
-    N_t(i) = \sum_{j\in \mathcal{J}} N_t(i,j),
-    \qquad
-    N_t = \sum_{i\in \mathcal{I}} N_t(i).
+    N_t(i,j)
+        =
+        \#\{\text{messages sent from $i$ to $j$ in time interval $[0,t]$}\}.
 \]
-Each of these, when considered as a function of $t$, is right-continuous with
-left-hand limits.
-
-% Suppose $(t_1, i_1, j_1), \ldots, (t_M, i_M, j_M)$ is the sequence of observed
-% messages, where tuple $(t,i,j)$ encodes that at time $t$, sender $i$ sent a
-% message to receiver $j$.  Define the following message sets:
-% \begin{align*}
-%     \mathcal{M}_t(i,j)
-%         &= \{ m : t_m \leq t, \, i_m = i, \, j_m = j \}, \\
-%     \mathcal{M}_t(i)
-%         &= \cup_{j \in \mathcal{J}} \mathcal{M}_t(i,j), \\
-%     \mathcal{M}_t
-%         &= \cup_{i \in \mathcal{I}} \mathcal{M}_t(i).
-% \end{align*}
-% It follows that
-% \begin{align*}
-%     N_t(i,j) &= |\mathcal{M}_t(i,j)|, \\
-%     N_t(i) &= |\mathcal{M}_t(i)|, \\
-%     N_t &= |\mathcal{M}_t|.
-% \end{align*}
-
-% The reverse procedure works as well: given $N_\cdot(\cdot, \cdot)$, there
-% is a sequence of messages and a set function $\mathcal{M}_\cdot(\cdot,\cdot)$
-% such that $\mathcal{M}_s(i,j) \subseteq \mathcal{M}_t(i,j)$ for $s \leq t$,
-% consistent with the equation $N_t(i,j) = |\mathcal{M}_t(i,j)|$.  If the
-% times are all distinct then this construction is unique; otherwise it is
-% unique up to time-fixing permutations of message indices.
-
-To model the interaction process, we take the message events to be random.
-Formally, suppose that the interaction process is defined on a
-probability space $(\Omega, \mathcal{F}, \mathbb{P})$.  Let
-$\big\{ \mathcal{F}_t : t \geq 0 \big\}$ be a filtration of $\mathcal{F}$
-such that $N_t(i,j)$ is $\mathcal{F}_t$-measurable when
-$(t,i,j) \in \reals_+ \times \mathcal{I} \times \mathcal{J}$.  Further,
-assume that $N_0 = 0$, that $N_t < \infty$ a.s. for all $t$, and that 
-$N_\cdot$ is piecewise constant with jumps of size $1$.  Thus, the message
-arrival times are all distinct.
-
-The process $N(i,j)$ is a local submartingale and thus has a 
-nondecreasing predictable compensator, $\Lambda(i,j)$.  Predictability
-means roughly that $\Lambda_t(i,j)$ is known just before time $t$.  The
-compensator satisfies $\Lambda_0(i,j) = 0$ and is such that
-\(
-    N(i,j) - \Lambda(i,j)
-\)
-is a local martingale.  Assume $\Lambda(i,j)$ is absolutely continuous,
-so that there exists a predictable stochastic intensity process $\lambda(i,j)$
-such that
-\[
-    \Lambda_t = \int_0^t \lambda_s(i,j) \, ds.
-\]
-The intuition is
+We model $N$ through its stochastic intensity, $\lambda$, assumed to
+exist and be predictable and continuous (``predictable'' means roughly that
+it only depends on the immediate past).  Heuristically,
 \[
     \lambda_t(i,j) \, dt
         =
         \mathbb{P}\{
-            \text{$i$ sends $j$ a message in $[t,t+dt)$}
+            \text{$i$ sends $j$ a message in time interval $[t,t+dt)$}
         \}.
 \]
-See Martinussen and Scheike for more details~\cite{martinussen2006dynamic}.
+The stochastic intensity exists
+under mild conditions, the most important of which is that no two interactions
+happen simultaneously.
+We will use a version of the Cox Proportional Hazards model for modeling
+the interaction process \cite{cox1972regression}.
+For this section, assume that each message has a single recipient.
 
-Suppose sender $i$ only sends messages to a subset of the receivers.  Denote
-this subset by $\mathcal{J}(i)$.  For sender $i$, receiver $j$, and positive
-time $t$, let $x_t(i,j)$ be a locally bounded predictable vector of
-covariates in $\reals^p$.  Let $\beta$ be an unknown parameter vector in
-$\reals^p$ and let $\lambda_t(i)$ be the baseline intensity for sender $i$,
-deterministic but unknown.  We assume $\lambda_t(i,j)$ has the form
-\begin{equation}
-    \lambda_t(i,j)
-        = 
-        \begin{cases}
-            \lambda_t(i)
-            \cdot
-            \exp\{ \langle x_t(i,j), \, \beta \rangle \}
-                &\text{when $j \in \mathcal{J}(i)$,} \\
-            0
-                &\text{otherwise.}
-        \end{cases}
-\end{equation}
-This is a version of the Cox proportional hazards
-model~\cite{cox1972regression}.
 
-The likelihood of the interaction process is a function of the unknown
-parameter vector $\beta$ and the sender-specific baseline
-intensities $\lambda(1), \ldots, \lambda(I)$.  After observing the process
-up to time $t$, the likelihood is
-\begin{multline*}
-    L_t\big(\beta, \lambda(1), \ldots, \lambda(I)\big) \\
-        =
-        \exp\bigg\{
-            \sum_{i \in \mathcal{I}}
-            \sum_{j \in \mathcal{J}}
-            \int_0^t
-                \log \lambda_s(i,j) \, dN_s(i,j)
-            -
-            \int_0^t
-                \lambda_s(i,j) \, ds
-        \bigg\}.
-\end{multline*}
-This factors into two terms, one which depends on all of the parameters,
-and one which depends on $\beta$ alone.  We estimate $\beta$ by maximizing
-the latter term, the partial likelihood, denoted $\mathit{PL}_t(\beta)$.
-Define
-\begin{gather*}
-    w_{\beta,t}(i,j) = \exp\{ \langle x_t(i,j), \, \beta \rangle \},
-    \qquad
-    W_{\beta,t}(i) = \sum_{j \in \mathcal{J}(i)} w_{\beta,t}(i,j), \\
-    \tilde \lambda_{\beta,t}(i)
-        = \lambda_t(i) \cdot W_{\beta,t}(i).
-\end{gather*}
-The factorization is
-\begin{align*}
-    \begin{split}
-    L_t\big(\beta, \lambda(1), \ldots&, \lambda(I)\big) \\
-        &=
-        \exp\bigg\{
-            \sum_{i \in \mathcal{I}}
-            \int_0^t
-                \log \tilde \lambda_{\beta,s}(i) \, dN_s(i,j)
-            -
-            \int_0^t
-                \tilde \lambda_{\beta,s}(i) \, ds
-        \bigg\}
-        \cdot
-        \mathit{PL}_t(\beta),
-    \end{split} \\
-    \mathit{PL}_t(\beta)
-        &=
-        \exp\bigg\{
-            \sum_{i \in \mathcal{I}}
-            \sum_{j \in \mathcal{J}}
-            \int_0^t
-                \log \frac{w_{\beta,s}(i,j)}
-                          {W_{\beta,s}(i)}
-                \, dN_s(i,j)
-        \bigg\}.
-\end{align*}
 
-Suppose $(t_1, i_1, j_1), \ldots, (t_M, i_M, j_M)$ is the sequence of observed
-messages, where tuple $(t,i,j)$ indicates that at time $t$, sender $i$ sent a
-message to receiver $j$.  Define the following message sets:
-\begin{align*}
-  \mathcal{M}_t(i,j)
-    &= \{ m : t_m \leq t, \, i_m = i, \, j_m = j \}, \\
-  \mathcal{M}_t(i)
-    &= \cup_{j \in \mathcal{J}} \mathcal{M}_t(i,j), \\
-  \mathcal{M}_t
-    &= \cup_{i \in \mathcal{I}} \mathcal{M}_t(i).
-\end{align*}
-The partial likelihood factors a a product of terms, one for each sender:
-\begin{align*}
-    \mathit{PL}_t(\beta)
-        &=
-        \,\,
-        \prod_{i \in \mathcal{I}}
-            \,\,
-            \mathit{PL}_t(\beta, i), \\
-    \mathit{PL}_t(\beta, i)
-        &=
-        \!\!\!\!
-        \prod_{m \in \mathcal{M}_t(i)}
-            \!\!\!
-            \frac{w_{\beta, t_m} (i, j_m)}
-                 {W_{\beta, t_m}}.
-\end{align*}
-This factorization allows us to compute $\log \mathit{PL}_t(\beta)$ and
-its derivatives by computing the sender-specific terms in parallel and
-then adding them together.
-
-The sender-specific log-partial likelihood and its derivatives are
-\begin{align*}
-    \log \mathit{PL}_t(\beta, i)
-        &=
-        \!\!\!\!
-        \sum_{m \in \mathcal{M}_t(i)}
-            \!\!\!        
-            \langle x_{t_m}\!(i, j_m), \, \beta \rangle
-            \,
-            -
-            \,
-            \log W_{\beta, t_m}\!(i), \\
-    \nabla [ \log \mathit{PL}_t(\beta, i) ]
-        &=
-        \!\!\!\!        
-        \sum_{m \in \mathcal{M}_t(i)}
-            \!\!\!
-            x_{t_m}\!(i,j_m)
-            \,
-            -
-            \,
-            \frac{1}{W_{t_m}\!(i)}
-                \sum_{j \in \mathcal{J}(i)}
-                    w_{t_m}\!(i,j) \,
-                    x_{t_m}\!(i,j), \\
-    \begin{split}
-    \nabla^2 [ \log \mathit{PL}_t(\beta, i) ]
-        &=
-        -
-        \!\!\!\!
-        \sum_{m \in \mathcal{M}_t(i)}
-            \!\!
-            \bigg\{
-            \frac{1}{W_{t_m}\!(i)}
-            \sum_{j \in \mathcal{J}(i)}
-                w_{t_m}\!(i,j) \,
-                \big[
-                    x_{t_m}\!(i,j)
-                \big]^{\otimes 2} \\
-        &\qquad\qquad\qquad-
-            \Big[
-                \frac{1}{W_{t_m}\!(i)}
-                \sum_{j \in \mathcal{J}(i)}
-                    w_{t_m}\!(i,j) \,
-                    x_{t_m}\!(i,j)
-            \Big]^{\otimes 2}
-            \bigg\},
-    \end{split}
-\end{align*}
-where $a^{\otimes 2} = a a^\trans$.  When $x_t(i,j)$ is constant over time,
-there are sufficient statistics for $\beta$ and these formulas reduce.
-Otherwise, computing $\log \mathit{PL}_t(\beta,i)$ and its derivatives
-requires iterating over all messages, potentially taking time
-$\Oh(|\mathcal{M}_t(i)| \cdot |\mathcal{J}(i)| \cdot p^2)$.  
-The serial computation time for computing the full partial likelihood
-and its derivatives is $\Oh(M \cdot J \cdot p^2)$.
-For the Enron data, $M \approx 20,\!000$, $J \approx 150$,
-and $p \approx 200$.  This is relatively small by modern standards.  Often
-$M$ on the order of $10^9$ and $J$ on the order of $10^6$.  Computations
-taking time $\Oh(M \cdot J)$ are prohibitive for large datasets.
-
-Taking advantage of sparsity, the serial computation time reduces to
-$\Oh(M \cdot p^2 + I \cdot J)$.  Decompose $x$ into its static
-(non time-varying) and dynamic parts:
-\[
-    x_t(i,j)
-        = x_0(i,j) + d_t(i,j).
-\]
-Typically, the dynamic part, $d_t(i,j)$, is sparse, with at most $\bar p$
-nonzero components.  Moreover $d_t(i,j)$ is zero for most $(i,j)$ pairs
---- often $d_t(i,j)$ is zero unless $i$ and $j$ have exchanged
-messages in the past.  Let
-\[
-    \mathcal{\bar J}(i)
-        =
-        \{
-            j \in \mathcal{J}(i) : d_t(i,j) \neq 0 
-            \,\,
-            \text{for some $t$}
-        \}.
-\]
-Assume $|\mathcal{\bar J}(i)| \ll |\mathcal{J}(i)|$ and that 
-computing $d_t(i,j)$ takes amortized time $\Oh(\bar p)$ for each
-$(t,i,j)$ triple.
-
-Notice
-\begin{align*}
-    w_{\beta,t}(i,j)
-        &=
-            w_{\beta,0}(i,j)
-            \cdot
-            \exp\{ \langle d_t(i,j), \beta \rangle \}, \\
-    W_{\beta,t}(i)
-        &=
-            W_{\beta,0}(i)
-            +
-            \sum_{j \in \mathcal{\bar J}(i)}
-                w_{\beta,t}(i,j) - w_{\beta,0}(i,j)
-\end{align*}
-It takes time $\Oh(|\mathcal{J}(i)| \cdot p)$ to compute the values of
-$W_{\beta,0}(i)$ and $w_{\beta,0}(i,j)$ for any $i$ and all
-$j$ in $\mathcal{J}(i)$; once these values are known, computing the values
-of $W_{\beta,t}(i)$ and $w_{\beta,t}(i,j)$ takes time
-\(
-    \Oh(|\mathcal{\bar J}(i)| \cdot \bar p).
-\)
-Since
-\[
-    \sum_{m\in \mathcal{M}_t(i)}
-        x_{t_m}\!(i,j_m)
-        =
-            \sum_{j \in \mathcal{J}(i)}
-                \mathcal{M}_t(i,j) \, x_0(i,j)
-            \,\,\,
-            +
-            \sum_{m \in \mathcal{M}_t(i)}
-                d_{t_m}\!(i,j),
-\]
-%computing sum on the left hand side takes time
-%\(
-%    \Oh(|\mathcal{M}_t(i)| \cdot \bar p + |\mathcal{J}(i)| \cdot p);
-%\)
-computing $\log \mathit{PL}_t(\beta, i)$ takes time
-\(
-    \Oh(
-        |\mathcal{M}_t(i)| \cdot |\mathcal{\bar J}(i)| \cdot \bar p
-        +
-        |\mathcal{J}(i)| \cdot p
-    ).
-\)
-
-The second term in the gradient is
-\begin{multline*}
-    \sum_{m \in \mathcal{M}_t(i)}
-        \frac{1}{W_{\beta,t_m}\!(i)}
-        \sum_{j \in \mathcal{J}(i)}
-            w_{\beta,t_m}\!(i,j)
-            \,
-            x_{t_m}\!(i,j) \\
-    =
-    \sum_{j \in \mathcal{J}(i)}
-    \bigg[
-        \sum_{m \in \mathcal{M}_t(i)}
-            \frac{w_{\beta,t_m}\!(i,j)}{W_{\beta,t_m}\!(i)}
-    \bigg]
-    \cdot
-    x_0(i,j) \\
-    +
-    \sum_{m \in \mathcal{M}_t(i)}
-        \frac{1}{W_{\beta, t_m}\!(i)}
-        \sum_{j \in \mathcal{\bar J}(i)}
-            w_{\beta,t_m}\!(i,j)
-            \,
-            d_{t_m}\!(i,j).
-\end{multline*}
-Also,
-\[
-    \sum_{m \in \mathcal{M}_t(i)}
-        \frac{w_{\beta,t_m}\!(i,j)}{W_{\beta,t_m}\!(i)}
-    =
-        w_{\beta,0}(i,j)
-        \cdot
-        \sum_{m \in \mathcal{M}_t(i)}
-            \frac{
-                \exp\{\langle d_{t_m}\!(i,j), \, \beta \rangle \}
-            }{
-                W_{\beta,t_m}\!(i)
-            };
-\]
-the latter term is constant when $j \notin \mathcal{\bar J}(i)$.
-Organizing the computations as suggested by these formula,
-the additional overhead for computing the gradient of
-$\log \mathit{PL}_t(\beta,i)$ is
-\(
-    \Oh(
-        |\mathcal{M}_t(i)| \cdot |\mathcal{\bar J}(i)| \cdot \bar p
-        +
-        |\mathcal{J}(i)| \cdot p
-    )
-\).
-This is the same computational complexity as for computing
-$\log \mathit{PL}_t(\beta,i)$.
-
-To compute the Hessian, write
-\begin{multline*}
-    \big[ x_t(i,j) \big]^{\otimes 2}
-    =
-    \big[ x_0(i,j) \big]^{\otimes 2}
-    +
-    \big[ d_t(i,j) \big]^{\otimes 2} \\
-    + 
-    \big[
-        x_0(i,j) \otimes d_t(i,j)
-    \big]
-    +
-    \big[
-        x_0(i,j) \otimes d_t(i,j)
-    \big]^\trans
-\end{multline*}
-Once we have the gradient of $\log \mathit{PL}_t(\beta,i)$,
-the additional term needed to compute the Hessian is
-\[
-    \sum_{m \in \mathcal{M}_t(i)}
-        \frac{1}{W_{\beta,t_m}\!(i)}
-        \sum_{j \in \mathcal{J}(i)}
-            w_{\beta,t_m}\!(i,j) \,
-            \big[
-                x_{t_m}\!(i,j)
-            \big]^{\otimes 2}.
-\]
-The part involving
-$\big[ x_0(i,j) \big]^{\otimes 2} + \big[ d_t(i,j) \big]^{\otimes 2}$
-can be gotten similarly to the term from the gradient in time
-\(
-    \Oh(
-        |\mathcal{M}_t(i)| \cdot |\mathcal{\bar J}(i)| \cdot \bar p^2
-        +
-        |\mathcal{J}(i)| \cdot p^2
-    ).
-\)
-The cross term factors as
-\begin{multline*}
-    \sum_{m \in \mathcal{M}_t(i)}
-        \frac{1}{W_{\beta,t_m}\!(i)}
-        \sum_{j \in \mathcal{J}(i)}
-            w_{\beta,t_m}\!(i,j) \,
-            \big[
-                x_{0}(i,j)
-                \otimes
-                d_{t_m}\!(i,j)
-            \big] \\
-        =
-        \sum_{j \in \mathcal{J}(i)}
-            x_{0}(i,j)
-            \otimes
-            \bigg[
-                \sum_{m \in \mathcal{M}_t(i)}
-                    \frac{w_{\beta,t_m}\!(i,j)}{W_{\beta,t_m}\!(i)}
-                    \,
-                    d_{t_m}\!(i,j)
-            \bigg].
-\end{multline*}
-Thus, the total computation time for computing $\log \mathit{PL}_t(\beta,i)$,
-its gradient, and its hessian, is
-\(
-    \Oh(
-        |\mathcal{M}_t(i)| \cdot |\mathcal{\bar J}(i)| \cdot \bar p^2
-        +
-        |\mathcal{J}(i)| \cdot p^2
-    ).
-\)
-
-Suppose $|\mathcal{J}(i)| \leq J$, $|\mathcal{\bar J}(i)| \leq \bar J$,
-and $|\mathcal{M}_t(i)| \leq M$.  By organizing the computations as described
-above, we can compute $\log \mathit{PL}_t(\beta)$ and its first
-two derivatives in serial time
-\(
-    \Oh(
-        | \mathcal{I} |
-        \cdot
-        M
-        \cdot
-        \bar J
-        \cdot
-        \bar p^2
-        +
-        |\mathcal{I}| \cdot J \cdot p^2
-    ).
-\)
-With $\Oh(|\mathcal{I}|)$ processors, we can compute these quantities in time
-\(
-    \Oh(
-        M \cdot \bar J \cdot \bar p^2
-        +
-        J \cdot p^2
-        +
-        |\mathcal{I}| \cdot p^2
-    ).
-\)
-
-\clearpage
-
-\section{Multiple recipients}
-
-To this point, we have assumed that each message has a single recipient.
-Often, messages have multiple recipients.  In the Enron dataset,
-approximately 30\% of messages have more than one recipient, with
-a few messages having more than fifty recipients.  One way of dealing
-with multiple recipients is, for example, treating a message with three
-recipients as three separate single-recipient messages.  A less ad-hoc
-approach is to explicitly take multiple recipients into account at the
-modeling stage.
-
-Introduce $\lambda_t(i ; R)$ as the baseline intensity at time $t$ for
-messages sent by sender $i$ with $R$ recipients.  Let $J$ be any
-subset of $\mathcal{J}(i)$ and model the rate at which $i$ sends messages to
-recipient set $J$ as
-\begin{equation}\label{E:intensity-multiple}
-    \lambda_t(i,J)
-        =
-        \lambda_t(i ; |J|)
-        \cdot
-        \exp\Big\{
-            \sum_{j \in J}
-                \langle x_t(i,j), \, \beta \rangle
-        \Big\}.
-\end{equation}
-We have chosen this form for ease of interpretability.  At time
-$t$, changing receiver $j$'s covariates from $x_t(i,j)$ to
-$x'_t(i,j)$ results in scaling the the rate at
-which $i$ sends him messages by
-\(
-    \exp\{ \langle x'_t(i,j) - x_t(i,j), \beta \rangle \};
-\)
-importantly, this does not depend on $\lambda_t(i; R)$.
-
-The partial likelihood is nearly the same as in the single-recipient
-setting from Section~\ref{S:point-process-model}.
-Let $(t_1, i_1, J_1), \ldots, (t_M, i_M, J_M)$ be the sequence of
-observed messages, with tuple $(t, i, J)$ indicating that at time $t$
-sender $i$ sent a message with recipient set
-$J$, a subset of $\mathcal{J}$.  Define sets
-\begin{align*}
-    \mathcal{M}_t(i, J)
-        &= \{ m : t_m \leq t, i_m = i, J_m = J \}, \\
-    \mathcal{M}_t(i)
-        &= \cup_{J \subseteq \mathcal{J}} \mathcal{M}_t(i, J), \\
-    \mathcal{M}_t
-        &= \cup_{i \in \mathcal{I}} \mathcal{M}_t(i).
-\end{align*}
-When $i \in \mathcal{I}$, $j \in \mathcal{J}(i)$, and $R \geq 1$, define
-\[
-    w_{\beta,t}(i,j) = \exp\{ \langle x_t(i,j), \, \beta \rangle \},
-    \quad
-    W_{\beta,t}(i; R)
-    =
-    \!\!
-    \sum_{\substack{J \subseteq \mathcal{J}(i)\\ |J| = R}}
-        \prod_{j \in J}
-            w_{\beta,t}(i,j).
-\]
-The log partial likelihood at time $t$ is
-\begin{equation}\label{E:log-pl-multiple}
-    \log \mathit{PL}_t(\beta)
-        =
-        \sum_{i \in \mathcal{I}}
-        \log \mathit{PL}_t(\beta, i),
-\end{equation}
-where the sender-specific part is
-\begin{equation}\label{E:sender-log-pl-multiple}
-    \log \mathit{PL}_t(\beta, i)
-        =
-        \sum_{m \in \mathcal{M}_t(i)}
-        \Big[
-            \sum_{j \in J_m}
-                \langle x_{t_m}\!(i, j), \, \beta \rangle
-        \Big]
-            -
-            \log W_{\beta,t_m} (i ; |J_m|).
-\end{equation}
-Consistency and asymptotic normality of the maximum partial likelihood
-estimator follow from standard arguments.  We state this result and
-sketch its proof below.
-
-\subsection{The general case}
 Let $\mathcal{I}$ be a set of senders and $\mathcal{J}$ be a set of
 receivers.  
 For each sender $i$, let $\bar \lambda_t(i)$ be a non-negative predictable
 process called the baseline intensity of sender $i$; let
 $\mathcal{J}_t(i)$ be a predictable subset of $\mathcal{J}$ called the 
 recipient set of sender $i$.
-For each sender-receiver pair $(i,j)$, let $x_t(i,j)$ in $\reals^p$ be a
-locally bounded predictable vector of covariates.  Let $\beta_0$ in $\reals^p$
-be an unknown vector of coefficients.
+For each sender-receiver pair $(i,j)$, let $x_t(i,j)$ be a locally bounded
+predictable vector of covariates in $\reals^p$.  Let $\beta_0$ in
+be an unknown vector of coefficients in  $\reals^p$.
 
 Suppose $N$ is a multivariate counting process on 
 $\reals_+ \times \mathcal{I} \times \mathcal{J}$,
@@ -785,10 +261,7 @@ with stochastic intensity
         \cdot
         1{\{j \in \mathcal{J}_t(i)\}}.
 \end{equation}
-The integer $N_t(i,j)$ is the number of events marked $(i,j)$ having
-times in  $[0,t]$, with $N_0(i,j)$ assumed to be zero.
-Interpret event $(t, i, j)$ as a message sent from $i$ to $j$ at
-time $t$.  Define
+Assume $N_0(i,j) = 0$.  Define
 \(
     N_t(i) = \sum_{j \in \mathcal{J}} N_t(i,j)
 \)
@@ -861,11 +334,10 @@ The gradient and negative Hessian of $\log \mathit{PL}_t(\cdot)$ are
         \sum_{t_m \leq t}
             V_{t_m}(\beta, i_m).
 \end{gather}
-We call $U_t(\beta)$ the unnormalized score function and $I_t(\beta)$
+We call $U_t(\beta_0)$ the unnormalized score and $I_t(\beta_0)$
 the Fisher information matrix.  Let $\hat \beta_t$ be the value that
 maximizes $\log \mathit{PL}_t(\cdot)$, called the maximum partial
-likelihood estimator (MPLE).  Set $\hat I_t = I_t(\hat \beta_t)$ to be
-the estimated score and Fisher information.
+likelihood estimator (MPLE). 
 
 Typically, one proves consistency of $\hat \beta_t$ by keeping $t$ fixed
 and letting $|\mathcal{I}|$ go to infinity
@@ -1030,7 +502,7 @@ covariation
                 \big[ H_s(i,j) \big]^{\otimes 2} \,
                 d\Lambda_s(i,j)
             \cdot
-            I_{\{ i = i', j = j' \}}
+            1\{ i = i', j = j' \}
 \end{align*}
 \cite[Thm.~2.4.3]{fleming1991counting}.  There exists a sequence
 of stopping times localizing all $M(i,j)$ simultaneously, so $U(\beta_0)$ is
@@ -1142,14 +614,14 @@ The Lindeberg condition is that for any positive $\varepsilon$,
     \sum_{i,j}
     \int_{0}^{\tau_n}
         \| H_s(i,j) \|^2
-        \, I_{\{\| H_s(i,j) \| > \sqrt{n} \varepsilon \}}
+        \, 1\{\| H_s(i,j) \| > \sqrt{n} \varepsilon \}
         \, d\Lambda_s(i,j)
         \toP
         0.
 \]
 With $K = \sup_{t,i,j} \| x_t(i,j)\|$ as above, the integral is bounded by
 \(
-    4 \, K^2 \, I_{\{n^{-1/2} K > \varepsilon / 2\}}
+    4 \, K^2 \, 1\{n^{-1/2} K > \varepsilon / 2\}
     \cdot
     \frac{\Lambda_{\tau_n}}{n}.
 \)
@@ -1252,9 +724,96 @@ must converge to zero.  This proves that the second term in the bound on
         \Sigma_{\alpha} (\beta_0)
     \right\|
 \)
-converges to zero uniformly in $\alpha$ and concludes the proof.
+converges to zero uniformly in $\alpha$, concluding the proof.
 
 \end{proof}
+
+\clearpage
+
+
+\clearpage
+
+\section{Multiple recipients}
+
+To this point, we have assumed that each message has a single recipient.
+Often, messages have multiple recipients.  In the Enron dataset,
+approximately 30\% of messages have more than one recipient, with
+a few messages having more than fifty recipients.  One way of dealing
+with multiple recipients is, for example, treating a message with three
+recipients as three separate single-recipient messages.  A less ad-hoc
+approach is to explicitly take multiple recipients into account at the
+modeling stage.
+
+Introduce $\lambda_t(i ; R)$ as the baseline intensity at time $t$ for
+messages sent by sender $i$ with $R$ recipients.  Let $J$ be any
+subset of $\mathcal{J}(i)$ and model the rate at which $i$ sends messages to
+recipient set $J$ as
+\begin{equation}\label{E:intensity-multiple}
+    \lambda_t(i,J)
+        =
+        \lambda_t(i ; |J|)
+        \cdot
+        \exp\Big\{
+            \sum_{j \in J}
+                \langle x_t(i,j), \, \beta \rangle
+        \Big\}.
+\end{equation}
+We have chosen this form for ease of interpretability.  At time
+$t$, changing receiver $j$'s covariates from $x_t(i,j)$ to
+$x'_t(i,j)$ results in scaling the the rate at
+which $i$ sends him messages by
+\(
+    \exp\{ \langle x'_t(i,j) - x_t(i,j), \beta \rangle \};
+\)
+importantly, this does not depend on $\lambda_t(i; R)$.
+
+The partial likelihood is nearly the same as in the single-recipient
+setting from Section~\ref{S:point-process-model}.
+Let $(t_1, i_1, J_1), \ldots, (t_M, i_M, J_M)$ be the sequence of
+observed messages, with tuple $(t, i, J)$ indicating that at time $t$
+sender $i$ sent a message with recipient set
+$J$, a subset of $\mathcal{J}$.  Define sets
+\begin{align*}
+    \mathcal{M}_t(i, J)
+        &= \{ m : t_m \leq t, i_m = i, J_m = J \}, \\
+    \mathcal{M}_t(i)
+        &= \cup_{J \subseteq \mathcal{J}} \mathcal{M}_t(i, J), \\
+    \mathcal{M}_t
+        &= \cup_{i \in \mathcal{I}} \mathcal{M}_t(i).
+\end{align*}
+When $i \in \mathcal{I}$, $j \in \mathcal{J}(i)$, and $R \geq 1$, define
+\[
+    w_{\beta,t}(i,j) = \exp\{ \langle x_t(i,j), \, \beta \rangle \},
+    \quad
+    W_{\beta,t}(i; R)
+    =
+    \!\!
+    \sum_{\substack{J \subseteq \mathcal{J}(i)\\ |J| = R}}
+        \prod_{j \in J}
+            w_{\beta,t}(i,j).
+\]
+The log partial likelihood at time $t$ is
+\begin{equation}\label{E:log-pl-multiple}
+    \log \mathit{PL}_t(\beta)
+        =
+        \sum_{i \in \mathcal{I}}
+        \log \mathit{PL}_t(\beta, i),
+\end{equation}
+where the sender-specific part is
+\begin{equation}\label{E:sender-log-pl-multiple}
+    \log \mathit{PL}_t(\beta, i)
+        =
+        \sum_{m \in \mathcal{M}_t(i)}
+        \Big[
+            \sum_{j \in J_m}
+                \langle x_{t_m}\!(i, j), \, \beta \rangle
+        \Big]
+            -
+            \log W_{\beta,t_m} (i ; |J_m|).
+\end{equation}
+Consistency and asymptotic normality of the maximum partial likelihood
+estimator follow from standard arguments.  We state this result and
+sketch its proof below.
 
 
 
@@ -1373,6 +932,312 @@ has a Gaussian limit.
     are uniformly bounded in $n$, then $\hat \beta_n$ is a
     $\sqrt{n}$-consistent estimate of $\beta$.
 \end{theorem}
+
+\clearpage
+
+\appendix
+
+\section{Implementation}\label{S:implementaiton}
+
+
+The likelihood of the interaction process is a function of the unknown
+parameter vector $\beta$ and the sender-specific baseline
+intensities $\lambda(1), \ldots, \lambda(I)$.  After observing the process
+up to time $t$, the likelihood is
+\begin{multline*}
+    L_t\big(\beta, \lambda(1), \ldots, \lambda(I)\big) \\
+        =
+        \exp\bigg\{
+            \sum_{i \in \mathcal{I}}
+            \sum_{j \in \mathcal{J}}
+            \int_0^t
+                \log \lambda_s(i,j) \, dN_s(i,j)
+            -
+            \int_0^t
+                \lambda_s(i,j) \, ds
+        \bigg\}.
+\end{multline*}
+This factors into two terms, one which depends on all of the parameters,
+and one which depends on $\beta$ alone.  We estimate $\beta$ by maximizing
+the latter term, the partial likelihood, denoted $\mathit{PL}_t(\beta)$.
+Define
+\begin{gather*}
+    w_{\beta,t}(i,j) = \exp\{ \langle x_t(i,j), \, \beta \rangle \},
+    \qquad
+    W_{\beta,t}(i) = \sum_{j \in \mathcal{J}(i)} w_{\beta,t}(i,j), \\
+    \tilde \lambda_{\beta,t}(i)
+        = \lambda_t(i) \cdot W_{\beta,t}(i).
+\end{gather*}
+The factorization is
+\begin{align*}
+    \begin{split}
+    L_t\big(\beta, \lambda(1), \ldots&, \lambda(I)\big) \\
+        &=
+        \exp\bigg\{
+            \sum_{i \in \mathcal{I}}
+            \int_0^t
+                \log \tilde \lambda_{\beta,s}(i) \, dN_s(i,j)
+            -
+            \int_0^t
+                \tilde \lambda_{\beta,s}(i) \, ds
+        \bigg\}
+        \cdot
+        \mathit{PL}_t(\beta),
+    \end{split} \\
+    \mathit{PL}_t(\beta)
+        &=
+        \exp\bigg\{
+            \sum_{i \in \mathcal{I}}
+            \sum_{j \in \mathcal{J}}
+            \int_0^t
+                \log \frac{w_{\beta,s}(i,j)}
+                          {W_{\beta,s}(i)}
+                \, dN_s(i,j)
+        \bigg\}.
+\end{align*}
+
+Suppose $(t_1, i_1, j_1), \ldots, (t_M, i_M, j_M)$ is the sequence of observed
+messages, where tuple $(t,i,j)$ indicates that at time $t$, sender $i$ sent a
+message to receiver $j$.  Define the following message sets:
+\begin{align*}
+  \mathcal{M}_t(i,j)
+    &= \{ m : t_m \leq t, \, i_m = i, \, j_m = j \}, \\
+  \mathcal{M}_t(i)
+    &= \cup_{j \in \mathcal{J}} \mathcal{M}_t(i,j), \\
+  \mathcal{M}_t
+    &= \cup_{i \in \mathcal{I}} \mathcal{M}_t(i).
+\end{align*}
+The partial likelihood factors a a product of terms, one for each sender:
+\begin{align*}
+    \mathit{PL}_t(\beta)
+        &=
+        \,\,
+        \prod_{i \in \mathcal{I}}
+            \,\,
+            \mathit{PL}_t(\beta, i), \\
+    \mathit{PL}_t(\beta, i)
+        &=
+        \!\!\!\!
+        \prod_{m \in \mathcal{M}_t(i)}
+            \!\!\!
+            \frac{w_{\beta, t_m} (i, j_m)}
+                 {W_{\beta, t_m}}.
+\end{align*}
+This factorization allows us to compute $\log \mathit{PL}_t(\beta)$ and
+its derivatives by computing the sender-specific terms in parallel and
+then adding them together.
+
+The sender-specific log-partial likelihood and its derivatives are
+\begin{align*}
+    \log \mathit{PL}_t(\beta, i)
+        &=
+        \!\!\!\!
+        \sum_{m \in \mathcal{M}_t(i)}
+            \!\!\!        
+            \langle x_{t_m}\!(i, j_m), \, \beta \rangle
+            \,
+            -
+            \,
+            \log W_{\beta, t_m}\!(i), \\
+    \nabla [ \log \mathit{PL}_t(\beta, i) ]
+        &=
+        \!\!\!\!        
+        \sum_{m \in \mathcal{M}_t(i)}
+            \!\!\!
+            x_{t_m}\!(i,j_m)
+            \,
+            -
+            \,
+            \frac{1}{W_{t_m}\!(i)}
+                \sum_{j \in \mathcal{J}(i)}
+                    w_{t_m}\!(i,j) \,
+                    x_{t_m}\!(i,j), \\
+    \begin{split}
+    \nabla^2 [ \log \mathit{PL}_t(\beta, i) ]
+        &=
+        -
+        \!\!\!\!
+        \sum_{m \in \mathcal{M}_t(i)}
+            \!\!
+            \bigg\{
+            \frac{1}{W_{t_m}\!(i)}
+            \sum_{j \in \mathcal{J}(i)}
+                w_{t_m}\!(i,j) \,
+                \big[
+                    x_{t_m}\!(i,j)
+                \big]^{\otimes 2} \\
+        &\qquad\qquad\qquad-
+            \Big[
+                \frac{1}{W_{t_m}\!(i)}
+                \sum_{j \in \mathcal{J}(i)}
+                    w_{t_m}\!(i,j) \,
+                    x_{t_m}\!(i,j)
+            \Big]^{\otimes 2}
+            \bigg\},
+    \end{split}
+\end{align*}
+where $a^{\otimes 2} = a a^\trans$.  When $x_t(i,j)$ is constant over time,
+there are sufficient statistics for $\beta$ and these formulas reduce.
+Otherwise, computing $\log \mathit{PL}_t(\beta,i)$ and its derivatives
+requires iterating over all messages, potentially taking time
+$\Oh(|\mathcal{M}_t(i)| \cdot |\mathcal{J}(i)| \cdot p^2)$.  
+The serial computation time for computing the full partial likelihood
+and its derivatives is $\Oh(M \cdot J \cdot p^2)$.
+For the Enron data, $M \approx 20,\!000$, $J \approx 150$,
+and $p \approx 200$.  This is relatively small by modern standards.  Often
+$M$ on the order of $10^9$ and $J$ on the order of $10^6$.  Computations
+taking time $\Oh(M \cdot J)$ are prohibitive for large datasets.
+
+Taking advantage of sparsity, the serial computation time reduces to
+$\Oh(M \cdot p^2 + I \cdot J)$.  Decompose $x$ into its static
+(non time-varying) and dynamic parts:
+\[
+    x_t(i,j)
+        = x_0(i,j) + d_t(i,j).
+\]
+Typically, the dynamic part, $d_t(i,j)$, is sparse, with at most $\bar p$
+nonzero components.  Moreover $d_t(i,j)$ is zero for most $(i,j)$
+pairs---often $d_t(i,j)$ is zero unless $i$ and $j$ have exchanged
+messages in the past.  Let
+\[
+    \mathcal{\bar J}(i)
+        =
+        \{
+            j \in \mathcal{J}(i) : d_t(i,j) \neq 0 
+            \,\,
+            \text{for some $t$}
+        \}.
+\]
+Assume $|\mathcal{\bar J}(i)| \ll |\mathcal{J}(i)|$ and that 
+computing $d_t(i,j)$ takes amortized time $\Oh(\bar p)$ for each
+$(t,i,j)$ triple.
+
+Notice
+\begin{align*}
+    w_{\beta,t}(i,j)
+        &=
+            w_{\beta,0}(i,j)
+            \cdot
+            \exp\{ \langle d_t(i,j), \beta \rangle \}, \\
+    W_{\beta,t}(i)
+        &=
+            W_{\beta,0}(i)
+            +
+            \sum_{j \in \mathcal{\bar J}(i)}
+                w_{\beta,t}(i,j) - w_{\beta,0}(i,j)
+\end{align*}
+It takes time $\Oh(|\mathcal{J}(i)| \cdot p)$ to compute the values of
+$W_{\beta,0}(i)$ and $w_{\beta,0}(i,j)$ for any $i$ and all
+$j$ in $\mathcal{J}(i)$; once these values are known, computing the values
+of $W_{\beta,t}(i)$ and $w_{\beta,t}(i,j)$ takes time
+\(
+    \Oh(|\mathcal{\bar J}(i)| \cdot \bar p).
+\)
+Since
+\[
+    \sum_{m\in \mathcal{M}_t(i)}
+        x_{t_m}\!(i,j_m)
+        =
+            \sum_{j \in \mathcal{J}(i)}
+                \mathcal{M}_t(i,j) \, x_0(i,j)
+            \,\,\,
+            +
+            \sum_{m \in \mathcal{M}_t(i)}
+                d_{t_m}\!(i,j),
+\]
+%computing sum on the left hand side takes time
+%\(
+%    \Oh(|\mathcal{M}_t(i)| \cdot \bar p + |\mathcal{J}(i)| \cdot p);
+%\)
+computing $\log \mathit{PL}_t(\beta, i)$ takes time
+\(
+    \Oh(
+        |\mathcal{M}_t(i)| \cdot |\mathcal{\bar J}(i)| \cdot \bar p
+        +
+        |\mathcal{J}(i)| \cdot p
+    ).
+\)
+
+The second term in the gradient is
+\begin{multline*}
+    \sum_{m \in \mathcal{M}_t(i)}
+        \frac{1}{W_{\beta,t_m}\!(i)}
+        \sum_{j \in \mathcal{J}(i)}
+            w_{\beta,t_m}\!(i,j)
+            \,
+            x_{t_m}\!(i,j) \\
+    =
+    \sum_{j \in \mathcal{J}(i)}
+    \bigg[
+        \sum_{m \in \mathcal{M}_t(i)}
+            \frac{w_{\beta,t_m}\!(i,j)}{W_{\beta,t_m}\!(i)}
+    \bigg]
+    \cdot
+    x_0(i,j) \\
+    +
+    \sum_{m \in \mathcal{M}_t(i)}
+        \frac{1}{W_{\beta, t_m}\!(i)}
+        \sum_{j \in \mathcal{\bar J}(i)}
+            w_{\beta,t_m}\!(i,j)
+            \,
+            d_{t_m}\!(i,j).
+\end{multline*}
+Also,
+\[
+    \sum_{m \in \mathcal{M}_t(i)}
+        \frac{w_{\beta,t_m}\!(i,j)}{W_{\beta,t_m}\!(i)}
+    =
+        w_{\beta,0}(i,j)
+        \cdot
+        \sum_{m \in \mathcal{M}_t(i)}
+            \frac{
+                \exp\{\langle d_{t_m}\!(i,j), \, \beta \rangle \}
+            }{
+                W_{\beta,t_m}\!(i)
+            };
+\]
+the latter term is constant when $j \notin \mathcal{\bar J}(i)$.
+Organizing the computations as suggested by these formula,
+the additional overhead for computing the gradient of
+$\log \mathit{PL}_t(\beta,i)$ is
+\(
+    \Oh(
+        |\mathcal{M}_t(i)| \cdot |\mathcal{\bar J}(i)| \cdot \bar p
+        +
+        |\mathcal{J}(i)| \cdot p
+    )
+\).
+This is the same computational complexity as for computing
+$\log \mathit{PL}_t(\beta,i)$.
+
+
+Suppose $|\mathcal{J}(i)| \leq J$, $|\mathcal{\bar J}(i)| \leq \bar J$,
+and $|\mathcal{M}_t(i)| \leq M$.  By organizing the computations as described
+above, we can compute $\log \mathit{PL}_t(\beta)$ and its gradient in serial
+time
+\(
+    \Oh(
+        | \mathcal{I} |
+        \cdot
+        M
+        \cdot
+        \bar J
+        \cdot
+        \bar p
+        +
+        |\mathcal{I}| \cdot J \cdot p
+    ).
+\)
+With $\Oh(|\mathcal{I}|)$ processors, we can compute these quantities in time
+\(
+    \Oh(
+        M \cdot \bar J \cdot \bar p
+        +
+        J \cdot p
+        +
+        |\mathcal{I}| \cdot p
+    ).
+\)
 
 
 \bibliographystyle{imsart-number}
