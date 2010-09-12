@@ -7,6 +7,8 @@
 \RequirePackage{hypernat}
 \RequirePackage{graphicx}
 \RequirePackage{enumerate}
+\RequirePackage{booktabs}
+\belowbottomsep=0.5em
 
 \setattribute{journal}{name}{}  % Suppress text "Submitted to..."
 
@@ -80,7 +82,7 @@ calls or the emails sent between individuals in a community
 ``pairwise interaction'' has been construed to include the following:
 
 \begin{itemize}
-    \item\textbf{animal association patterns:} zebras assemble at particular
+    \item\textbf{animal association patterns:} zebras congregate at
     locations in their habitat \cite{sundaresan2007network};
     
     \item\textbf{gang homicide:} gangs in Chicago murder members of rival factions
@@ -127,56 +129,61 @@ allow various forms of time-inhomogeneity and dependency, and includes the
 ability to handle interactions with multiple recipients. 
 
 
-\section{The Enron Email Data}
+\section{A Motivating Example}
 
-Our motivating dataset is a large collection of email messages sent within the
-Enron corporation during the last four years of the company's existence. The
-Enron email corpus is a large subset of the email messages sent within the
-corporation between November 1998 and June 2002. Enron was an energy company
-based in Texas that became notorious in late 2001 for its fraudulent
-accounting practices. These practices eventually lead to the resignation of
-its CEO, to an external audit into its accounting procedures, to massive
-readjustments to its earnings statements, and eventually to its bankruptcy.
-Later, many of the top executives were prosecuted and convicted of criminal
-fraud and insider trading. As part of the investigation, the Federal Energy
-Regulatory Commission (FERC) subpoenaed the e-mail correspondences of the top
-employees and posted those not related to the criminal trial to their website
-(619,446 messages, roughly 92\% of those subpoenaed).
+Our motivating example is to test for gender bias in a corporate email
+network.  The dataset we use is a large collection of email messages sent
+within the Enron corporation during the last four years of the company's
+existence.  Appendix~\ref{S:enron-corpus} describes the data collection and
+preprocessing.  Briefly, there are 21,635 messages in the dataset, which
+were sent between 156 executives in the company.  We know the genders,
+seniorities, and departments of the employees (summarized in
+Table~\ref{T:employees}).
 
-Leslie Kaelbling, a computer scientist at MIT, purchased the corpus from the
-FERC with the intention of making it available to the research community. A
-team of researchers at SRI International worked to fix a number of apparent
-integrity problems with the data, and then it was released to the public by
-William Cohen, at CMU. This is the ``March 2, 2004 Version'' of the dataset.
-Later, a former Enron employee requested that one message be removed from the
-data; this removal prompted the ``August 21, 2009 Version,'' widely regarded
-to be the authoritative version \cite{cohen2009enron}.
+\begin{table}[h]
+    \begin{tabular}{lrclrclr}
+        \toprule
+        \multicolumn{2}{c}{\textbf{Gender}}
+        & & \multicolumn{2}{c}{\textbf{Seniority}}
+        & & \multicolumn{2}{c}{\textbf{Department}} \\
+        \cmidrule{1-2} \cmidrule{4-5} \cmidrule{7-8}
+        Female &  43 && Junior    & 82 && Legal      & 25 \\
+        Male   & 113 && Senior    & 74 && Trading    & 60 \\
+               &     &&           &    && Other      & 71 \\
+        \bottomrule
+    \end{tabular}
+    \caption{
+        Characteristics of the 156 employees in the Enron dataset.
+    }
+    \label{T:employees}
+\end{table}
 
-Zhou et al. have gone through substantial work to preprocess the Enron corpus
-into a useful form \cite{zhou2007strategies}. We rely on their preprocessed
-version for our analysis. They reduce the data to the set of e-mails sent by
-high-ranking Enron executives, eliminating messages sent by non-employees,
-support staff and administrative assistants. They also filter out messages
-with missing timestamps. After this culling process, there are 21,635 messages
-sent by 156 employees between November 13, 1998 and June 21, 2002. Each email
-message has a message body consisting of text, along with header fields
-including \texttt{Date}, \texttt{From}, \texttt{To}, \texttt{CC},
-\texttt{BCC}, and \texttt{Subject}. The \texttt{From} field always lists a
-unique e-mail address, but the \texttt{To}, \texttt{CC}, and \texttt{BCC}
-fields sometimes specify multiple recipients. We make no distinction between
-\texttt{To}, \texttt{CC}, and \texttt{BCC}, combining them all to determine
-the recipients of a message.
+Roughly 28\% of the employees are female, and 72\% are male.  If there were
+no gender bias in the email behavior, we would expect these proportions to
+agree with the counts of messages exchanged between gender groups.  This
+is not the case, as Table~\ref{T:gender-send-counts} demonstrates.  Females
+sent 48\% of their messages to Females, while Males sent 23\%.  Bias is
+present in each group, associated with higher within-group sending rates.
 
-We can associate a set of static covariates for each of the 156 individuals in
-the dataset. Zhou et al. have extracted the employees' names, departments, and
-titles. We use the forenames of the employees to associate genders to the
-employees (e.g, John is male, Susan is female). For ambiguously-gendered names
-like Dana, Robin, and Sean, we use personal pronouns in the messages to help
-code the genders. We code the department as one of three categories: Legal,
-Trading, or Other. Finally, we code the position as Senior (CEO, CFO, COO,
-Director, Managing Director, VP, President) or Junior (Administrator, Analyst,
-Assistant, Attorney, Counsel, Employee, Manager, Specialist, Trader).
-
+\begin{table}[h]
+    \begin{tabular}{lrr}
+        \toprule
+        & \multicolumn{2}{c}{\textbf{To}} \\
+        \cmidrule(l){2-3}
+        \textbf{From} & Female & Male  \\
+        \midrule
+        Female & 7529   &  8061 \\
+        Male   & 5310   & 17488 \\
+        \bottomrule
+    \end{tabular}
+    \caption{
+        Counts of the 21,635 messages sent between gender groups.  Messages
+        with multiple recipients are duplicated so that, for example,
+        a messages with five recipients counts as five single-recipient
+        messages.  This increases the total count to 38,388.
+    }
+    \label{T:gender-send-counts}
+\end{table}
 
 \section{Contingency Tables}
 
@@ -1040,6 +1047,56 @@ has a Gaussian limit.
 \clearpage
 
 \appendix
+
+\section{The Enron Email Corpus}\label{S:enron-corpus}
+
+The Enron email corpus is a large subset of the email messages sent within the
+corporation between November 1998 and June 2002. Enron was an energy company
+based in Texas that became notorious in late 2001 for its fraudulent
+accounting practices. These practices eventually lead to the resignation of
+its CEO, to an external audit into its accounting procedures, to massive
+readjustments to its earnings statements, and eventually to its bankruptcy.
+Later, many of the top executives were prosecuted and convicted of criminal
+fraud and insider trading. As part of the investigation, the Federal Energy
+Regulatory Commission (FERC) subpoenaed the e-mail correspondences of the top
+employees and posted those not related to the criminal trial to their website
+(619,446 messages, roughly 92\% of those subpoenaed).
+
+Leslie Kaelbling, a computer scientist at MIT, purchased the corpus from the
+FERC with the intention of making it available to the research community. A
+team of researchers at SRI International worked to fix a number of apparent
+integrity problems with the data, and then it was released to the public by
+William Cohen, at CMU. This is the ``March 2, 2004 Version'' of the dataset.
+Later, a former Enron employee requested that one message be removed from the
+data; this removal prompted the ``August 21, 2009 Version,'' widely regarded
+to be the authoritative version \cite{cohen2009enron}.
+
+Zhou et al. have gone through substantial work to preprocess the Enron corpus
+into a useful form \cite{zhou2007strategies}. We rely on their preprocessed
+version for our analysis. They reduce the data to the set of e-mails sent by
+high-ranking Enron executives, eliminating messages sent by non-employees,
+support staff and administrative assistants. They also filter out messages
+with missing timestamps. After this culling process, there are 21,635 messages
+sent by 156 employees between November 13, 1998 and June 21, 2002. Each email
+message has a message body consisting of text, along with header fields
+including \texttt{Date}, \texttt{From}, \texttt{To}, \texttt{CC},
+\texttt{BCC}, and \texttt{Subject}. The \texttt{From} field always lists a
+unique e-mail address, but the \texttt{To}, \texttt{CC}, and \texttt{BCC}
+fields sometimes specify multiple recipients. We make no distinction between
+\texttt{To}, \texttt{CC}, and \texttt{BCC}, combining them all to determine
+the recipients of a message.
+
+We can associate a set of static covariates for each of the 156 individuals in
+the dataset. Zhou et al. have extracted the employees' names, departments, and
+titles. We use the forenames of the employees to associate genders to the
+employees (e.g, John is male, Susan is female). For ambiguously-gendered names
+like Dana, Robin, and Sean, we use personal pronouns in the messages to help
+code the genders. We code the department as one of three categories: Legal,
+Trading, or Other. Finally, we code the position as Senior (CEO, CFO, COO,
+Director, Managing Director, VP, President) or Junior (Administrator, Analyst,
+Assistant, Attorney, Counsel, Employee, Manager, Specialist, Trader).
+
+
 
 \section{Implementation}\label{S:implementaiton}
 
