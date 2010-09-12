@@ -73,35 +73,33 @@ Abstract.
 
 \section{Introduction}
 
-Data derived from observing repeated pairwise interactions are becoming more
-and more common. One obvious source are communications networks: either all of
-the phone calls made or the emails sent between inviduals in a small
-community. More broadly, one can consider the notion of ``pairwise
-interaction'' to include
+Data derived from repeated pairwise interactions are becoming more common. 
+The canonical examples are communications networks: either all of the phone
+calls or the emails sent between individuals in a community
+\cite{eagle2006reality,tyler2005email}. More broadly,
+``pairwise interaction'' has been construed to include the following:
 
-\begin{description}
+\begin{itemize}
+    \item\textbf{animal association patterns:} zebras assemble at particular
+    locations in their habitat \cite{sundaresan2007network};
+    
+    \item\textbf{gang homicide:} gangs in Chicago murder members of rival factions
+    \cite{papachristos2009murder};
 
-    \item[migration patterns] where each ``individual'' is a greographical
-    location, and each ``interaction'' is a family relocating (rehabituating)
-    from one county to another;
+    \item\textbf{legislation cosponsorship:} a congressperson authors a bill, which
+    gets sponsored by other legislators \cite{fowler2006connecting};
 
-    \item[collaborations] where individuals are authors and interactions are
-    the works they coauthor; alternatively, individuals are congressmen and
-    interactions are coauthored bills; or
+    \item\textbf{migration patterns:} families migrate between communities in
+    Mexico \cite{mckenzie2007network};
+\end{itemize}
 
-    \item[text analysis] where individials are works or bigrams, and
-    interactions are co-occurrences in phrases or documents.
-
-\end{description}
-
-For the current treatment, we shall consider directed interactions, with each
+For the current treatment, we consider directed interactions, with each
 interaction having an initiator (sender) and at least one recipient
-(receiver). To simplify the development, initially we focus on the
-single-recipient case, so that each interaction involves a single
-sender-receiver pair. If we consider the first author of a work to be the
-initiator, and if we respect word order in a document, then all of the above
-interaction scenarios can be included. Mostly, though, we will focus on
-communication networks.
+(receiver).  All of the above examples fall into this category.  To simplify
+the development, initially we focus on the single-recipient case, so that
+each interaction involves one sender-receiver pair, called a dyad.  We
+borrow terminology from the communications setting, referring to
+interactions as messages.
 
 Suppose we observe a system of individuals interacting over time. At the end
 of the observation period, we have witnessed a stream of interaction events of

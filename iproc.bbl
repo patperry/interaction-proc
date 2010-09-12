@@ -54,6 +54,17 @@
 \end{barticle}
 \endbibitem
 
+\bibitem{eagle2006reality}
+\begin{barticle}[author]
+\bauthor{\bsnm{Eagle},~\bfnm{N.}\binits{N.}} \AND
+  \bauthor{\bsnm{Pentland},~\bfnm{A.~S.}\binits{A.~S.}}
+(\byear{2006}).
+\btitle{{Reality mining: sensing complex social systems}}.
+\bjournal{Pers. Ubiquit. Comput.}
+\bpages{255--268}.
+\end{barticle}
+\endbibitem
+
 \bibitem{fleming1991counting}
 \begin{bbook}[author]
 \bauthor{\bsnm{Fleming},~\bfnm{T.~R.}\binits{T.~R.}} \AND
@@ -62,6 +73,17 @@
 \btitle{{Counting Processes and Survival Analysis}}.
 \bpublisher{John Wiley \& Sons}.
 \end{bbook}
+\endbibitem
+
+\bibitem{fowler2006connecting}
+\begin{barticle}[author]
+\bauthor{\bsnm{Fowler},~\bfnm{J.~H.}\binits{J.~H.}}
+(\byear{2006}).
+\btitle{{Connecting the congress: a study of cosponsorship networks}}.
+\bjournal{Polit. Anal.}
+\bvolume{14}
+\bpages{456--487}.
+\end{barticle}
 \endbibitem
 
 \bibitem{haberman1977maximum}
@@ -105,16 +127,41 @@
 \end{bbook}
 \endbibitem
 
+\bibitem{mckenzie2007network}
+\begin{barticle}[author]
+\bauthor{\bsnm{Mckenzie},~\bfnm{D.}\binits{D.}} \AND
+  \bauthor{\bsnm{Rapoport},~\bfnm{H.}\binits{H.}}
+(\byear{2007}).
+\btitle{{Network effects and the dynamics of migration and inequality: theory
+  and evidence from Mexico}}.
+\bjournal{J. Dev. Econ.}
+\bvolume{84}
+\bpages{1--24}.
+\end{barticle}
+\endbibitem
+
 \bibitem{mcpherson2001birds}
 \begin{barticle}[author]
 \bauthor{\bsnm{McPherson},~\bfnm{M.}\binits{M.}},
   \bauthor{\bsnm{Smith-Lovin},~\bfnm{L.}\binits{L.}} \AND
   \bauthor{\bsnm{Cook},~\bfnm{J.~M.}\binits{J.~M.}}
 (\byear{2001}).
-\btitle{{Birds of a feather: Homophily in social networks}}.
+\btitle{{Birds of a feather: homophily in social networks}}.
 \bjournal{Annu. Rev. Sociol.}
 \bvolume{27}
 \bpages{415--444}.
+\end{barticle}
+\endbibitem
+
+\bibitem{papachristos2009murder}
+\begin{barticle}[author]
+\bauthor{\bsnm{Papachristos},~\bfnm{A.~V.}\binits{A.~V.}}
+(\byear{2009}).
+\btitle{{Murder by structure: dominance relations and the social structure of
+  gang homicide}}.
+\bjournal{Am. J. Sociol.}
+\bvolume{115}
+\bpages{74--128}.
 \end{barticle}
 \endbibitem
 
@@ -129,6 +176,21 @@
 \end{barticle}
 \endbibitem
 
+\bibitem{sundaresan2007network}
+\begin{barticle}[author]
+\bauthor{\bsnm{Sundaresan},~\bfnm{S.~R.}\binits{S.~R.}},
+  \bauthor{\bsnm{Fischoff},~\bfnm{I.~R.}\binits{I.~R.}},
+  \bauthor{\bsnm{Dushoff},~\bfnm{J.}\binits{J.}} \AND
+  \bauthor{\bsnm{Rubenstein},~\bfnm{D.~I.}\binits{D.~I.}}
+(\byear{2007}).
+\btitle{{Network metrics reveal differences in social organization between two
+  fission-fusion species, Grevy's zebra and onager}}.
+\bjournal{Oecologia}
+\bvolume{151}
+\bpages{140--149}.
+\end{barticle}
+\endbibitem
+
 \bibitem{tapia1971kantorovich}
 \begin{barticle}[author]
 \bauthor{\bsnm{Tapia},~\bfnm{R.~A.}\binits{R.~A.}}
@@ -137,6 +199,20 @@
 \bjournal{Am. Math. Mon.}
 \bvolume{78}
 \bpages{389--392}.
+\end{barticle}
+\endbibitem
+
+\bibitem{tyler2005email}
+\begin{barticle}[author]
+\bauthor{\bsnm{Tyler},~\bfnm{J.~R.}\binits{J.~R.}},
+  \bauthor{\bsnm{Wilkinson},~\bfnm{D.~M.}\binits{D.~M.}} \AND
+  \bauthor{\bsnm{Huberman},~\bfnm{B.~A.}\binits{B.~A.}}
+(\byear{2005}).
+\btitle{E-mail as spectroscopy: automated discovery of community structure
+  within organizations}.
+\bjournal{Inform. Soc.}
+\bvolume{21}
+\bpages{143--153}.
 \end{barticle}
 \endbibitem
 
