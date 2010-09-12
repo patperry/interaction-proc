@@ -849,13 +849,10 @@ Newton iterates converge to $\hat \beta_n$.  Moreover,
         \)
 \end{enumerate}
 Thus, $\hat \beta_n \toP \beta_0$, and $\sqrt{n} (\hat \beta_n - \beta_0)$
-and $Z_n$ converge in distribution to the same limit.
+and $\sqrt{n} \, Z_n$ converge weakly to the same limit.
 
 \end{proof}
 
-
-
-\clearpage
 
 \section{Multiple recipients}
 
@@ -868,19 +865,23 @@ recipients as three separate single-recipient messages.  A less ad-hoc
 approach is to explicitly take multiple recipients into account at the
 modeling stage.
 
-Introduce $\lambda_t(i ; R)$ as the baseline intensity at time $t$ for
+Introduce $\bar \lambda_t(i ; R)$ as the baseline intensity at time $t$ for
 messages sent by sender $i$ with $R$ recipients.  Let $J$ be any
-subset of $\mathcal{J}(i)$ and model the rate at which $i$ sends messages to
+subset of $\mathcal{J}$ and model the rate at which $i$ sends messages to
 recipient set $J$ as
 \begin{equation}\label{E:intensity-multiple}
     \lambda_t(i,J)
         =
-        \lambda_t(i ; |J|)
+        \bar \lambda_t(i ; |J|)
         \cdot
         \exp\Big\{
             \sum_{j \in J}
-                \langle x_t(i,j), \, \beta \rangle
-        \Big\}.
+                \beta_0^\trans  x_t(i,j)
+        \Big\}
+        \cdot
+        \prod_{j \in J}
+        1\{ j \in \mathcal{J}_t(i) \}
+        .
 \end{equation}
 We have chosen this form for ease of interpretability.  At time
 $t$, changing receiver $j$'s covariates from $x_t(i,j)$ to
@@ -895,8 +896,12 @@ The partial likelihood is nearly the same as in the single-recipient
 setting from Section~\ref{S:point-process-model}.
 Let $(t_1, i_1, J_1), \ldots, (t_M, i_M, J_M)$ be the sequence of
 observed messages, with tuple $(t, i, J)$ indicating that at time $t$
-sender $i$ sent a message with recipient set
-$J$, a subset of $\mathcal{J}$.  Define sets
+sender $i$ sent a message with recipient set $J$.
+
+
+\clearpage 
+
+Define sets
 \begin{align*}
     \mathcal{M}_t(i, J)
         &= \{ m : t_m \leq t, i_m = i, J_m = J \}, \\
@@ -938,11 +943,6 @@ where the sender-specific part is
 Consistency and asymptotic normality of the maximum partial likelihood
 estimator follow from standard arguments.  We state this result and
 sketch its proof below.
-
-
-\clearpage
-
-
 
 Let $J_n$ be an increasing sequence of positive integers, set
 $\mathcal{J}_n = \{ 1, \ldots, J_n \}$, and
