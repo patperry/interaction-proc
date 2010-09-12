@@ -95,52 +95,36 @@ calls or the emails sent between individuals in a community
 
 For the current treatment, we consider directed interactions, with each
 interaction having an initiator (sender) and at least one recipient
-(receiver).  All of the above examples fall into this category.  To simplify
+(receiver).  The above examples fall into this category.  To simplify
 the development, initially we focus on the single-recipient case, so that
 each interaction involves one sender-receiver pair, called a dyad.  We
 borrow terminology from the communications setting, referring to
 interactions as messages.
 
-Suppose we observe a system of individuals interacting over time. At the end
-of the observation period, we have witnessed a stream of interaction events of
-the form $(t, i, j)$. This triple denotes that at time $t$, we observed the
-interaction $i \to j$, an interaction sent by individual $i$ and received by
-individual $j$.
-
-Given covariate information about the senders and receivers, we want to
-determine which characteristics and behaviors are associated with (predictive
-of) interaction. We want to answer the following questions.
+The data is a set of messages.  Each message is represented by a triple,
+where $(t,i,j)$ denotes that at time $t$, sender $i$ sent a message to
+receiver $j$.  Given a set of messages and covariate information about the
+senders and receivers, our goal is to determine which characteristics and
+behaviors are predictive of interaction.  At least two questions are
+relevant:
 
 \begin{enumerate}
-
-    \item If two individuals share an attribute, are they more likely to
-    interact? In studying human behavior, Sociologists have repeatedly found
+    \item Is a shared attribute between individuals predictive of increased
+    interaction?  In studying human behavior, Sociologists repeatedly find
     evidence of homophily, the tendency of individuals to associate with
-    similar others \cite{mcpherson2001birds}. We would like to know, for
-    example, if pairs of people with the same gender interact more often then
-    pairs of people with differing genders.
+    similar others \cite{mcpherson2001birds}. A typical inquiry is
+    to see if people with identical genders interact more often then
+    people with differing genders.
 
-    \item If individual $i$ sends a message to individual $j$, is $j$ likely
-    to respond? How much more likely does the interaction $j \to i$ become,
-    and how does this depend on time? When I send you a message at 12:00~p.m.\
-    on Monday, I certainly do not expect a reply before 12:01~p.m., but I
-    might expect one before 12:00~p.m.\ on Tuesday. Maybe I should expect a
-    reply before 1:00~p.m. Certainly, if I have not heard from you in two
-    weeks, I should not expect a reply the next month. How can statements like
-    this be made precise, and how can they be derived from data?
-
-    \item Conversely, if individual $i$ interacts with $j$ at time $t$, is he
-    more likely to interact with $j$ at time $t+1$? How much more likely, and
-    how does this affect decay over time?
-
+    \item If individual $i$ sends a message to individual $j$, is this
+    associated with $j$ being more likely to send to $i$ in the future?
+    If so, how does this effect decay with time?
 \end{enumerate}
 
-We present a simple modeling framework to facilitate inquiry into all of the
-above. The framework is flexible enough to allow various forms of
-time-inhomogeneity and dependency, and includes the ability to handle
-interactions with multiple recipients. However, we stress that without further
-justification, none of our conclusions imply causality---they only show
-association.
+This report presents a modeling framework to facilitate inquiry into
+these questions and others like them. The framework is flexible enough to
+allow various forms of time-inhomogeneity and dependency, and includes the
+ability to handle interactions with multiple recipients. 
 
 
 \section{The Enron Email Data}
