@@ -138,44 +138,25 @@ existence.  Appendix~\ref{S:enron-corpus} describes the data collection and
 preprocessing.  Briefly, there are 21,635 messages in the dataset, which
 were sent between 156 executives in the company.  We know the genders,
 seniorities, and departments of the employees (summarized in
-Table~\ref{T:employees}).
+Table~\ref{T:employee-summary}).
 
 \begin{table}[h]
-    \begin{tabular}{lrclrclr}
-        \toprule
-        \multicolumn{2}{c}{\textbf{Gender}}
-        & & \multicolumn{2}{c}{\textbf{Seniority}}
-        & & \multicolumn{2}{c}{\textbf{Department}} \\
-        \cmidrule{1-2} \cmidrule{4-5} \cmidrule{7-8}
-        Female &  43 && Junior    & 82 && Legal      & 25 \\
-        Male   & 113 && Senior    & 74 && Trading    & 60 \\
-               &     &&           &    && Other      & 71 \\
-        \bottomrule
-    \end{tabular}
+    \input{tables/employee-summary}
     \caption{
         Characteristics of the 156 employees in the Enron dataset.
     }
-    \label{T:employees}
+    \label{T:employee-summary}
 \end{table}
 
 Roughly 28\% of the employees are female, and 72\% are male.  If there were
 no gender bias in the email behavior, we would expect these proportions to
 agree with the counts of messages exchanged between gender groups.  This
-is not the case, as Table~\ref{T:gender-send-counts} demonstrates.  Females
-sent 48\% of their messages to Females, while Males sent 23\%.  Bias is
-present in each group, associated with higher within-group sending rates.
+is not the case, as Table~\ref{T:gender-send-counts} demonstrates.  
+Apparently, bias is present in each group, associated with higher
+within-group sending rates.
 
 \begin{table}[h]
-    \begin{tabular}{lrr}
-        \toprule
-        & \multicolumn{2}{c}{\textbf{To}} \\
-        \cmidrule(l){2-3}
-        \textbf{From} & Female & Male  \\
-        \midrule
-        Female & 7529   &  8061 \\
-        Male   & 5310   & 17488 \\
-        \bottomrule
-    \end{tabular}
+    \input{tables/gender-send-counts}
     \caption{
         Counts of the 21,635 messages sent between gender groups.  Messages
         with multiple recipients are duplicated so that, for example,
@@ -185,21 +166,37 @@ present in each group, associated with higher within-group sending rates.
     \label{T:gender-send-counts}
 \end{table}
 
-\section{Contingency Tables}
+If we treat the messages as independent identically-distributed observations,
+then any reasonable test will find gender bias in both group-level behaviors.
+Given that a female is sending a message, the probability that the recipient
+is male will be estimated to be about 48\%, with a standard error around
+0.4\%; given that a male is sending a message, the estimate will be about
+23\% with a standard error around 0.2\%.
 
-The contingency table is an established method for analyzing homophily and
-group-level behavior.
+There are at least three problems with this simple analysis.
+\begin{enumerate}
+    \item \textbf{Senders never send messages to themselves.} In network
+    terminology, there are no ``self-loops.'' In other email datasets, people
+    do sometimes email themselves, but arguably these messages should be
+    handled differently then messages exchanged between different individuals.
+    
+    \item \textbf{Messages are not independent of each other.} If I send
+    you a message today, then you are more likely to send me a message
+    tomorrow.  Any inherent gender bias will be exaggerated by
+    reciprocation effects.
+    
+    \item \textbf{Messages have multiple recipients.} In the Enron dataset,
+    more than 30\% of the messages have more than one recipient.  As noted in
+    the caption to Table~\ref{T:gender-send-counts}, for the analysis above
+    we have treated a message with two or more recipients as two or more
+    single-recipient messages.
+\end{enumerate}
+The first issue is easy to fix, but the other two require significant
+attention.
 
-\section{Pitfalls of Table-Based Analyses}
-
-The table-based analysis does not account for variability in individual
-behavior, ignores the times of the messages, and does not handle messages with
-multiple recipients.
-
-\subsection{Individual Inhomogeneity}
-\subsection{Time Dependence}
-\subsection{Multiple Recipients}
-
+Another feature of the data potentially requiring special consideration is
+that the employees have inhomogeneous sending patterns.  Fig~BLAH shows how
+the volume varies with sender and time.
 
 \section{A Point Process Model}\label{S:point-process-model}
 

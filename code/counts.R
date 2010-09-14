@@ -1,5 +1,5 @@
-# counts.R
-# --------
+# code/counts.R
+# -------------
 
 require("RSQLite")
 
@@ -145,31 +145,32 @@ GetSendCounts <- function(from.eid)
 }
 
 
-group_count <- kGenderCount * kSeniorityCount * kDepartmentCount
-gender <- rep(kGender, group_count / kGenderCount)
-seniority <- rep(rep(kSeniority, each = kGenderCount),
-                 group_count / kGenderCount / kSeniorityCount)
-department <- rep(kDepartment, each = kGenderCount * kSeniorityCount)
-
-recipient_count <- matrix(NA, group_count, group_count)
-
-for (i in seq_len(group_count)) {
-    for (j in seq_len(group_count)) {
-        recipient_count[i,j] <- GetRecipientCount(from.gender = gender[i],
-            from.seniority = seniority[i], from.department = department[i],
-            to.gender = gender[j], to.seniority = seniority[j],
-            to.department = department[j])
-    }
-}
-
-employee_count <- rep(NA, group_count)
-for (k in seq_len(group_count)) {
-    employee_count[k] <- GetEmployeeCount(gender = gender[k],
-        seniority = seniority[k], department = department[k])
-}
-
-send_count <- rep(NA, group_count)
-for (k in seq_len(group_count)) {
-    send_count[k] <- GetRecipientCount(from.gender = gender[k],
-        from.seniority = seniority[k], from.department = department[k])
-}
+# group_count <- kGenderCount * kSeniorityCount * kDepartmentCount
+# gender <- rep(kGender, group_count / kGenderCount)
+# seniority <- rep(rep(kSeniority, each = kGenderCount),
+#                  group_count / kGenderCount / kSeniorityCount)
+# department <- rep(kDepartment, each = kGenderCount * kSeniorityCount)
+# 
+# recipient_count <- matrix(NA, group_count, group_count)
+# 
+# for (i in seq_len(group_count)) {
+#     for (j in seq_len(group_count)) {
+#         recipient_count[i,j] <- GetRecipientCount(from.gender = gender[i],
+#             from.seniority = seniority[i], from.department = department[i],
+#             to.gender = gender[j], to.seniority = seniority[j],
+#             to.department = department[j])
+#     }
+# }
+# 
+# employee_count <- rep(NA, group_count)
+# for (k in seq_len(group_count)) {
+#     employee_count[k] <- GetEmployeeCount(gender = gender[k],
+#         seniority = seniority[k], department = department[k])
+# }
+# 
+# send_count <- rep(NA, group_count)
+# for (k in seq_len(group_count)) {
+#     send_count[k] <- GetRecipientCount(from.gender = gender[k],
+#         from.seniority = seniority[k], from.department = department[k])
+# }
+# 
