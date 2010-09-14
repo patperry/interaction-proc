@@ -1,40 +1,7 @@
 # code/counts.R
 # -------------
 
-require("RSQLite")
-
-kDbDriver <- dbDriver("SQLite")
-kDbName <- "data/enron/enron.db"
-
-kGender <- factor(c("Female", "Male"))
-kSeniority <- factor(c("Junior", "Senior"))
-kDepartment <- factor(c("Legal", "Trading", "Other"))
-
-kGenderCount <- length(kGender)
-kSeniorityCount <- length(kSeniority)
-kDepartmentCount <- length(kDepartment)
-
-kEmployee <- (function() {
-    sql <- paste("
-        SELECT
-            *
-        FROM
-            Employee
-    ")
-    conn <- dbConnect(kDbDriver, dbname = kDbName)
-    tryCatch({
-        employee <- dbGetQuery(conn, sql)
-    }, finally = {
-        dbDisconnect(conn)
-    })
-    
-    employee$gender <- factor(employee$gender, kGender)
-    employee$seniority <- factor(employee$seniority, kSeniority)
-    employee$department <- factor(employee$department, kDepartment)
-    employee
-})()
-
-kEmployeeCount <- nrow(kEmployee)
+source("code/common.R")
 
 GetEmployeeCount <- function(gender = kGender,
                              seniority = kSeniority,
@@ -68,8 +35,6 @@ GetEmployeeCount <- function(gender = kGender,
     count <- rows$employee_count
     count
 }
-
-kEmployeeCount <- GetEmployeeCount()
 
 
 GetRecipientCount <- function(from.gender = kGender,
@@ -115,33 +80,6 @@ GetRecipientCount <- function(from.gender = kGender,
     
     count <- rows$recipient_count
     count
-}
-
-
-GetSendCounts <- function(from.eid)
-{
-    sql <- paste("
-        SELECT
-            R.to_eid AS to_eid,
-            COUNT(*) AS receive_count
-        FROM
-            Message M,
-            Recipient R
-        WHERE
-            M.mid = R.mid
-            AND M.from_eid =", from.eid,"
-        GROUP BY
-            R.to_eid
-        ")
-        
-    conn <- dbConnect(kDbDriver, dbname = kDbName)
-    tryCatch({
-        res <- dbGetQuery(conn, sql)
-    }, finally = {
-        dbDisconnect(conn)
-    })
-
-    res
 }
 
 
