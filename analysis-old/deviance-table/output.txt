@@ -1,0 +1,4 @@
+deviance.null:  387214 df: 38388 
+deviance.static:  323197.8 df: 132 
+deviance.dynamic:  190252.8 df: 39 
+
