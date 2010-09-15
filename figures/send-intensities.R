@@ -10,10 +10,17 @@ msg <- GetMessages()
 pdffile <- "figures/send-intensities.pdf"
 pdfout <- TRUE
 
-# 'Purples' scheme from ColorBrewer2
-colorRGB <- colorRamp(c(rgb(239, 237, 245, max = 255),
-                        rgb(188, 189, 200, max = 255),
-                        rgb(117, 107, 177, max = 255)), space = "Lab")
+# 'Oranges' scheme from ColorBrewer2, last 3 colors from 4-color scheme
+colorRGB <- colorRamp(c(rgb(253, 190, 133, max = 255),
+                        rgb(253, 141, 60, max = 255),
+                        rgb(217, 71, 1, max = 255)
+                       ), space = "Lab", bias=1)
+
+# 'Purples' scheme from ColorBrewer2, last 3 colors from 4-color scheme
+colorRGB <- colorRamp(c(rgb(203, 201, 226, max = 255),
+                        rgb(158, 154, 200, max = 255),
+                        rgb(106, 81, 163, max = 255)
+                       ), space = "Lab", bias=1)
 color <- function(q) rgb(colorRGB(q), max = 255)
 
 
