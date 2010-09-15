@@ -244,10 +244,7 @@ of the Cox proportional intensity model for modeling the interaction process
 \cite{cox1972regression}.  For this section, assume each message has a
 single recipient.
 
-
-
-Let $\mathcal{I}$ be a set of senders and $\mathcal{J}$ be a set of
-receivers.  
+Let $\mathcal{I}$ be a set of senders and $\mathcal{J}$ be a set of receivers.
 For each sender $i$, let $\bar \lambda_t(i)$ be a non-negative predictable
 process called the baseline intensity of sender $i$; let
 $\mathcal{J}_t(i)$ be a predictable subset of $\mathcal{J}$ called the 
@@ -293,6 +290,72 @@ estimators are consistent, and Appendix~\ref{S:implementaiton} presents
 an efficient algorithm for computing them.  In practice, the
 Hessian of $\log \mathit{PL}_t(\cdot)$ may be singular or ill-conditioned;
 Appendix~\ref{S:regularization} addresses the issue.
+
+\section{Modeling the Enron Data}\label{S:enron-modeling}
+
+We use the proportional intensity model of
+Section~\ref{S:point-process-model} to model the Enron data.
+The senders and receivers are the 156 employees in the dataset, so
+$\mathcal{I} = \mathcal{J} = \{ 1, 2, \ldots, 156 \}$.  To disallow
+self-loops, we set $\mathcal{J}_t(i) = \mathcal{I} \setminus \{ i \}$.
+We use two types of covariates: static and dynamic.  The static covariates
+don't change over time, and are determined by the sender- and
+receiver-specific group memberships.  The dynamic covariates depend on the
+history of the process.
+
+Considering gender (2 levels), seniority (2 levels), and department
+(3 levels), each individual belongs to one of 12 groups.  Each
+sender-receiver pair involves 2 of these groups, for $12^2 = 144$ possible
+group-group combinations.  We introduce a static binary covariate for each
+combination.  The dyad covariate vector $x_t(i,j)$ has 144 components
+corresponding to these covariates.  For concreteness, abbreviate the codes
+for gender, seniority, and department by F/M, J/S, and L/T/O.  For
+individual $i$, define $s(i)$ in $\reals^{12}$ by
+\begin{align*}
+    s(i)
+    =
+    \big(
+        &\text{1\{$i$ is FJL\}},
+        \text{1\{$i$ is MJL\}},
+        \text{1\{$i$ is FSL\}},
+        \text{1\{$i$ is MSL\}}, \\
+        &\,\,\text{1\{$i$ is FJT\}},
+        \text{1\{$i$ is MJT\}},
+        \text{1\{$i$ is FST\}},
+        \text{1\{$i$ is MST\}}, \\
+        &\,\,\,\,\text{1\{$i$ is FJO\}},
+        \text{1\{$i$ is MJO\}},
+        \text{1\{$i$ is FSO\}},
+        \text{1\{$i$ is MSO\}}
+    \big).
+\end{align*}
+The 144 static covariates of $x_t(i,j)$ are the interactions,
+the components of $\vecm\big(s(i) \otimes s(j)\big)$, where
+$a \otimes b = a b^\trans$ and $\vecm(\cdot)$ maps a matrix to a vector
+by stacking columns.  More generally, we recommend forming
+dyad covariates by taking Kronecker products of sender and receiver
+covariates.
+
+Notably, the components of $\beta_0$ corresponding to the static
+components are not identifiable.  Any $\tilde \beta_0$ satisfying
+$\tilde \beta_0^\trans x_t(i,j) = \beta_0^\trans x_t(i,j) + \alpha_t(i)$
+gives rise to the same partial likelihood.  We identify $\beta_0$ by
+forcing it to have minimum $\mathcal{L}^2$ norm.  This reduces the
+degrees of freedom in the static coefficients from 144 to 132 (effectively,
+it imposes ``sum-to-zero'' constraints within receiver classes).
+
+We use history-dependent covariates to capture reciprocation effects.
+Specifically, we introduce 21 covariates of the form
+\[
+    1\{\text{$j$'s most recent message to $i$ was sent in $[t-\delta, t)$\}}.
+\]
+If, at time $t$, individual $j$ has never sent a message to $i$, then
+these covariates are all zero.  The 21 values for the time interval
+$\delta$ are of the form ``$2^k$ hours,'' where $k$ is an integer ranging
+from $-6$ to $14$.  The shortest time interval is $56.25$ seconds, and the
+longest is $1.87$ years.
+
+
 
 \section{MPLE Consistency}\label{S:MPLE-consistency}
 
@@ -1068,7 +1131,7 @@ With $\Oh(|\mathcal{I}|)$ processors, we can compute these quantities in time
     ).
 \)
 
-\section{Estimation when the Hessian is Ill-conditioned}\label{S:regularization}
+\section{Estimation with an Ill-conditioned Hessian}\label{S:regularization}
 
 When the Hessian of $\log \mathit{PL}_t(\cdot)$ is singular or
 ill-conditioned, its inverse may not exist, and it is necessary to modify
