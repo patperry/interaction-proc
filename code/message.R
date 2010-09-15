@@ -14,7 +14,7 @@ GetMessages <- function(duplicate = TRUE) {
     msg$time <- as.POSIXct(unix.time, origin = "1970-01-01")
     msg$time.secs <- unix.time - min(unix.time)
     
-    time.origin <- ifelse(length(msg$time) > 0, msg$time[1], NA)
+    time.origin <- if(length(msg$time) > 0) (msg$time[1]) else NA
     
     if (duplicate) {
         msg.raw <- msg

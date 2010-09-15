@@ -20,9 +20,9 @@ GetEmployees <- function() {
         dbDisconnect(conn)
     })
     
-    emp <- data.frame(gender = factor(emp.raw$gender, kGender),
+    emp <- data.frame(eid = emp.raw$eid,
+                      gender = factor(emp.raw$gender, kGender),
                       senioirity = factor(emp.raw$seniority, kSeniority),
                       department = factor(emp.raw$department, kDepartment))
-    rownames(emp) <- emp.raw$eid
     emp
 }

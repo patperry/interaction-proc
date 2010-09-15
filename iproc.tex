@@ -198,6 +198,19 @@ Another feature of the data potentially requiring special consideration is
 that the employees have inhomogeneous sending patterns.  Fig~BLAH shows how
 the volume varies with sender and time.
 
+\begin{figure}
+    \includegraphics[scale=0.6]{figures/send-intensities}
+    \caption{
+        The left panel shows a quantile plot of the number of messages
+        sent per sender; the numbers range from 1 to 3,844.  The right
+        panel shows kernel density estimates of the message sending times
+        for each individual; when scaled by the corresponding counts from the
+        left panel, these curves give estimates of individual send
+        intensities.  Inhomogeneity is present across individuals and
+        times.
+    }
+\end{figure}
+
 \section{A Point Process Model}\label{S:point-process-model}
 
 Every interaction process can be encoded by a multivariate counting measure.
