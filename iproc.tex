@@ -195,8 +195,9 @@ The first issue is easy to fix, but the other two require significant
 attention.
 
 Another feature of the data potentially requiring special consideration is
-that the employees have inhomogeneous sending patterns.  Fig~BLAH shows how
-the volume varies with sender and time.
+that the employees have inhomogeneous sending patterns. 
+Fig.~\ref{F:send-intensities} shows how the message volume varies with
+sender and time.  The individuals have idiosyncratic sending behaviors.
 
 \begin{figure}
     \includegraphics[scale=0.6]{figures/send-intensities}
@@ -209,7 +210,12 @@ the volume varies with sender and time.
         intensities.  Inhomogeneity is present across individuals and
         times.
     }
+    \label{F:send-intensities}
 \end{figure}
+
+We propose using a Cox proportional intensity model with history-dependent
+covariates to address the first two issues mentioned above, and a parametric
+bootstrap to address the third.
 
 \section{A Point Process Model}\label{S:point-process-model}
 
