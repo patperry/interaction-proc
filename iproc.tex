@@ -220,7 +220,7 @@ bootstrap to address the third.
 \section{A Point Process Model}\label{S:point-process-model}
 
 Every interaction process can be encoded by a multivariate counting measure.
-For sender, $i$, receiver, $j$, and positive time, $t$, we define
+For sender, $i$, receiver, $j$, and positive time, $t$, define
 \[
     N_t(i,j)
         =
@@ -236,12 +236,13 @@ it only depends on the immediate past).  Heuristically,
             \text{$i$ sends $j$ a message in time interval $[t,t+dt)$}
         \}.
 \]
-The stochastic intensity exists
-under mild conditions, the most important of which is that no two interactions
-happen simultaneously.
-We will use a version of the Cox Proportional Hazards model for modeling
-the interaction process \cite{cox1972regression}.
-For this section, assume that each message has a single recipient.
+The stochastic intensity exists under mild conditions, the most important of
+which is that no two interactions happen simultaneously (in practical
+applications simultaneous events exist and are an annoyance; a few 
+work-arounds have been proposed {TODO: references}).  We will use a version
+of the Cox proportional intensity model for modeling the interaction process
+\cite{cox1972regression}.  For this section, assume each message has a
+single recipient.
 
 
 
@@ -266,18 +267,9 @@ with stochastic intensity
         \cdot
         1{\{j \in \mathcal{J}_t(i)\}}.
 \end{equation}
-Assume $N_0(i,j) = 0$.  Define
-\(
-    N_t(i) = \sum_{j \in \mathcal{J}} N_t(i,j)
-\)
-and
-\(
-    N_t = \sum_{i \in \mathcal{I}} N_t(i).
-\)
-
-  
-If $\{ (t_m, i_m, j_m) \}$ is the set of observed messages, then
-the log partial likelihood at time $t$, evaluated at $\beta$, is
+For technical reasons, assume $N_0(i,j) = 0$.  If $\{ (t_m, i_m, j_m) \}$ is
+the set of observed messages, then the log partial likelihood at time $t$,
+evaluated at $\beta$, is
 \begin{equation}\label{E:log-pl}
     \log
     \mathit{PL}_t(\beta)
@@ -293,21 +285,76 @@ the log partial likelihood at time $t$, evaluated at $\beta$, is
             \big]
         \bigg\}.
 \end{equation}
-Define weights
-\begin{gather}
+The maximum partial likelihood estimator (MPLE) is a natural
+estimate of $\beta_0$; the inverse Hessian of $\log \mathit{PL}_t(\cdot)$
+evaluated at the MPLE is a natural estimate of its covariance matrix.
+Section~\ref{S:MPLE-consistency} gives conditions under which these
+estimators are consistent, and Appendix~\ref{S:implementaiton} presents
+an efficient algorithm for computing them.  In practice, the
+Hessian of $\log \mathit{PL}_t(\cdot)$ may be singular or ill-conditioned;
+Appendix~\ref{S:regularization} addresses the issue.
+
+\section{MPLE Consistency}\label{S:MPLE-consistency}
+
+Let $N_t(i,j)$ be a multivariate counting process with stochastic
+intensity $\lambda_t(i,j)$ as defined in~\eqref{E:cox-intensity}.
+As before, the log-partial likelihood is given in~\eqref{E:log-pl}.
+Let $\hat \beta_t$ be the MPLE of the true parameter vector, $\beta_0$.
+
+Typically, one proves consistency of $\hat \beta_t$ by keeping $t$ fixed
+and letting $|\mathcal{I}|$ go to infinity
+\cite{andersen1993statistical,andersen1982cox,cook2007statistical,fleming1991counting,
+martinussen2006dynamic}.  This makes sense in the context of clinical trial
+data, where $\mathcal{I}$ corresponds to the set of patients.  In interaction
+data, $|\mathcal{I}|$ is either fixed, or $t$ and $|\mathcal{I}|$ increase
+simultaneously.  It is more natural to look at what happens as time increases.
+Increasing sender sets can be handled by assuming $|\mathcal{I}|$ is infinite
+(for most senders $\bar \lambda_t(i)$ is zero during the initial
+part of the observation period); increasing receiver sets can be
+handled similarly.
+
+
+The main idea of the consistency proof is to rescale time to make the message
+arrivals uniform.  This is the biggest difference between our proof and
+Andersen and Gill's original proof \cite{andersen1982cox}; otherwise, the
+outline of the two are roughly the same.  
+Define marginal processes
+\(
+    N_t(i) = \sum_{j \in \mathcal{J}} N_t(i,j)
+\)
+and
+\(
+    N_t = \sum_{i \in \mathcal{I}} N_t(i).
+\)
+Define the sequence of stopping
+times
+\begin{equation}\label{E:message-times}
+    \tau_n = \sup\{ t : N_t < n \},
+\end{equation}
+and let $\mathcal{F}_{\tau_n}$ be the $\sigma$-algebra of events prior to
+$\tau_n$. The idea is to change time from the original scale to a scale on
+which $\tau_{n} - \tau_{n'}$ is proportional to $n - n'$.
+
+The first two derivatives of $\log \mathit{PL}_t(\cdot)$ are a weighted
+mean and covariance of the covariates.  The weights are
+\begin{subequations}
+\begin{align}
     w_{t}(\beta, i,j)
-        =
+        &=
         \exp\{ \beta^\trans x_t(i,j) \}
         \cdot
         1\{ j \in \mathcal{J}_t(i)\}, \\
+    \text{and}\qquad
     W_{t}(\beta, i)
-        =
+        &=
         \sum_{j \in \mathcal{J}} w_{t}(\beta, i,j).
-\end{gather}
-Note the inner sum in $\log \mathit{PL}_t(\beta)$ is
+\end{align}
+\end{subequations}
+The inner sum in $\log \mathit{PL}_t(\beta)$ is
 $W_{t_m}\!(\beta, i_m)$.  The function 
 $\log W_{t}(\cdot, i)$ has gradient $E_{t}(\cdot, i)$ and Hessian 
 $V_{t}(\cdot, i)$, given by
+\begin{subequations}
 \begin{gather}
     E_{t}(\beta, i)
         =
@@ -321,8 +368,11 @@ $V_{t}(\cdot, i)$, given by
             w_{t}(\beta, i,j) 
             \Big[ x_{t}(i,j) - E_{t}(\beta, i)\Big]^{\otimes 2},
 \end{gather}
+\end{subequations}
 where $a^{\otimes 2} = a \otimes a = a a^\trans$.
-The gradient and negative Hessian of $\log \mathit{PL}_t(\cdot)$ are
+Consequently, the gradient and negative Hessian of
+$\log \mathit{PL}_t(\cdot)$ are
+\begin{subequations}
 \begin{gather}
     \label{E:log-pl-gradient}
     U_t(\beta)
@@ -339,38 +389,13 @@ The gradient and negative Hessian of $\log \mathit{PL}_t(\cdot)$ are
         \sum_{t_m \leq t}
             V_{t_m}(\beta, i_m).
 \end{gather}
+\end{subequations}
 We call $U_t(\beta_0)$ the unnormalized score and $I_t(\beta_0)$
-the Fisher information matrix.  Let $\hat \beta_t$ be the value that
-maximizes $\log \mathit{PL}_t(\cdot)$, called the maximum partial
-likelihood estimator (MPLE). 
-
-Typically, one proves consistency of $\hat \beta_t$ by keeping $t$ fixed
-and letting $|\mathcal{I}|$ go to infinity
-\cite{andersen1993statistical,andersen1982cox,cook2007statistical,fleming1991counting,
-martinussen2006dynamic}.  This makes sense in the context of clinical trial
-data, where $\mathcal{I}$ corresponds to the set of patients.  In interaction
-data, $|\mathcal{I}|$ is either fixed, or $t$ and $|\mathcal{I}|$ increase
-simultaneously.  It is more natural to look at what happens as time increases.
-Increasing sender sets can be handled by assuming $|\mathcal{I}|$ is infinite
-(for most senders $\bar \lambda_t(i)$ is zero during the initial
-part of the observation period); increasing receiver sets can be
-handled similarly.
-
-The main idea of the consistency proof is to rescale time to make the message
-arrivals uniform.  This is the main difference between our proof and
-Andersen and Gill's original proof \cite{andersen1982cox}; otherwise, the
-outline of the two are roughly the same.  Define the sequence of stopping
-times
-\begin{equation}\label{E:message-times}
-    \tau_n = \sup\{ t : N_t < n \},
-\end{equation}
-and let $\mathcal{F}_{\tau_n}$ be the $\sigma$-algebra of events prior to
-$\tau_n$. The idea is to change time from the original scale to a scale on
-which $\tau_{n} - \tau_{n'}$ is proportional to $n - n'$.
+the Fisher information matrix.
 
 Let $\mathcal{B}$ be a neighborhood of $\beta_0$.  For a vector, $a$, let
 $\| a \|$ denote its Euclidean norm; for a matrix, $A$, let $\| A \|$ denote
-its spectral norm (largest eigenvalue).  We will make the following assumptions:
+its spectral norm (largest eigenvalue).  We need the following assumptions:
 \begin{enumerate}[{A}1.]
     \item \label{A:square-int}
     \textbf{The covariates are uniformly square-integrable.}  That is,
@@ -409,9 +434,12 @@ its spectral norm (largest eigenvalue).  We will make the following assumptions:
             :
             n \geq 1, i \in \mathcal{I}
         \Big\}
+        \,\,\text{is an equicontinuous family of functions.}
     \]
-    is equicontinuous.
 \end{enumerate}
+These assumptions imply that the MPLE is consistent and asymptotically
+Gaussian.  Anderson and Gill show related assumptions hold in some
+specific settings~\cite{andersen1982cox}.
 
 \begin{theorem}\label{T:score-fisher}
     Let $N$ be a multivariate counting process on with stochastic
@@ -445,292 +473,10 @@ its spectral norm (largest eigenvalue).  We will make the following assumptions:
     \end{enumerate}
 \end{theorem}
 
-\begin{proof}[Proof of Part \textit{(\ref{I:score-part})}]
-The process $N_t(i,j)$ has compensator
-\begin{equation}
-    \Lambda_t(i,j)
-        =
-            \int_0^t \lambda_s(i,j) \, ds;
-\end{equation}
-similarly, processes $N_t(i)$ and $N_t$ have compensators
-$\Lambda_t(i) = \sum_{j \in \mathcal{J}} \Lambda_t(i,j)$
-and $\Lambda_t = \sum_{i \in \mathcal{I}} \Lambda_t(i)$.  Define local
-martintagles $M_t(i,j) = N_t(i,j) - \Lambda_t(i,j)$,
-$M_t(i) = N_t(i) - \Lambda_t(i)$, and 
-$M_t = N_t - \Lambda_t$.  
-
-The score function evaluated at the true parameter vector has a simple
-representation in terms of these martingales.  Set
-$H_t(i,j) = x_t(i,j) - E_t(\beta_0,i)$.  Since $x$ is uniformly
-bounded, $H$ is as well.  Using the identity
-\(
-    \sum_{j \in \mathcal{J}}
-    \int_0^t
-        H_s(i,j) \,
-        d\Lambda_s(i,j)
-    =
-    0,
-\)
-the score can be written as
-\begin{align*}
-    U_t(\beta_0)
-        &=
-        \sum_{i \in \mathcal{I}}
-        \sum_{j \in \mathcal{J}}
-        \int_0^t
-            H_s(i,j) \, dN_s(i,j) \\
-        &=
-        \sum_{i \in \mathcal{I}}
-        \sum_{j \in \mathcal{J}}
-        \int_0^t
-            H_s(i,j) \, dM_s(i,j).
-\end{align*}
-Each term in the sum is locally square integrable, with predictable
-covariation
-\begin{align*}
-    \begin{split}
-        \bigg\langle
-            \int
-                H_s(i,j) \, dM_s(i,j)
-        &, \, \,
-            \int
-                H_s(i',j') \, dM_s(i',j')
-        \bigg\rangle_t \\
-        &=
-            \int_0^t
-                H_s(i,j) \otimes H_s(i',j') \,
-                d\big\langle M(i,j), M(i',j')\big\rangle_s
-    \end{split} \\
-        &=
-            \int_0^t
-                \big[ H_s(i,j) \big]^{\otimes 2} \,
-                d\Lambda_s(i,j)
-            \cdot
-            1\{ i = i', j = j' \}
-\end{align*}
-\cite[Thm.~2.4.3]{fleming1991counting}.  There exists a sequence
-of stopping times localizing all $M(i,j)$ simultaneously, so $U(\beta_0)$ is
-locally square integrable with predictable variation
-\begin{align*}
-    \big\langle U(\beta_0) \big\rangle_t
-        &=
-            \sum_{i \in \mathcal{I}}
-            \sum_{j \in \mathcal{J}}
-            \int_0^t
-                \big[ H_s(i,j) \big]^{\otimes 2} \,
-                d\Lambda_s(i,j) \\
-        &=
-            \sum_{i \in \mathcal{I}}
-            \int_0^t
-                V_s(\beta_0, i) \,
-                d\Lambda_s(i). \\
-\intertext{Note}
-    I_t(\beta)
-        &=
-            \sum_{i \in \mathcal{I}}
-            \int_0^t
-                V_s(\beta, i) \,
-                dN_s(i).
-\end{align*}
-
-Now we rescale time.
-For each positive $n$ define a discretized time-scaled version of the score.  
-The process is defined for times in $[0,1]$; between times in
-$[\tfrac{k}{n}, \tfrac{k+1}{n})$, it takes the value $U_{\tau_k}$.  That is,
-\[
-    \tilde U_{\alpha}^{(n)}(\beta)
-        = U_{\lfloor \alpha \tau_n \rfloor}(\beta).
-\]
-This is right-continuous with limits from the left.
-
-We claim $\tilde U_\alpha^{(n)}(\beta_0)$ is a square-integrable martingale
-adapted to
-\(
-    \mathcal{\tilde F}^{(n)}_\alpha
-        =
-        \mathcal{F}_{\lfloor \alpha \tau_n \rfloor}.
-\)
-The conditional expectation property holds provided
-\(
-    \E[ U_{\tau_{n}}(\beta_0) \mid \mathcal{F}_{\tau_{n-1}} ]
-        = U_{\tau_{n-1}}(\beta_0).
-\)
-Define $K = \sup_{t,i,j} \| x_{t}(i,j) \|$.
-Note that $\|H_{t}(i,j)\| \leq 2 K$.  Thus,
-\begin{align*}
-    \| U_{t \wedge \tau_n} (\beta_0) \|
-        &\leq
-            2 K
-            \big(
-                N_{t \wedge \tau_n}
-                +
-                \Lambda_{t \wedge \tau_n}
-            \big), \\
-\intertext{so that}
-    \E \left[
-        \sup_t
-        \| U_{t \wedge \tau_n} (\beta_0) \|^2
-    \right]
-        &\leq
-            8 \cdot \big(\E K^2\big)^{1/2} \cdot
-            \big(
-              \E N_{\tau_n}^2
-              +
-              \E \Lambda_{\tau_n}^2              
-            \big)^{1/2}.
-\end{align*}
-By assumption, $\E K^2$ is finite, and by construction, $N_{\tau_n}$ is
-bounded.  Since $N_{t \wedge \tau_n}$ is a counting process,
-$\E \Lambda_{\tau_n}^2$ is finite, too
-(this follows from results in Section 2.3 of Fleming and Harrington
-\cite{fleming1991counting}).  Thus, $U_{t \wedge \tau_n}(\beta_0)$
-is uniformly integrable.  The Optional Sampling Theorem now applies to
-give the conditional expectation property of $\tilde U^{(n)}(\beta_0)$.  For
-square integrability, note
-\(
-    \sup_{1 \leq m \leq n}
-    \E \| U_{\tau_m} \|^2
-        \leq
-        \E \left[
-           \sup_t
-           \| U_{t \wedge \tau_n} (\beta_0) \|^2
-        \right].
-\)
-
-Since it only depends on values at jump times, the
-quadratic variation of $\tilde U^{(n)}(\beta_0)$ at time $\alpha$ is
-equal to the quadratic variation of $U(\beta_0)$ at time
-$\tau_{\lfloor \alpha n \rfloor}$.  Therefore, since quadratic and predictable
-variation have the same limit when it exists
-\cite[Prop. 1]{rebolledo1980central},
-\(
-    \langle \frac{1}{\sqrt{n}} \tilde U^{(n)}(\beta_0) \rangle_\alpha
-        \toP
-            \Sigma_\alpha(\beta_0).
-\)
-When $\frac{1}{\sqrt{n}} \tilde U^{(n)}(\beta_0)$ satisfies a Lindeberg condition,
-the process converges in distribution to a Gaussian process with covariance
-function $\Sigma(\beta_0).$
-
-The Lindeberg condition is that for any positive $\varepsilon$,
-\[
-    \frac{1}{n}
-    \sum_{i,j}
-    \int_{0}^{\tau_n}
-        \| H_s(i,j) \|^2
-        \, 1\{\| H_s(i,j) \| > \sqrt{n} \varepsilon \}
-        \, d\Lambda_s(i,j)
-        \toP
-        0.
-\]
-With $K = \sup_{t,i,j} \| x_t(i,j)\|$ as above, the integral is bounded by
-\(
-    4 \, K^2 \, 1\{n^{-1/2} K > \varepsilon / 2\}
-    \cdot
-    \frac{\Lambda_{\tau_n}}{n}.
-\)
-Since $\E K^2 < \infty$, the first term converges to zero in probability.
-Since $\E \Lambda_{\tau_n} = \E N_{\tau_n} = n$, the product of the two also
-converges to zero in probability.  Thus, the Lindeberg condition is satisfied.
-The weak convergence result now follows from Rebolledo's Martingale Central
-Limit Theorem~\cite{rebolledo1980central}.
-\end{proof}
-
-\begin{proof}[Proof of Part \textit{(\ref{I:fisher-part})}]
-Part~\textit{(\ref{I:fisher-part})} is a consequence of equicontinuity
-and Lenglart's Inequality~\cite{lenglart1977relation}.  As in the proof of
-part~\textit{(\ref{I:score-part})}, set $K = \sup_{t,i,j} \| x_t(i,j) \|$.
-
-When $\alpha \in [0, 1]$,
-\begin{align*}
-    \left\|
-        \tfrac{1}{n} I_{\lfloor \alpha \tau_n \rfloor}(\hat \beta_{\tau_n})
-        -
-        \Sigma_{\alpha} (\beta_0)
-    \right\|
-        &\leq
-        \left\|
-            \frac{1}{n}
-            \int_0^{\lfloor \alpha \tau_n \rfloor}
-                \{
-                    V_s(\hat \beta_{\tau_n}, i)
-                    -
-                    V_s(\beta_0, i)
-                \} \, dN_s(i)
-        \right\| \\
-        &\quad+
-        \left\|
-            \frac{1}{n}
-            \sum_i
-            \int_0^{\lfloor \alpha \tau_n \rfloor}
-                V_s(\beta_0, i) \, dM_s(i)
-        \right\| \\
-        &\quad+
-        \left\|
-            \frac{1}{n}
-            \sum_i
-            \int_0^{\lfloor \alpha \tau_n \rfloor}
-                V_s(\beta_0)
-                \, d\Lambda_s(i)
-            -
-            \Sigma_{\alpha}(\beta_0)
-        \right\|.
-\end{align*}
-The first term is uniformly bounded by 
-\(
-    \sup_{n',i}
-        \|
-            V_{\tau_{n'}}(\hat \beta_{\tau_n}, i)
-            -
-            V_{\tau_{n'}}(\beta_0, i)
-        \|,
-\)
-which converges to zero since $\hat \beta_t \toP \beta_0$ and
-$\{ V_{\tau_{n'}}(\cdot, i) \}$ is an equicontinuous family
-(assumption~A\ref{A:var-equicont}).
-The third term converges to zero by assumption~A\ref{A:integrated-cov-limit}.
-Lenglart's Inequality and assumption~A\ref{A:message-times-finite} imply that for
-any postive $\rho$ and $\delta$,
-\begin{multline*}
-    \mathbb{P}\left\{
-        \sup_{t \in [0,\tau_n]}
-        \left\|
-            \frac{1}{n}
-            \sum_{i}
-            \int_{0}^{t}
-                V_s(\beta_0, i) \, dM_s(i)
-        \right\|
-        \geq \rho
-    \right\} \\
-    \leq
-    \frac{\delta}{\rho^2}
-    +
-    \mathbb{P}\left\{
-        \frac{1}{n^2}
-        \sum_{i}
-        \int_{0}^{\tau_n}
-            \| V_s (\beta_0, i) \|^2
-            \, d\Lambda_s(i)
-        \geq
-        \delta
-    \right\}.
-\end{multline*}
-(see Fleming and Harrington's Cor.~3.4.1 for a related proof
-\cite{fleming1991counting}).  The sum in the second term is bounded by
-$\frac{K^4}{n} \cdot \frac{\Lambda_{\tau_n}}{n}$.  Since $n^{-1/2} K^2 \toP 0$
-and $\E \Lambda_{\tau_n} = n$, the right hand side of the inequality converges
-to $\frac{\delta}{\rho^2}$.  Since $\delta$ is arbitrary, the right hand side
-must converge to zero.  This proves that the second term in the bound on
-\(
-    \left\|
-        \tfrac{1}{n} I_{\lfloor \alpha \tau_n \rfloor}(\hat \beta_{\tau_n})
-        -
-        \Sigma_{\alpha} (\beta_0)
-    \right\|
-\)
-converges to zero uniformly in $\alpha$, concluding the proof.
-\end{proof}
-
+We don't actually need convergence of the whole sample path, but
+it turns out to just as difficult to prove as convergence of the
+endpoint.  Consistency is a direct consequence of
+Theorem~\ref{T:score-fisher}.
 
 \begin{theorem}\label{T:consistency}
     Let $N$ be a multivariate counting process on with stochastic
@@ -759,105 +505,11 @@ converges to zero uniformly in $\alpha$, concluding the proof.
     \end{enumerate}
 \end{theorem}
 
-We follow Haberman's approach to proving
-consistency, which relies on Kantorovich's analysis
-of Newton's method.  Tapia gives an elementary proof of the Kantorovich
-Thereom~\cite{haberman1977maximum,kantorovich1952functional,tapia1971kantorovich}.
-We state a weak form of the the result as a lemma.
-
-\begin{lemma}[Kantorovich Theorem]
-    Let $P(x) = 0$ be a general system of nonlinear equations, where $P$ is
-    a map between two Banach spaces.  Let $P'(x)$ denote the Jacobian
-    (Fr\'echet differential) of $P$ at $x$, assumed to exist in $D_0$,
-    a convex open neighborhood of $x_0$.  Assume the following:
-    \begin{enumerate}[(i)]
-        \item $\| [P'(x_0)]^{-1} \| \leq B$,
-        \item $\| [P'(x_0)]^{-1} P(x_0) \| \leq \eta$,
-        \item $\| P'(x) - P'(y) \| \leq K \| x - y \|$,\quad
-            for all $x$ and $y$ in $D_0$,
-    \end{enumerate}
-    with $h = B K \eta \leq \tfrac{1}{2}$.
-    
-    Let $\Omega_\ast = \{ x : \| x - x_0 \| \leq 2 \eta \}$.
-    If $\Omega_\ast \subset D_0$, then the Newton iterates,
-    $x_{k+1} = x_k - [P'(x_k)]^{-1} P(x_k)$, are well defined, remain
-    in $\Omega_\ast$, and converge to $x^\ast$ in $\Omega_\ast$ such
-    that $P(x^\ast) = 0$.  In addition,
-    \[
-        \| x^\ast - x_k \|
-            \leq
-                \frac{\eta}{h}
-                \frac{(2h)^{2^k}}{2^k},
-        \qquad
-        k = 0, 1, 2, \ldots.
-    \]
-\end{lemma}
-
-\begin{proof}[Proof of Theorem~\ref{T:consistency}]
-
-Set $U_t(\cdot)$ and $I_t(\cdot)$ to be the gradient and negative
-Hessian of the log partial likelihood, as defined in
-(\ref{E:log-pl-gradient}--\ref{E:log-pl-neg-hessian}).  Since
-$I_t(\beta)$ is a sum of rank-one matrices with positive weights,
-it is positive semi-definite, and $\log \mathit{PL}_t(\cdot)$ is
-a concave function.  By the assumption that $\| \Sigma_1(\cdot) \|$
-is bounded away from zero in a neighborhood of $\beta_0$, for $n$
-sufficiently large, if $\log \mathit{PL}_t(\cdot)$ has a local minimum
-in that neighborhood then it must be the unique global maximum.
-
-We find the local maximum by applying Newton's method to the
-gradient of $\tfrac{1}{n} \log \mathit{PL}_{\tau_n}(\cdot)$, taking
-$\beta_0$ as the initial iterate.  Define
-\[
-    Z_n = -[I_{\tau_n}(\beta_0)]^{-1} U_{\tau_n}(\beta_0).
-\]
-Theorem~\ref{T:score-fisher} and the
-assumptions of the theorem imply that $[I_{\tau_n}(\beta_0)]^{-1}$
-exists for $n$ large enough so that $Z_n$ is well-defined.  Moreover,
-(i) $Z_n \toP 0$, and
-(ii) $\sqrt{n} \, Z_n \tod \Normal(0, \, [\Sigma_1(\beta_0)]^{-1})$.
-The first Newton iterate, $\beta_{n,1}$ is equal to $\beta_0 - Z_n$.
-
-Apply Kantorovich's Theorem to bound $\| \hat \beta_n - \beta_0 \|$
-and $\| \hat \beta_n - \beta_{n,1} \|$.  By assumption, there exists
-a neighborhood of $\beta_0$, say $D_0$, and finite $K$ and $B$, such that 
-\(
-    \|
-        \frac{1}{n} I_{\tau_n} (\beta)
-        -
-        \frac{1}{n} I_{\tau_n}(\beta')
-    \|
-    \leq
-    K
-    \|
-        \beta
-        -
-        \beta'
-    \|
-\)
-and
-\(
-    \| \frac{1}{n} [I_{\tau_n}(\beta_0)]^{-1} \| \leq B
-\)
-for $\beta, \beta' \in D_0$.
-Define $\eta_n = \| Z_n \|$ and $h_n = B K \eta_n$, noting that $h_n$ and
-$\eta_n$ are size $\OhP(n^{-1/2})$.  Thus, for $n$ large enough, the
-Newton iterates converge to $\hat \beta_n$.  Moreover,
-\begin{enumerate}[(i)]
-    \item $\| \hat \beta_n - \beta_0 \| \leq 2 \, \eta_n \toP 0$,
-    \item 
-        \(
-            \sqrt{n} \, \| \hat \beta_n - (\beta_0 - Z_n) \|
-            \leq
-            2 \sqrt{n} \, \eta_n \, h_n
-            \toP 0.
-        \)
-\end{enumerate}
-Thus, $\hat \beta_n \toP \beta_0$, and $\sqrt{n} (\hat \beta_n - \beta_0)$
-and $\sqrt{n} \, Z_n$ converge weakly to the same limit.
-
-\end{proof}
-
+Appendix~\ref{S:MPLE-consistency-proofs} contains the proofs of
+these two theorems.  For the data application in this report,
+the covariates are bounded and the message count is high, so 
+assumptions A\ref{A:square-int}--A\ref{A:var-equicont} and
+the asymptotic framework are natural.  
 
 \section{Multiple recipients}
 
@@ -1415,6 +1067,398 @@ With $\Oh(|\mathcal{I}|)$ processors, we can compute these quantities in time
         |\mathcal{I}| \cdot p
     ).
 \)
+
+\section{Estimation when the Hessian is Ill-conditioned}\label{S:regularization}
+
+When the Hessian of $\log \mathit{PL}_t(\cdot)$ is singular or
+ill-conditioned, its inverse may not exist, and it is necessary to modify
+the MPLE-based estimators.
+
+\section{Proofs of MPLE Consistency Results}\label{S:MPLE-consistency-proofs}
+
+\begin{proof}[Proof of Theorem~\ref{T:score-fisher}, Part \textit{(\ref{I:score-part})}]
+The process $N_t(i,j)$ has compensator
+\begin{equation}
+    \Lambda_t(i,j)
+        =
+            \int_0^t \lambda_s(i,j) \, ds;
+\end{equation}
+similarly, processes $N_t(i)$ and $N_t$ have compensators
+$\Lambda_t(i) = \sum_{j \in \mathcal{J}} \Lambda_t(i,j)$
+and $\Lambda_t = \sum_{i \in \mathcal{I}} \Lambda_t(i)$.  Define local
+martintagles $M_t(i,j) = N_t(i,j) - \Lambda_t(i,j)$,
+$M_t(i) = N_t(i) - \Lambda_t(i)$, and 
+$M_t = N_t - \Lambda_t$.  
+
+The score function evaluated at the true parameter vector has a simple
+representation in terms of these martingales.  Set
+$H_t(i,j) = x_t(i,j) - E_t(\beta_0,i)$.  Since $x$ is uniformly
+bounded, $H$ is as well.  Using the identity
+\(
+    \sum_{j \in \mathcal{J}}
+    \int_0^t
+        H_s(i,j) \,
+        d\Lambda_s(i,j)
+    =
+    0,
+\)
+the score can be written as
+\begin{align*}
+    U_t(\beta_0)
+        &=
+        \sum_{i \in \mathcal{I}}
+        \sum_{j \in \mathcal{J}}
+        \int_0^t
+            H_s(i,j) \, dN_s(i,j) \\
+        &=
+        \sum_{i \in \mathcal{I}}
+        \sum_{j \in \mathcal{J}}
+        \int_0^t
+            H_s(i,j) \, dM_s(i,j).
+\end{align*}
+Each term in the sum is locally square integrable, with predictable
+covariation
+\begin{align*}
+    \begin{split}
+        \bigg\langle
+            \int
+                H_s(i,j) \, dM_s(i,j)
+        &, \, \,
+            \int
+                H_s(i',j') \, dM_s(i',j')
+        \bigg\rangle_t \\
+        &=
+            \int_0^t
+                H_s(i,j) \otimes H_s(i',j') \,
+                d\big\langle M(i,j), M(i',j')\big\rangle_s
+    \end{split} \\
+        &=
+            \int_0^t
+                \big[ H_s(i,j) \big]^{\otimes 2} \,
+                d\Lambda_s(i,j)
+            \cdot
+            1\{ i = i', j = j' \}
+\end{align*}
+\cite[Thm.~2.4.3]{fleming1991counting}.  There exists a sequence
+of stopping times localizing all $M(i,j)$ simultaneously, so $U(\beta_0)$ is
+locally square integrable with predictable variation
+\begin{align*}
+    \big\langle U(\beta_0) \big\rangle_t
+        &=
+            \sum_{i \in \mathcal{I}}
+            \sum_{j \in \mathcal{J}}
+            \int_0^t
+                \big[ H_s(i,j) \big]^{\otimes 2} \,
+                d\Lambda_s(i,j) \\
+        &=
+            \sum_{i \in \mathcal{I}}
+            \int_0^t
+                V_s(\beta_0, i) \,
+                d\Lambda_s(i). \\
+\intertext{Note}
+    I_t(\beta)
+        &=
+            \sum_{i \in \mathcal{I}}
+            \int_0^t
+                V_s(\beta, i) \,
+                dN_s(i).
+\end{align*}
+
+Now we rescale time.
+For each positive $n$ define a discretized time-scaled version of the score.  
+The process is defined for times in $[0,1]$; between times in
+$[\tfrac{k}{n}, \tfrac{k+1}{n})$, it takes the value $U_{\tau_k}$.  That is,
+\[
+    \tilde U_{\alpha}^{(n)}(\beta)
+        = U_{\lfloor \alpha \tau_n \rfloor}(\beta).
+\]
+This is right-continuous with limits from the left.
+
+We claim $\tilde U_\alpha^{(n)}(\beta_0)$ is a square-integrable martingale
+adapted to
+\(
+    \mathcal{\tilde F}^{(n)}_\alpha
+        =
+        \mathcal{F}_{\lfloor \alpha \tau_n \rfloor}.
+\)
+The conditional expectation property holds provided
+\(
+    \E[ U_{\tau_{n}}(\beta_0) \mid \mathcal{F}_{\tau_{n-1}} ]
+        = U_{\tau_{n-1}}(\beta_0).
+\)
+Define $K = \sup_{t,i,j} \| x_{t}(i,j) \|$.
+Note that $\|H_{t}(i,j)\| \leq 2 K$.  Thus,
+\begin{align*}
+    \| U_{t \wedge \tau_n} (\beta_0) \|
+        &\leq
+            2 K
+            \big(
+                N_{t \wedge \tau_n}
+                +
+                \Lambda_{t \wedge \tau_n}
+            \big), \\
+\intertext{so that}
+    \E \left[
+        \sup_t
+        \| U_{t \wedge \tau_n} (\beta_0) \|^2
+    \right]
+        &\leq
+            8 \cdot \big(\E K^2\big)^{1/2} \cdot
+            \big(
+              \E N_{\tau_n}^2
+              +
+              \E \Lambda_{\tau_n}^2              
+            \big)^{1/2}.
+\end{align*}
+By assumption, $\E K^2$ is finite, and by construction, $N_{\tau_n}$ is
+bounded.  Since $N_{t \wedge \tau_n}$ is a counting process,
+$\E \Lambda_{\tau_n}^2$ is finite, too
+(this follows from results in Section 2.3 of Fleming and Harrington
+\cite{fleming1991counting}).  Thus, $U_{t \wedge \tau_n}(\beta_0)$
+is uniformly integrable.  The Optional Sampling Theorem now applies to
+give the conditional expectation property of $\tilde U^{(n)}(\beta_0)$.  For
+square integrability, note
+\(
+    \sup_{1 \leq m \leq n}
+    \E \| U_{\tau_m} \|^2
+        \leq
+        \E \left[
+           \sup_t
+           \| U_{t \wedge \tau_n} (\beta_0) \|^2
+        \right].
+\)
+
+Since it only depends on values at jump times, the
+quadratic variation of $\tilde U^{(n)}(\beta_0)$ at time $\alpha$ is
+equal to the quadratic variation of $U(\beta_0)$ at time
+$\tau_{\lfloor \alpha n \rfloor}$.  Therefore, since quadratic and predictable
+variation have the same limit when it exists
+\cite[Prop. 1]{rebolledo1980central},
+\(
+    \langle \frac{1}{\sqrt{n}} \tilde U^{(n)}(\beta_0) \rangle_\alpha
+        \toP
+            \Sigma_\alpha(\beta_0).
+\)
+When $\frac{1}{\sqrt{n}} \tilde U^{(n)}(\beta_0)$ satisfies a Lindeberg condition,
+the process converges in distribution to a Gaussian process with covariance
+function $\Sigma(\beta_0).$
+
+The Lindeberg condition is that for any positive $\varepsilon$,
+\[
+    \frac{1}{n}
+    \sum_{i,j}
+    \int_{0}^{\tau_n}
+        \| H_s(i,j) \|^2
+        \, 1\{\| H_s(i,j) \| > \sqrt{n} \varepsilon \}
+        \, d\Lambda_s(i,j)
+        \toP
+        0.
+\]
+With $K = \sup_{t,i,j} \| x_t(i,j)\|$ as above, the integral is bounded by
+\(
+    4 \, K^2 \, 1\{n^{-1/2} K > \varepsilon / 2\}
+    \cdot
+    \frac{\Lambda_{\tau_n}}{n}.
+\)
+Since $\E K^2 < \infty$, the first term converges to zero in probability.
+Since $\E \Lambda_{\tau_n} = \E N_{\tau_n} = n$, the product of the two also
+converges to zero in probability.  Thus, the Lindeberg condition is satisfied.
+The weak convergence result now follows from Rebolledo's Martingale Central
+Limit Theorem~\cite{rebolledo1980central}.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{T:score-fisher}, Part \textit{(\ref{I:fisher-part})}]
+Part~\textit{(\ref{I:fisher-part})} is a consequence of equicontinuity
+and Lenglart's Inequality~\cite{lenglart1977relation}.  As in the proof of
+part~\textit{(\ref{I:score-part})}, set $K = \sup_{t,i,j} \| x_t(i,j) \|$.
+
+When $\alpha \in [0, 1]$,
+\begin{align*}
+    \left\|
+        \tfrac{1}{n} I_{\lfloor \alpha \tau_n \rfloor}(\hat \beta_{\tau_n})
+        -
+        \Sigma_{\alpha} (\beta_0)
+    \right\|
+        &\leq
+        \left\|
+            \frac{1}{n}
+            \int_0^{\lfloor \alpha \tau_n \rfloor}
+                \{
+                    V_s(\hat \beta_{\tau_n}, i)
+                    -
+                    V_s(\beta_0, i)
+                \} \, dN_s(i)
+        \right\| \\
+        &\quad+
+        \left\|
+            \frac{1}{n}
+            \sum_i
+            \int_0^{\lfloor \alpha \tau_n \rfloor}
+                V_s(\beta_0, i) \, dM_s(i)
+        \right\| \\
+        &\quad+
+        \left\|
+            \frac{1}{n}
+            \sum_i
+            \int_0^{\lfloor \alpha \tau_n \rfloor}
+                V_s(\beta_0)
+                \, d\Lambda_s(i)
+            -
+            \Sigma_{\alpha}(\beta_0)
+        \right\|.
+\end{align*}
+The first term is uniformly bounded by 
+\(
+    \sup_{n',i}
+        \|
+            V_{\tau_{n'}}(\hat \beta_{\tau_n}, i)
+            -
+            V_{\tau_{n'}}(\beta_0, i)
+        \|,
+\)
+which converges to zero since $\hat \beta_t \toP \beta_0$ and
+$\{ V_{\tau_{n'}}(\cdot, i) \}$ is an equicontinuous family
+(assumption~A\ref{A:var-equicont}).
+The third term converges to zero by assumption~A\ref{A:integrated-cov-limit}.
+Lenglart's Inequality and assumption~A\ref{A:message-times-finite} imply that for
+any postive $\rho$ and $\delta$,
+\begin{multline*}
+    \mathbb{P}\left\{
+        \sup_{t \in [0,\tau_n]}
+        \left\|
+            \frac{1}{n}
+            \sum_{i}
+            \int_{0}^{t}
+                V_s(\beta_0, i) \, dM_s(i)
+        \right\|
+        \geq \rho
+    \right\} \\
+    \leq
+    \frac{\delta}{\rho^2}
+    +
+    \mathbb{P}\left\{
+        \frac{1}{n^2}
+        \sum_{i}
+        \int_{0}^{\tau_n}
+            \| V_s (\beta_0, i) \|^2
+            \, d\Lambda_s(i)
+        \geq
+        \delta
+    \right\}.
+\end{multline*}
+(see Fleming and Harrington's Cor.~3.4.1 for a related proof
+\cite{fleming1991counting}).  The sum in the second term is bounded by
+$\frac{K^4}{n} \cdot \frac{\Lambda_{\tau_n}}{n}$.  Since $n^{-1/2} K^2 \toP 0$
+and $\E \Lambda_{\tau_n} = n$, the right hand side of the inequality converges
+to $\frac{\delta}{\rho^2}$.  Since $\delta$ is arbitrary, the right hand side
+must converge to zero.  This proves that the second term in the bound on
+\(
+    \left\|
+        \tfrac{1}{n} I_{\lfloor \alpha \tau_n \rfloor}(\hat \beta_{\tau_n})
+        -
+        \Sigma_{\alpha} (\beta_0)
+    \right\|
+\)
+converges to zero uniformly in $\alpha$, concluding the proof.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{T:consistency}]
+We follow Haberman's approach to proving
+consistency, which relies on Kantorovich's analysis
+of Newton's method.  Tapia gives an elementary proof of the Kantorovich
+Thereom~\cite{haberman1977maximum,kantorovich1952functional,tapia1971kantorovich}.
+We state a weak form of the the result as a lemma.
+
+\begin{lemma}[Kantorovich Theorem]
+    Let $P(x) = 0$ be a general system of nonlinear equations, where $P$ is
+    a map between two Banach spaces.  Let $P'(x)$ denote the Jacobian
+    (Fr\'echet differential) of $P$ at $x$, assumed to exist in $D_0$,
+    a convex open neighborhood of $x_0$.  Assume the following:
+    \begin{enumerate}[(i)]
+        \item $\| [P'(x_0)]^{-1} \| \leq B$,
+        \item $\| [P'(x_0)]^{-1} P(x_0) \| \leq \eta$,
+        \item $\| P'(x) - P'(y) \| \leq K \| x - y \|$,\quad
+            for all $x$ and $y$ in $D_0$,
+    \end{enumerate}
+    with $h = B K \eta \leq \tfrac{1}{2}$.
+    
+    Let $\Omega_\ast = \{ x : \| x - x_0 \| \leq 2 \eta \}$.
+    If $\Omega_\ast \subset D_0$, then the Newton iterates,
+    $x_{k+1} = x_k - [P'(x_k)]^{-1} P(x_k)$, are well defined, remain
+    in $\Omega_\ast$, and converge to $x^\ast$ in $\Omega_\ast$ such
+    that $P(x^\ast) = 0$.  In addition,
+    \[
+        \| x^\ast - x_k \|
+            \leq
+                \frac{\eta}{h}
+                \frac{(2h)^{2^k}}{2^k},
+        \qquad
+        k = 0, 1, 2, \ldots.
+    \]
+\end{lemma}
+
+Set $U_t(\cdot)$ and $I_t(\cdot)$ to be the gradient and negative
+Hessian of the log partial likelihood, as defined in
+(\ref{E:log-pl-gradient}--\ref{E:log-pl-neg-hessian}).  Since
+$I_t(\beta)$ is a sum of rank-one matrices with positive weights,
+it is positive semi-definite, and $\log \mathit{PL}_t(\cdot)$ is
+a concave function.  By the assumption that $\| \Sigma_1(\cdot) \|$
+is bounded away from zero in a neighborhood of $\beta_0$, for $n$
+sufficiently large, if $\log \mathit{PL}_t(\cdot)$ has a local minimum
+in that neighborhood then it must be the unique global maximum.
+
+We find the local maximum by applying Newton's method to the
+gradient of $\tfrac{1}{n} \log \mathit{PL}_{\tau_n}(\cdot)$, taking
+$\beta_0$ as the initial iterate.  Define
+\[
+    Z_n = -[I_{\tau_n}(\beta_0)]^{-1} U_{\tau_n}(\beta_0).
+\]
+Theorem~\ref{T:score-fisher} and the
+assumptions of the theorem imply that $[I_{\tau_n}(\beta_0)]^{-1}$
+exists for $n$ large enough so that $Z_n$ is well-defined.  Moreover,
+(i) $Z_n \toP 0$, and
+(ii) $\sqrt{n} \, Z_n \tod \Normal(0, \, [\Sigma_1(\beta_0)]^{-1})$.
+The first Newton iterate, $\beta_{n,1}$ is equal to $\beta_0 - Z_n$.
+
+Apply Kantorovich's Theorem to bound $\| \hat \beta_n - \beta_0 \|$
+and $\| \hat \beta_n - \beta_{n,1} \|$.  By assumption, there exists
+a neighborhood of $\beta_0$, say $D_0$, and finite $K$ and $B$, such that 
+\(
+    \|
+        \frac{1}{n} I_{\tau_n} (\beta)
+        -
+        \frac{1}{n} I_{\tau_n}(\beta')
+    \|
+    \leq
+    K
+    \|
+        \beta
+        -
+        \beta'
+    \|
+\)
+and
+\(
+    \| \frac{1}{n} [I_{\tau_n}(\beta_0)]^{-1} \| \leq B
+\)
+for $\beta, \beta' \in D_0$.
+Define $\eta_n = \| Z_n \|$ and $h_n = B K \eta_n$, noting that $h_n$ and
+$\eta_n$ are size $\OhP(n^{-1/2})$.  Thus, for $n$ large enough, the
+Newton iterates converge to $\hat \beta_n$.  Moreover,
+\begin{enumerate}[(i)]
+    \item $\| \hat \beta_n - \beta_0 \| \leq 2 \, \eta_n \toP 0$,
+    \item 
+        \(
+            \sqrt{n} \, \| \hat \beta_n - (\beta_0 - Z_n) \|
+            \leq
+            2 \sqrt{n} \, \eta_n \, h_n
+            \toP 0.
+        \)
+\end{enumerate}
+Thus, $\hat \beta_n \toP \beta_0$, and $\sqrt{n} (\hat \beta_n - \beta_0)$
+and $\sqrt{n} \, Z_n$ converge weakly to the same limit.
+
+\end{proof}
 
 
 \bibliographystyle{imsart-number}
