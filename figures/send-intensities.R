@@ -10,16 +10,17 @@ msg <- GetMessages()
 pdffile <- "figures/send-intensities.pdf"
 pdfout <- TRUE
 
-# 'Oranges' scheme from ColorBrewer2, last 3 colors from 4-color scheme
-colorRGB <- colorRamp(c(rgb(253, 190, 133, max = 255),
-                        rgb(253, 141, 60, max = 255),
-                        rgb(217, 71, 1, max = 255)
-                       ), space = "Lab", bias=1)
 
 # 'Purples' scheme from ColorBrewer2, last 3 colors from 4-color scheme
 colorRGB <- colorRamp(c(rgb(203, 201, 226, max = 255),
                         rgb(158, 154, 200, max = 255),
                         rgb(106, 81, 163, max = 255)
+                       ), space = "Lab", bias=1)
+
+# 'Oranges' scheme from ColorBrewer2, last 3 colors from 4-color scheme
+colorRGB <- colorRamp(c(rgb(253, 190, 133, max = 255),
+                        rgb(253, 141, 60, max = 255),
+                        rgb(217, 71, 1, max = 255)
                        ), space = "Lab", bias=1)
 color <- function(q) rgb(colorRGB(q), max = 255)
 
@@ -48,6 +49,7 @@ par(plt = c(c(margin, margin + width)/fin[1],
             c(margin, margin + height)/fin[2]), new = FALSE)
 
 q <- rank(nmsg)/(1 + length(nmsg))
+
 plot(q, log2(nmsg), col = color(q),
      xlab = "Fraction of Senders",
      ylab = expression("Log"[2]*" Number of Messages"))
@@ -61,7 +63,9 @@ par(plt = c(c(margin + width + padding + margin,
 
 xlim = range(msg$time)
 ylim = c(0, 5)
-plot(xlim, ylim, t = "n", xlab = "Date", ylab = "Relative Send Intensity")
+plot(xlim, ylim, t = "n",
+     xlab = "Year",
+     ylab = "Relative Send Intensity")
 axis(3, labels = FALSE,
      at = as.POSIXct(c("1999-01-01", "2000-01-01", "2001-01-01", "2002-01-01")))
 axis(4, labels = FALSE)
