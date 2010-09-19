@@ -264,9 +264,10 @@ with stochastic intensity
         \cdot
         1{\{j \in \mathcal{J}_t(i)\}}.
 \end{equation}
-For technical reasons, assume $N_0(i,j) = 0$.  If $\{ (t_m, i_m, j_m) \}$ is
-the set of observed messages, then the log partial likelihood at time $t$,
-evaluated at $\beta$, is
+For technical reasons, assume $N_0(i,j) = 0$.  If
+$(t_1, i_1, j_1), \ldots, (t_n, i_n, j_n)$ is the sequence of observed
+messages, then the log partial likelihood at time $t$, evaluated at $\beta$,
+is
 \begin{equation}\label{E:log-pl}
     \log
     \mathit{PL}_t(\beta)
@@ -585,8 +586,8 @@ recipients as three separate single-recipient messages.  A less ad-hoc
 approach is to explicitly take multiple recipients into account at the
 modeling stage.
 
-Introduce $\bar \lambda_t(i ; R)$ as the baseline intensity at time $t$ for
-messages sent by sender $i$ with $R$ recipients.  Let $J$ be any
+Introduce $\bar \lambda_t(i ; L)$ as the baseline intensity at time $t$ for
+messages sent by sender $i$ with $L$ recipients.  Let $J$ be any
 subset of $\mathcal{J}$ and model the rate at which $i$ sends messages to
 recipient set $J$ as
 \begin{equation}\label{E:intensity-multiple}
@@ -608,16 +609,182 @@ $t$, changing receiver $j$'s covariates from $x_t(i,j)$ to
 $x'_t(i,j)$ results in scaling the the rate at
 which $i$ sends him messages by
 \(
-    \exp\{ \langle x'_t(i,j) - x_t(i,j), \beta \rangle \};
+    \exp\big\{ \beta_0^\trans \big(x'_t(i,j) - x_t(i,j)\big) \big\};
 \)
-importantly, this does not depend on $\lambda_t(i; R)$.
+importantly, this does not depend on $\bar \lambda_t(i; L)$.
 
 The partial likelihood is nearly the same as in the single-recipient
 setting from Section~\ref{S:point-process-model}.
-Let $(t_1, i_1, J_1), \ldots, (t_M, i_M, J_M)$ be the sequence of
+Let $(t_1, i_1, J_1), \ldots, (t_n, i_n, J_n)$ be the sequence of
 observed messages, with tuple $(t, i, J)$ indicating that at time $t$
-sender $i$ sent a message with recipient set $J$.
+sender $i$ sent a message with recipient set $J$.  The log partial likelihood
+at time $t$, evaluated at $\beta$, is
+\begin{equation}\label{E:log-pl-multiple}
+    \log
+    \mathit{PL}_t(\beta)
+        =
+        \sum_{t_m \leq t}\!
+        \bigg\{\!
+            \sum_{j \in J_m}\!
+                \beta^\trans x_{t_m}\!(i_m, j)
+            -
+            \log\big[
+                \!\!\!\!
+                \sum_{\substack{J \subseteq \mathcal{J}_{t_m}(i_m) \\
+                               |J| = |J_m|}}\!\!\!\!\!\!\!
+                    \exp\big\{
+                        \sum_{j \in J}
+                            \beta^\trans x_{t_m}\!(i_m, j)
+                    \big\}
+            \big]
+        \bigg\}.
+\end{equation}
+Compare this with the single recipient case in~\eqref{E:log-pl}.
 
+The multiple recipient case can actually be considered as a special case of
+the single recipient one if we take $\mathcal{I} \times \mathbb{N}_+$
+to be the sender set and power set $\mathcal{P}(\mathcal{J})$ to be the
+receiver set.  For sender $(i,L)$, take $\bar \lambda(i ; L)$ to be the
+baseline send intensity and take
+$\{ J \subseteq \mathcal{J}_t(i) : |J| = L\}$ to be the recipient set; for
+sender-receiver pair $\big((i,L), J\big)$, take $\sum_{j \in J} x_t(i,j)$ to
+be the covariate vector.  Consistency of the MPLE now follows from
+Theorems~\ref{T:score-fisher}~and~\ref{T:consistency}.
+
+In practice, \eqref{E:log-pl-multiple} involves combinatorially many terms
+and is difficult to optimize.  When we treat messages with multiple recipients
+as multiple single-recipient messages, we get an approximate partial
+likelihood:
+\begin{equation}\label{E:log-pl-multiple-approx}
+    \log
+    \widetilde{\mathit{PL}}_t(\beta)
+        =
+        \sum_{t_m \leq t}
+        \bigg\{
+            \sum_{j \in J_m}\!
+                \beta^\trans x_{t_m}\!(i_m, j)
+            -
+            \log\big[
+                \!\!\!\!
+                \sum_{j \in \mathcal{J}_{t_m}\!(i_m)}
+                    \exp\{ \beta^\trans x_{t_m}\!(i_m, j)\}
+            \big]^{|J_m|}
+        \bigg\}.
+\end{equation}
+Maximizing $\log \widetilde{\mathit{PL}}_t(\cdot)$ instead of
+$\log \mathit{PL}_t(\cdot)$ introduces bias in the estimate of $\beta_0$.
+
+For subset $J \subseteq \mathcal{J}_t(i)$, set
+\begin{gather}
+    X_t(i, J) = \sum_{j \in J} x_t(i,j), \\
+    w_t(\beta, i, J)
+        = \exp\{ \beta^\trans X_t(i,J) \}.
+\end{gather}
+As a slight abuse of notation, when $j$ is an element of $\mathcal{J}_t(i)$,
+take ``$w_t(\beta, i, j)$'' to mean $w_t(\beta, i, \{j\})$.
+
+Define weights
+\begin{gather}
+    W_t(\beta, i; L)
+        = \sum_{\substack{J \subseteq \mathcal{J}_t(i), \\
+                          |J| = L}}
+              w_t(\beta,i,J), \\
+    \widetilde W_t(\beta, i; L)
+        =
+            \Big[ \sum_{j \in \mathcal{J}_t(i)} w_t(\beta, i, j) \Big]^L.
+\end{gather}
+
+Define gradients
+\begin{gather}
+    E_t(\beta, i; L)
+        = \nabla \big[ \log W_t(\beta, i; L) \big]
+        =
+        \frac{1}{W_t(\beta, i; K)}
+        \sum_{\substack{J \subseteq \mathcal{J}_t(i), \\
+                        |J| = L}}\!
+            w_t(i,J)
+            \,
+            X_t(i,J), \\
+    \widetilde E_t(\beta, i; L)
+        = \nabla \big[ \log \widetilde W_t(\beta, i; L) \big]
+        =
+        L
+        \cdot
+        \frac{
+            \sum_{j \in \mathcal{J}_t(i)}
+                w_t(\beta, i, j) \, x_t(i,j)
+        }{
+            \sum_{j \in \mathcal{J}_t(i)}
+                w_t(\beta, i, j)
+        }.
+\end{gather}
+The second is the expectation of $\sum_{l = 1}^L x_t(i, j_l)$ when
+$j_1, \ldots, j_L$ are drawn independently and identically from
+$\mathcal{J}_t(i)$ with weights $w_t(\beta, i, \cdot)$; the first is the same
+expectation, conditional on the event that $j_1, \ldots, j_L$ are all unique.
+Let $\tilde{\mathbb{P}}_{t,\beta,i;L}$ and $\mathbb{P}_{t,\beta,i;L}$
+denote the two probability laws for $j_1, \ldots, j_L$, and let
+$\tilde{\mathbb{E}}_{t,\beta,i;L}$ and $\mathbb{E}_{t,\beta,i;L}$ denote
+expectations with respect to them, so that
+$E_t(\beta,i;L) = \mathbb{E}_{t,\beta,i;L} \big[ \sum_{l=1}^L x_t(i,j_l)\big]$
+and
+\(
+    \widetilde E_t(\beta,i;L)
+    =
+    \tilde{\mathbb{E}}_{t,\beta,i;L} \big[ \sum_{l=1}^L x_t(i,j_l)\big].
+\)
+
+The Hessians are
+\begin{align}
+    \begin{split}
+    V_t(\beta,i;L)
+        &=
+        \nabla^2 \big[  \log W_t(\beta, i; L) \big] \\
+        &=
+        \frac{1}{W_t(\beta,i;L)}
+        \sum_{\substack{J \subseteq \mathcal{J}_t(i), \\
+                        |J| = L}}
+            w_t(\beta,i,J)
+            \Big[
+                X_t(i,J)
+                -
+                E_t(\beta,i;L)
+            \Big]^{\otimes 2},
+    \end{split} \\
+    \begin{split}
+    \widetilde V_t(\beta,i;L)
+        &=
+        \nabla^2 \big[ \log \widetilde W_t(\beta,i;L) \big] \\
+        &=
+        L
+        \cdot
+        \frac{
+            \sum_{j \in \mathcal{J}_t(i)}
+                w_t(\beta, i, j)
+                \Big[ x_t(i,j) - \tfrac{1}{L} \widetilde E_t(\beta,i;L) \Big]^{\otimes 2}
+        }{
+            \sum_{j \in \mathcal{J}_t(i)}
+                w_t(\beta, i, j)
+        }.
+    \end{split}
+\end{align}
+The first is the covariance matrix of $\sum_{l=1}^L x_t(i,j_l)$ under
+$\mathbb{P}_{t,\beta,i;L}$; the second is the covariance matrix of the same
+quantity under $\tilde{\mathbb{P}}_{t,\beta,i;L}$.
+
+Let $\hat \beta_t$ maximize $\log \mathit{PL}_t(\cdot)$ and let
+$\tilde \beta_t$ maximize $\log \widetilde{\mathit{PL}}_t(\cdot)$.  We
+have
+\[
+    \| \tilde \beta_t - \beta_0 \|
+        \leq
+        \| \hat \beta_t - \beta_0\|
+        +
+        \| \hat \beta_t - \tilde \beta_t \|.
+\]
+We know $\hat \beta_t$ is a $\sqrt{n}$-consistent estimator of
+$\beta_0$.  To get consistency of $\tilde \beta_t$, we show
+$\tilde \beta_t$ is close to $\hat \beta_t$.
 
 \clearpage 
 
@@ -642,7 +809,7 @@ When $i \in \mathcal{I}$, $j \in \mathcal{J}(i)$, and $R \geq 1$, define
             w_{\beta,t}(i,j).
 \]
 The log partial likelihood at time $t$ is
-\begin{equation}\label{E:log-pl-multiple}
+\begin{equation}\label{E:log-pl-multiple-as-sum}
     \log \mathit{PL}_t(\beta)
         =
         \sum_{i \in \mathcal{I}}
