@@ -699,7 +699,7 @@ Define gradients
     E_t(\beta, i; L)
         = \nabla \big[ \log W_t(\beta, i; L) \big]
         =
-        \frac{1}{W_t(\beta, i; K)}
+        \frac{1}{W_t(\beta, i; L)}
         \sum_{\substack{J \subseteq \mathcal{J}_t(i), \\
                         |J| = L}}\!
             w_t(i,J)
@@ -785,6 +785,137 @@ have
 We know $\hat \beta_t$ is a $\sqrt{n}$-consistent estimator of
 $\beta_0$.  To get consistency of $\tilde \beta_t$, we show
 $\tilde \beta_t$ is close to $\hat \beta_t$.
+
+Write
+\[
+    \nabla \big[ \log \widetilde{\mathit{PL}}_t(\beta) \big]
+        =
+        \nabla \big[ \log \mathit{PL}_t(\beta )\big]
+        +
+        \sum_{t_m \leq t}
+            E_{t_m}\!(\beta, i_m; |J_m|)
+            -
+            \widetilde{E}_{t_m}\!(\beta, i_m; |J_m|),
+\]
+so that
+\[
+    \nabla \big[ \log \widetilde{\mathit{PL}}_t(\hat \beta_t) \big]
+        =
+        \sum_{t_m \leq t}
+            E_{t_m}\!(\hat \beta_t, i_m; |J_m|)
+            -
+            \widetilde{E}_{t_m}\!(\hat \beta_t, i_m; |J_m|).
+\]
+Recalling the representation in terms of probability laws $\mathbb{P}$ and
+$\tilde{\mathbb{P}}$,
+\[
+    E_{t}(\beta, i; L) - \widetilde{E}_t(\beta, i; L)
+        =
+        \mathbb{E}_{t,\beta,i;L}
+            \Big[ \sum_{l=1}^L x_t(i,j_l) \Big]
+        -
+        \widetilde{\mathbb{E}}_{t,\beta,i;L}
+            \Big[ \sum_{l=1}^L x_t(i,j_l) \Big].
+\]
+We bound the difference by coupling $\mathbb{P}$ and $\widetilde{\mathbb{P}}$.
+We define probability law $\mathbb{P}^\ast_{t,\beta,i;L}$ and associated
+random variables $j_1, \ldots, j_L$ and
+$\tilde \jmath_1, \ldots, \tilde \jmath_L$, such that marginally
+$j_1, \ldots, j_L$ are distributed according to $\mathbb{P}_{t,\beta,i;L}$
+and $\tilde \jmath_1, \ldots, \tilde \jmath_L$ are distributed according
+to $\tilde{\mathbb{P}}_{t,\beta,i;L}$.  Then,
+\begin{align*}
+    \Big\| E_{t}(\beta, i; L) &- \widetilde{E}_t(\beta, i; L) \Big\| \\
+        &=
+            \Big\|
+            \mathbb{E}_{t,\beta,i;L}^\ast
+            \Big[
+                \sum_{l=1}^L x_t(i,j_l)
+                -
+                \sum_{l=1}^L x_t(i, \tilde \jmath_l)
+            \Big] 
+            \Big\| \\
+        &\leq
+            2 L
+            \cdot
+            \Big[
+                \sup_{j \in \mathcal{J}_t(i)}
+                \| x_t(i,j) \|
+            \Big]
+            \cdot
+            \mathbb{P}^\ast_{t,\beta,i;L}
+            \Big\{
+                (j_1, \ldots, j_L)
+                    \neq
+                    (\tilde \jmath_1, \ldots, \tilde \jmath_L)
+            \Big\}
+\end{align*}
+The coupling is as follows:
+\begin{enumerate}
+    \item Draw $(\tilde \jmath_1, \ldots, \tilde \jmath_L)$ according to
+        $\tilde{\mathbb{P}}_{t,\beta,i;L}$.
+    \item If $(\tilde \jmath_1, \ldots, \tilde \jmath_L)$ are all unique,
+        set $(j_1, \ldots, j_L) = (\tilde \jmath_1, \ldots, \tilde \jmath_L)$,
+        otherwise draw $(j_1, \ldots, j_L)$ independently according to
+        $\mathbb{P}_{t,\beta,i;L}$.
+\end{enumerate}
+Now,
+\begin{align*}
+    \mathbb{P}^\ast_{t,\beta,i;L}
+    \Big\{
+        (j_1, \ldots, j_L)
+            \neq
+            (\tilde \jmath_1, \ldots, \tilde \jmath_L)
+    \Big\}
+        &=
+        \mathbb{P}^\ast_{t,\beta,i;L}
+        \Big\{
+            \text{$\tilde \jmath_1, \ldots, \tilde \jmath_L$ has a duplicate}
+        \} \\
+        &\leq
+        \sum_{k \leq l}
+            \mathbb{P}^\ast_{t,\beta,i;L}
+            \Big\{
+                \tilde \jmath_k = \tilde \jmath_l
+            \Big\} \\
+        &=
+            {L \choose 2}
+            \sum_{j \in \mathcal{J}_t(i)}
+                \Big[
+                    \frac{
+                        w_t(\beta, i, j)
+                    }{
+                        \sum_{j' \in \mathcal{J}_t(i)} w_t(\beta, i, j')
+                    }
+                \Big]^2.
+\end{align*}
+Set $K = \sup_t \| x_t(i,j) \|$.  Then, 
+\[
+    \exp\{-K \, \| \beta \|\}
+        \leq w_t(\beta,i,j)
+        \leq \exp\{K \| \, \beta \|\},
+\]
+so that
+\[
+    \mathbb{P}^\ast_{t,\beta,i;L}
+    \Big\{
+        (j_1, \ldots, j_L)
+            \neq
+            (\tilde \jmath_1, \ldots, \tilde \jmath_L)
+    \Big\}
+        \leq
+        {L \choose 2}
+        \cdot
+        \frac{\exp\{4 K \, \| \beta \|\}}{| \mathcal{J}_t(i) |},
+\]
+and
+\[
+    \Big\| E_{t}(\beta, i; L) - \widetilde{E}_t(\beta, i; L) \Big\|
+        \leq
+        K \, L^2 \, (L - 1)
+        \,
+        \frac{\exp\{4 K \, \| \beta \|\}}{| \mathcal{J}_t(i) |}.
+\]
 
 \clearpage 
 
