@@ -916,6 +916,82 @@ and
         \,
         \frac{\exp\{4 K \, \| \beta \|\}}{| \mathcal{J}_t(i) |}.
 \]
+By a similar argument,
+\[
+    \Big\| V_{t}(\beta, i; L) - \widetilde{V}_t(\beta, i; L) \Big\|
+        \leq
+        2\, K^2 \, L^3 \, (L - 1)
+        \,
+        \frac{\exp\{4 K \, \| \beta \|\}}{| \mathcal{J}_t(i) |}.
+\]
+Thus,
+\[
+    \Big\|
+        \nabla\big[ \log \widetilde{\mathit{PL}}_t(\hat \beta _t ) \big]
+    \Big\|
+        \leq
+            K
+            \exp\{4 K \| \beta \|\}
+            \cdot
+            \sum_{t_m \leq t}
+                \frac{|J_m|^2 \, (|J_m| - 1)}{|\mathcal{J}_{t_m}(i_m)|},
+\]
+and
+\begin{multline*}
+    \Big\|
+        \nabla^2\big[ \log \widetilde{\mathit{PL}}_t(\beta) \big]
+        -
+        \nabla^2\big[ \log \mathit{PL}_t(\beta) \big]
+    \Big\| \\
+        \leq
+            2K^2
+            \exp\{4 K \| \beta \|\}
+            \cdot
+            \sum_{t_m \leq t}
+                \frac{|J_m|^3 \, (|J_m| - 1)}{|\mathcal{J}_{t_m}(i_m)|}.
+\end{multline*}
+
+
+Set $\tau_n = \inf\{ t : N_t > n \}$, $L = \sup_m |J_m|$, and
+\[
+    \eta_n =
+    \Big\|
+        \Big[
+            \nabla^2\big[
+                \log \widetilde{\mathit{PL}}_{\tau_n}(\hat \beta_{\tau_n})
+            \big]
+        \Big]^{-1}
+        \Big[
+            \nabla\big[
+                \log \widetilde{\mathit{PL}}_{\tau_n}(\hat \beta_{\tau_n})
+            \big]
+        \Big]
+    \Big\|.
+\]
+If the limit of 
+\(
+    \Big\|
+        \frac{1}{n} \nabla^2
+        \big[ \log \widetilde{\mathit{PL}}_t(\hat \beta_{\tau_n}) \big]
+    \Big\|
+\)
+is bounded away from zero, then there exists a finite $C$ such that for any
+$\varepsilon > 0$, when $n$ is sufficiently large,
+\[
+    \eta_n
+        \leq
+            C K L^3 \exp\{4 K \| \beta \|\}
+            \cdot
+            \frac{1}{n}
+            \sum_{t_m \leq \tau_n}
+                \frac{1}{|\mathcal{J}_{t_m}(i_m)|}
+            +
+            \varepsilon.
+\]
+If $|\mathcal{J}_{t_m}(i_m)|$ is constant, then $\eta_n$ is size
+$\OhP(1)$.  If, on the other hand, $|\mathcal{J}_{t_m}(i_m)|$ grows
+at rate $\omega_P(\sqrt{n})$, then $\eta_n$ is size $\OhP\big(1/\sqrt{n}\big)$
+
 
 \clearpage 
 
