@@ -200,15 +200,32 @@ Fig.~\ref{F:send-intensities} shows how the message volume varies with
 sender and time.  The individuals have idiosyncratic sending behaviors.
 
 \begin{figure}
+    \includegraphics[scale=0.6]{figures/kernel-intensity}
+    \caption{
+        \textsc{Messages sent by the first employee in the Enron dataset.}
+        Each of the 413 messages sent by the employee is represented by a point
+        whose $x$ value is the time of the message and whose $y$ value is a
+        random jitter around zero.  The curve above the points is a kernel
+        intensity estimate of the sending rate with a Gaussian kernel
+        and bandwidth chosen by Silverman's rule of thumb.  The area
+        under the curve is 413, the number of messages sent by the
+        employee.
+    }
+    \label{F:kernel-intensity}
+\end{figure}
+
+\begin{figure}
     \includegraphics[scale=0.6]{figures/send-intensities}
     \caption{
-        The left panel shows a quantile plot of the number of messages
-        sent per sender; the numbers range from 1 to 3,844.  The right
-        panel shows kernel density estimates of the message sending times
-        for each individual; when scaled by the corresponding counts from the
-        left panel, these curves give estimates of individual send
-        intensities.  Inhomogeneity is present across individuals and
-        times.
+        \textsc{Send intensities of all 156 employees in the Enron
+        dataset.}  The curves in the right panel are constructed as in
+        Fig.~\ref{F:kernel-intensity}, except normalized so that the
+        area under each curve is one.   The left panel shows a quantile plot
+        of the number of the normalization constants,
+        the messages sent per sender (numbers range from 1 to 3,844).
+        Colors are consistent across the two panels. 
+        The two panels reveal inhomogeneity of sending volumes and of
+        activity behaviors.
     }
     \label{F:send-intensities}
 \end{figure}
