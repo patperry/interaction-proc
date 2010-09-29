@@ -169,9 +169,9 @@ within-group sending rates.
 If we treat the messages as independent identically-distributed observations,
 then any reasonable test will find gender bias in both group-level behaviors.
 Given that a female is sending a message, the probability that the recipient
-is male will be estimated to be about 48\%, with a standard error around
-0.4\%; given that a male is sending a message, the estimate will be about
-23\% with a standard error around 0.2\%.
+is male will be estimated to be about 0.48, with a standard error around
+0.004; given that a male is sending a message, the estimate will be about
+0.23 with a standard error around 0.002.
 
 There are at least three problems with this simple analysis.
 \begin{enumerate}
@@ -318,8 +318,10 @@ $\mathcal{I} = \mathcal{J} = \{ 1, 2, \ldots, 156 \}$.  To disallow
 self-loops, we set $\mathcal{J}_t(i) = \mathcal{I} \setminus \{ i \}$.
 We use two types of covariates: static and dynamic.  The static covariates
 don't change over time, and are determined by the sender- and
-receiver-specific group memberships.  The dynamic covariates depend on the
-history of the process.
+receiver-specific group memberships summarized in
+Table~\ref{T:employee-summary}.  The dynamic covariates depend on the
+history of the process, and are chosen to allow adjusting for reciprocation
+effects.  The rest of this section discusses the covariates in depth.
 
 Considering gender (2 levels), seniority (2 levels), and department
 (3 levels), each individual belongs to one of 12 groups.  Each
@@ -380,9 +382,9 @@ longest is $1.87$ years.
 Let $N_t(i,j)$ be a multivariate counting process with stochastic
 intensity $\lambda_t(i,j)$ as defined in~\eqref{E:cox-intensity}.
 As before, the log-partial likelihood is given in~\eqref{E:log-pl}.
-Let $\hat \beta_t$ be the MPLE of the true parameter vector, $\beta_0$.
+The MPLE is an obvious estimate of the true parameter vector, $\beta_0$.
 
-Typically, one proves consistency of $\hat \beta_t$ by keeping $t$ fixed
+Typically, one proves consistency of the MPLE by keeping $t$ fixed
 and letting $|\mathcal{I}|$ go to infinity
 \cite{andersen1993statistical,andersen1982cox,cook2007statistical,fleming1991counting,
 martinussen2006dynamic}.  This makes sense in the context of clinical trial
@@ -486,11 +488,7 @@ its spectral norm (largest eigenvalue).  We need the following assumptions:
         \right]
         \,\,\text{is bounded.}
     \]
-    \item \label{A:message-times-finite}
-    \textbf{The message arrival times are finite.}  For each $n$,
-    \[
-        \mathbb{P}\{\tau_n < \infty\} = 1.
-    \]
+
     \item \label{A:integrated-cov-limit}
     \textbf{The integrated covariance function is well-behaved.}
     When $\beta \in \mathcal{B}$ and $\alpha \in [0,1]$, as $ n \to \infty$,
@@ -504,6 +502,12 @@ its spectral norm (largest eigenvalue).  We need the following assumptions:
             \, ds
         \toP
         \Sigma_\alpha(\beta).
+    \]
+
+    \item \label{A:message-times-finite}
+    \textbf{The message arrival times are finite.}  For each $n$,
+    \[
+        \mathbb{P}\{\tau_n < \infty\} = 1.
     \]
     
     \item \label{A:var-equicont}
@@ -529,8 +533,8 @@ specific settings~\cite{andersen1982cox}.
     defined in~\eqref{E:message-times}, set $U_t(\beta)$ and $I_t(\beta)$ to
     be the gradient and negative Hessian of the partial likelihood function
     as given in~(\ref{E:log-pl-gradient}--\ref{E:log-pl-neg-hessian}).  If
-    assumptions A\ref{A:square-int}--A\ref{A:var-equicont} hold, then the
-    following are true as $n \to \infty$:
+    assumptions A\ref{A:square-int}--A\ref{A:integrated-cov-limit} hold, then
+    the following are true as $n \to \infty$:
     \begin{enumerate}[(i)]
         \item \label{I:score-part}
         $n^{-1/2} \, U_{\lfloor \alpha \tau_n \rfloor}(\beta_0)$
@@ -538,13 +542,15 @@ specific settings~\cite{andersen1982cox}.
         covariance function $\Sigma_\alpha(\beta_0)$;
         
         \item \label{I:fisher-part}
-        if $\hat \beta_t$ is any consistent estimator of $\beta_0$,
+        if in addition assumptions
+        A\ref{A:message-times-finite}--A\ref{A:var-equicont} hold and
+        if $\hat \beta_n$ is any consistent estimator of $\beta_0$,
         then
         \[
             \sup_{\alpha \in [0,1]}
             \left\|
                 \tfrac{1}{n}
-                I_{\lfloor \alpha \tau_n \rfloor}(\hat \beta_{\tau_n})
+                I_{\lfloor \alpha \tau_n \rfloor}(\hat \beta_{n})
                 -
                 \Sigma_\alpha(\beta_0)
             \right\|
@@ -555,7 +561,7 @@ specific settings~\cite{andersen1982cox}.
 \end{theorem}
 
 We don't actually need convergence of the whole sample path, but
-it turns out to just as difficult to prove as convergence of the
+it turns out to be just as difficult to prove as convergence of the
 endpoint.  Consistency is a direct consequence of
 Theorem~\ref{T:score-fisher}.
 
@@ -575,9 +581,9 @@ Theorem~\ref{T:score-fisher}.
     \)
     where $\| \Sigma_1(\cdot) \|$ is locally Lipschitz and bounded
     away from zero.
-    If $\hat \beta_n$ maximizes $\log \mathit{PL}_{\tau_n}(\cdot)$
-    and the conclusions of Theorem~\ref{T:score-fisher} hold, then
-    the following are true as $n\to\infty$:
+    If $\hat \beta_n$ maximizes $\log \mathit{PL}_{\tau_n}(\cdot)$ and
+    conclusion~(\ref{I:score-part}) of Theorem~\ref{T:score-fisher} holds,
+    then the following are true as $n\to\infty$:
     \begin{enumerate}[(i)]
         \item $\hat \beta_n$ is a consistent estimator of $\beta_0$;
         \item $\sqrt{n} \, (\hat \beta_n - \beta_0)$ converges weakly
@@ -1545,7 +1551,8 @@ covariation
 \cite[Thm.~2.4.3]{fleming1991counting}.  There exists a sequence
 of stopping times localizing all $M(i,j)$ simultaneously, so $U(\beta_0)$ is
 locally square integrable with predictable variation
-\begin{align*}
+\begin{align}
+\begin{split}\label{E:score-compensator}
     \big\langle U(\beta_0) \big\rangle_t
         &=
             \sum_{i \in \mathcal{I}}
@@ -1557,15 +1564,16 @@ locally square integrable with predictable variation
             \sum_{i \in \mathcal{I}}
             \int_0^t
                 V_s(\beta_0, i) \,
-                d\Lambda_s(i). \\
-\intertext{Note}
+                d\Lambda_s(i).
+\end{split} \\
+\intertext{Note}\label{E:var-estimate}
     I_t(\beta)
         &=
             \sum_{i \in \mathcal{I}}
             \int_0^t
                 V_s(\beta, i) \,
                 dN_s(i).
-\end{align*}
+\end{align}
 
 Now we rescale time.
 For each positive $n$ define a discretized time-scaled version of the score.  
@@ -1613,8 +1621,8 @@ Note that $\|H_{t}(i,j)\| \leq 2 K$.  Thus,
               \E \Lambda_{\tau_n}^2              
             \big)^{1/2}.
 \end{align*}
-By assumption, $\E K^2$ is finite, and by construction, $N_{\tau_n}$ is
-bounded.  Since $N_{t \wedge \tau_n}$ is a counting process,
+By assumption A\ref{A:square-int}, $\E K^2$ is finite, and by construction,
+$N_{\tau_n}$ is bounded.  Since $N_{t \wedge \tau_n}$ is a counting process,
 $\E \Lambda_{\tau_n}^2$ is finite, too
 (this follows from results in Section 2.3 of Fleming and Harrington
 \cite{fleming1991counting}).  Thus, $U_{t \wedge \tau_n}(\beta_0)$
@@ -1636,7 +1644,8 @@ quadratic variation of $\tilde U^{(n)}(\beta_0)$ at time $\alpha$ is
 equal to the quadratic variation of $U(\beta_0)$ at time
 $\tau_{\lfloor \alpha n \rfloor}$.  Therefore, since quadratic and predictable
 variation have the same limit when it exists
-\cite[Prop. 1]{rebolledo1980central},
+\cite[Prop. 1]{rebolledo1980central}, assumption A\ref{A:integrated-cov-limit}
+implies that
 \(
     \langle \frac{1}{\sqrt{n}} \tilde U^{(n)}(\beta_0) \rangle_\alpha
         \toP
@@ -1675,10 +1684,11 @@ Part~\textit{(\ref{I:fisher-part})} is a consequence of equicontinuity
 and Lenglart's Inequality~\cite{lenglart1977relation}.  As in the proof of
 part~\textit{(\ref{I:score-part})}, set $K = \sup_{t,i,j} \| x_t(i,j) \|$.
 
+Recall \eqref{E:score-compensator} and \eqref{E:var-estimate}.
 When $\alpha \in [0, 1]$,
 \begin{align*}
     \left\|
-        \tfrac{1}{n} I_{\lfloor \alpha \tau_n \rfloor}(\hat \beta_{\tau_n})
+        \tfrac{1}{n} I_{\lfloor \alpha \tau_n \rfloor}(\hat \beta_n)
         -
         \Sigma_{\alpha} (\beta_0)
     \right\|
@@ -1687,7 +1697,7 @@ When $\alpha \in [0, 1]$,
             \frac{1}{n}
             \int_0^{\lfloor \alpha \tau_n \rfloor}
                 \{
-                    V_s(\hat \beta_{\tau_n}, i)
+                    V_s(\hat \beta_n, i)
                     -
                     V_s(\beta_0, i)
                 \} \, dN_s(i)
@@ -1714,12 +1724,12 @@ The first term is uniformly bounded by
 \(
     \sup_{n',i}
         \|
-            V_{\tau_{n'}}(\hat \beta_{\tau_n}, i)
+            V_{\tau_{n'}}(\hat \beta_n, i)
             -
             V_{\tau_{n'}}(\beta_0, i)
         \|,
 \)
-which converges to zero since $\hat \beta_t \toP \beta_0$ and
+which converges to zero since $\hat \beta_n \toP \beta_0$ and
 $\{ V_{\tau_{n'}}(\cdot, i) \}$ is an equicontinuous family
 (assumption~A\ref{A:var-equicont}).
 The third term converges to zero by assumption~A\ref{A:integrated-cov-limit}.
@@ -1757,7 +1767,7 @@ to $\frac{\delta}{\rho^2}$.  Since $\delta$ is arbitrary, the right hand side
 must converge to zero.  This proves that the second term in the bound on
 \(
     \left\|
-        \tfrac{1}{n} I_{\lfloor \alpha \tau_n \rfloor}(\hat \beta_{\tau_n})
+        \tfrac{1}{n} I_{\lfloor \alpha \tau_n \rfloor}(\hat \beta_n)
         -
         \Sigma_{\alpha} (\beta_0)
     \right\|
