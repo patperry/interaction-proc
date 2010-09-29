@@ -46,7 +46,7 @@ if (top) {
     cat(append = TRUE, file = file, "\n\\textbf{Receiver}")
 } else {
     cat(append = TRUE, file = file, "\n\\phantom{\\textbf{Receiver}} &\\\\")
-    cat(append = TRUE, file = file, "\n\\\\")    
+    #cat(append = TRUE, file = file, "\n\\\\")    
 }
 
 for (i in sends) {
@@ -56,7 +56,7 @@ for (i in sends) {
 cat(append = TRUE, file = file, " \\\\")
 
 #cat(append = TRUE, file = file, "\n\\midrule")
-if (top) cat(append = TRUE, file = file, "\n    \\cmidrule(r){1-1}")
+if (top) cat(append = TRUE, file = file, "\n    \\cmidrule(lr){1-1}")
 for (i in seq_along(sends)) {
     cat(append = TRUE, file = file, sep = "",
         "\n    \\cmidrule(lr){", 2*i, "-", 2*i + 1, "}")
