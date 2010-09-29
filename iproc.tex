@@ -603,11 +603,11 @@ the asymptotic framework are natural.
 To this point, we have assumed that each message has a single recipient.
 Often, messages have multiple recipients.  In the Enron dataset,
 approximately 30\% of messages have more than one recipient, with
-a few messages having more than fifty recipients.  One way of dealing
-with multiple recipients is, for example, treating a message with three
-recipients as three separate single-recipient messages.  A less ad-hoc
-approach is to explicitly take multiple recipients into account at the
-modeling stage.
+a few messages having more than fifty recipients
+(see Fig.~\ref{F:recipient-counts}).  One way of dealing with multiple
+recipients is, for example, treating a message with three recipients as three
+separate single-recipient messages.  A less ad-hoc approach is to explicitly
+take multiple recipients into account at the modeling stage.
 
 Introduce $\bar \lambda_t(i ; L)$ as the baseline intensity at time $t$ for
 messages sent by sender $i$ with $L$ recipients.  Let $J$ be any
@@ -635,6 +635,18 @@ which $i$ sends him messages by
     \exp\big\{ \beta_0^\trans \big(x'_t(i,j) - x_t(i,j)\big) \big\};
 \)
 importantly, this does not depend on $\bar \lambda_t(i; L)$.
+
+\begin{figure}
+    \includegraphics[scale=0.6]{figures/recipient-counts}
+    \caption{
+        \textsc{Message recipient counts}
+        Each of the 21,635 points corresponds to a message, with the
+        $y$-value equal to the $\log$ (base 2) of the number of recipients
+        for that message.  The message sent to the most people
+        had 57 recipients.  Notably, the three messages with the most
+        recipients all came from the same sender.
+    }\label{F:recipient-counts}
+\end{figure}
 
 The partial likelihood is nearly the same as in the single-recipient
 setting from Section~\ref{S:point-process-model}.

@@ -4,3 +4,5 @@
 *.out
 *.synctex.gz
 iproc.pdf
+figures/recipient-counts.pdf
+
