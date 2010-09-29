@@ -29,6 +29,7 @@ if (pdfout) {
     pdf(pdffile, width = width.fig, height = height.fig)
 }
 
+par(las = 1)
 par(mar = c(4, 4, 1, 4) + 0.1)
 
 nmsg <- rep(NA, length(emp$eid))
