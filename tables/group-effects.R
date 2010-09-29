@@ -31,44 +31,46 @@ effects <- exp(coefs)
 effects.se <- exp(coefs) * coefs.se  # delta method approximation
 
 cat.table <- function(file = file, append = FALSE, top = TRUE, bottom = TRUE,
-                      rows = seq_len(ngroups), cols = seq_len(ngroups)) {
+                      sends = seq_len(ngroups), recvs = seq_len(ngroups)) {
 
 cat(file = file, append = append, sep = "", "
-\\begin{tabular}{l", rep("r", 2 * length(cols)), "}")
+\\begin{tabular}{l", rep("l@{\\,\\,\\,}r", length(sends)), "}")
 if (top) {
     cat(file = file, append = TRUE, "\n\\toprule")
 
     cat(append = TRUE, file = file, sep = "",
-        "\n    & \\multicolumn{", 2 * length(cols), "}{c}{\\textbf{Receiver}} \\\\")
+        "\n    & \\multicolumn{", 2 * length(sends), "}{c}{\\textbf{Sender}} \\\\")
     cat(append = TRUE, file = file,
-        "\n    \\cmidrule(l){2-", 1 + 2 * length(cols),"}")
+        "\n    \\cmidrule(lr){2-", 1 + 2 * length(sends),"}")
 
-    cat(append = TRUE, file = file, "\n\\textbf{Sender}")
+    cat(append = TRUE, file = file, "\n\\textbf{Receiver}")
 } else {
-    cat(append = TRUE, file = file, "\n\\phantom{\\textbf{Sender}} &\\\\")
+    cat(append = TRUE, file = file, "\n\\phantom{\\textbf{Receiver}} &\\\\")
     cat(append = TRUE, file = file, "\n\\\\")    
 }
 
-for (j in cols) {
+for (i in sends) {
     cat(append = TRUE, file = file, sep = "",
-        "\n    & \\multicolumn{2}{c}{\\textnormal{", groups[[j]], "}}")
+        "\n    & \\multicolumn{2}{c}{\\textnormal{", groups[[i]], "}}")
 }
 cat(append = TRUE, file = file, " \\\\")
 
-if (top) cat(append = TRUE, file = file, "\n    \\cmidrule(l){1-1}")
-for (j in seq_along(cols)) {
+#cat(append = TRUE, file = file, "\n\\midrule")
+if (top) cat(append = TRUE, file = file, "\n    \\cmidrule(r){1-1}")
+for (i in seq_along(sends)) {
     cat(append = TRUE, file = file, sep = "",
-        "\n    \\cmidrule(lr){", 2*j, "-", 2*j + 1, "}")
+        "\n    \\cmidrule(lr){", 2*i, "-", 2*i + 1, "}")
 }
-# cat(append = TRUE, file = file, " \\\\")
 
-for (i in rows) {
-    eff.fmt <- format(round(effects[i,cols], 2), digits = 2)
-    eff.se.fmt <- paste("(", format(round(effects.se[i,cols], 2), digits = 2), ")",
+for (j in recvs) {
+    eff.fmt <- format(round(effects[sends,j], 2), digits = 3)
+    eff.se.fmt <- paste("(",
+                        format(round(effects.se[sends,j], 2), digits = 2),
+                        ")",
                         sep = "")
 
     cat(append = TRUE, file = file, sep = "",
-        "\n    \\textnormal{", groups[[i]], "} & ")
+        "\n    \\textnormal{", groups[[j]], "} & ")
     cat(append = TRUE, file = file, sep = "",
         do.call(paste, c(as.list(rbind(eff.fmt, eff.se.fmt)), sep = " & ")))
     cat(append = TRUE, file = file, sep = "", " \\\\")
@@ -78,6 +80,6 @@ if (bottom) cat(file = file, append = TRUE, "\n\\bottomrule")
 cat(append = TRUE, file = file, "\n\\end{tabular}")
 }
 
-cat.table(file = file, append = FALSE, top = TRUE,  bottom = FALSE, cols = 1:6)
+cat.table(file = file, append = FALSE, top = TRUE,  bottom = FALSE, sends = 1:6)
 cat(file = file, append = TRUE, "\n")
-cat.table(file = file, append = TRUE,  top = FALSE, bottom = TRUE,  cols = 7:12)
+cat.table(file = file, append = TRUE,  top = FALSE, bottom = TRUE,  sends = 7:12)
