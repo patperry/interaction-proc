@@ -2,10 +2,10 @@
 %Å‚Å„ÅœÅ”\r
 1 0 obj
 <<
-/CreationDate (D:20100929161942)
-/ModDate (D:20100929161942)
+/CreationDate (D:20100929164241)
+/ModDate (D:20100929164241)
 /Title (R Graphics Output)
-/Producer (R 2.11.1)
+/Producer (R 2.11.0)
 /Creator (R)
 >>
 endobj
@@ -32,7 +32,7 @@ stream
 Q q
 BT
 0.000 0.000 0.000 rg
-/F2 1 Tf 12.00 0.00 -0.00 12.00 108.21 4.32 Tm [(Time of Most Recent Receiv) 25 (e)] TJ
+/F2 1 Tf 12.00 0.00 -0.00 12.00 98.21 4.32 Tm [(Time Since Most Recent Receiv) 25 (e)] TJ
 ET
 BT
 /F2 1 Tf 0.00 12.00 -12.00 0.00 12.96 125.54 Tm [(Relativ) 25 (e Send Intensity)] TJ
@@ -361,7 +361,7 @@ Q
 endstream
 endobj
 7 0 obj
-7771
+7773
 endobj
 3 0 obj
 <<
@@ -415,15 +415,15 @@ xref
 0000000000 65535 f 
 0000000021 00000 n 
 0000000164 00000 n 
-0000008137 00000 n 
-0000008220 00000 n 
+0000008139 00000 n 
+0000008222 00000 n 
 0000000213 00000 n 
 0000000293 00000 n 
-0000008117 00000 n 
-0000008327 00000 n 
-0000008584 00000 n 
-0000008667 00000 n 
-0000008764 00000 n 
+0000008119 00000 n 
+0000008329 00000 n 
+0000008586 00000 n 
+0000008669 00000 n 
+0000008766 00000 n 
 trailer
 <<
 /Size 12
@@ -431,5 +431,5 @@ trailer
 /Root 2 0 R
 >>
 startxref
-8814
+8816
 %%EOF

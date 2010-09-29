@@ -44,7 +44,7 @@ plot(c(log.intervals, log.intervals, max(log.intervals)),
      c(coefs - coefs.se, coefs + coefs.se, 0),
      t = "n",
      axes = FALSE,
-     xlab = "Time of Most Recent Receive",
+     xlab = "Time Since Most Recent Receive",
      ylab = "Relative Send Intensity")
 
 # bar.width <- 0.1
