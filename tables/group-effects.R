@@ -16,8 +16,8 @@ coefs.se <- with(dynamic,
                                          + 1),
                                   to = length(coefs))])
 
-groups <- c("FSL", "MSL", "FST", "MST", "FSO", "MSO",
-            "FJL", "MJL", "FJT", "MJT", "FJO", "MJO")
+groups <- c("FLJ", "FLS", "FTJ", "FTS", "FOJ", "FOS",
+            "MLJ", "MLS", "MTJ", "MTS", "MOJ", "MOS")
 ngroups <- length(groups)
 
 coefs <- matrix(coefs, ngroups, ngroups)

@@ -329,24 +329,24 @@ sender-receiver pair involves 2 of these groups, for $12^2 = 144$ possible
 group-group combinations.  We introduce a static binary covariate for each
 combination.  The dyad covariate vector $x_t(i,j)$ has 144 components
 corresponding to these covariates.  For concreteness, abbreviate the codes
-for gender, seniority, and department by F/M, J/S, and L/T/O.  For
+for gender, department, and seniority by F/M, L/T/O, and J/S.  For
 individual $i$, define $s(i)$ in $\reals^{12}$ by
 \begin{align*}
     s(i)
     =
     \big(
-        &\text{1\{$i$ is FJL\}},
-        \text{1\{$i$ is MJL\}},
-        \text{1\{$i$ is FSL\}},
-        \text{1\{$i$ is MSL\}}, \\
-        &\,\,\text{1\{$i$ is FJT\}},
-        \text{1\{$i$ is MJT\}},
-        \text{1\{$i$ is FST\}},
-        \text{1\{$i$ is MST\}}, \\
-        &\,\,\,\,\text{1\{$i$ is FJO\}},
-        \text{1\{$i$ is MJO\}},
-        \text{1\{$i$ is FSO\}},
-        \text{1\{$i$ is MSO\}}
+        &\text{1\{$i$ is FLJ\}},
+        \text{1\{$i$ is FLS\}},
+        \text{1\{$i$ is FTJ\}},
+        \text{1\{$i$ is FTS\}}, \\
+        &\,\,\text{1\{$i$ is FOJ\}},
+        \text{1\{$i$ is FOS\}},
+        \text{1\{$i$ is MLJ\}},
+        \text{1\{$i$ is MLS\}}, \\
+        &\,\,\,\,\text{1\{$i$ is MTJ\}},
+        \text{1\{$i$ is MTS\}},
+        \text{1\{$i$ is MOJ\}},
+        \text{1\{$i$ is MOS\}}
     \big).
 \end{align*}
 The 144 static covariates of $x_t(i,j)$ are the interactions,
