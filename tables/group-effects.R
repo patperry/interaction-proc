@@ -16,9 +16,8 @@ coefs.se <- with(dynamic,
                                          + 1),
                                   to = length(coefs))])
 
-groups <- c("FJL", "MJL", "FSL", "MSL",
-            "FJT", "MJT", "FST", "MST",
-            "FJO", "MJO", "FSO", "MSO")
+groups <- c("FSL", "MSL", "FST", "MST", "FSO", "MSO",
+            "FJL", "MJL", "FJT", "MJT", "FJO", "MJO")
 ngroups <- length(groups)
 
 coefs <- matrix(coefs, ngroups, ngroups)
@@ -64,6 +63,10 @@ for (i in seq_along(sends)) {
 
 for (j in recvs) {
     eff.fmt <- format(round(effects[sends,j], 2), digits = 3)
+    for (i in seq_along(sends)) {
+        if (effects[sends[i],j] == max(effects[sends[i],]))
+            eff.fmt[i] <- paste("\\textbf{", eff.fmt[i], "}", sep = "")
+    }
     eff.se.fmt <- paste("(",
                         format(round(effects.se[sends,j], 2), digits = 2),
                         ")",
