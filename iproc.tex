@@ -600,11 +600,31 @@ the asymptotic framework are natural.
 
 \section{Enron Parameter Estimates}
 
+We fit the model described in Section~\ref{S:enron-modeling} by
+maximizing the partial likelihood, and then got Wold-style standard
+error estimates using Theorem~\ref{T:consistency}.  
+Table~\ref{T:group-effects} shows the estimated group-level (static) effects,
+and Fig.~\ref{F:reciprocation} shows the reciprocation (dynamic) effects.
+Reciprocation was stronger by orders of magnitude, amplifying the
+sending rate by between about $10^1$ and $10^3$.  Group level effects, on the
+other hand were mostly on the order of $10^{-1}$ to $10^0$.
+
+
 \begin{table}[h]
     \tiny
     \input{tables/group-effects}
     \caption{
-        Blah Blah Blah
+        Estimated group-level effects and their standard errors for the
+        model described in Section~\ref{S:enron-modeling}.  Gender,
+        Department, and Seniority codes are abbreviated as F/M, L/T/O,
+        and J/S.  Standard errors are computed from
+        Theorem~\ref{T:consistency} using the delta method and are shown in
+        parentheses.  The group-level effect of 2.46 for sender FLJ 
+        and receiver FLS means that a female legal junior executive sends
+        emails to a female legal senior executive at 2.46 times her baseline
+        activity rate.  The highest effect in each column is shown in
+        boldface; note that for females there is a strong within-group
+        (homophily) effect.
     }
     \label{T:group-effects}
 \end{table}
@@ -612,8 +632,23 @@ the asymptotic framework are natural.
 \begin{figure}[h]
     \includegraphics[scale=0.6]{figures/reciprocation}
     \caption{
-        \textsc{Reciprocation Effect}
-        Blah Blah Blah
+        \textsc{Reciprocation Effect.}
+        Estimated reciprocation effect and standard errors for the
+        model described in Section~\ref{S:enron-modeling}.  The solid
+        (purple) curve is determined from the 21 estimated coefficients
+        corresponding to variables of the form
+        ``\(\,
+            1\{\text{the time since $j$'s most recent message to $i$ is at most $\delta$}\},
+        \)''
+        where $i$ is the sender, $j$ is the receiver,
+        and $\delta$ is ``\,$2^l$ hours'' for $l$ ranging
+        from $-6$ to $14$.  The dashed (orange) curve gives one
+        standard error around the estimate as computed from 
+        Theorem~\ref{T:consistency}.  If employee $j$'s most recent
+        message to employee $i$ was 30 minutes ago, then $i$ sends to
+        $j$ at about 200 times his baseline rate.  The reciprocation
+        effect decays at a super-exponential rate, but persists for
+        1.87 years.
     }\label{F:reciprocation}
 \end{figure}
 
@@ -658,7 +693,7 @@ importantly, this does not depend on $\bar \lambda_t(i; L)$.
 \begin{figure}
     \includegraphics[scale=0.6]{figures/recipient-counts}
     \caption{
-        \textsc{Message recipient counts}
+        \textsc{Message recipient counts.}
         Each of the 21,635 points corresponds to a message, with the
         $y$-value equal to the log (base 2) of the number of recipients
         for that message.  The message sent to the most people
