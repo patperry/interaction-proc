@@ -8,6 +8,7 @@
 \RequirePackage{graphicx}
 \RequirePackage{enumerate}
 \RequirePackage{booktabs}
+\RequirePackage{subfigure}
 \belowbottomsep=0.5em
 
 \setattribute{journal}{name}{}  % Suppress text "Submitted to..."
@@ -598,16 +599,18 @@ the covariates are bounded and the message count is high, so
 assumptions A\ref{A:square-int}--A\ref{A:var-equicont} and
 the asymptotic framework are natural.  
 
-\section{Enron Parameter Estimates}
 
-We fit the model described in Section~\ref{S:enron-modeling} by
-maximizing the partial likelihood, and then got Wold-style standard
-error estimates using Theorem~\ref{T:consistency}.  
-Table~\ref{T:group-effects} shows the estimated group-level (static) effects,
-and Fig.~\ref{F:reciprocation} shows the reciprocation (dynamic) effects.
-Reciprocation was stronger by orders of magnitude, amplifying the
-sending rate by between about $10^1$ and $10^3$.  Group level effects, on the
-other hand were mostly on the order of $10^{-1}$ to $10^0$.
+\section{Enron Parameter Estimates}\label{S:enron-estimates}
+
+We fit the model described in Section~\ref{S:enron-modeling} to
+the messages in the Enron corpus with 10 or fewer recipients by
+maximizing the partial likelihood, and then get Wold-style standard
+error estimates using Theorem~\ref{T:consistency}.  We exclude messages
+with more than 10 recipients---a subjectively-chosen cutoff that includes
+99\% of the corpus---because many of these are ``broadcast'' messages and
+we are only interested in inter-personal communication.  For this section,
+we treat messages with multiple recipients as multiple single-recipient
+messages.  
 
 \begin{table}[h]
     \tiny
@@ -628,6 +631,12 @@ other hand were mostly on the order of $10^{-1}$ to $10^0$.
     \label{T:group-effects}
 \end{table}
 
+Table~\ref{T:group-effects} shows the estimated group-level
+(static) effects, and Fig.~\ref{F:reciprocation} shows the reciprocation
+(dynamic) effects.  Reciprocation was stronger by orders of magnitude,
+amplifying the sending rate by between about $10^1$ and $10^3$.  Group level
+effects, on the other hand were mostly on the order of $10^{-1}$ to $10^0$.
+
 \begin{figure}[h]
     \includegraphics[scale=0.6]{figures/reciprocation}
     \caption{
@@ -637,7 +646,8 @@ other hand were mostly on the order of $10^{-1}$ to $10^0$.
         (purple) curve is determined from the 21 estimated coefficients
         corresponding to variables of the form
         ``\(\,
-            1\{\text{the time since $j$'s most recent message to $i$ is at most $\delta$}\},
+            1\{\text{the time since $j$'s most recent message to
+                     $i$ is at most $\delta$}\},
         \)''
         where $i$ is the sender, $j$ is the receiver,
         and $\delta$ is ``\,$2^l$ hours'' for $l$ ranging
@@ -650,6 +660,23 @@ other hand were mostly on the order of $10^{-1}$ to $10^0$.
         1.87 years.
     }\label{F:reciprocation}
 \end{figure}
+
+\begin{table}
+    \subtable[Adjusted for Reciprocation]{
+        \input{tables/gender-effects-dynamic}
+        \label{T:gender-effects-dynamic}
+    }
+    \hspace{3em}
+    \subtable[No Adjustment]{
+        \input{tables/gender-effects-static}
+        \label{T:gender-effects-dynamic}
+    }
+    \caption{
+        blah, blah, blah
+    }
+    \label{T:gender-effects}
+\end{table}
+
 
 \section{Multiple recipients}
 
@@ -696,7 +723,8 @@ importantly, this does not depend on $\bar \lambda_t(i; L)$.
         Each of the 21,635 points corresponds to a message, with the
         $y$-value equal to the log (base 2) of the number of recipients
         for that message.  The message sent to the most people
-        had 57 recipients.
+        had 57 recipients.  In our analysis, we exclude messages with more
+        than 10 recipients.
     }\label{F:recipient-counts}
 \end{figure}
 
