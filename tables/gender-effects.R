@@ -2,9 +2,11 @@
 # -----------------------
 
 source("code/counts.R")
+source("code/boot.R")
 
 file.static <- "tables/gender-effects-static.tex"
 file.dynamic <- "tables/gender-effects-dynamic.tex"
+file.dynamic.bc <- "tables/gender-effects-dynamic-bc.tex"
 
 
 groups <- c("FLJ", "FLS", "FTJ", "FTS", "FOJ", "FOS",
@@ -185,3 +187,8 @@ PrintGenderTable(file.dynamic, dynamic$coefs, dynamic$coefs.cov)
 
 static <- GetCoefs("analysis/static.R")
 PrintGenderTable(file.static, static$coefs, static$coefs.cov)
+
+bias <- GetBias()
+bias <- bias$est[seq.int(from = length(bias$est) - ngroups^2 + 1,
+                         to = length(bias$est))]
+PrintGenderTable(file.dynamic.bc, dynamic$coefs - bias, dynamic$coefs.cov)
