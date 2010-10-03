@@ -4,11 +4,11 @@
 pdffile <- "figures/reciprocation.pdf"
 pdfout <- TRUE
 
-# purple
-color.points <- rgb(158, 154, 200, max = 255)
-
 # orange
-color.segments <- rgb(253, 141,  60, max = 255)
+color.points <- rgb(253, 141,  60, max = 255)
+
+# purple
+color.segments <- rgb(158, 154, 200, max = 255)
 
 margin <- 0.82
 padding <- margin/2
@@ -69,11 +69,11 @@ segments(c(par()$usr[1],log.intervals), c(coefs + coefs.se, 0),
 
 
 
-points(log.intervals, coefs, col = color.points, pch = 16, cex=0.75)
+points(log.intervals, coefs, col = color.points, pch = 16, cex=0.5)
 # lines(log.intervals, coefs, col = color.points)
 segments(c(par()$usr[1],log.intervals), c(coefs, 0),
          c(log.intervals, par()$usr[2]), c(coefs, 0),
-         col = color.points, lwd = 2)
+         col = color.points, lwd = 1)
          
 
 xaxis.at = log(c(30, 30 * 60, 30 * 60 * 60, 75 * 24 * 60 * 60))
