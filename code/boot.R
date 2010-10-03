@@ -50,5 +50,5 @@ GetBias <- function()
     bias.se <- sqrt(apply(boot$coefs, 2, var) * ((nrep-1)/nrep)
                     / nrep)
 
-    list(est = bias, est.se = bias.se)
+    list(est = bias, est.se = bias.se, nreps = nrow(boot$coefs))
 }
