@@ -605,9 +605,9 @@ the asymptotic framework are natural.
 We fit the model described in Section~\ref{S:enron-modeling} to
 the messages in the Enron corpus with 10 or fewer recipients by
 maximizing the partial likelihood, and then get Wold-style standard
-error estimates using Theorem~\ref{T:consistency}.  We exclude messages
-with more than 10 recipients---a subjectively-chosen cutoff that includes
-99\% of the corpus---because many of these are ``broadcast'' messages and
+error estimates using Theorem~\ref{T:consistency}.  Our analysis excludes
+messages with more than 10 recipients---a subjectively-chosen cutoff that
+includes 99\% of the corpus---because many of these are ``broadcast'' and
 we are only interested in inter-personal communication.  For this section,
 we treat messages with multiple recipients as multiple single-recipient
 messages.  
@@ -631,37 +631,74 @@ messages.
     \label{T:group-effects}
 \end{table}
 
-Table~\ref{T:group-effects} shows the estimated group-level
-(static) effects, and Fig.~\ref{F:reciprocation} shows the reciprocation
-(dynamic) effects.  Reciprocation was stronger by orders of magnitude,
-amplifying the sending rate by between about $10^1$ and $10^3$.  Group level
-effects, on the other hand were mostly on the order of $10^{-1}$ to $10^0$.
-
 \begin{figure}[h]
     \includegraphics[scale=0.6]{figures/reciprocation}
     \caption{
         \textsc{Reciprocation Effect.}
         Estimated reciprocation effect and standard errors for the
         model described in Section~\ref{S:enron-modeling}.  The solid
-        (purple) curve is determined from the 21 estimated coefficients
-        corresponding to variables of the form
-        ``\(\,
-            1\{\text{the time since $j$'s most recent message to
-                     $i$ is at most $\delta$}\},
-        \)''
-        where $i$ is the sender, $j$ is the receiver,
-        and $\delta$ is ``\,$2^l$ hours'' for $l$ ranging
-        from $-6$ to $14$.  The dashed (orange) curve gives one
-        standard error around the estimate as computed from 
-        Theorem~\ref{T:consistency}.  If employee $j$'s most recent
-        message to employee $i$ was 30 minutes ago, then $i$ sends to
-        $j$ at about 200 times his baseline rate.  The reciprocation
-        effect decays at a super-exponential rate, but persists for
-        1.87 years.
+        (orange) curve is determined from the 21 estimated coefficients
+        for the reciprocation effects at intervals of ``\,$2^l$ hours''
+        for $l$ ranging from $-6$ to $14$.  The dashed (purple) curve gives
+        one standard error around the estimate as computed from 
+        Theorem~\ref{T:consistency}.  Read the figure as follows: if employee
+        $j$'s most recent message to employee $i$ was 30 minutes ago, then
+        $i$ sends to $j$ at about 200 times his baseline rate.
+        The reciprocation effect decays at a super-exponential rate, but
+        persists for $1.87$ years.
     }\label{F:reciprocation}
 \end{figure}
 
-\begin{table}
+Table~\ref{T:group-effects} shows the estimated group-level
+(static) effects, and Fig.~\ref{F:reciprocation} shows the reciprocation
+(dynamic) effects.  Reciprocation is stronger by orders of magnitude,
+amplifying the sending rate by between about $10^1$ and $10^3$.  Group level
+effects, on the other hand are on the order of $10^{-1}$ to $10^0$.
+
+\begin{table}[h]
+    \input{tables/deviance.tex}
+    \caption{
+        Ad-hoc analysis of deviance for the model described in
+        Section~\ref{S:enron-modeling}.  Residual deviance is defined as twice
+        the negative log-partial likelihood when messages with multiple
+        recipients are treated as multiple single-recipient messages.  The
+        ``Static'' term contains the group-level effects, and the ``Dynamic''
+        term contains the reciprocation effects.   Degrees of freedom for the
+        model terms are the number of identifiable parameters.
+    }
+    \label{T:deviance}
+\end{table}
+
+Table~\ref{T:deviance} gives an ad-hoc analysis of deviance for the fitted
+model, showing group-level (static) effects account for 18\% of the
+residual deviance and reciprocation (dynamic) effects account for 24\%.
+If the model fit perfectly, we would expect the residual deviance to be
+about equal to the residual degrees of freedom; here, the residual deviance
+is about $5.9$ times what we would expect.  We can account for this by
+scaling the reported standard errors by $\sqrt{5.9}$.
+
+We use the estimated group level effects to quantify the gender bias of
+females and males.  This is defined as follows:
+\begin{enumerate}
+    \item go to the company on the day that it opens, so that there are no
+          reciprocation effects;
+    \item choose a random female employee proportional to how many
+          messages she sent in the dataset;
+    \item \label{I:bias-description-block}
+          block all messages sent to this employee;
+    \item wait for the first message she sends and record the gender
+          of its recipient;
+    \item if the probability of the recipient being female does not
+          agree with the proportion of females in the company ($43 / 156$),
+          then declare there to be gender bias;
+    \item do the same for the first message sent by a male.
+\end{enumerate}
+Step \ref{I:bias-description-block} is there because if the chosen
+employee receives a message before she sends one, then her sending
+probabilities will change.  
+
+\begin{table}[h]
+    \label{T:gender-effects}    
     \subtable[Adjusted for Reciprocation]{
         \input{tables/gender-effects-dynamic}
         \label{T:gender-effects-dynamic}
@@ -671,18 +708,30 @@ effects, on the other hand were mostly on the order of $10^{-1}$ to $10^0$.
         \label{T:gender-effects-static}
     }
     \caption{
-        Estimated gender-level sending preferences.
+        Estimated gender-level sending preferences.  Probabilities
+        should be compared to the proportions of females and males
+        at the company ($0.276$ and $0.724$, respectively).  See
+        main text for a more thorough description.
     }
-    \label{T:gender-effects}
 \end{table}
 
-\begin{table}
-    \input{tables/deviance.tex}
-    \caption{
-        Analysis of deviance.
-    }
-    \label{T:deviance}
-\end{table}
+According to Table~\ref{T:gender-effects-dynamic}, females are biased
+towards sending to females, and males are biased towards sending to
+males, even after adjusting for reciprocation effects.
+Table~\ref{T:gender-effects-static} shows that when we don't
+adjust for reciprocation, apparent gender bias is higher in females
+but about the same in males.  This suggests that females are more likely
+to respond to a message than males are (though we have not formally
+analyzed interactions between gender and reciprocation).
+
+The analyses in this section all have a serious caveat, which is that
+we have sidestepped the issue of messages with multiple recipients.  By
+treating messages with multiple recipients as multiple single-recipient
+messages, we have introduced bias in the estimates.  It turns out that
+after correcting for the bias, the group-level effects are about the
+same, and the reciprocation effects is slightly stronger.  The next two
+sections address the multiple recipient issue and remove the caveat.
+
 
 \section{Multiple recipients}
 
@@ -1972,6 +2021,36 @@ $\varepsilon > 0$, when $n$ is sufficiently large,
 
 \end{proof}
 
+
+\section{Bias-Corrected Estimates}
+
+This section gives bias-corrected estimates of the parameters in
+the Enron model.
+
+\begin{table}[h]
+    \tiny
+    \input{tables/group-effects-bc}
+    \caption{
+        Bias-corrected estimated group-level effects and their
+        standard errors.
+    }
+    \label{T:group-effects-bc}
+\end{table}
+
+\begin{figure}[h]
+    \includegraphics[scale=0.6]{figures/reciprocation-bc}
+    \caption{
+        \textsc{Bias-Corrected Reciprocation Effect.}
+    }\label{F:reciprocation-bc}
+\end{figure}
+
+\begin{table}[h]
+    \input{tables/gender-effects-dynamic-bc}
+    \label{T:gender-effects-dynamic-bc}    
+    \caption{
+        Bias-corrected estimated gender-level sending preferences.
+    }
+\end{table}
 
 \bibliographystyle{imsart-number}
 \bibliography{iproc-sources}
