@@ -937,9 +937,19 @@ consistently estimates the limiting covariance
 of $\sqrt{n}(\tilde \beta_n - \beta_0)$.  To get the mean, we use
 a parametric bootstrap.
 
+
 \section{Bias-Corrected Enron Parameter Estimates}
 
-Blah Blah Blah.
+Corollary~\ref{C:mple-approx-error} indicates that treating messages with multiple
+recipients as multiple single-recipient messages leads to bias in the parameter
+estimates.  For the Enron corpus the recipient set doesn't grow with the number
+of messages, so the bias in the parameter estimate is of order
+$1/|\mathcal{J}|$, where $\mathcal{J}$ is the recipient set.  Fortunately,
+$|\mathcal{J}|$ is on the order of the square root of the number of messages
+in the dataset, so we can correct the bias ($|J|$ is $156$ and there are $21,365$
+messages).
+
+
 
 \begin{figure}
     \includegraphics[scale=0.6]{figures/coef-bias}
