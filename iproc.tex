@@ -733,7 +733,7 @@ same, and the reciprocation effects is slightly stronger.  The next two
 sections address the multiple recipient issue and remove the caveat.
 
 
-\section{Multiple recipients}
+\section{Multiple Recipients}
 
 To this point, we have assumed that each message has a single recipient.
 Often, messages have multiple recipients.  In the Enron dataset,
@@ -899,27 +899,20 @@ $\log \widetilde{\mathit{PL}}.$
 \end{theorem}
 \begin{corollary}\label{C:mple-approx-error}
     Assume the setup of Theorem~\ref{T:log-pl-multiple-approx-error}.
-    Suppose for $\beta$ in a neighborhood of $\beta_0$ that
+    Let $\hat \beta_n$ maximize $\log \mathit{PL}_{\tau_n}(\cdot)$
+    and let $\tilde \beta_n$ maximize
+    $\log \widetilde{\mathit{PL}}_{\tau_n}(\cdot)$. 
+    Suppose for all $n$
     \(
-        -
+        \|
         \tfrac{1}{n}
         \nabla^2
-        [ \log \mathit{PL}_{\tau_n}(\beta)]
-        \toP \Sigma_1(\beta)
+        [ \log \mathit{PL}_{\tau_n}(\cdot)]
+        \|
     \)
-    and
-    \(
-        -
-        \tfrac{1}{n}
-        \nabla^2
-        [ \log \widetilde{\mathit{PL}}_{\tau_n}(\beta)]
-        \toP \tilde{\Sigma}_1(\beta),
-    \)
-    where $\| \Sigma_1 (\cdot) \|$ and $\| \tilde \Sigma_1( \cdot ) \|$
-    are locally Lipschitz and bounded away from zero.
-    If $\hat \beta_n$ maximizes $\log \mathit{PL}_{\tau_n}(\cdot)$
-    and $\tilde \beta_n$ maximizes
-    $\log \widetilde{\mathit{PL}}_{\tau_n}(\cdot)$, then
+    is uniformly locally Lipschitz and bounded away from zero
+    in a neighborhood of $\hat \beta_n$.
+    If $G_n \toP 0$, then
     \[
         \| \tilde \beta_{\tau_n} - \hat \beta_{\tau_n} \|
             =
@@ -927,14 +920,17 @@ $\log \widetilde{\mathit{PL}}.$
     \]
 \end{corollary}
 
-Corollary~\ref{C:mple-approx-error} implies that if $|\mathcal{J}_{t_m}(i_m)|$
-grows sufficiently quickly and if the true MPLE, $\hat \beta_n$, is
-a $\sqrt{n}$-consistent estimate of $\beta_0$, then
-the approximate MPLE, $\tilde \beta_n$ is \emph{also} $\sqrt{n}$-consistent.
-Growth at rate $|\mathcal{J}_{t_m}(i_m)| = \omega(\sqrt{m})$ suffices.
+Suppose the true MPLE, $\hat \beta_n$, is a $\sqrt{n}$-consistent estimate of
+$\beta_0$ (Theorem~\ref{T:consistency} gives sufficient conditions).  
+Corollary~\ref{C:mple-approx-error} says that if
+$|\mathcal{J}_{t_m}(i_m)|$ grows fast enough to make $G_n$ decay at rate
+$\OhP(1/\sqrt{n})$, then the approximate MPLE, $\tilde \beta_n$ is \emph{also}
+$\sqrt{n}$-consistent.  Growth at rate
+$|\mathcal{J}_{t_m}(i_m)| = \omega(\sqrt{m})$ suffices.
 Moreover, if $\sqrt{n}(\hat \beta_n - \beta_0)$ is asymptotically Gaussian, 
 then $\sqrt{n}(\tilde \beta_n - \beta_0)$ is asymptotically Gaussian with
-the same covariance matrix (but possibly a different mean).  
+the same covariance matrix but possibly a different mean.
+
 Theorem~\ref{T:log-pl-multiple-approx-error} implies that under enough
 regularity,
 \(
@@ -942,12 +938,13 @@ regularity,
         \nabla^2 \log \widetilde{\mathit{PL}}_{\tau_n}(\tilde \beta_n)
     ]
 \)
-consistently estimates the covariance matrix.  To get the mean, we use
-a parametric bootstrap simulation.
+consistently estimates the limiting covariance
+of $\sqrt{n}(\tilde \beta_n - \beta_0)$.  To get the mean, we use
+a parametric bootstrap.
 
+\section{Bias-Corrected Enron Parameter Estimates}
 
-
-\clearpage 
+Blah Blah Blah.
 
 \appendix
 
@@ -1608,7 +1605,7 @@ of Newton's method.  Tapia gives an elementary proof of the Kantorovich
 Thereom~\cite{haberman1977maximum,kantorovich1952functional,tapia1971kantorovich}.
 We state a weak form of the the result as a lemma.
 
-\begin{lemma}[Kantorovich Theorem]
+\begin{lemma}[Kantorovich Theorem]\label{L:kantorovich}
     Let $P(x) = 0$ be a general system of nonlinear equations, where $P$ is
     a map between two Banach spaces.  Let $P'(x)$ denote the Jacobian
     (Fr\'echet differential) of $P$ at $x$, assumed to exist in $D_0$,
@@ -1970,7 +1967,31 @@ and
 
 \begin{proof}[Proof of Corollary~\ref{C:mple-approx-error}]
 
-Set $\tau_n = \inf\{ t : N_t > n \}$, $L = \sup_m |J_m|$, and
+We know that Newton's method applied to
+$\log \widetilde{\mathit{PL}}_{\tau_n}(\cdot)$ converges to $\tilde \beta_n$
+after enough iterations.  We use $\hat \beta_n$ as the initial iterate
+and use the Kantorovich Theorem (Lemma~\ref{L:kantorovich}) to bound
+$\|\tilde \beta_n - \hat \beta_n\|$.  
+
+In the notation of the lemma, $P(\cdot)$ is the gradient of
+$\log \widetilde{\mathit{PL}}_{\tau_n}(\cdot)$ and $P'(\cdot)$ is its Hessian.
+Singe $G_n \toP 0$, assumptions (i) and (iii) hold for
+some finite $B$ and $K$ uniformly for $n$ large enough with arbitrarily
+high probability by
+Theorem~\ref{T:log-pl-multiple-approx-error}
+and the assumptions on $\nabla^2 [\log {\mathit{PL}}_{\tau_n}(\cdot)]$.
+Likewise, for large enough $n$,
+\(
+    \Big\|
+        \nabla^2\big[
+            \log \widetilde{\mathit{PL}}_{\tau_n}(\hat \beta_{\tau_n})
+        \big]
+    \Big\|
+\)
+is uniformly bounded away from zero with arbitrarily high probability.
+Equivalently, the norm of the inverse Hessian is bounded.
+
+Set
 \[
     \eta_n =
     \Big\|
@@ -1984,54 +2005,18 @@ Set $\tau_n = \inf\{ t : N_t > n \}$, $L = \sup_m |J_m|$, and
                 \log \widetilde{\mathit{PL}}_{\tau_n}(\hat \beta_{\tau_n})
             \big]
         \Big]
-    \Big\|.
-\]
-If the limit of 
-\(
     \Big\|
-        \frac{1}{n} \nabla^2
-        \big[ \log \widetilde{\mathit{PL}}_t(\hat \beta_{\tau_n}) \big]
-    \Big\|
-\)
-is bounded away from zero, then there exists a finite $C$ such that for any
-$\varepsilon > 0$, when $n$ is sufficiently large,
-\[
-    \eta_n
-        \leq
-            C K L^3 \exp\{4 K \| \beta \|\}
-            \cdot
-            \frac{1}{n}
-            \sum_{t_m \leq \tau_n}
-                \frac{1}{|\mathcal{J}_{t_m}(i_m)|}
-            +
-            \varepsilon.
 \]
-
-Let $\hat \beta_t$ maximize $\log \mathit{PL}_t(\cdot)$ and let
-$\tilde \beta_t$ maximize $\log \widetilde{\mathit{PL}}_t(\cdot)$.  We
-have
+and set $h_n = B K \eta_n$.
+Since $\nabla\big[\log {\mathit{PL}}_{\tau_n}(\hat \beta_{\tau_n})\big] = 0$,
+Theorem~\ref{T:log-pl-multiple-approx-error} and the boundedness of the
+inverse Hessian give us that $\eta_n = \OhP(G_n)$.  Therefore, for $n$
+large enough,
 \[
-    \| \tilde \beta_t - \beta_0 \|
-        \leq
-        \| \hat \beta_t - \beta_0\|
-        +
-        \| \hat \beta_t - \tilde \beta_t \|.
+    \| \tilde \beta_n - \hat \beta_n \|
+        \leq \frac{\eta_n}{h}\frac{(2h)^{2^0}}{2^0} = 2 \eta_n.
+    \qedhere
 \]
-We know $\hat \beta_t$ is a $\sqrt{n}$-consistent estimator of
-$\beta_0$.  To get consistency of $\tilde \beta_t$, we show
-$\tilde \beta_t$ is close to $\hat \beta_t$.
-
-Write
-\[
-    \nabla \big[ \log \widetilde{\mathit{PL}}_t(\hat \beta_t) \big]
-        =
-        \sum_{t_m \leq t}
-            E_{t_m}\!(\hat \beta_t, i_m; |J_m|)
-            -
-            \widetilde{E}_{t_m}\!(\hat \beta_t, i_m; |J_m|).
-\]
-
-
 \end{proof}
 
 
