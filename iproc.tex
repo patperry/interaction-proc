@@ -1802,39 +1802,17 @@ The first is the covariance matrix of $\sum_{l=1}^L x_t(i,j_l)$ under
 $\mathbb{P}_{t,\beta,i;L}$; the second is the covariance matrix of the same
 quantity under $\tilde{\mathbb{P}}_{t,\beta,i;L}$.
 
-Let $\hat \beta_t$ maximize $\log \mathit{PL}_t(\cdot)$ and let
-$\tilde \beta_t$ maximize $\log \widetilde{\mathit{PL}}_t(\cdot)$.  We
-have
-\[
-    \| \tilde \beta_t - \beta_0 \|
-        \leq
-        \| \hat \beta_t - \beta_0\|
-        +
-        \| \hat \beta_t - \tilde \beta_t \|.
-\]
-We know $\hat \beta_t$ is a $\sqrt{n}$-consistent estimator of
-$\beta_0$.  To get consistency of $\tilde \beta_t$, we show
-$\tilde \beta_t$ is close to $\hat \beta_t$.
 
 Write
 \[
     \nabla \big[ \log \widetilde{\mathit{PL}}_t(\beta) \big]
+    -
+    \nabla \big[ \log \mathit{PL}_t(\beta )\big]
         =
-        \nabla \big[ \log \mathit{PL}_t(\beta )\big]
-        +
         \sum_{t_m \leq t}
             E_{t_m}\!(\beta, i_m; |J_m|)
             -
-            \widetilde{E}_{t_m}\!(\beta, i_m; |J_m|),
-\]
-so that
-\[
-    \nabla \big[ \log \widetilde{\mathit{PL}}_t(\hat \beta_t) \big]
-        =
-        \sum_{t_m \leq t}
-            E_{t_m}\!(\hat \beta_t, i_m; |J_m|)
-            -
-            \widetilde{E}_{t_m}\!(\hat \beta_t, i_m; |J_m|).
+            \widetilde{E}_{t_m}\!(\beta, i_m; |J_m|).
 \]
 Recalling the representation in terms of probability laws $\mathbb{P}$ and
 $\tilde{\mathbb{P}}$,
@@ -1919,12 +1897,14 @@ Now,
                     }
                 \Big]^2.
 \end{align*}
-Set $K = \sup_t \| x_t(i,j) \|$.  Then, 
-\[
+
+
+Set $K = \sup_t \| x_t(i,j) \|$.  Then,
+\(
     \exp\{-K \, \| \beta \|\}
         \leq w_t(\beta,i,j)
         \leq \exp\{K \| \, \beta \|\},
-\]
+\)
 so that
 \[
     \mathbb{P}^\ast_{t,\beta,i;L}
@@ -1946,25 +1926,31 @@ and
         \,
         \frac{\exp\{4 K \, \| \beta \|\}}{| \mathcal{J}_t(i) |}.
 \]
-By a similar argument,
+Thus,
+\[
+    \Big\|
+        \nabla\big[ \log \widetilde{\mathit{PL}}_t(\hat \beta _t ) \big]
+        -
+        \nabla\big[ \log {\mathit{PL}}_t(\hat \beta _t ) \big]        
+    \Big\| \\
+        \leq
+            K
+            \exp\{4 K \| \beta \|\}
+            \cdot
+            \sum_{t_m \leq t}
+                \frac{|J_m|^2(|J_m| - 1)}{|\mathcal{J}_{t_m}(i_m)|}.
+\]
+We get the final bound by replacing the numerators of the summands
+with $\sup_m |J_m|$.
+
+The bound on the difference in Hessians follows by a similar argument.
+The relevant intermediate bounds are
 \[
     \Big\| V_{t}(\beta, i; L) - \widetilde{V}_t(\beta, i; L) \Big\|
         \leq
         2\, K^2 \, L^3 \, (L - 1)
         \,
         \frac{\exp\{4 K \, \| \beta \|\}}{| \mathcal{J}_t(i) |}.
-\]
-Thus,
-\[
-    \Big\|
-        \nabla\big[ \log \widetilde{\mathit{PL}}_t(\hat \beta _t ) \big]
-    \Big\|
-        \leq
-            K
-            \exp\{4 K \| \beta \|\}
-            \cdot
-            \sum_{t_m \leq t}
-                \frac{|J_m|^2 \, (|J_m| - 1)}{|\mathcal{J}_{t_m}(i_m)|},
 \]
 and
 \begin{multline*}
@@ -1980,7 +1966,9 @@ and
             \sum_{t_m \leq t}
                 \frac{|J_m|^3 \, (|J_m| - 1)}{|\mathcal{J}_{t_m}(i_m)|}.
 \end{multline*}
+\end{proof}
 
+\begin{proof}[Proof of Corollary~\ref{C:mple-approx-error}]
 
 Set $\tau_n = \inf\{ t : N_t > n \}$, $L = \sup_m |J_m|$, and
 \[
@@ -2018,6 +2006,31 @@ $\varepsilon > 0$, when $n$ is sufficiently large,
             +
             \varepsilon.
 \]
+
+Let $\hat \beta_t$ maximize $\log \mathit{PL}_t(\cdot)$ and let
+$\tilde \beta_t$ maximize $\log \widetilde{\mathit{PL}}_t(\cdot)$.  We
+have
+\[
+    \| \tilde \beta_t - \beta_0 \|
+        \leq
+        \| \hat \beta_t - \beta_0\|
+        +
+        \| \hat \beta_t - \tilde \beta_t \|.
+\]
+We know $\hat \beta_t$ is a $\sqrt{n}$-consistent estimator of
+$\beta_0$.  To get consistency of $\tilde \beta_t$, we show
+$\tilde \beta_t$ is close to $\hat \beta_t$.
+
+Write
+\[
+    \nabla \big[ \log \widetilde{\mathit{PL}}_t(\hat \beta_t) \big]
+        =
+        \sum_{t_m \leq t}
+            E_{t_m}\!(\hat \beta_t, i_m; |J_m|)
+            -
+            \widetilde{E}_{t_m}\!(\hat \beta_t, i_m; |J_m|).
+\]
+
 
 \end{proof}
 
