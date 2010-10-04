@@ -848,7 +848,6 @@ as the variance. Define
 \begin{equation}\label{E:growth-constant}
     G_n
         =
-            \frac{1}{n}
             \sum_{t_m \leq \tau_n}
                 \frac{1}{|\mathcal{J}_{t_m}(i_m)|},
 \end{equation}
@@ -875,10 +874,8 @@ $\log \widetilde{\mathit{PL}}.$
     then for $\beta$ in a neighborhood of $\beta_0$,
     \[
         \Big\|
-        \tfrac{1}{n}
         \nabla [\log \mathit{PL}_{\tau_n}(\beta) ]
         -
-        \tfrac{1}{n}
         \nabla [\log \widetilde{\mathit{PL}}_{\tau_n}(\beta) ]
         \Big\|
             =
@@ -887,10 +884,8 @@ $\log \widetilde{\mathit{PL}}.$
     and
     \[
         \Big\|
-        \tfrac{1}{n}
         \nabla^2 [\log \mathit{PL}_{\tau_n}(\beta) ]
         -
-        \tfrac{1}{n}
         \nabla^2 [\log \widetilde{\mathit{PL}}_{\tau_n}(\beta) ]
         \Big\|
             =
@@ -902,29 +897,29 @@ $\log \widetilde{\mathit{PL}}.$
     Let $\hat \beta_n$ maximize $\log \mathit{PL}_{\tau_n}(\cdot)$
     and let $\tilde \beta_n$ maximize
     $\log \widetilde{\mathit{PL}}_{\tau_n}(\cdot)$. 
-    Suppose for all $n$
+    Suppose for all $n$, the norm of the Hessian,
     \(
         \|
         \tfrac{1}{n}
         \nabla^2
         [ \log \mathit{PL}_{\tau_n}(\cdot)]
-        \|
+        \|,
     \)
     is uniformly locally Lipschitz and bounded away from zero
     in a neighborhood of $\hat \beta_n$.
-    If $G_n \toP 0$, then
+    If $G_n/n \toP 0$, then
     \[
         \| \tilde \beta_{\tau_n} - \hat \beta_{\tau_n} \|
             =
-            \OhP(G_n).
+            \OhP(G_n/n).
     \]
 \end{corollary}
 
 Suppose the true MPLE, $\hat \beta_n$, is a $\sqrt{n}$-consistent estimate of
 $\beta_0$ (Theorem~\ref{T:consistency} gives sufficient conditions).  
 Corollary~\ref{C:mple-approx-error} says that if
-$|\mathcal{J}_{t_m}(i_m)|$ grows fast enough to make $G_n$ decay at rate
-$\OhP(1/\sqrt{n})$, then the approximate MPLE, $\tilde \beta_n$ is \emph{also}
+$|\mathcal{J}_{t_m}(i_m)|$ grows fast enough to make $G_n$ smaller than
+$\OhP(\sqrt{n})$, then the approximate MPLE, $\tilde \beta_n$ is \emph{also}
 $\sqrt{n}$-consistent.  Growth at rate
 $|\mathcal{J}_{t_m}(i_m)| = \omega(\sqrt{m})$ suffices.
 Moreover, if $\sqrt{n}(\hat \beta_n - \beta_0)$ is asymptotically Gaussian, 
@@ -1978,22 +1973,23 @@ and
 \begin{proof}[Proof of Corollary~\ref{C:mple-approx-error}]
 
 We know that Newton's method applied to
-$\log \widetilde{\mathit{PL}}_{\tau_n}(\cdot)$ converges to $\tilde \beta_n$
-after enough iterations.  We use $\hat \beta_n$ as the initial iterate
-and use the Kantorovich Theorem (Lemma~\ref{L:kantorovich}) to bound
-$\|\tilde \beta_n - \hat \beta_n\|$.  
+$\tfrac{1}{n}\log \widetilde{\mathit{PL}}_{\tau_n}(\cdot)$ converges to
+$\tilde \beta_n$ after enough iterations.  We use $\hat \beta_n$ as the
+initial iterate and use the Kantorovich Theorem (Lemma~\ref{L:kantorovich})
+to bound $\|\tilde \beta_n - \hat \beta_n\|$.  
 
 In the notation of the lemma, $P(\cdot)$ is the gradient of
-$\log \widetilde{\mathit{PL}}_{\tau_n}(\cdot)$ and $P'(\cdot)$ is its Hessian.
-Singe $G_n \toP 0$, assumptions (i) and (iii) hold for
+$\tfrac{1}{n} \log \widetilde{\mathit{PL}}_{\tau_n}(\cdot)$ and $P'(\cdot)$ is its Hessian.
+Singe $G_n/n \toP 0$, assumptions (i) and (iii) hold for
 some finite $B$ and $K$ uniformly for $n$ large enough with arbitrarily
 high probability by
 Theorem~\ref{T:log-pl-multiple-approx-error}
-and the assumptions on $\nabla^2 [\log {\mathit{PL}}_{\tau_n}(\cdot)]$.
+and the assumptions on $\tfrac{1}{n} \nabla^2 [\log {\mathit{PL}}_{\tau_n}(\cdot)]$.
 Likewise, for large enough $n$,
 \(
     \Big\|
         \nabla^2\big[
+            \tfrac{1}{n}
             \log \widetilde{\mathit{PL}}_{\tau_n}(\hat \beta_{\tau_n})
         \big]
     \Big\|
@@ -2007,11 +2003,13 @@ Set
     \Big\|
         \Big[
             \nabla^2\big[
+                \tfrac{1}{n}
                 \log \widetilde{\mathit{PL}}_{\tau_n}(\hat \beta_{\tau_n})
             \big]
         \Big]^{-1}
         \Big[
             \nabla\big[
+                \tfrac{1}{n}
                 \log \widetilde{\mathit{PL}}_{\tau_n}(\hat \beta_{\tau_n})
             \big]
         \Big]
@@ -2020,11 +2018,13 @@ Set
 and set $h_n = B K \eta_n$.
 Since $\nabla\big[\log {\mathit{PL}}_{\tau_n}(\hat \beta_{\tau_n})\big] = 0$,
 Theorem~\ref{T:log-pl-multiple-approx-error} and the boundedness of the
-inverse Hessian give us that $\eta_n = \OhP(G_n)$.  Therefore, for $n$
+inverse Hessian give us that $\eta_n = \OhP(G_n/n)$.  Therefore, for $n$
 large enough,
 \[
     \| \tilde \beta_n - \hat \beta_n \|
-        \leq \frac{\eta_n}{h}\frac{(2h)^{2^0}}{2^0} = 2 \eta_n.
+        \leq \frac{\eta_n}{h}\frac{(2h)^{2^0}}{2^0}
+        = 2 \eta_n
+        = \OhP(G_n/n).
     \qedhere
 \]
 \end{proof}
