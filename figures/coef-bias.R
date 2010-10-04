@@ -18,8 +18,8 @@ margin <- 0.82
 padding <- margin/2
 
 if (pdfout) {
-    width.fig <- 4.15 * 1.25
-    height.fig <- width.fig - margin + padding
+    width.fig <- 8.3
+    height.fig <- 0.5 * width.fig - margin + padding
     pdf(pdffile, width = width.fig, height = height.fig)
 }
 
