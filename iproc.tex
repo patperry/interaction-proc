@@ -868,14 +868,15 @@ likelihood.  As noted previously, this is equivalent to treating messages with
 multiple recipients as multiple single-recipient messages.  Let
 $\mathit{PL}$ denote the true partial likelihood and let $\widetilde{\mathit{PL}}$
 denote the approximation as given in \eqref{E:log-pl-multiple}
-and \eqref{E:log-pl-multiple-approx}.  Define
+and \eqref{E:log-pl-multiple-approx}.  Define the receiver set growth
+sequence:
 \begin{equation}\label{E:growth-constant}
     G_n
         =
             \sum_{t_m \leq \tau_n}
-                \frac{1}{|\mathcal{J}_{t_m}(i_m)|},
+                \frac{1}{|\mathcal{J}_{t_m}(i_m)|}.
 \end{equation}
-the receiver set growth sequence.  This sequence turns out to be critical
+This sequence turns out to be critical
 in bounding the error from approximating $\mathit{PL}$ by
 $\widetilde{\mathit{PL}}.$  When $|\mathcal{J}_{t_m}(i_m)|$ is
 constant, $G_n$ has linear growth.  In contrast, when
@@ -936,7 +937,7 @@ $G_n = \Oh(\sqrt{n})$.
     Let $\hat \beta_n$ maximize $\log \mathit{PL}_{\tau_n}(\cdot)$
     and let $\tilde \beta_n$ maximize
     $\log \widetilde{\mathit{PL}}_{\tau_n}(\cdot)$. 
-    Suppose for all $n$, the norm of the Hessian,
+    Suppose for all $n$ that the norm of the Hessian,
     \(
         \|
         \tfrac{1}{n}
@@ -959,14 +960,11 @@ $\beta_0$ (Theorem~\ref{T:consistency} gives sufficient conditions).
 Corollary~\ref{C:mple-approx-error} says that if
 $|\mathcal{J}_{t_m}(i_m)|$ grows fast enough to make $G_n$ smaller than
 $\OhP(\sqrt{n})$, then the approximate MPLE, $\tilde \beta_n$ is \emph{also}
-$\sqrt{n}$-consistent.  Growth at rate
-$|\mathcal{J}_{t_m}(i_m)| = \omega(\sqrt{m})$ suffices.
+$\sqrt{n}$-consistent.  
 Moreover, if $\sqrt{n}(\hat \beta_n - \beta_0)$ is asymptotically Gaussian, 
 then $\sqrt{n}(\tilde \beta_n - \beta_0)$ is asymptotically Gaussian with
 the same covariance matrix but possibly a different mean.
-
-Theorem~\ref{T:log-pl-multiple-approx-error} implies that under enough
-regularity,
+Under enough regularity,
 \(
     -\tfrac{1}{n} [
         \nabla^2 \log \widetilde{\mathit{PL}}_{\tau_n}(\tilde \beta_n)
@@ -976,23 +974,67 @@ consistently estimates the limiting covariance
 of $\sqrt{n}(\tilde \beta_n - \beta_0)$.  To get the mean, we use
 a parametric bootstrap.
 
+Assume the conditions of Corollary~\ref{C:mple-approx-error}.
+The residual $\tilde \beta_n - \beta_0$ depends continuously on $\beta_0$
+and the covariates, $x_t(i,j)$.  Since $\tilde \beta_n$ is a consistent
+estimator of $\beta_0$, we can estimate the bias in $\tilde \beta_n$ via
+a parametric bootstrap.  We generate a bootstrap replicate dataset
+$\{ (t_m, i_m, J_m^{(r)}) \}$ by drawing $J_m^{(r)}$, a random subset
+of $\mathcal{J}_{t_m}(i_m)$ with size $|J_m|$ whose elements are drawn
+proportional to $w_{t_m}(\tilde \beta, i_m, \cdot)$.
+We then get a bootstrap approximate MPLE, $\tilde \beta^{(r)}$, by maximizing
+$\widetilde{\mathit{PL}}_{t_n}^{(r)}$, where
+\begin{multline*}
+    \log \widetilde{\mathit{PL}}_{t}^{(r)}\!(\beta) \\
+        =
+        \sum_{t_m \leq t}
+        \bigg\{
+            \sum_{j \in J_m^{(r)}}\!
+                \beta^\trans x_{t_m}\!(i_m, j)
+            -
+            \log\big[
+                \!\!\!\!
+                \sum_{j \in \mathcal{J}_{t_m}\!(i_m)}
+                    \exp\{ \beta^\trans x_{t_m}\!(i_m, j)\}
+            \big]^{|J_m^{(r)}|}
+        \bigg\}.
+\end{multline*}
+Note that $x_t(i,j)$ is determined from the original dataset, not the
+bootstrap dataset.  For each bootstrap replicate, we get a residual
+$\tilde \beta_n^{(r)} - \tilde \beta_n$.  With $R$ bootstrap
+replicates, we estimate the bias by
+\[
+    \widehat{\mathrm{bias}}
+        =
+            \frac{1}{R} \sum_{r=1}^{R} \tilde \beta_n^{(r)} - \tilde \beta.
+\]
+We adjust for the bias by replacing $\tilde \beta_n$ with
+$\tilde \beta_n - \widehat{\mathrm{bias}}$.
 
 
-Corollary~\ref{C:mple-approx-error} indicates that treating messages with multiple
-recipients as multiple single-recipient messages leads to bias in the parameter
-estimates.  For the Enron corpus the recipient set doesn't grow with the number
+For the Enron corpus the recipient set doesn't grow with the number
 of messages, so the bias in the parameter estimate is of order
 $1/|\mathcal{J}|$, where $\mathcal{J}$ is the recipient set.  Fortunately,
 $|\mathcal{J}|$ is on the order of the square root of the number of messages
-in the dataset, so we can correct the bias ($|J|$ is $156$ and there are $21,365$
-messages).
+in the dataset, so we can correct the bias ($|J|$ is $156$ and there are
+$21,365$ messages).  Figure~\ref{F:boot-resid} shows a summary of the bootstrap
+residuals from $R = 500$ replicates.  We can see that treating messages with
+multiple recipients as multiple single-recipient messages leads to negative
+bias in the coefficient estimates.
 
 \begin{figure}
-    \includegraphics[scale=0.6]{figures/coef-bias}
+    \includegraphics[scale=0.6]{figures/boot-resid}
     \caption{
-        \textsc{Coefficient Bias.}
+        \textsc{Enron Bootstrap Residuals.} Summary of bootstrap residuals for
+        the coefficients in the Enron dataset, normalized by estimated
+        standard errors.  The points (orange) show the means, and the
+        error bars (purple) show one standard deviation.  Coefficients
+        1--144 are the group-level (static) effects, and coefficients
+        145--165 are the reciprocation (dynamic) effects, ordered from
+        shortest time interval to longest.  The bias is on the order of
+        the standard error, and is near zero for most of the coefficients.
     }
-    \label{F:coef-bias}
+    \label{F:boot-resid}
 \end{figure}
 
 
