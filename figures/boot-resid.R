@@ -1,10 +1,10 @@
-# figures/coef-bias.R
-# -------------------
+# figures/boot-resid.R
+# --------------------
 
 source("code/boot.R")
 source("analysis/dynamic.R")
 
-pdffile <- "figures/coef-bias.pdf"
+pdffile <- "figures/boot-resid.pdf"
 pdfout <- TRUE
 
 purple <- rgb(158, 154, 200, max = 255)
@@ -51,7 +51,7 @@ par(las = 1)
 
 plot(bias[ix] / coefs.se[ix], t = "n", axes = FALSE,
      xlab = "Coefficient Index",
-     ylab = "Relative Bias") 
+     ylab = "Normalized Residual") 
 abline(v = nstatic + 1, lty = 2, col = "gray")
 xaxis.at <- c(1, 73, 145)
 axis(1, at = xaxis.at, labels = TRUE)
