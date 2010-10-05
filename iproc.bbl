@@ -140,6 +140,18 @@
 \end{barticle}
 \endbibitem
 
+\bibitem{malmgen2009characterizing}
+\begin{binproceedings}[author]
+\bauthor{\bsnm{Malmgren},~\bfnm{R.~D.}\binits{R.~D.}},
+  \bauthor{\bsnm{Hofman},~\bfnm{J.~M.}\binits{J.~M.}},
+  \bauthor{\bsnm{Amaral},~\bfnm{L.~A.}\binits{L.~A.}} \AND
+  \bauthor{\bsnm{Watts},~\bfnm{D.~J.}\binits{D.~J.}}
+(\byear{2009}).
+\btitle{{Characterizing individual communication patterns}}.
+In \bbooktitle{KDD}.
+\end{binproceedings}
+\endbibitem
+
 \bibitem{martinussen2006dynamic}
 \begin{bbook}[author]
 \bauthor{\bsnm{Martinussen},~\bfnm{T.}\binits{T.}} \AND

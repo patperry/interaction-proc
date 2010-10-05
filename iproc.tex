@@ -104,7 +104,7 @@ each interaction involves one sender-receiver pair, called a dyad.  We
 borrow terminology from the communications setting, referring to
 interactions as messages.
 
-The data is a set of messages.  Each message is represented by a triple,
+The data consists of a set of messages.  Each message is represented by a triple,
 where $(t,i,j)$ denotes that at time $t$, sender $i$ sent a message to
 receiver $j$.  Given a set of messages and covariate information about the
 senders and receivers, our goal is to determine which characteristics and
@@ -113,17 +113,17 @@ relevant:
 
 \begin{enumerate}
     \item Is a shared attribute between individuals predictive of increased
-    interaction?  In studying human behavior, Sociologists repeatedly find
-    evidence of homophily, the tendency of individuals to associate with
-    similar others \cite{mcpherson2001birds}. A typical inquiry is
-    to see if people with identical genders interact more often then
-    people with differing genders.
+    interaction?
 
     \item If individual $i$ sends a message to individual $j$, is this
     associated with $j$ being more likely to send to $i$ in the future?
     If so, how does this effect decay with time?
 \end{enumerate}
 
+In studying human behavior, Sociologists repeatedly find evidence of homophily,
+the tendency of individuals to associate with similar others
+\cite{mcpherson2001birds}. A typical inquiry is to see if people with identical
+genders interact more often then people with differing genders.
 This report presents a modeling framework to facilitate inquiry into
 these questions and others like them. The framework is flexible enough to
 allow various forms of time-inhomogeneity and dependency, and includes the
@@ -174,7 +174,7 @@ is male will be estimated to be about 0.48, with a standard error around
 0.004; given that a male is sending a message, the estimate will be about
 0.23 with a standard error around 0.002.
 
-There are at least three problems with this simple analysis.
+There are three main problems with this simple analysis:
 \begin{enumerate}
     \item \textbf{Senders never send messages to themselves.} In network
     terminology, there are no ``self-loops.'' In other email datasets, people
@@ -187,18 +187,14 @@ There are at least three problems with this simple analysis.
     reciprocation effects.
     
     \item \textbf{Messages have multiple recipients.} In the Enron dataset,
-    more than 30\% of the messages have more than one recipient.  As noted in
-    the caption to Table~\ref{T:gender-send-counts}, for the analysis above
-    we have treated a message with two or more recipients as two or more
-    single-recipient messages.
+    more than 30\% of the messages have more than one recipient.  In
+    Table~\ref{T:gender-send-counts}, we have treated a message with two
+    or more recipients as two or more single-recipient messages; this
+    leads to bias in the estimates.
 \end{enumerate}
 The first issue is easy to fix, but the other two require significant
 attention.
 
-Another feature of the data potentially requiring special consideration is
-that the employees have inhomogeneous sending patterns. 
-Fig.~\ref{F:send-intensities} shows how the message volume varies with
-sender and time.  The individuals have idiosyncratic sending behaviors.
 
 \begin{figure}
     \includegraphics[scale=0.6]{figures/kernel-intensity}
@@ -311,6 +307,14 @@ Hessian of $\log \mathit{PL}_t(\cdot)$ may be singular; when this is
 the case, we introduce linear constraints on the parameters to make
 them identifiable.
 
+One feature of~\eqref{E:log-pl} deserving emphasis is that we are using
+a different baseline intensity for each sender.  (TODO: add ref to
+Cox model with multi-type events.)  We make this modeling
+choice because the individuals have highly idiosyncratic sending behaviors
+(see Fig.~\ref{F:send-intensities}).  Malmgen et. al use a hidden Markov
+model to capture individual and seasonal idiosyncrasies
+\cite{malmgen2009characterizing}; we use a nonparametric model instead.
+
 
 \section{Multiple Recipients}\label{S:multiple-recipients}
 
@@ -390,15 +394,16 @@ at time $t$, evaluated at $\beta$, is
 \end{equation}
 Compare this with the single recipient case in~\eqref{E:log-pl}.
 
-The multiple recipient case can actually be considered as a special case of
-the single recipient one if we take $\mathcal{I} \times \mathbb{N}_+$
-to be the sender set and power set $\mathcal{P}(\mathcal{J})$ to be the
+The multiple recipient case can be considered as a special case of
+the single recipient one where $\mathcal{I} \times \mathbb{N}_+$
+is the sender set and power set $\mathcal{P}(\mathcal{J})$ is the
 receiver set.  For sender $(i,L)$, take $\bar \lambda(i ; L)$ to be the
 baseline send intensity and take
 $\{ J \subseteq \mathcal{J}_t(i) : |J| = L\}$ to be the recipient set; for
 sender-receiver pair $\big((i,L), J\big)$, take $\sum_{j \in J} x_t(i,j)$ to
 be the covariate vector.  Consistency of the MPLE now follows from
-Theorems~\ref{T:score-fisher}~and~\ref{T:consistency}.
+the theory fror the single recipient case (proved in
+Section~\ref{S:MPLE-consistency}).
 
 In practice, \eqref{E:log-pl-multiple} involves combinatorially many terms
 and is difficult to optimize.  When we treat messages with multiple recipients
@@ -422,23 +427,23 @@ likelihood:
 \end{equation}
 Maximizing $\log \widetilde{\mathit{PL}}_t(\cdot)$ instead of
 $\log \mathit{PL}_t(\cdot)$ introduces bias in the estimate of $\beta_0$.
-Fortunately, in many situations the bias in the estimate is of the same order
-as the variance. 
-
+Theorems in Section~\ref{S:bias-correction} show that in certain situations,
+the bias is on the order of the standard error of the estimate and can be
+corrected. 
 
 
 \section{Modeling the Enron Data}\label{S:enron-modeling}
 
-We use the proportional intensity model with multiple recipients from
-Section~\ref{S:multiple-recipients} to model the Enron data.
-Our analysis excludes messages with more than 10 recipients---a
+To model the Enron data, we use the proportional intensity model with multiple
+recipients from Section~\ref{S:multiple-recipients}.  Our analysis excludes
+messages with more than 10 recipients---a
 subjectively-chosen cutoff that includes 99\% of the corpus---because many of
 these are ``broadcast'' and we are only interested in inter-personal
 communication.  We fit the model by maximizing the approximate log partial
 likelihood from \eqref{E:log-pl-multiple-approx}, and then apply
-a bias-correction to be described in Sections (FIXME: refs).  For standard
-error methods, we use the forthcoming theory in the next two sections
-and employ the delta method where appropriate.
+a bias-correction to be described in Section~\ref{S:bias-correction}.  For standard
+errors, we use the forthcoming asymptotic theory and employ the delta method where
+appropriate.
 
 The senders and receivers are the 156 employees in the dataset, so
 $\mathcal{I} = \mathcal{J} = \{ 1, 2, \ldots, 156 \}$.  To disallow
@@ -448,7 +453,7 @@ don't change over time, and are determined by the sender- and
 receiver-specific group memberships summarized in
 Table~\ref{T:employee-summary}.  The dynamic covariates depend on the
 history of the process, and are chosen to allow adjusting for reciprocation
-effects.  The rest of this section discusses the covariates in depth.
+effects.  The next few paragraphs discuss the covariates in detail.
 
 Considering gender (2 levels), seniority (2 levels), and department
 (3 levels), each individual belongs to one of 12 groups.  Each
@@ -562,8 +567,8 @@ model, showing group-level (static) effects account for 18\% of the
 residual deviance and reciprocation (dynamic) effects account for 24\%.
 If the model fit perfectly, we would expect the residual deviance to be
 about equal to the residual degrees of freedom; here, the residual deviance
-is about $5.9$ times what we would expect.  We can account for this by
-scaling the reported standard errors by $\sqrt{5.9}$.
+is about $5.9$ times what we would expect.  Scaling the reported standard errors
+by $\sqrt{5.9}$ is an ad-hoc adjustment for this overdispersion.
 
 
 \section{Gender Bias in the Enron Dataset}
@@ -588,29 +593,56 @@ Step \ref{I:bias-description-block} is necessary because if the chosen
 employee receives a message before she sends one, then her sending
 probabilities will change.  
 
+According to Table~\ref{T:gender-effects-dynamic-bc}, females are biased
+towards sending to females, and males are biased towards sending to
+males, even after adjusting for reciprocation effects.  The subtables in
+Table~\ref{T:gender-effects} show the impacts of the corrections we have
+made (adjusting for self loops, reciprocation, and multiple recipients).
+As expected, when we adjust for reciprocation, apparent gender bias is less
+pronounced.  Interestingly, the starkest change is for the females,
+indicating that females are more prone to reciprocation than males are
+(we have not explored this interaction in depth).  It turns out that excluding
+self-loops and adjusting for multiple recipients have minor impacts, but we
+could not have known this beforehand.
+
 \begin{table}[h]
-    \input{tables/gender-effects-dynamic-bc}
+    \label{T:gender-effects}
+    \subtable[Na\"{i}ve Estimates]{
+        \input{tables/gender-effects-naive}
+        \label{T:gender-effects-naive}
+    }
+    \subtable[Adjusted for Self-Loops]{
+        \input{tables/gender-effects-static}
+        \label{T:gender-effects-static}
+
+    }
+    \subtable[Adjusted for Reciprocation]{
+        \input{tables/gender-effects-dynamic}    
+        \label{T:gender-effects-dynamic}        
+    }
+    \subtable[Adjusted for Multiple Recipients]{
+        \input{tables/gender-effects-dynamic-bc}
+        \label{T:gender-effects-dynamic-bc}        
+    }
     \caption{
         Estimated gender-level sending preferences.  Probabilities
         should be compared to the proportions of females and males
-        at the company ($0.276$ and $0.724$, respectively).
+        at the company ($0.276$ and $0.724$, respectively).  Subtables
+        show the cumulative estimates after excluding self-loops,
+        including dynamic covariates to adjust for reciprocation, and
+        applying a bias-correction to deal with messages with multiple
+        recipients.
     }
-    \label{T:gender-effects}
 \end{table}
-
-According to Table~\ref{T:gender-effects}, females are biased
-towards sending to females, and males are biased towards sending to
-males, even after adjusting for reciprocation effects.  However,
-the bias is not as strong as suggested by the naive estimates from
-Section~\ref{S:motivating-example}.
 
 
 \section{MPLE Consistency}\label{S:MPLE-consistency}
 
-Let $N_t(i,j)$ be a multivariate counting process with stochastic
-intensity $\lambda_t(i,j)$ as defined in~\eqref{E:cox-intensity}.
+Now we give asymptotic theory for the single recipient case.  
+Section~\ref{S:bias-correction} covers corrections for the multiple recipient
+case.  For this section, let $N_t(i,j)$ be a multivariate counting process with
+stochastic intensity $\lambda_t(i,j)$ as defined in~\eqref{E:cox-intensity}.
 As before, the log-partial likelihood is given in~\eqref{E:log-pl}.
-The MPLE is an obvious estimate of the true parameter vector, $\beta_0$.
 
 Typically, one proves consistency of the MPLE by keeping $t$ fixed
 and letting $|\mathcal{I}|$ go to infinity
@@ -829,9 +861,14 @@ the asymptotic framework are natural.
 
 
 
-\section{Bias Correction for Multiple Recipients}
+\section{Bias Correction for Multiple Recipients}\label{S:bias-correction}
 
-Define
+Here, we analyze the bias introduced by using the approximate partial
+likelihood.  As noted previously, this is equivalent to treating messages with
+multiple recipients as multiple single-recipient messages.  Let
+$\mathit{PL}$ denote the true partial likelihood and let $\widetilde{\mathit{PL}}$
+denote the approximation as given in \eqref{E:log-pl-multiple}
+and \eqref{E:log-pl-multiple-approx}.  Define
 \begin{equation}\label{E:growth-constant}
     G_n
         =
@@ -839,8 +876,8 @@ Define
                 \frac{1}{|\mathcal{J}_{t_m}(i_m)|},
 \end{equation}
 the receiver set growth sequence.  This sequence turns out to be critical
-in bounding the error from approximating $\log \mathit{PL}$ by
-$\log \widetilde{\mathit{PL}}.$  When $|\mathcal{J}_{t_m}(i_m)|$ is
+in bounding the error from approximating $\mathit{PL}$ by
+$\widetilde{\mathit{PL}}.$  When $|\mathcal{J}_{t_m}(i_m)|$ is
 constant, $G_n$ has linear growth.  In contrast, when
 $|\mathcal{J}_{t_m}(i_m)|$ increases, $G_n$ often has sublinear growth.
 For example, the Cauchy-Schwartz inequality gives
@@ -2046,35 +2083,6 @@ large enough,
     \qedhere
 \]
 \end{proof}
-
-
-\section{Estimates without Bias-Correction}
-
-This section gives raw estimates of the parameters in
-the Enron model, without bias correction.
-
-\begin{table}[h]
-    \label{T:gender-effects-comparison}
-    \subtable[Na\"{i}ve Estimates]{
-        \input{tables/gender-effects-naive}
-    }
-    \subtable[Adjusted for Self-Loops]{
-        \input{tables/gender-effects-static}
-        \label{T:gender-effects-static}
-
-    }
-    \subtable[Adjusted for Reciprocation]{
-        \input{tables/gender-effects-dynamic}    
-        \label{T:gender-effects-static-dynamic}        
-    }
-    \subtable[Adjusted for Multiple Recipients]{
-        \input{tables/gender-effects-dynamic-bc}
-        \label{T:gender-effects-static-dynamic-bc}        
-    }
-    \caption{
-        blah blah
-    }
-\end{table}
 
 
 \bibliographystyle{imsart-number}
