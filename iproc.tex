@@ -1041,7 +1041,36 @@ bias in the coefficient estimates.
 
 \section{Concluding Remarks}
 
-The end.
+Email and other types of ``network'' data are becoming more and more pervasive,
+and methods for studying network data are being developed at an accelerating
+pace (see Goldenberg et al. and Kolaczyk for recent
+overviews~\cite{goldenberg2009survey,kolaczyk2009statistical}).  Unfortunately,
+with ``network science'' increasing in popularity, there is a tendency to
+shoehorn disparate forms of data into binary ties between actors.  An email
+sent between two people is \emph{not} a tie, it is an instantaneous event.
+This hasn't discouraged practitioners from forming social networks from
+communications data.  One popular approach is to divide the observation period
+into time intervals ranging in duration from a week to a month, and then form
+a sequence of binary networks by thresholding the number of times pairs of actors
+communicate in each interval.  However, as De Choudhury et al. have shown, the
+choice of threshold dramatically affects the resulting networks and
+downstream analysis~\cite{dechoudhury2010}.  We have avoided these issues by
+eschewing network representations entirely.
+
+The models used in this report borrow very little from network science.
+Still, they have a lot in common with the agent-based models from that
+literature (see \cite{snijders2010introduction} for a recent survey).  Both
+conceive of the data as arising from ego-centric decisions made by the actors.
+The main difference between agent-based models and our treatment is that we
+are dealing with instantaneous events, and they are dealing with ties that
+persist in time.  Agent-based models typically involve transitivity (the fact
+that your friends' friends are likely to be your friends, too), a behavior
+which we have ignored completely.  However, nothing precludes adding covariates
+to capture this behavior in our model.
+
+The foundation of our work is Cox's proportional intensity model and partial
+likelihood theory, tools which he first introduced almost 40 years ago and which
+have been significantly developed since then.
 
 
 

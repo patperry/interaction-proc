@@ -65,6 +65,20 @@
 \end{barticle}
 \endbibitem
 
+\bibitem{dechoudhury2010}
+\begin{binproceedings}[author]
+\bauthor{\bsnm{De~Chudhury},~\bfnm{M.}\binits{M.}},
+  \bauthor{\bsnm{Mason},~\bfnm{W.~A.}\binits{W.~A.}},
+  \bauthor{\bsnm{Hofman},~\bfnm{J.~M.}\binits{J.~M.}} \AND
+  \bauthor{\bsnm{Watts},~\bfnm{D.~J.}\binits{D.~J.}}
+(\byear{2010}).
+\btitle{{Inferring relevant social networks from interpersonal communication}}.
+In \bbooktitle{{WWW 2010: Proceedings of the 19th international conference on
+  the World Wide Web}}
+\bpages{301--310}.
+\end{binproceedings}
+\endbibitem
+
 \bibitem{eagle2006reality}
 \begin{barticle}[author]
 \bauthor{\bsnm{Eagle},~\bfnm{N.}\binits{N.}} \AND
@@ -109,6 +123,20 @@
 \end{barticle}
 \endbibitem
 
+\bibitem{goldenberg2009survey}
+\begin{barticle}[author]
+\bauthor{\bsnm{Goldenberg},~\bfnm{A.}\binits{A.}},
+  \bauthor{\bsnm{Zheng},~\bfnm{A.~X.}\binits{A.~X.}},
+  \bauthor{\bsnm{Fienberg},~\bfnm{S.~E.}\binits{S.~E.}} \AND
+  \bauthor{\bsnm{Airoldi},~\bfnm{E.~M.}\binits{E.~M.}}
+(\byear{2009}).
+\btitle{{A survey of statistical network models}}.
+\bjournal{Found. Trends Mach. Learn.}
+\bvolume{2}
+\bpages{129--233}.
+\end{barticle}
+\endbibitem
+
 \bibitem{haberman1977maximum}
 \begin{barticle}[author]
 \bauthor{\bsnm{Haberman},~\bfnm{S.~J.}\binits{S.~J.}}
@@ -126,6 +154,15 @@
 (\byear{1952}).
 \btitle{{Functional Analysis and Applied Mathematics}}.
 \bnote{translated by C. D. Benster, National Bureau of Standards Report 1509}.
+\end{bbook}
+\endbibitem
+
+\bibitem{kolaczyk2009statistical}
+\begin{bbook}[author]
+\bauthor{\bsnm{Kolaczyk},~\bfnm{E.~D.}\binits{E.~D.}}
+(\byear{2009}).
+\btitle{{Statistical Analysis of Network Data: Methods and Models}}.
+\bpublisher{Springer}.
 \end{bbook}
 \endbibitem
 
@@ -148,7 +185,9 @@
   \bauthor{\bsnm{Watts},~\bfnm{D.~J.}\binits{D.~J.}}
 (\byear{2009}).
 \btitle{{Characterizing individual communication patterns}}.
-In \bbooktitle{KDD}.
+In \bbooktitle{KDD '09: Proceedings of the 15th ACM SIGKDD international
+  conference on Knowledge Discovery and Data Mining}
+\bpages{607--616}.
 \end{binproceedings}
 \endbibitem
 
@@ -218,6 +257,18 @@ In \bbooktitle{KDD}.
 \bjournal{Probabl. Theory Rel.}
 \bvolume{51}
 \bpages{269-286}.
+\end{barticle}
+\endbibitem
+
+\bibitem{snijders2010introduction}
+\begin{barticle}[author]
+\bauthor{\bsnm{Snijders},~\bfnm{T.~A.~B.}\binits{T.~A.~B.}},
+  \bauthor{\bparticle{van~d }\bsnm{eBunt},~\bfnm{G.~V.}\binits{G.~V.}} \AND
+  \bauthor{\bsnm{Steglich},~\bfnm{C.~E.~G.}\binits{C.~E.~G.}}
+(\byear{2010}).
+\btitle{{Introduction to stochastic actor-based models for network dynamics}}.
+\bjournal{Soc. Networks}
+\bpages{44--60}.
 \end{barticle}
 \endbibitem
 
