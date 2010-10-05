@@ -24,6 +24,17 @@
 \end{barticle}
 \endbibitem
 
+\bibitem{brostrom2002cox}
+\begin{barticle}[author]
+\bauthor{\bsnm{Brostr\"{o}m},~\bfnm{G.}\binits{G.}}
+(\byear{2002}).
+\btitle{{Cox regression; ties without tears}}.
+\bjournal{Commun. Stat. Theory}
+\bvolume{31}
+\bpages{285--197}.
+\end{barticle}
+\endbibitem
+
 \bibitem{cohen2009enron}
 \begin{bmisc}[author]
 \bauthor{\bsnm{Cohen},~\bfnm{W.~W.}\binits{W.~W.}}
@@ -61,7 +72,19 @@
 (\byear{2006}).
 \btitle{{Reality mining: sensing complex social systems}}.
 \bjournal{Pers. Ubiquit. Comput.}
+\bvolume{10}
 \bpages{255--268}.
+\end{barticle}
+\endbibitem
+
+\bibitem{efron1977efficiency}
+\begin{barticle}[author]
+\bauthor{\bsnm{Efron},~\bfnm{B.}\binits{B.}}
+(\byear{1977}).
+\btitle{{The efficiency of {C}ox's likelihood function for censored data}}.
+\bjournal{J. Am. Stat. Assoc.}
+\bvolume{72}
+\bpages{557--565}.
 \end{barticle}
 \endbibitem
 
