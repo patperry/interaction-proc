@@ -1006,7 +1006,7 @@ replicates, we estimate the bias by
 \[
     \widehat{\mathrm{bias}}
         =
-            \frac{1}{R} \sum_{r=1}^{R} \tilde \beta_n^{(r)} - \tilde \beta.
+            \frac{1}{R} \sum_{r=1}^{R} \tilde \beta_n^{(r)} - \tilde \beta_n.
 \]
 We adjust for the bias by replacing $\tilde \beta_n$ with
 $\tilde \beta_n - \widehat{\mathrm{bias}}$.
@@ -1032,7 +1032,8 @@ bias in the coefficient estimates.
         1--144 are the group-level (static) effects, and coefficients
         145--165 are the reciprocation (dynamic) effects, ordered from
         shortest time interval to longest.  The bias is on the order of
-        the standard error, and is near zero for most of the coefficients.
+        the standard error, and is near zero for most---but not all---of the
+        coefficients.
     }
     \label{F:boot-resid}
 \end{figure}
@@ -1041,6 +1042,13 @@ bias in the coefficient estimates.
 \section{Concluding Remarks}
 
 The end.
+
+
+
+\section*{Acknowledgement}
+
+The authors thank Joe Blitzstein, Susan Holmes, Art Owen, and Andrew Thomas
+for helpful remarks and encouragement.
 
 
 \appendix
