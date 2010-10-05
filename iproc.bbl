@@ -153,6 +153,16 @@
 \end{barticle}
 \endbibitem
 
+\bibitem{nocedal2006numerical}
+\begin{bbook}[author]
+\bauthor{\bsnm{Nocedal},~\bfnm{J.}\binits{J.}} \AND
+  \bauthor{\bsnm{Wright},~\bfnm{S.~J.}\binits{S.~J.}}
+(\byear{2006}).
+\btitle{{Numerical Optimization}}, \bedition{2nd} ed.
+\bpublisher{Springer}.
+\end{bbook}
+\endbibitem
+
 \bibitem{papachristos2009murder}
 \begin{barticle}[author]
 \bauthor{\bsnm{Papachristos},~\bfnm{A.~V.}\binits{A.~V.}}

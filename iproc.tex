@@ -1040,11 +1040,11 @@ and one which depends on $\beta$ alone.  We estimate $\beta$ by maximizing
 the latter term, the partial likelihood, denoted $\mathit{PL}_t(\beta)$.
 Define
 \begin{gather*}
-    w_{\beta,t}(i,j) = \exp\{ \langle x_t(i,j), \, \beta \rangle \},
+    w_{t}(\beta,i,j) = \exp\{ \beta^\trans x_t(i,j)\},
     \qquad
-    W_{\beta,t}(i) = \sum_{j \in \mathcal{J}(i)} w_{\beta,t}(i,j), \\
-    \tilde \lambda_{\beta,t}(i)
-        = \lambda_t(i) \cdot W_{\beta,t}(i).
+    W_{t}(\beta,i) = \sum_{j \in \mathcal{J}_t(i)} w_{t}(\beta,i,j), \\
+    \tilde \lambda_{t}(\beta, i)
+        = \lambda_t(i) \cdot W_{t}(\beta,i).
 \end{gather*}
 The factorization is
 \begin{align*}
@@ -1054,10 +1054,10 @@ The factorization is
         \exp\bigg\{
             \sum_{i \in \mathcal{I}}
             \int_0^t
-                \log \tilde \lambda_{\beta,s}(i) \, dN_s(i,j)
+                \log \tilde \lambda_{s}(\beta,i) \, dN_s(i,j)
             -
             \int_0^t
-                \tilde \lambda_{\beta,s}(i) \, ds
+                \tilde \lambda_{s}(\beta,i) \, ds
         \bigg\}
         \cdot
         \mathit{PL}_t(\beta),
@@ -1066,10 +1066,10 @@ The factorization is
         &=
         \exp\bigg\{
             \sum_{i \in \mathcal{I}}
-            \sum_{j \in \mathcal{J}}
+            \sum_{j \in \mathcal{J}_t(i)}
             \int_0^t
-                \log \frac{w_{\beta,s}(i,j)}
-                          {W_{\beta,s}(i)}
+                \log \frac{w_{s}(\beta,i,j)}
+                          {W_{s}(\beta,i)}
                 \, dN_s(i,j)
         \bigg\}.
 \end{align*}
@@ -1098,8 +1098,8 @@ The partial likelihood factors a a product of terms, one for each sender:
         \!\!\!\!
         \prod_{m \in \mathcal{M}_t(i)}
             \!\!\!
-            \frac{w_{\beta, t_m} (i, j_m)}
-                 {W_{\beta, t_m}}.
+            \frac{w_{t_m} (\beta, i, j_m)}
+                 {W_{t_m}(\beta, i)}.
 \end{align*}
 This factorization allows us to compute $\log \mathit{PL}_t(\beta)$ and
 its derivatives by computing the sender-specific terms in parallel and
@@ -1111,12 +1111,13 @@ The sender-specific log-partial likelihood and its derivatives are
         &=
         \!\!\!\!
         \sum_{m \in \mathcal{M}_t(i)}
-            \!\!\!        
-            \langle x_{t_m}\!(i, j_m), \, \beta \rangle
+            \!\!\!
+            \beta^\trans        
+            x_{t_m}\!(i, j_m)
             \,
             -
             \,
-            \log W_{\beta, t_m}\!(i), \\
+            \log W_{t_m}\!(\beta, i), \\
     \nabla [ \log \mathit{PL}_t(\beta, i) ]
         &=
         \!\!\!\!        
@@ -1126,9 +1127,9 @@ The sender-specific log-partial likelihood and its derivatives are
             \,
             -
             \,
-            \frac{1}{W_{t_m}\!(i)}
+            \frac{1}{W_{t_m}\!(\beta,i)}
                 \sum_{j \in \mathcal{J}(i)}
-                    w_{t_m}\!(i,j) \,
+                    w_{t_m}\!(\beta,i,j) \,
                     x_{t_m}\!(i,j), \\
     \begin{split}
     \nabla^2 [ \log \mathit{PL}_t(\beta, i) ]
@@ -1138,17 +1139,17 @@ The sender-specific log-partial likelihood and its derivatives are
         \sum_{m \in \mathcal{M}_t(i)}
             \!\!
             \bigg\{
-            \frac{1}{W_{t_m}\!(i)}
+            \frac{1}{W_{t_m}\!(\beta,i)}
             \sum_{j \in \mathcal{J}(i)}
-                w_{t_m}\!(i,j) \,
+                w_{t_m}\!(\beta,i,j) \,
                 \big[
                     x_{t_m}\!(i,j)
                 \big]^{\otimes 2} \\
         &\qquad\qquad\qquad-
             \Big[
-                \frac{1}{W_{t_m}\!(i)}
+                \frac{1}{W_{t_m}\!(\beta,i)}
                 \sum_{j \in \mathcal{J}(i)}
-                    w_{t_m}\!(i,j) \,
+                    w_{t_m}\!(\beta,i,j) \,
                     x_{t_m}\!(i,j)
             \Big]^{\otimes 2}
             \bigg\},
@@ -1166,9 +1167,15 @@ and $p \approx 200$.  This is relatively small by modern standards.  Often
 $M$ on the order of $10^9$ and $J$ on the order of $10^6$.  Computations
 taking time $\Oh(M \cdot J)$ are prohibitive for large datasets.
 
-Taking advantage of sparsity, the serial computation time reduces to
-$\Oh(M \cdot p^2 + I \cdot J)$.  Decompose $x$ into its static
-(non time-varying) and dynamic parts:
+Taking advantage of sparsity, the serial time for computing the
+gradient reduces to $\Oh(M \cdot p + I \cdot J)$.   Our implementation
+uses a gradient-based optimization method (the
+Broyden-Fletcher-Goldfarb-Shanno algorithm \cite{nocedal2006numerical}) to
+compute the MPLE in linear time.
+
+Assume for the remainder that
+$\mathcal{J}_t(i) = \mathcal{J}(i)$, i.e., that $\mathcal{J}_t(i)$ is
+constant.  Decompose $x$ into its static (non time-varying) and dynamic parts:
 \[
     x_t(i,j)
         = x_0(i,j) + d_t(i,j).
@@ -1192,22 +1199,22 @@ $(t,i,j)$ triple.
 
 Notice
 \begin{align*}
-    w_{\beta,t}(i,j)
+    w_{t}(\beta,i,j)
         &=
-            w_{\beta,0}(i,j)
+            w_{0}(\beta,i,j)
             \cdot
-            \exp\{ \langle d_t(i,j), \beta \rangle \}, \\
+            \exp\{ \beta^\trans d_t(i,j) \}, \\
     W_{\beta,t}(i)
         &=
-            W_{\beta,0}(i)
+            W_{0}(\beta,i)
             +
             \sum_{j \in \mathcal{\bar J}(i)}
-                w_{\beta,t}(i,j) - w_{\beta,0}(i,j)
+                w_{t}(\beta,i,j) - w_{0}(\beta,i,j)
 \end{align*}
 It takes time $\Oh(|\mathcal{J}(i)| \cdot p)$ to compute the values of
-$W_{\beta,0}(i)$ and $w_{\beta,0}(i,j)$ for any $i$ and all
+$W_{0}(\beta,i)$ and $w_{0}(\beta,i,j)$ for any $i$ and all
 $j$ in $\mathcal{J}(i)$; once these values are known, computing the values
-of $W_{\beta,t}(i)$ and $w_{\beta,t}(i,j)$ takes time
+of $W_{t}(\beta,i)$ and $w_{t}(\beta,i,j)$ takes time
 \(
     \Oh(|\mathcal{\bar J}(i)| \cdot \bar p).
 \)
@@ -1217,7 +1224,7 @@ Since
         x_{t_m}\!(i,j_m)
         =
             \sum_{j \in \mathcal{J}(i)}
-                \mathcal{M}_t(i,j) \, x_0(i,j)
+                |\mathcal{M}_t(i,j)| \, x_0(i,j)
             \,\,\,
             +
             \sum_{m \in \mathcal{M}_t(i)}
@@ -1239,39 +1246,39 @@ computing $\log \mathit{PL}_t(\beta, i)$ takes time
 The second term in the gradient is
 \begin{multline*}
     \sum_{m \in \mathcal{M}_t(i)}
-        \frac{1}{W_{\beta,t_m}\!(i)}
+        \frac{1}{W_{t_m}\!(\beta,i)}
         \sum_{j \in \mathcal{J}(i)}
-            w_{\beta,t_m}\!(i,j)
+            w_{t_m}\!(\beta,i,j)
             \,
             x_{t_m}\!(i,j) \\
     =
     \sum_{j \in \mathcal{J}(i)}
     \bigg[
         \sum_{m \in \mathcal{M}_t(i)}
-            \frac{w_{\beta,t_m}\!(i,j)}{W_{\beta,t_m}\!(i)}
+            \frac{w_{t_m}\!(\beta,i,j)}{W_{t_m}\!(\beta,i)}
     \bigg]
     \cdot
     x_0(i,j) \\
     +
     \sum_{m \in \mathcal{M}_t(i)}
-        \frac{1}{W_{\beta, t_m}\!(i)}
+        \frac{1}{W_{t_m}\!(\beta,i)}
         \sum_{j \in \mathcal{\bar J}(i)}
-            w_{\beta,t_m}\!(i,j)
+            w_{t_m}\!(\beta,i,j)
             \,
             d_{t_m}\!(i,j).
 \end{multline*}
 Also,
 \[
     \sum_{m \in \mathcal{M}_t(i)}
-        \frac{w_{\beta,t_m}\!(i,j)}{W_{\beta,t_m}\!(i)}
+        \frac{w_{t_m}\!(\beta,i,j)}{W_{t_m}\!(\beta,i)}
     =
-        w_{\beta,0}(i,j)
+        w_{0}(\beta,i,j)
         \cdot
         \sum_{m \in \mathcal{M}_t(i)}
             \frac{
-                \exp\{\langle d_{t_m}\!(i,j), \, \beta \rangle \}
+                \exp\{\beta^\trans d_{t_m}\!(i,j) \}
             }{
-                W_{\beta,t_m}\!(i)
+                W_{t_m}\!(\beta,i)
             };
 \]
 the latter term is constant when $j \notin \mathcal{\bar J}(i)$.
