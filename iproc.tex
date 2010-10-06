@@ -134,9 +134,20 @@ the tendency of individuals to associate with similar others
 \cite{mcpherson2001birds}. A typical inquiry is to see if people with identical
 genders interact more often then people with differing genders.
 This report presents a modeling framework to facilitate inquiry into
-these questions and others like them. The framework is flexible enough to
-allow various forms of time-inhomogeneity and dependency, and includes the
-ability to handle interactions with multiple recipients. 
+these questions and others like them.
+
+Section~\ref{S:motivating-example} presents a motivating example: testing
+for gender bias in a corporate email network.
+Section~\ref{S:point-process-model} presents the basic multiplicative
+intensity model,
+Section~\ref{S:multiple-recipients} discusses extensions for multiple
+recipients, and Sections~\ref{S:enron-modeling}~and~\ref{S:gender-bias}
+present the results of fitting the model to the email network.  We
+prove asymptotic consistency for the single-recipient setting in
+Section~\ref{S:MPLE-consistency}, and investigate bias in the multiple
+recipient setting in Section~\ref{S:bias-correction}.  
+Section~\ref{S:discussion} concludes with discussion; further details and
+proof of the theorems are provided in the appendices.
 
 
 \section{A Motivating Example}\label{S:motivating-example}
@@ -548,12 +559,6 @@ from $-6$ to $14$.  The shortest time interval is $56.25$ seconds, and the
 longest is $1.87$ years.
 
 
-
-
-
-
-
-
 Table~\ref{T:group-effects} shows the estimated group-level
 (static) effects, and Fig.~\ref{F:reciprocation} shows the reciprocation
 (dynamic) effects.  Reciprocation is stronger by orders of magnitude,
@@ -580,7 +585,7 @@ is about $5.9$ times what we would expect.  Scaling the reported standard errors
 by $\sqrt{5.9}$ is an ad-hoc adjustment for this overdispersion.
 
 
-\section{Gender Bias in the Enron Dataset}
+\section{Gender Bias in the Enron Dataset}\label{S:gender-bias}
 
 We use the estimated group level effects to quantify the gender bias of
 females and males.  This is defined as follows:
@@ -1048,7 +1053,7 @@ bias in the coefficient estimates.
 \end{figure}
 
 
-\section{Discussion}
+\section{Discussion}\label{S:discussion}
 
 Email and other types of ``network'' data are becoming more and more pervasive,
 and methods for studying network data are being developed at an accelerating
