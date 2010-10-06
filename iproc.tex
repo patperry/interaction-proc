@@ -56,7 +56,16 @@
 \end{aug}
 
 \begin{abstract}
-Abstract.
+Data derived from repeated interactions between entities are becoming more
+common, the canonical examples being communication networks.  We model the
+interactions as a point process---specifically using a Cox multiplicative
+intensity model---to adjust for reciprocation effects and obtain accurate
+estimates of group-level social behavior.  We prove that the estimation
+procedure is asymptotically consistent as the time increases.  We also prove
+that improper handling of interactions between more than two individuals
+leads to bias in the estimates, and we show how to correct the bias.  Our
+motivating example is estimating gender-level email preferences in a
+corporate email network.
 \end{abstract}
 
 \begin{keyword}[class=AMS]
@@ -76,11 +85,11 @@ Abstract.
 
 \section{Introduction}
 
-Data derived from repeated pairwise interactions are becoming more common. 
-The canonical examples are communications networks: either all of the phone
-calls or the emails sent between individuals in a community
+Data derived from repeated interactions between entities are becoming more
+common.  The canonical examples are communications networks: either all of
+the phone calls or the emails sent between individuals in a community
 \cite{eagle2006reality,tyler2005email}. More broadly,
-``pairwise interaction'' has been construed to include the following:
+``interaction'' has been construed to include the following:
 
 \begin{itemize}
     \item\textbf{animal association patterns:} zebras congregate at
@@ -308,8 +317,8 @@ the case, we introduce linear constraints on the parameters to make
 them identifiable.
 
 One feature of~\eqref{E:log-pl} deserving emphasis is that we are using
-a different baseline intensity for each sender.  (TODO: add ref to
-Cox model with multi-type events.)  We make this modeling
+a different baseline intensity for each sender. In the survival analysis
+terminology, the model is stratified by sender. We make this modeling
 choice because the individuals have highly idiosyncratic sending behaviors
 (see Fig.~\ref{F:send-intensities}).  Malmgen et. al use a hidden Markov
 model to capture individual and seasonal idiosyncrasies
@@ -1039,7 +1048,7 @@ bias in the coefficient estimates.
 \end{figure}
 
 
-\section{Concluding Remarks}
+\section{Discussion}
 
 Email and other types of ``network'' data are becoming more and more pervasive,
 and methods for studying network data are being developed at an accelerating
@@ -1051,10 +1060,11 @@ sent between two people is \emph{not} a tie, it is an instantaneous event.
 This hasn't discouraged practitioners from forming social networks from
 communications data.  One popular approach is to divide the observation period
 into time intervals ranging in duration from a week to a month, and then form
-a sequence of binary networks by thresholding the number of times pairs of actors
-communicate in each interval.  However, as De Choudhury et al. have shown, the
-choice of threshold dramatically affects the resulting networks and
-downstream analysis~\cite{dechoudhury2010}.  We have avoided these issues by
+a sequence of binary networks by thresholding the number of times pairs of
+actors communicate in each interval.  However, as De Choudhury et al. have
+shown, the choice of threshold dramatically affects the resulting networks and
+downstream analysis~\cite{dechoudhury2010}.  Like
+Heard et al.~\cite{heard2010bayesian}, we have avoided these issues by
 eschewing network representations entirely.
 
 The models used in this report borrow very little from network science.
@@ -1068,10 +1078,37 @@ that your friends' friends are likely to be your friends, too), a behavior
 which we have ignored completely.  However, nothing precludes adding covariates
 to capture this behavior in our model.
 
-The foundation of our work is Cox's proportional intensity model and partial
-likelihood theory, tools which he first introduced almost 40 years ago and which
-have been significantly developed since then.
+We are not the first to model dyadic interactions with a point processes.
+Malmgren et al.\ and Heard et al.\ both use
+hidden Markov models for communication activity~\cite{heard2010bayesian,
+malmgen2009characterizing}.  Neither of these models model uses covariate
+information, and neither uses continuous time.
 
+The foundation of our work is Cox's proportional intensity model and partial
+likelihood theory, tools which he first introduced almost forty years ago and
+which have been significantly developed since then
+\cite{andersen1993statistical,cook2007statistical,cox1972regression,cox1975partial,fleming1991counting,martinussen2006dynamic}.
+These tools are used extensively in the context of clinical trials, but have
+not yet made an appearance in network data.
+
+We have made two contributions to the theory:
+first, we have given asymptotic results which take the limit as the number
+of messages grow to infinity instead of assuming a fixed observation interval
+and letting the number of subjects grow; second, we have shown that treating
+messages with multiple recipients as multiple single-recipient messages leads
+to bias in the parameter estimates, but in certain situations this bias can
+be corrected. The issue of multiple recipients or interactions with more than
+two actors has largely been ignored in the network literature.  
+Lunag\'omez et al.~\cite{lunagomez2009geometric} have done some relevant
+work in the context of graphical models.  We hope the results from
+Section~\ref{S:bias-correction} encourage others to take this issue more
+seriously.
+
+Our analysis of the Enron data has shown that dynamic effects are important
+to email communication, and we expect this to hold broadly for other
+types of interactions.  The proportional intensity model with time-varying
+covariates is a simple, flexible, and well-established model for incorporating
+these effects into the analysis of interaction data.
 
 
 \section*{Acknowledgement}
@@ -1134,64 +1171,14 @@ Assistant, Attorney, Counsel, Employee, Manager, Specialist, Trader).
 
 \section{Implementation}\label{S:implementaiton}
 
+For small-to-medium datasets, one can fit proportional intensity models
+using \texttt{coxph} from the \texttt{survival} package for R
+\cite{therneau2009survival}.  Unfortunately, with 156 senders and
+over $20,000$ messages, the Enron dataset is too large for the package
+to handle.  We instead wrote custom software to maximize the partial
+likelihood.
 
-The likelihood of the interaction process is a function of the unknown
-parameter vector $\beta$ and the sender-specific baseline
-intensities $\lambda(1), \ldots, \lambda(I)$.  After observing the process
-up to time $t$, the likelihood is
-\begin{multline*}
-    L_t\big(\beta, \lambda(1), \ldots, \lambda(I)\big) \\
-        =
-        \exp\bigg\{
-            \sum_{i \in \mathcal{I}}
-            \sum_{j \in \mathcal{J}}
-            \int_0^t
-                \log \lambda_s(i,j) \, dN_s(i,j)
-            -
-            \int_0^t
-                \lambda_s(i,j) \, ds
-        \bigg\}.
-\end{multline*}
-This factors into two terms, one which depends on all of the parameters,
-and one which depends on $\beta$ alone.  We estimate $\beta$ by maximizing
-the latter term, the partial likelihood, denoted $\mathit{PL}_t(\beta)$.
-Define
-\begin{gather*}
-    w_{t}(\beta,i,j) = \exp\{ \beta^\trans x_t(i,j)\},
-    \qquad
-    W_{t}(\beta,i) = \sum_{j \in \mathcal{J}_t(i)} w_{t}(\beta,i,j), \\
-    \tilde \lambda_{t}(\beta, i)
-        = \lambda_t(i) \cdot W_{t}(\beta,i).
-\end{gather*}
-The factorization is
-\begin{align*}
-    \begin{split}
-    L_t\big(\beta, \lambda(1), \ldots&, \lambda(I)\big) \\
-        &=
-        \exp\bigg\{
-            \sum_{i \in \mathcal{I}}
-            \int_0^t
-                \log \tilde \lambda_{s}(\beta,i) \, dN_s(i,j)
-            -
-            \int_0^t
-                \tilde \lambda_{s}(\beta,i) \, ds
-        \bigg\}
-        \cdot
-        \mathit{PL}_t(\beta),
-    \end{split} \\
-    \mathit{PL}_t(\beta)
-        &=
-        \exp\bigg\{
-            \sum_{i \in \mathcal{I}}
-            \sum_{j \in \mathcal{J}_t(i)}
-            \int_0^t
-                \log \frac{w_{s}(\beta,i,j)}
-                          {W_{s}(\beta,i)}
-                \, dN_s(i,j)
-        \bigg\}.
-\end{align*}
-
-Suppose $(t_1, i_1, j_1), \ldots, (t_M, i_M, j_M)$ is the sequence of observed
+Suppose $(t_1, i_1, j_1), \ldots, (t_n, i_n, j_n)$ is the sequence of observed
 messages, where tuple $(t,i,j)$ indicates that at time $t$, sender $i$ sent a
 message to receiver $j$.  Define the following message sets:
 \begin{align*}

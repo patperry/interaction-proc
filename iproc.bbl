@@ -61,7 +61,18 @@
 \btitle{{Regression models and life-tables (with discussion)}}.
 \bjournal{J. R. Statist. Soc. B}
 \bvolume{34}
-\bpages{187-220}.
+\bpages{187--220}.
+\end{barticle}
+\endbibitem
+
+\bibitem{cox1975partial}
+\begin{barticle}[author]
+\bauthor{\bsnm{Cox},~\bfnm{D.~R.}\binits{D.~R.}}
+(\byear{1975}).
+\btitle{Partial likelihood}.
+\bjournal{Biometrika}
+\bvolume{62}
+\bpages{269--276}.
 \end{barticle}
 \endbibitem
 
@@ -148,6 +159,20 @@ In \bbooktitle{{WWW 2010: Proceedings of the 19th international conference on
 \end{barticle}
 \endbibitem
 
+\bibitem{heard2010bayesian}
+\begin{barticle}[author]
+\bauthor{\bsnm{Heard},~\bfnm{N.~A.}\binits{N.~A.}},
+  \bauthor{\bsnm{Weston},~\bfnm{D.~J.}\binits{D.~J.}},
+  \bauthor{\bsnm{Platanioti},~\bfnm{K.}\binits{K.}} \AND
+  \bauthor{\bsnm{Hand},~\bfnm{D.~J.}\binits{D.~J.}}
+(\byear{2010}).
+\btitle{{Bayesian anomaly detection methods for social networks}}.
+\bjournal{Ann. Appl. Stat.}
+\bvolume{4}
+\bpages{645--662}.
+\end{barticle}
+\endbibitem
+
 \bibitem{kantorovich1952functional}
 \begin{bbook}[author]
 \bauthor{\bsnm{Kantorovich},~\bfnm{L.~V.}\binits{L.~V.}}
@@ -175,6 +200,18 @@ In \bbooktitle{{WWW 2010: Proceedings of the 19th international conference on
 \bvolume{13}
 \bpages{171--9}.
 \end{barticle}
+\endbibitem
+
+\bibitem{lunagomez2009geometric}
+\begin{bunpublished}[author]
+\bauthor{\bsnm{Lunag\'omez},~\bfnm{S.}\binits{S.}},
+  \bauthor{\bsnm{Mukherjee},~\bfnm{S.}\binits{S.}} \AND
+  \bauthor{\bsnm{Wolpert},~\bfnm{R.~L.}\binits{R.~L.}}
+(\byear{2009}).
+\btitle{{Geometric representations of hypergraphs for prior specification and
+  posterior sampling}}.
+\bnote{arXiv:0912.3648v1 [math.ST]}.
+\end{bunpublished}
 \endbibitem
 
 \bibitem{malmgen2009characterizing}
@@ -296,6 +333,17 @@ In \bbooktitle{KDD '09: Proceedings of the 15th ACM SIGKDD international
 \bvolume{78}
 \bpages{389--392}.
 \end{barticle}
+\endbibitem
+
+\bibitem{therneau2009survival}
+\begin{bmanual}[author]
+\bauthor{\bsnm{Therneau},~\bfnm{Terry}\binits{T.}} \AND
+  \bauthor{\bsnm{Lumley},~\bfnm{Thomas}\binits{T.}}
+(\byear{2009}).
+\btitle{\texttt{survival}: Survival analysis, including penalised likelihood.}
+\bnote{R package version 2.35-8.
+  \url{http://CRAN.R-project.org/package=survival}}.
+\end{bmanual}
 \endbibitem
 
 \bibitem{tyler2005email}
