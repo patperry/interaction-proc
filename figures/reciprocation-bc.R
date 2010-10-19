@@ -65,22 +65,22 @@ plot(c(log.intervals, log.intervals, max(log.intervals)),
 #          log.intervals + bar.width, coefs + coefs.se,
 #          col = color.segments, lwd = 2)
 
-points(log.intervals, coefs - coefs.se, col = color.segments, pch = 16, cex=0.5)
-points(log.intervals, coefs + coefs.se, col = color.segments, pch = 16, cex=0.5)
+points(log.intervals, coefs - coefs.se, col = color.segments, pch = 16, cex=0)
+points(log.intervals, coefs + coefs.se, col = color.segments, pch = 16, cex=0)
 segments(c(par()$usr[1],log.intervals), c(coefs - coefs.se, 0),
          c(log.intervals, par()$usr[2]), c(coefs - coefs.se, 0),
-         col = color.segments, lty = 2)
+         col = color.segments, lty = 1, lwd = 2)
 segments(c(par()$usr[1],log.intervals), c(coefs + coefs.se, 0),
          c(log.intervals, par()$usr[2]), c(coefs + coefs.se, 0),
-         col = color.segments, lty = 2)
+         col = color.segments, lty = 1, lwd = 2)
 
 
 
-points(log.intervals, coefs, col = color.points, pch = 16, cex=0.5)
+points(log.intervals, coefs, col = color.points, pch = 16, cex=1)
 # lines(log.intervals, coefs, col = color.points)
 segments(c(par()$usr[1],log.intervals), c(coefs, 0),
          c(log.intervals, par()$usr[2]), c(coefs, 0),
-         col = color.points, lwd = 1)
+         col = color.points, lwd = 3)
          
 
 xaxis.at = log(c(30, 30 * 60, 30 * 60 * 60, 75 * 24 * 60 * 60))
