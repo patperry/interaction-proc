@@ -167,7 +167,7 @@ In \bbooktitle{{WWW 2010: Proceedings of the 19th international conference on
   \bauthor{\bsnm{Hand},~\bfnm{D.~J.}\binits{D.~J.}}
 (\byear{2010}).
 \btitle{{Bayesian anomaly detection methods for social networks}}.
-\bjournal{Ann. Appl. Stat.}
+\bjournal{Ann. Appl. Statist.}
 \bvolume{4}
 \bpages{645--662}.
 \end{barticle}
@@ -358,6 +358,17 @@ In \bbooktitle{KDD '09: Proceedings of the 15th ACM SIGKDD international
 \bjournal{Inform. Soc.}
 \bvolume{21}
 \bpages{143--153}.
+\end{barticle}
+\endbibitem
+
+\bibitem{wong1986theory}
+\begin{barticle}[author]
+\bauthor{\bsnm{Wong},~\bfnm{W.~H.}\binits{W.~H.}}
+(\byear{1986}).
+\btitle{{Theory of partial likelihood}}.
+\bjournal{Ann. Statist.}
+\bvolume{14}
+\bpages{88--123}.
 \end{barticle}
 \endbibitem
 

@@ -225,11 +225,10 @@ For sender $i$, receiver $j$, and positive time $t$, define
         \}.
 \]
 For technical reasons, assume $N_0(i,j) = 0$ and that $N_t(i,j)$ is adapted to 
-a stochastic basis of sigma-algebras $\{ \mathcal{F}_t \}_{t \geq 0}$
+a stochastic basis of $\sigma$-algebras $\{ \mathcal{F}_t \}_{t \geq 0}$
 satisfying the usual  conditions.  Then, $N_t(i,j)$ is a 
 local submartingale, so by the Doob-Meyer decomposition, there exists a 
-predictable increasing process $\Lambda_t(i,j)$ such that $N_t(i,j) - 
-\Lambda_t(i,j)$ is an $\mathcal{F}_t$ local martingale.  Under mild conditions---the most important of which is that no two 
+predictable increasing process $\Lambda_t(i,j)$, null at zero, such that $N_t(i,j) - \Lambda_t(i,j)$ is an $\mathcal{F}_t$ local martingale.  Under mild conditions---the most important of which is that no two 
 interactions happen simultaneously---there exists a predictable continuous 
 process $\lambda_t(i,j)$ such that
 \(
@@ -255,7 +254,7 @@ For each sender $i$, let $\bar \lambda_t(i)$ be a non-negative predictable
 process called the baseline intensity of sender $i$; let $\mathcal{J}_t(i)$ be 
 a predictable subset of $\mathcal{J}$ called the receiver set of sender $i$.
 For each sender-receiver pair $(i,j)$, let $x_t(i,j)$ be a predictable
-locally bounded vector of covariates in $\reals^p$.  Let $\beta_0$ in
+locally bounded vector of covariates in $\reals^p$.  Let $\beta_0$
 be an unknown vector of coefficients in  $\reals^p$.  For this section, 
 assume each interaction has a single receiver.
 
@@ -297,7 +296,7 @@ or
     1\{\text{for some $k$, interaction $i\to k$ and $k \to j$ occurred in
              $[t - \delta, t)$}\}.
 \]
-Any process measurable with respect to the predictable sigma-algebra is
+Any process measurable with respect to the predictable $\sigma$-algebra is
 a valid covariate; this only excludes covariates depending on the future
 or the immediate present.
 
@@ -386,7 +385,7 @@ $V_{t}(\cdot, i)$, given by
         =
         \frac{1}{W_{t}(\beta, i)}
         \sum_{j \in \mathcal{J}_t(i)}
-            w_{t}(\beta, i,j) \, x_{t}(i,j), \\
+            w_{t}(\beta, i,j) \, x_{t}(i,j), \label{E:wt-expectation}\\
     V_{t}(\beta, i)
         =
         \frac{1}{W_{t}(\beta, i)}
@@ -419,13 +418,8 @@ $\log \mathit{PL}_t(\cdot)$ are
 We call $U_t(\beta_0)$ the unnormalized score and $I_t(\beta_0)$
 the Fisher information matrix.
 
-\section{Consistency of Maximum Partial Likelihood Inference}\label{S:MPLE-consistency}
-
-%Now we give asymptotic theory for the single recipient case.
-%Section~\ref{S:bias-correction} covers corrections for the multiple recipient
-%case.  For this section, let $N_t(i,j)$ be a multivariate counting process with
-%stochastic intensity $\lambda_t(i,j)$ as defined in~\eqref{E:cox-intensity}.
-%As before, the log-partial likelihood is given in~\eqref{E:log-pl}.
+\section{Consistency of Maximum Partial Likelihood Inference}
+\label{S:MPLE-consistency}
 
 Under the model of Section~\ref{S:point-process-model}, the maximum partial likelihood estimator (MPLE) is a natural
 estimate of $\beta_0$; the inverse Hessian of $\log \mathit{PL}_t(\cdot)$
@@ -433,31 +427,43 @@ evaluated at the MPLE is a natural estimate of its covariance matrix.
 We now give conditions under which these
 estimators are consistent as $t$ goes to infinity.
 
-Typically, one proves consistency of the MPLE by keeping time $t$ fixed
-and instead letting $|\mathcal{I}|$ go to infinity
-\cite{andersen1993statistical,andersen1982cox,cook2007statistical,fleming1991counting,
-martinussen2006dynamic}.  This setting is natural in the context of clinical trial
-data, where $\mathcal{I}$ corresponds to the set of patients under study, but does not
-meet the requirements typical of interaction data analysis, where $t$ increases while $|\mathcal{I}|$ and $|\mathcal{J}|$ may either be fixed or grow with $t$.  We note that increasing initiator sets can be treated by assuming $|\mathcal{I}|$ is infinite, with $\bar \lambda_t(i) = 0$ for most initiators during the initial part of the observation period; increasing receiver sets can be
-handled similarly.
+In the sampling regime where observation time $t$ is fixed and the number of 
+senders $|\mathcal{I}|$ increases, Anderson and Gill's consistency proof for
+the Cox proportional hazards model in survival analysis extends
+to cover model~\eqref{E:cox-intensity}.  This setting is natural in the 
+context of clinical trial data, where $\mathcal{I}$ corresponds to the set of 
+patients under study, but does not meet the requirements typical of 
+interaction data.  For most interaction 
+data we cannot control $\mathcal{I}$ and $\mathcal{J}$, and the only way to 
+get more data is to increase $t$.  Cox gives a rough proof for general
+MPLE consistency which applies to our sampling regime but his argument is 
+heuristic; Wong's treatment is more rigorous but does not cover continuous or 
+time-varying covariates \cite{cox1975partial,wong1986theory}. The general 
+interaction data sampling regime mandates a new consistency proof.
 
-Our proof of consistency relies on a rescaling of time to make the interaction arrivals uniform.  To this end,
-define marginal processes
+Despite assuming $\mathcal{I}$ and $\mathcal{J}$ to be effects, our analysis 
+allows senders and receivers to enter and leave the study during the 
+observation period.  The effective number of senders at time $t$ is the
+set of $i$ such that $\bar \lambda_t(i) \neq 0$, which potentially varies
+with time.  Likewise, the effective number of receivers is controlled through
+$\mathcal{J}_t(i)$.
+
+Our consistency proof relies on rescaling time to make the interaction 
+times uniform.  To this end, define marginal processes
 \(
     N_t(i) = \sum_{j \in \mathcal{J}} N_t(i,j)
 \)
 and
 \(
-    N_t = \sum_{i \in \mathcal{I}} N_t(i).
+    N_t = \sum_{i \in \mathcal{I}} N_t(i),
 \)
-Define the sequence of stopping
-times
+define sequence of stopping times
 \begin{equation}\label{E:message-times}
     \tau_n = \sup\{ t : N_t < n \},
 \end{equation}
 and let $\mathcal{F}_{\tau_n}$ be the $\sigma$-algebra of events prior to
-$\tau_n$. The main idea of the proof is to change time from the original scale to a scale on
-which $\tau_{n} - \tau_{n'}$ is proportional to $n - n'$.
+$\tau_n$. The main idea of the proof is to change time from the original scale 
+to a scale on which $\tau_{n} - \tau_{n'}$ is proportional to $n - n'$.
 
 \subsection{Assumptions}
 
@@ -508,7 +514,10 @@ its spectral norm (largest eigenvalue).  We require the following assumptions:
     \]
 \end{enumerate}
 
-These technical assumptions are similar to those of Anderson and Gill~\cite{andersen1982cox}, who prove consistency in the clinical trials setting described above, and also investigate specific settings in which their assumptions hold.
+These technical assumptions are similar to those of Anderson and 
+Gill~\cite{andersen1982cox}, who investigate specific settings in which their 
+assumptions hold.  Under A\ref{A:message-times-finite} the other three 
+assumptions hold when $\| x_t(i,j) \|$ is bounded.
 
 \subsection{Main Results}
 Assumptions A\ref{A:square-int}--A\ref{A:var-equicont} imply that the MPLE is consistent and asymptotically
@@ -549,6 +558,7 @@ Gaussian, as shown by the following two theorems.
     \end{enumerate}
 \end{theorem}
 
+\noindent
 We don't actually require convergence of the whole sample path, but
 it turns out to be just as much effort to prove as convergence of the
 endpoint.  
@@ -596,28 +606,17 @@ and $\Lambda_t = \sum_{i \in \mathcal{I}} \Lambda_t(i)$.  Correspondingly, defin
 martingales $M_t(i,j) = N_t(i,j) - \Lambda_t(i,j)$,
 $M_t(i) = N_t(i) - \Lambda_t(i)$, and
 $M_t = N_t - \Lambda_t$.
-
 Define
 \[
     H_t(i,j)
         =
-        x_t(i,j) - E_t(\beta_0,i).
+        x_t(i,j) - E_t(\beta_0,i),
 \]
-As observed by Andersen and Gill \cite{andersen1982cox}, the score function $U_t(\cdot)$ evaluated at $\beta_0$ has a simple
-representation in terms of these martingales:  %Set
-%\[
-%    H_t(i,j) = x_t(i,j) - E_t(\beta_0,i),
-%\]
-%and, using the identity
-%\(
-%    \sum_{j \in \mathcal{J}}
-%    \int_0^t
-%        H_s(i,j) \,
-%        d\Lambda_s(i,j)
-%    =
-%    0,
-%\)
-%note that the score can be written as
+where $E_t(\beta,i)$ is as defined in \eqref{E:wt-expectation}.
+
+As observed by Andersen and Gill \cite{andersen1982cox}, the score function 
+$U_t(\cdot)$ evaluated at $\beta_0$ has 
+a simple representation in terms of these processes:
 \begin{align*}
     U_t(\beta_0)
         &=
@@ -833,10 +832,10 @@ Hessian of the log partial likelihood, as defined in
 (\ref{E:log-pl-gradient}--\ref{E:log-pl-neg-hessian}).  Since
 $I_t(\beta)$ is a sum of rank-one matrices with positive weights,
 it is positive semi-definite, and $\log \mathit{PL}_t(\cdot)$ is
-a concave function.  By the assumption that $\| \Sigma_1(\cdot) \|$
-is *** bounded away from zero *** in a neighborhood of $\beta_0$, for $n$
-sufficiently large, if $\log \mathit{PL}_t(\cdot)$ has a local minimum
-in that neighborhood then it must be the unique global maximum.
+a concave function.  By the assumption that the smallest
+eigenvalue of $\Sigma_1(\cdot)$ is bounded away from zero in a neighborhood
+of $\beta_0$, for $n$ sufficiently large, if $\log \mathit{PL}_t(\cdot)$ has a 
+local minimum in that neighborhood then it must be the unique global maximum.
 
 We find the local maximum by applying Newton's method to the
 gradient of $\tfrac{1}{n} \log \mathit{PL}_{\tau_n}(\cdot)$, taking
@@ -844,12 +843,14 @@ $\beta_0$ as the initial iterate.  Define
 \[
    Z_n = -[\tfrac{1}{n} I_{\tau_n}(\beta_0)]^{-1} [ \tfrac{1}{n} U_{\tau_n}(\beta_0)].
 \]
-Theorem~\ref{T:score-fisher} and the
-assumptions of the theorem imply that $[I_{\tau_n}(\beta_0)]^{-1}$
-exists for $n$ large enough so that $Z_n$ is well-defined.  Moreover,
-(i) $Z_n \toP 0$, and
-(ii) $\sqrt{n} \, Z_n \tod \Normal(0, \, [\Sigma_1(\beta_0)]^{-1})$.
 The first Newton iterate, $\beta_{n,1}$ is equal to $\beta_0 - Z_n$.
+Part (ii) of Theorem~\ref{T:score-fisher} and the
+assumptions of the theorem imply $[\tfrac{1}{n} I_{\tau_n}(\beta_0)]^{-1}$
+exists for $n$ large enough so that $Z_n$ is well-defined.  
+Moreover, Part (i) of Theorem~\ref{T:score-fisher} and Slutzky's Theorem imply
+$Z_n \toP 0$ and
+$\sqrt{n} \, Z_n \tod \Normal(0,\, [\Sigma_1(\beta_0)]^{-1})$.
+
 
 Apply Kantorovich's Theorem to bound $\| \hat \beta_n - \beta_0 \|$
 and $\| \hat \beta_n - \beta_{n,1} \|$.  By assumption, there exists
@@ -875,7 +876,6 @@ and
 for $\beta, \beta' \in D_0$.
 Define $\eta_n = \| Z_n \|$ and $h_n = B K \eta_n$, noting that $h_n$ and
 $\eta_n$ are size $\OhP(n^{-1/2})$.  Thus, for $n$ large enough, the
-Newton iterates converge to $\hat \beta_n$.  Moreover,
 \begin{enumerate}[(i)]
     \item $\| \hat \beta_n - \beta_0 \| \leq 2 \, \eta_n \toP 0$,
     \item
@@ -891,16 +891,37 @@ and $\sqrt{n} \, Z_n$ converge weakly to the same limit.
 
 \end{proof}
 
-\section{The Case of Multiple Receivers}\label{S:multiple-receivers}
+\section{Multicast Interactions}\label{S:multiple-receivers}
 
-We have assumed thus far in the article that each interaction involves a single initiator and a single receiver.  While the asymptotic theory we have presented in Section~\ref{S:MPLE-consistency} is thus sufficient to cover the case of strictly pairwise directed interactions such telephone calls between two individuals, we have not yet considered the case in which an initiator interacts simultaneously with multiple receivers---for example, an e-mail message sent to multiple recipients.
+In Sections~\ref{S:point-process-model}~and~\ref{S:MPLE-consistency},
+we have assumed each interaction involves a single sender and a single 
+receiver.  The model and corresponding asymptotic theory are sufficient to 
+cover strictly pairwise directed interactions (e.g. phone calls), but they
+do not extend to interactions that can involve multiple receivers (e.g. e-mail 
+messages).  We call an interaction involving a single sender and possibly 
+multiple receivers a multicast interaction.  
 
-In practice, such scenarios are often treated in an ad-hoc manner by treating interactions with multiple recipients as separate pairwise interactions.  In this section we show that such an approach can in fact be viewed as an approximate MPLE fitting method under a natural extension of our Cox proportional intensity model, and that the bias introduced by such an approximation can be quantified and in certain cases corrected.
+In practice, multicast interactions usually get treated in an ad-hoc manner 
+via duplication---for example, interaction $i \to \{ j_1, j_2, j_3 \}$ gets 
+recorded as three separate pairwise interactions, $i \to j_1$, $i \to j_2$, 
+and $i \to j_3$---giving rise to approximate likelihood and inference.
+In this section we explore the implications of using this approximate
+likelihood for our model.  In particular we show  the approximation is closely 
+related to an extension of the model and that bias introduced by the 
+approximation can be quantified and in certain cases corrected.
 
-To this end, introduce $\bar \lambda_t(i ; L)$ as the baseline intensity at time $t$ for
-messages sent by sender $i$ with $L$ recipients.  Let $J$ be any
-subset of $\mathcal{J}$ and model the rate at which $i$ sends messages to
-recipient set $J$ as
+To this end, we introduce an extension of the model to the multicast setting.
+Let $\mathcal{I}$, $\mathcal{J}$, $\mathcal{J}_t(i)$, $x_t(i,j)$,
+and $\beta_0$ be as in Section~\ref{S:point-process-model}.  For each sender 
+$i$ and positive integer $L$, let $\bar \lambda_t(i ; L)$ be a non-negative 
+predictable process called the baseline $L$-receiver intensity of sender $i$
+Let $(t_1, i_1, J_1), \ldots, (t_n, i_n, J_n)$ be the 
+sequence of observed multicast interactions, with tuple $(t, i, J)$ indicating 
+that at  time $t$ sender $i$ interacted with receiver set $J$.  For a set
+$J$, let $|J|$ denote its cardinality.
+
+Consider a model for multicast interactions where the rate of interaction
+between sender $i$ and receiver set $J$ is
 \begin{equation}\label{E:intensity-multiple}
     \lambda_t(i,J)
         =
@@ -912,35 +933,9 @@ recipient set $J$ as
         \Big\}
         \cdot
         \prod_{j \in J}
-        1\{ j \in \mathcal{J}_t(i) \}
-        .
+        1\{ j \in \mathcal{J}_t(i) \}.
 \end{equation}
-This form provides ease of interpretability, in the sense that at time
-$t$, changing receiver $j$'s covariates from $x_t(i,j)$ to
-$x'_t(i,j)$ results in scaling the rate of interactions $i \rightarrow j$ by
-\(
-    \exp\big\{ \beta_0^\trans \big(x'_t(i,j) - x_t(i,j)\big) \big\};
-\)
-importantly, this does not depend on $\bar \lambda_t(i; L)$.
-
-\begin{figure}
-    %\includegraphics[scale=0.6]{figures/recipient-counts}
-    \caption{
-        \textsc{Message recipient counts.}
-        Each of the 21,635 points corresponds to a message, with the
-        $y$-value equal to the log (base 2) of the number of recipients
-        for that message.  The message sent to the most people
-        had 57 recipients.  In our analysis, we exclude messages with more
-        than 10 recipients.
-    }\label{F:recipient-counts}
-\end{figure}
-
-The partial likelihood under the model of~\eqref{E:intensity-multiple} is nearly the same as in the single-recipient
-setting from Section~\ref{S:point-process-model}.
-Let $(t_1, i_1, J_1), \ldots, (t_n, i_n, J_n)$ be the sequence of
-observed messages, with tuple $(t, i, J)$ indicating that at time $t$
-sender $i$ sent a message with recipient set $J$.  The log partial likelihood
-at time $t$, evaluated at $\beta$, is
+The log partial likelihood at time $t$, evaluated at $\beta$, is
 \begin{equation}\label{E:log-pl-multiple}
     \log
     \mathit{PL}_t(\beta)
@@ -961,10 +956,115 @@ at time $t$, evaluated at $\beta$, is
             \big]
         \bigg\}.
 \end{equation}
-Compare this with the single recipient case in~\eqref{E:log-pl}.
 
-As a result, the multiple recipient case can be considered as a special case of
-the single recipient one where $\mathcal{I} \times \mathbb{N}_+$
+Suppose instead of using the multicast model, we use duplication to get
+pairwise interactions from the original multicast data.  If we use
+model~\eqref{E:cox-intensity} for the pairwise data and ignore ties in
+the interaction times, we get an approximate partial likelihood:
+\begin{equation}\label{E:log-pl-multiple-approx}
+    \log
+    \widetilde{\mathit{PL}}_t(\beta)
+        =\!
+        \sum_{t_m \leq t}\!
+        \bigg\{\!
+            \sum_{j \in J_m}\!
+                \beta^\trans x_{t_m}\!(i_m, j)
+            -
+            |J_m|
+            \log\big[
+                \!\!\!\!
+                \sum_{j \in \mathcal{J}_{t_m}\!(i_m)}\!\!\!\!\!
+                    \exp\{ \beta^\trans x_{t_m}\!(i_m, j)\}
+            \big]
+        \bigg\}.
+\end{equation}
+
+We claim $\log \widetilde{\mathit{PL}}_t(\beta)$ is an approximation of
+$\log \mathit{PL}_t(\beta)$.  Heuristically, replacing the
+sum over all sets of size $|J_m|$ with a sum over all multisets of size
+$|J_m|$, allowing duplicate elements,
+\begin{align*}
+    \log\big[\!\!
+        \sum_{\substack{J \subseteq \mathcal{J}_{t_m}(i_m) \\
+              |J| = |J_m|}}\!\!\!
+            \exp\big\{
+                \sum_{j \in J}
+                    \beta^\trans x_{t_m}\!(i_m, j)
+            \big\}
+    \big]
+    &\approx
+        \log\big[\!\!\!
+            \sum_{j \in \mathcal{J}_{t_m}(i_m)}\!\!\!\!\!
+                \exp\big\{
+                    \beta^\trans x_{t_m}\!(i_m, j)
+                \big\}
+        \big]^{|J_m|} \\
+    &=
+        |J_m|
+        \log\big[\!\!\!
+            \sum_{j \in \mathcal{J}_{t_m}(i_m)}\!\!\!\!\!
+                \exp\big\{
+                    \beta^\trans x_{t_m}\!(i_m, j)
+                \big\}
+        \big].
+\end{align*}
+In this sense,
+$\log \mathit{PL}_t(\beta) \approx \log \widetilde{\mathit{PL}}_t(\beta)$.
+
+When we perform ad-hoc duplication, we are performing approximate inference
+under the multicast model.
+
+When we perform the ad-hoc adjustment, treating multicast interactions
+as multiple pairwise interactions using model~\eqref{E:cox-intensity}
+instead of model~\eqref{E:intensity-multiple}, we get the approximate partial 
+likelihood:
+The right hand side of~\eqref{E:log-pl-multiple-approx} can be seen of
+an approximation gotten from~\eqref{E:log-pl-multiple} by replacing   Thus, the ad-hoc adjustment can
+be seen as leading to approximate inference under model~\eqref{E:intensity-multiple}.
+
+
+
+Maximizing $\log \widetilde{\mathit{PL}}_t(\cdot)$ instead of
+$\log \mathit{PL}_t(\cdot)$ introduces bias in the estimate of $\beta_0$.
+Theorems in Section~\ref{S:bias-correction} show that in certain situations,
+the bias is on the order of the standard error of the estimate and can be
+corrected.
+
+In practice, even if we wanted to use model~\eqref{E:intensity-multiple},
+the partial likelihood in \eqref{E:log-pl-multiple} involves combinatorially 
+many terms and is difficult to optimize.  
+
+
+
+
+%This form provides ease of interpretability, in the sense that at time
+%$t$, changing receiver $j$'s covariates from $x_t(i,j)$ to
+%$x'_t(i,j)$ results in scaling the rate of interactions $i \rightarrow j$ by
+%\(
+%    \exp\big\{ \beta_0^\trans \big(x'_t(i,j) - x_t(i,j)\big) \big\};
+%\)
+%importantly, this does not depend on $\bar \lambda_t(i; L)$.
+
+\begin{figure}
+    %\includegraphics[scale=0.6]{figures/recipient-counts}
+    \caption{
+        \textsc{Message recipient counts.}
+        Each of the 21,635 points corresponds to a message, with the
+        $y$-value equal to the log (base 2) of the number of recipients
+        for that message.  The message sent to the most people
+        had 57 recipients.  In our analysis, we exclude messages with more
+        than 10 recipients.
+    }\label{F:recipient-counts}
+\end{figure}
+
+
+
+
+
+*****
+
+The multicast case can be considered as a special case of
+the single receiver case where $\mathcal{I} \times \mathbb{N}_+$
 is the sender set and power set $\mathcal{P}(\mathcal{J})$ is the
 receiver set.  For sender $(i,L)$, take $\bar \lambda(i ; L)$ to be the
 baseline send intensity and take
@@ -974,33 +1074,7 @@ be the covariate vector.  Consistency of the MPLE now follows from
 the theory for the single recipient case (proved in
 Section~\ref{S:MPLE-consistency}).
 
-In practice, \eqref{E:log-pl-multiple} involves combinatorially many terms
-and is difficult to optimize.  When we treat messages with multiple recipients
-as multiple single-recipient messages, we get an approximate partial
-likelihood:
-\begin{equation}\label{E:log-pl-multiple-approx}
-    \log
-    \widetilde{\mathit{PL}}_t(\beta)
-        =
-        \sum_{t_m \leq t}
-        \bigg\{
-            \sum_{j \in J_m}\!
-                \beta^\trans x_{t_m}\!(i_m, j)
-            -
-            \log\big[
-                \!\!\!\!
-                \sum_{j \in \mathcal{J}_{t_m}\!(i_m)}
-                    \exp\{ \beta^\trans x_{t_m}\!(i_m, j)\}
-            \big]^{|J_m|}
-        \bigg\}.
-\end{equation}
-Maximizing $\log \widetilde{\mathit{PL}}_t(\cdot)$ instead of
-$\log \mathit{PL}_t(\cdot)$ introduces bias in the estimate of $\beta_0$.
-Theorems in Section~\ref{S:bias-correction} show that in certain situations,
-the bias is on the order of the standard error of the estimate and can be
-corrected.
 
-*****
 
 Here, we analyze the bias introduced by using the approximate partial
 likelihood.  As noted previously, this is equivalent to treating messages with
@@ -1812,7 +1886,7 @@ With $\Oh(|\mathcal{I}|)$ processors, we can compute these quantities in time
     ).
 \)
 
-\subsection{Proofs of MPLE Results}\label{S:MPLE-consistency-proofs}
+\section{Proofs of MPLE Results}\label{S:MPLE-consistency-proofs}
 
 \begin{lemma}\label{L:adapted-martingale}
 $\tilde U_\alpha^{(n)}(\beta_0)$ from *** is a square-integrable martingale
