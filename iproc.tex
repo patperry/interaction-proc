@@ -215,15 +215,31 @@ model to capture individual and seasonal idiosyncrasies
 \section{A Point Process Model and Partial-Likelihood Inference}\label{S:point-process-model}
 
 Every interaction process can be encoded by a multivariate counting measure.
-For initiator $i$, receiver $j$, and positive time $t$, define
+For sender $i$, receiver $j$, and positive time $t$, define
 \[
     N_t(i,j)
         =
-        \#\{\text{directed interactions $i\rightarrow j$ in time interval $[0,t]$}\}.
+        \#\{
+            \text{directed interactions $i\rightarrow j$ in time interval 
+            $[0,t]$}
+        \}.
 \]
-We model $N$ through its stochastic intensity, $\lambda$, assumed to
-exist and be predictable and continuous (``predictable'' means roughly that
-it only depends on the immediate past).  Heuristically,
+For technical reasons, assume $N_0(i,j) = 0$ and that $N_t(i,j)$ is adapted to 
+a stochastic basis of sigma-algebras $\{ \mathcal{F}_t \}_{t \geq 0}$
+satisfying the usual  conditions.  Then, $N_t(i,j)$ is a 
+local submartingale, so by the Doob-Meyer decomposition, there exists a 
+predictable increasing process $\Lambda_t(i,j)$ such that $N_t(i,j) - 
+\Lambda_t(i,j)$ is an $\mathcal{F}_t$ local martingale.  Under mild conditions---the most important of which is that no two 
+interactions happen simultaneously---there exists a predictable continuous 
+process $\lambda_t(i,j)$ such that
+\(
+    \Lambda_t(i,j) = \int_0^t \lambda_s(i,j) \, ds.
+\)
+(In practical applications, simultaneous events exist and are an annoyance;
+Efron be handles them through an ad-hoc adjustment, while Brostr\"om adds a 
+discrete component to $\Lambda$ \cite{efron1977efficiency,brostrom2002cox}.)
+The process $\lambda$ is known as the stochastic intensity of $N$.
+Heuristically,
 \[
     \lambda_t(i,j) \, dt
         =
@@ -231,41 +247,98 @@ it only depends on the immediate past).  Heuristically,
             \text{interaction $i\rightarrow j$ occurs in time interval $[t,t+dt)$}
         \}.
 \]
-The stochastic intensity exists under mild conditions, the most important of
-which is that no two interactions happen simultaneously (in practical
-applications simultaneous events exist and are an annoyance; a few
-work-arounds have been proposed \cite{brostrom2002cox,efron1977efficiency}).
-We will use a version of the Cox proportional intensity model for modeling the
-interaction process \cite{cox1972regression}.  For this section, assume each
-interaction has a single receiver.
+We will model $N$ through $\lambda$ using a version of the Cox
+proportional intensity model \cite{cox1972regression}.  
 
-Let $\mathcal{I}$ be a set of initiators and $\mathcal{J}$ be a set of receivers.
-For each initiator $i$, let $\bar \lambda_t(i)$ be a non-negative predictable
-process called the baseline intensity of initiator $i$; let
-$\mathcal{J}_t(i)$ be a predictable subset of $\mathcal{J}$ called the
-receiver set of initiator $i$.
-For each initiator-receiver pair $(i,j)$, let $x_t(i,j)$ be a locally bounded
-predictable vector of covariates in $\reals^p$.  Let $\beta_0$ in
-be an unknown vector of coefficients in  $\reals^p$.
+Let $\mathcal{I}$ be a set of senders and $\mathcal{J}$ be a set of receivers.
+For each sender $i$, let $\bar \lambda_t(i)$ be a non-negative predictable
+process called the baseline intensity of sender $i$; let $\mathcal{J}_t(i)$ be 
+a predictable subset of $\mathcal{J}$ called the receiver set of sender $i$.
+For each sender-receiver pair $(i,j)$, let $x_t(i,j)$ be a predictable
+locally bounded vector of covariates in $\reals^p$.  Let $\beta_0$ in
+be an unknown vector of coefficients in  $\reals^p$.  For this section, 
+assume each interaction has a single receiver.
 
-Given a multivariate counting process $N$ on
+Given a multivariate counting process $N$ on 
 $\reals_+ \times \mathcal{I} \times \mathcal{J}$,
 we model its stochastic intensity as
 \begin{equation}\label{E:cox-intensity}
     \lambda_t(i,j)
         =
         \bar \lambda_t(i)
+        \cdot
         \exp\{ \beta_0^\trans x_t(i, j) \}
         \cdot
         1{\{j \in \mathcal{J}_t(i)\}}.
 \end{equation}
+The model posits sender $i$ in $\mathcal{I}$ interacts  with receiver $j$ 
+in $\mathcal{J}_t(i)$ at a baseline rate $\bar \lambda_t(i)$ modulated up or 
+down according to the pair's covariate vector, $x_t(i,j)$.  As Efron notes
+\cite{efron1977efficiency}, the specific parametric form for the multiplier
+$\exp\{ \beta_0^\trans x_t(i,j) \}$ is not central to the theoretical 
+analysis, but this form is amenable to computation and gives
+the parameter vector $\beta_0$ a straightforward interpretation.
 
-*** This is reasonable/desirable because ***.  Admits partial-likelihood inference which we show to be consistent under suitable regularity conditions/technical assumptions. ***
+The form of \eqref{E:cox-intensity} is deceptively simple but remains 
+flexible enough to be useful in practice.  Of course, the model allows for
+homophily and group level effects via inclusion of covariates like
+``$1\{\text{$i$ and $j$ belong to the same group}\}$,'' where ``group'' is 
+some observable trait like ethnicity, gender, or age group.  The real strength
+of the model is that $x_t(i,j)$ is allowed to be \emph{any} predictable
+process, in particular it can depend on the history of interactions.  To
+model reciprocation or transitivity in the interactions  (assuming 
+$\mathcal{I} = \mathcal{J}$), choose a positive $\delta$ and include 
+covariates in $x_t(i,j)$ like
+\[
+    1\{\text{interaction $j \to i$ occurred in $[t - \delta,t)$}\}
+\]
+or
+\[
+    1\{\text{for some $k$, interaction $i\to k$ and $k \to j$ occurred in
+             $[t - \delta, t)$}\}.
+\]
+Any process measurable with respect to the predictable sigma-algebra is
+a valid covariate; this only excludes covariates depending on the future
+or the immediate present.
 
-For technical reasons, assume $N_0(i,j) = 0$.  If
-$(t_1, i_1, j_1), \ldots, (t_n, i_n, j_n)$ is the sequence of observed
-interactions, then the log partial likelihood at time $t$, evaluated at $\beta$,
-is
+Following Cox \cite{cox1975partial}, we treat the baseline rate
+$\bar \lambda_t(i)$ as a nuisance parameter estimate the coefficient
+$\beta_0$ vector using a partial likelihood.  Let
+$(t_1, i_1, j_1), \ldots, (t_n, i_n, j_n)$ be the sequence of observed
+interactions.  Heuristically, partial likelihood is motivated by decomposing 
+the likelihood as
+\begin{align*}
+    \begin{split}
+    f(t_1&, i_1, j_1, t_2, i_2, j_2, \ldots, t_n, i_n, j_n) \\
+        &=
+            f(t_1, i_1)
+            \, f(j_1 | t_1, i_1)
+            \, f(t_2, i_2 | t_1, i_1, j_1)
+            \, f(j_2 | t_2, i_2, t_1, i_1, j_1) \\
+        &\quad \cdots
+            f(t_n, i_n | t_{n-1}, i_{n-1}, j_{n-1}, \ldots t_1, i_1, j_1)
+            \, f(j_n | t_{n-1}, i_{n-1} \ldots t_1, i_1, j_1)
+    \end{split} \\
+    \begin{split}
+        &=
+            \Big[
+                f(t_1, i_1)
+                \, f(t_2, i_2 | t_1, i_1, j_1)
+                \cdots
+                f(t_n, i_n | t_{n-1}, i_{n-1}, j_{n-1}, \ldots t_1, i_1, j_1)
+            \Big] \\
+        &\quad
+            \cdot
+            \Big[
+                f(j_1 | t_1, i_1)
+                \, f(j_2 | t_2, i_2, t_1, i_1, j_1)
+                \cdots
+                f(j_n | t_{n-1}, i_{n-1} \ldots t_1, i_1, j_1)
+            \Big];
+    \end{split}
+\end{align*}
+the latter term is dubbed a partial likelihood.  In continuous time, the
+the log partial likelihood at time $t$, evaluated at $\beta$, is
 \begin{equation}\label{E:log-pl}
     \log
     \mathit{PL}_t(\beta)
@@ -281,8 +354,15 @@ is
             \big]
         \bigg\}.
 \end{equation}
-The first two derivatives of $\log \mathit{PL}_t(\cdot)$ are a weighted
-mean and covariance of the covariates.  The weights are
+In Section~\ref{S:MPLE-consistency} we prove under suitable regularity
+conditions that the maximizer of $\log \mathit{PL}_t(\cdot)$ is a
+consistent estimator of $\beta_0$ as $t$ increases.
+
+Function $\log \mathit{PL}_t(\cdot)$ is concave, and so can be maximized
+via Newton's method or a gradient-based optimization method
+\cite{nocedal2006numerical}.  These methods require one or both of the
+first two derivatives of $\log\mathit{PL}_t(\cdot)$, which can be
+expressed as weighted mean and covariance of the covariates.  The weights are
 \begin{subequations}
 \begin{align}
     w_{t}(\beta, i,j)
@@ -315,14 +395,7 @@ $V_{t}(\cdot, i)$, given by
             \Big[ x_{t}(i,j) - E_{t}(\beta, i)\Big]^{\otimes 2},
 \end{gather}
 \end{subequations}
-where
-\[
-    H_t(i,j)
-        =
-        x_t(i,j) - E_t(\beta_0,i)
-\]
-and
-$a^{\otimes 2} = a \otimes a = a a^\trans$.
+where $a^{\otimes 2} = a \otimes a = a a^\trans$.
 Consequently, the gradient and negative Hessian of
 $\log \mathit{PL}_t(\cdot)$ are
 \begin{subequations}
@@ -354,7 +427,7 @@ the Fisher information matrix.
 %stochastic intensity $\lambda_t(i,j)$ as defined in~\eqref{E:cox-intensity}.
 %As before, the log-partial likelihood is given in~\eqref{E:log-pl}.
 
-Under the model of Section ***, the maximum partial likelihood estimator (MPLE) is a natural
+Under the model of Section~\ref{S:point-process-model}, the maximum partial likelihood estimator (MPLE) is a natural
 estimate of $\beta_0$; the inverse Hessian of $\log \mathit{PL}_t(\cdot)$
 evaluated at the MPLE is a natural estimate of its covariance matrix.
 We now give conditions under which these
@@ -524,6 +597,12 @@ martingales $M_t(i,j) = N_t(i,j) - \Lambda_t(i,j)$,
 $M_t(i) = N_t(i) - \Lambda_t(i)$, and
 $M_t = N_t - \Lambda_t$.
 
+Define
+\[
+    H_t(i,j)
+        =
+        x_t(i,j) - E_t(\beta_0,i).
+\]
 As observed by Andersen and Gill \cite{andersen1982cox}, the score function $U_t(\cdot)$ evaluated at $\beta_0$ has a simple
 representation in terms of these martingales:  %Set
 %\[
