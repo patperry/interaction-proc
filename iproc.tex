@@ -982,7 +982,7 @@ the interaction times, we get an approximate partial likelihood:
 We claim $\log \widetilde{\mathit{PL}}_t(\beta)$ is an approximation of
 $\log \mathit{PL}_t(\beta)$.  Heuristically, replacing the
 sum over all sets of size $|J_m|$ with a sum over all multisets of size
-$|J_m|$, allowing duplicate elements,
+$|J_m|$ allowing duplicate elements,
 \begin{align*}
     \log\big[\!\!
         \sum_{\substack{J \subseteq \mathcal{J}_{t_m}(i_m) \\
@@ -1010,29 +1010,309 @@ $|J_m|$, allowing duplicate elements,
 \end{align*}
 In this sense,
 $\log \mathit{PL}_t(\beta) \approx \log \widetilde{\mathit{PL}}_t(\beta)$.
+Section~\ref{S:approximation-error} makes this statement more precise,
+and Section~\ref{S:approximation-bias} analyzes the bias introduced by the approximation
 
-When we perform ad-hoc duplication, we are performing approximate inference
-under the multicast model.
+\subsection{Approximation Error}\label{S:approximation-error}
+Introduce the receiver set growth sequence
+\begin{equation}\label{E:growth-constant}
+    G_n
+        =
+            \sum_{t_m \leq \tau_n}
+                \frac{1}{|\mathcal{J}_{t_m}(i_m)|}.
+\end{equation}
+This sequence plays a critical role in bounded the error introduced by
+replacing $\log \mathit{PL}$ with $\log \widetilde{\mathit{PL}}$.
+Note when $|\mathcal{J}_{t_m}(i_m)|$ is constant $G_n$ has linear growth,
+but when $|\mathcal{J}_{t_m}(i_m)|$ increases $G_n$ often has sublinear 
+growth.  For example, the Cauchy-Schwartz inequality gives
+\[
+    G_n
+        \leq
+            \sqrt{n}
+            \cdot
+            \bigg[
+                \sum_{t_m \leq \tau_n}
+                    \frac{1}{|\mathcal{J}_{t_m}(i_m)|^2}
+            \bigg]^{1/2},
+\]
+so if $|\mathcal{J}_{t_m}(i_m)| = \omega(\sqrt{m})$ then
+$G_n = \Oh(\sqrt{n})$.  Theorem~\ref{T:log-pl-multiple-approx-error} bounds
+the approximation error in terms of $G_n$.
 
-When we perform the ad-hoc adjustment, treating multicast interactions
-as multiple pairwise interactions using model~\eqref{E:cox-intensity}
-instead of model~\eqref{E:intensity-multiple}, we get the approximate partial 
-likelihood:
-The right hand side of~\eqref{E:log-pl-multiple-approx} can be seen of
-an approximation gotten from~\eqref{E:log-pl-multiple} by replacing   Thus, the ad-hoc adjustment can
-be seen as leading to approximate inference under model~\eqref{E:intensity-multiple}.
+\begin{theorem}\label{T:log-pl-multiple-approx-error}
+    Let $(t_m, i_m, J_m)$ be a sequence of observations from a multivariate
+    point processes with intensity as given in~\eqref{E:intensity-multiple}.
+    Set $\tau_n = t_n$.  Assume
+    \(
+        \sup_t \| x_t (i,j) \|
+    \)
+    and
+    \(
+        \sup_m | J_m |
+    \)
+    are bounded in probability.
+    If $\log \mathit{PL}$ and $\log \widetilde{\mathit{PL}}$ are as
+    defined in
+    \textnormal{(}\ref{E:log-pl-multiple}--\ref{E:log-pl-multiple-approx}\textnormal{)},
+    and $G_n$ is as defined in \eqref{E:growth-constant},
+    then for $\beta$ in a neighborhood of $\beta_0$,
+    \[
+        \Big\|
+        \nabla [\log \mathit{PL}_{\tau_n}(\beta) ]
+        -
+        \nabla [\log \widetilde{\mathit{PL}}_{\tau_n}(\beta) ]
+        \Big\|
+            =
+            \OhP(G_n),
+    \]
+    and
+    \[
+        \Big\|
+        \nabla^2 [\log \mathit{PL}_{\tau_n}(\beta) ]
+        -
+        \nabla^2 [\log \widetilde{\mathit{PL}}_{\tau_n}(\beta) ]
+        \Big\|
+            =
+            \OhP(G_n).
+    \]
+\end{theorem}
+
+\begin{proof}[Proof of Theorem~\ref{T:log-pl-multiple-approx-error}]
+
+When $J \subseteq \mathcal{J}_t(i)$, set
+\(
+    X_t(i, J) = \sum_{j \in J} x_t(i,j)
+\)
+and
+\(
+    w_t(\beta, i, J)
+        = \exp\{ \beta^\trans X_t(i,J) \}.
+\)
+As a slight abuse of notation, when $j$ is an element of $\mathcal{J}_t(i)$,
+take ``$w_t(\beta, i, j)$'' to mean $w_t(\beta, i, \{j\})$.  Define weights
+\begin{subequations}
+\begin{gather*}
+    W_t(\beta, i; L)
+        = \sum_{\substack{J \subseteq \mathcal{J}_t(i), \\
+                          |J| = L}}
+              w_t(\beta,i,J), \\
+    \widetilde W_t(\beta, i; L)
+        =
+            \Big[ \sum_{j \in \mathcal{J}_t(i)} w_t(\beta, i, j) \Big]^L.
+\end{gather*}
+\end{subequations}
+Approximation error in $\log \widetilde{\mathit{PL}}$ comes from replacing
+$W$ with $\widetilde W$.
+
+The gradients of the weights are
+\begin{subequations}
+\begin{gather*}
+    E_t(\beta, i; L)
+        = \nabla \big[ \log W_t(\beta, i; L) \big]
+        =
+        \frac{1}{W_t(\beta, i; L)}
+        \sum_{\substack{J \subseteq \mathcal{J}_t(i), \\
+                        |J| = L}}\!
+            w_t(i,J)
+            \,
+            X_t(i,J), \\
+    \widetilde E_t(\beta, i; L)
+        = \nabla \big[ \log \widetilde W_t(\beta, i; L) \big]
+        =
+        L
+        \cdot
+        \frac{
+            \sum_{j \in \mathcal{J}_t(i)}
+                w_t(\beta, i, j) \, x_t(i,j)
+        }{
+            \sum_{j \in \mathcal{J}_t(i)}
+                w_t(\beta, i, j)
+        }.
+\end{gather*}
+\end{subequations}
+The second is the expectation of $\sum_{l = 1}^L x_t(i, j_l)$ when
+$j_1, \ldots, j_L$ are drawn independently and identically from
+$\mathcal{J}_t(i)$ with weights $w_t(\beta, i, \cdot)$; the first is the same
+expectation, conditional on the event that $j_1, \ldots, j_L$ are all unique.
+Let $\tilde{\mathbb{P}}_{t,\beta,i;L}$ and $\mathbb{P}_{t,\beta,i;L}$
+denote the two probability laws for $j_1, \ldots, j_L$, and let
+$\tilde{\mathbb{E}}_{t,\beta,i;L}$ and $\mathbb{E}_{t,\beta,i;L}$ denote
+expectations with respect to them, so that
+$E_t(\beta,i;L) = \mathbb{E}_{t,\beta,i;L} \big[ \sum_{l=1}^L x_t(i,j_l)\big]$
+and
+\(
+    \widetilde E_t(\beta,i;L)
+    =
+    \tilde{\mathbb{E}}_{t,\beta,i;L} \big[ \sum_{l=1}^L x_t(i,j_l)\big].
+\)
+
+The bound on 
+\(
+    \nabla [\log \mathit{PL}_{\tau_n}(\beta) ]
+    -
+    \nabla [\log \widetilde{\mathit{PL}}_{\tau_n}(\beta) ]
+\)
+derives from a bound on
+\(
+    E_t(\beta,i;L)
+    -
+    \widetilde E_t(\beta,i;L).
+\)
+Write
+\[
+    E_{t}(\beta, i; L) - \widetilde{E}_t(\beta, i; L)
+        =
+        \mathbb{E}_{t,\beta,i;L}
+            \Big[ \sum_{l=1}^L x_t(i,j_l) \Big]
+        -
+        \widetilde{\mathbb{E}}_{t,\beta,i;L}
+            \Big[ \sum_{l=1}^L x_t(i,j_l) \Big].
+\]
+We define probability law $\mathbb{P}^\ast_{t,\beta,i;L}$ and 
+associated random variables $j_1, \ldots, j_L$ and
+$\tilde \jmath_1, \ldots, \tilde \jmath_L$, such that marginally
+$j_1, \ldots, j_L$ are distributed according to $\mathbb{P}_{t,\beta,i;L}$
+and $\tilde \jmath_1, \ldots, \tilde \jmath_L$ are distributed according
+to $\tilde{\mathbb{P}}_{t,\beta,i;L}$, but the variables are coupled to have
+nontrivial chance of agreeing.  Then,
+\begin{align*}
+    \Big\| E_{t}(\beta, i; L) &- \widetilde{E}_t(\beta, i; L) \Big\| \\
+        &=
+            \Big\|
+            \mathbb{E}_{t,\beta,i;L}^\ast
+            \Big[
+                \sum_{l=1}^L x_t(i,j_l)
+                -
+                \sum_{l=1}^L x_t(i, \tilde \jmath_l)
+            \Big]
+            \Big\| \\
+        &\leq
+            2 L
+            \cdot
+            \Big[
+                \sup_{j \in \mathcal{J}_t(i)}
+                \| x_t(i,j) \|
+            \Big]
+            \cdot
+            \mathbb{P}^\ast_{t,\beta,i;L}
+            \Big\{
+                (j_1, \ldots, j_L)
+                    \neq
+                    (\tilde \jmath_1, \ldots, \tilde \jmath_L)
+            \Big\}
+\end{align*}
+The coupling is as follows:
+\begin{enumerate}
+    \item Draw $(\tilde \jmath_1, \ldots, \tilde \jmath_L)$ according to
+        $\tilde{\mathbb{P}}_{t,\beta,i;L}$.
+    \item If $(\tilde \jmath_1, \ldots, \tilde \jmath_L)$ are all unique,
+        set $(j_1, \ldots, j_L) = (\tilde \jmath_1, \ldots, \tilde \jmath_L)$,
+        otherwise draw $(j_1, \ldots, j_L)$ independently according to
+        $\mathbb{P}_{t,\beta,i;L}$.
+\end{enumerate}
+With $K = \sup_{j \in \mathcal{J}_t(i)} \| x_t(i,j) \|$, 
+Lemma~\ref{L:coupling-prob-bound} shows
+\[
+    \mathbb{P}^\ast_{t,\beta,i;L}
+    \Big\{
+        (j_1, \ldots, j_L)
+            \neq
+            (\tilde \jmath_1, \ldots, \tilde \jmath_L)
+    \Big\}
+        \leq
+        {L \choose 2}
+        \cdot
+        \frac{\exp\{4 K \, \| \beta \|\}}{| \mathcal{J}_t(i) |}.
+\]
+The resulting bound on 
+\(
+    \|
+    \nabla [\log \mathit{PL}_{t}(\beta) ]
+    -
+    \nabla [\log \widetilde{\mathit{PL}}_{t}(\beta) ]
+    \|
+\)
+now follows by expressing
+\[
+    \nabla \big[ \log \widetilde{\mathit{PL}}_t(\beta) \big]
+    -
+    \nabla \big[ \log \mathit{PL}_t(\beta )\big]
+        =
+        \sum_{t_m \leq t}
+            E_{t_m}\!(\beta, i_m; |J_m|)
+            -
+            \widetilde{E}_{t_m}\!(\beta, i_m; |J_m|).
+\]
+Using
+\(
+    \big\| E_{t}(\beta, i; L) - \widetilde{E}_t(\beta, i; L) \big\|
+        \leq
+        K \, L^2 \, (L - 1)
+        \,
+        \frac{\exp\{4 K \, \| \beta \|\}}{| \mathcal{J}_t(i) |},
+\)
+we get
+\[
+    \Big\|
+        \nabla\big[ \log \widetilde{\mathit{PL}}_t( \beta ) \big]
+        -
+        \nabla\big[ \log {\mathit{PL}}_t( \beta ) \big]
+    \Big\| \\
+        \leq
+            K
+            \exp\{4 K \| \beta \|\}
+            \cdot
+            \sum_{t_m \leq t}
+                \frac{|J_m|^2(|J_m| - 1)}{|\mathcal{J}_{t_m}(i_m)|}.
+\]
+We get the final bound for the gradients by replacing the numerators of the 
+summands with $\sup_m |J_m|$.
+
+Using the same methods, Lemma~\ref{L:hessian-approx-bound} derives the bound 
+on the difference in Hessians.
+\end{proof}
+
+\subsection{Bias from the Approximate Partial Likelihood}
+\label{S:approximation-bias}
+
+When we use ad-hoc duplication, we are performing approximate inference
+under the multicast model.  In practice, even if we explicitly want to use the
+multicast model, computing the partial likelihood in \eqref{E:log-pl-multiple} 
+involves an intractable combinatorial sum, so we may result to using the
+approximation instead.  Maximizing $\log \widetilde{\mathit{PL}}_t(\cdot)$ 
+instead of $\log \mathit{PL}_t(\cdot)$ introduces bias in the estimate of 
+$\beta_0$.  Theorem~\ref{T:mple-approx-error} bounds the bias.
+
+\begin{theorem}\label{T:mple-approx-error}
+    Assume the setup of Theorem~\ref{T:log-pl-multiple-approx-error}.
+    Let $\hat \beta_n$ maximize $\log \mathit{PL}_{\tau_n}(\cdot)$
+    and let $\tilde \beta_n$ maximize
+    $\log \widetilde{\mathit{PL}}_{\tau_n}(\cdot)$.
+    Suppose for all $n$ that the norm of the Hessian,
+    \(
+        \|
+        \tfrac{1}{n}
+        \nabla^2
+        [ \log \mathit{PL}_{\tau_n}(\cdot)]
+        \|,
+    \)
+    is uniformly locally Lipschitz and bounded away from zero
+    in a neighborhood of $\hat \beta_n$.
+    If $G_n/n \toP 0$, then
+    \[
+        \| \tilde \beta_{\tau_n} - \hat \beta_{\tau_n} \|
+            =
+            \OhP(G_n/n).
+    \]
+\end{theorem}
+
+\clearpage
 
 
-
-Maximizing $\log \widetilde{\mathit{PL}}_t(\cdot)$ instead of
-$\log \mathit{PL}_t(\cdot)$ introduces bias in the estimate of $\beta_0$.
 Theorems in Section~\ref{S:bias-correction} show that in certain situations,
 the bias is on the order of the standard error of the estimate and can be
 corrected.
-
-In practice, even if we wanted to use model~\eqref{E:intensity-multiple},
-the partial likelihood in \eqref{E:log-pl-multiple} involves combinatorially 
-many terms and is difficult to optimize.  
 
 
 
@@ -1081,96 +1361,15 @@ likelihood.  As noted previously, this is equivalent to treating messages with
 multiple recipients as multiple single-recipient messages.  Let
 $\mathit{PL}$ denote the true partial likelihood and let $\widetilde{\mathit{PL}}$
 denote the approximation as given in \eqref{E:log-pl-multiple}
-and \eqref{E:log-pl-multiple-approx}.  Define the receiver set growth
-sequence:
-\begin{equation}\label{E:growth-constant}
-    G_n
-        =
-            \sum_{t_m \leq \tau_n}
-                \frac{1}{|\mathcal{J}_{t_m}(i_m)|}.
-\end{equation}
-This sequence turns out to be critical
-in bounding the error from approximating $\mathit{PL}$ by
-$\widetilde{\mathit{PL}}.$  When $|\mathcal{J}_{t_m}(i_m)|$ is
-constant, $G_n$ has linear growth.  In contrast, when
-$|\mathcal{J}_{t_m}(i_m)|$ increases, $G_n$ often has sublinear growth.
-For example, the Cauchy-Schwartz inequality gives
-\[
-    G_n
-        \leq
-            \sqrt{n}
-            \cdot
-            \bigg[
-                \sum_{t_m \leq \tau_n}
-                    \frac{1}{|\mathcal{J}_{t_m}(i_m)|^2}
-            \bigg]^{1/2},
-\]
-so if $|\mathcal{J}_{t_m}(i_m)| = \omega(\sqrt{m})$, then
-$G_n = \Oh(\sqrt{n})$.
+and \eqref{E:log-pl-multiple-approx}.  
 
-\begin{theorem}\label{T:log-pl-multiple-approx-error}
-    Let $(t_m, i_m, J_m)$ be a sequence of observations from a multivariate
-    point processes with intensity as given in~\eqref{E:intensity-multiple}.
-    Set $\tau_n = t_n$.  Assume
-    \(
-        \sup_t \| x_t (i,j) \|
-    \)
-    and
-    \(
-        \sup_m | J_m |
-    \)
-    are bounded in probability.
-    If $\log \mathit{PL}$ and $\log \widetilde{\mathit{PL}}$ are as
-    defined in
-    \textnormal{(}\ref{E:log-pl-multiple}--\ref{E:log-pl-multiple-approx}\textnormal{)},
-    and $G_n$ is as defined in \eqref{E:growth-constant},
-    then for $\beta$ in a neighborhood of $\beta_0$,
-    \[
-        \Big\|
-        \nabla [\log \mathit{PL}_{\tau_n}(\beta) ]
-        -
-        \nabla [\log \widetilde{\mathit{PL}}_{\tau_n}(\beta) ]
-        \Big\|
-            =
-            \OhP(G_n),
-    \]
-    and
-    \[
-        \Big\|
-        \nabla^2 [\log \mathit{PL}_{\tau_n}(\beta) ]
-        -
-        \nabla^2 [\log \widetilde{\mathit{PL}}_{\tau_n}(\beta) ]
-        \Big\|
-            =
-            \OhP(G_n).
-    \]
-\end{theorem}
-\begin{corollary}\label{C:mple-approx-error}
-    Assume the setup of Theorem~\ref{T:log-pl-multiple-approx-error}.
-    Let $\hat \beta_n$ maximize $\log \mathit{PL}_{\tau_n}(\cdot)$
-    and let $\tilde \beta_n$ maximize
-    $\log \widetilde{\mathit{PL}}_{\tau_n}(\cdot)$.
-    Suppose for all $n$ that the norm of the Hessian,
-    \(
-        \|
-        \tfrac{1}{n}
-        \nabla^2
-        [ \log \mathit{PL}_{\tau_n}(\cdot)]
-        \|,
-    \)
-    is uniformly locally Lipschitz and bounded away from zero
-    in a neighborhood of $\hat \beta_n$.
-    If $G_n/n \toP 0$, then
-    \[
-        \| \tilde \beta_{\tau_n} - \hat \beta_{\tau_n} \|
-            =
-            \OhP(G_n/n).
-    \]
-\end{corollary}
+
+
+
 
 Suppose the true MPLE, $\hat \beta_n$, is a $\sqrt{n}$-consistent estimate of
 $\beta_0$ (Theorem~\ref{T:consistency} gives sufficient conditions).
-Corollary~\ref{C:mple-approx-error} says that if
+Theorem~\ref{T:mple-approx-error} says that if
 $|\mathcal{J}_{t_m}(i_m)|$ grows fast enough to make $G_n$ smaller than
 $\OhP(\sqrt{n})$, then the approximate MPLE, $\tilde \beta_n$ is \emph{also}
 $\sqrt{n}$-consistent.
@@ -1187,7 +1386,7 @@ consistently estimates the limiting covariance
 of $\sqrt{n}(\tilde \beta_n - \beta_0)$.  To get the mean, we use
 a parametric bootstrap.
 
-Assume the conditions of Corollary~\ref{C:mple-approx-error}.
+Assume the conditions of Theorem~\ref{T:mple-approx-error}.
 The residual $\tilde \beta_n - \beta_0$ depends continuously on $\beta_0$
 and the covariates, $x_t(i,j)$.  Since $\tilde \beta_n$ is a consistent
 estimator of $\beta_0$, we can estimate the bias in $\tilde \beta_n$ via
@@ -2025,69 +2224,97 @@ converges to zero uniformly in $\alpha$, concluding the proof.
 
 \section{Proofs of Multiple Recipient Results}\label{S:multiple-recipient-proofs}
 
-\begin{proof}[Proof of Theorem~\ref{T:log-pl-multiple-approx-error}]
-
-For subset $J \subseteq \mathcal{J}_t(i)$, set
-\begin{gather}
-    X_t(i, J) = \sum_{j \in J} x_t(i,j), \\
-    w_t(\beta, i, J)
-        = \exp\{ \beta^\trans X_t(i,J) \}.
-\end{gather}
-As a slight abuse of notation, when $j$ is an element of $\mathcal{J}_t(i)$,
-take ``$w_t(\beta, i, j)$'' to mean $w_t(\beta, i, \{j\})$.
-
-Define weights
-\begin{gather}
-    W_t(\beta, i; L)
-        = \sum_{\substack{J \subseteq \mathcal{J}_t(i), \\
-                          |J| = L}}
-              w_t(\beta,i,J), \\
-    \widetilde W_t(\beta, i; L)
-        =
-            \Big[ \sum_{j \in \mathcal{J}_t(i)} w_t(\beta, i, j) \Big]^L.
-\end{gather}
-
-Define gradients
-\begin{gather}
-    E_t(\beta, i; L)
-        = \nabla \big[ \log W_t(\beta, i; L) \big]
-        =
-        \frac{1}{W_t(\beta, i; L)}
-        \sum_{\substack{J \subseteq \mathcal{J}_t(i), \\
-                        |J| = L}}\!
-            w_t(i,J)
-            \,
-            X_t(i,J), \\
-    \widetilde E_t(\beta, i; L)
-        = \nabla \big[ \log \widetilde W_t(\beta, i; L) \big]
-        =
-        L
+\begin{lemma}\label{L:coupling-prob-bound}
+Using the notation and assumptions of 
+Theorem~\ref{T:log-pl-multiple-approx-error},
+\[
+    \mathbb{P}^\ast_{t,\beta,i;L}
+    \Big\{
+        (j_1, \ldots, j_L)
+            \neq
+            (\tilde \jmath_1, \ldots, \tilde \jmath_L)
+    \Big\}
+        \leq
+        {L \choose 2}
         \cdot
-        \frac{
+        \frac{\exp\{4 K \, \| \beta \|\}}{| \mathcal{J}_t(i) |},
+\]
+where $K = \sup_t \| x_t(i,j) \|$.
+\end{lemma}
+\begin{proof}
+\begin{align*}
+    \mathbb{P}^\ast_{t,\beta,i;L}
+    \Big\{
+        (j_1, \ldots, j_L)
+            \neq
+            (\tilde \jmath_1, \ldots, \tilde \jmath_L)
+    \Big\}
+        &=
+        \mathbb{P}^\ast_{t,\beta,i;L}
+        \Big\{
+            \text{$\tilde \jmath_1, \ldots, \tilde \jmath_L$ has a duplicate}
+        \} \\
+        &\leq
+        \sum_{k \leq l}
+            \mathbb{P}^\ast_{t,\beta,i;L}
+            \Big\{
+                \tilde \jmath_k = \tilde \jmath_l
+            \Big\} \\
+        &=
+            {L \choose 2}
             \sum_{j \in \mathcal{J}_t(i)}
-                w_t(\beta, i, j) \, x_t(i,j)
-        }{
-            \sum_{j \in \mathcal{J}_t(i)}
-                w_t(\beta, i, j)
-        }.
-\end{gather}
-The second is the expectation of $\sum_{l = 1}^L x_t(i, j_l)$ when
-$j_1, \ldots, j_L$ are drawn independently and identically from
-$\mathcal{J}_t(i)$ with weights $w_t(\beta, i, \cdot)$; the first is the same
-expectation, conditional on the event that $j_1, \ldots, j_L$ are all unique.
-Let $\tilde{\mathbb{P}}_{t,\beta,i;L}$ and $\mathbb{P}_{t,\beta,i;L}$
-denote the two probability laws for $j_1, \ldots, j_L$, and let
-$\tilde{\mathbb{E}}_{t,\beta,i;L}$ and $\mathbb{E}_{t,\beta,i;L}$ denote
-expectations with respect to them, so that
-$E_t(\beta,i;L) = \mathbb{E}_{t,\beta,i;L} \big[ \sum_{l=1}^L x_t(i,j_l)\big]$
-and
+                \Big[
+                    \frac{
+                        w_t(\beta, i, j)
+                    }{
+                        \sum_{j' \in \mathcal{J}_t(i)} w_t(\beta, i, j')
+                    }
+                \Big]^2.
+\end{align*}
+Note
 \(
-    \widetilde E_t(\beta,i;L)
-    =
-    \tilde{\mathbb{E}}_{t,\beta,i;L} \big[ \sum_{l=1}^L x_t(i,j_l)\big].
+    \exp\{-K \, \| \beta \|\}
+        \leq w_t(\beta,i,j)
+        \leq \exp\{K \| \, \beta \|\},
 \)
+so that
+\[
+    \sum_{j \in \mathcal{J}_t(i)}
+        \Big[
+            \frac{
+                w_t(\beta, i, j)
+            }{
+                \sum_{j' \in \mathcal{J}_t(i)} w_t(\beta, i, j')
+            }
+        \Big]^2.
+    \leq
+        \frac{\exp\{4 K \, \| \beta \|\}}{| \mathcal{J}_t(i) |}.
+    \qedhere
+\]    
+\end{proof}
 
-The Hessians are
+
+\begin{lemma}\label{L:hessian-approx-bound}
+Using the notation and assumptions of 
+Theorem~\ref{T:log-pl-multiple-approx-error},
+\begin{multline*}
+    \Big\|
+        \nabla^2\big[ \log \widetilde{\mathit{PL}}_t(\beta) \big]
+        -
+        \nabla^2\big[ \log \mathit{PL}_t(\beta) \big]
+    \Big\| \\
+        \leq
+            2K^2
+            \exp\{4 K \| \beta \|\}
+            \cdot
+            \sum_{t_m \leq t}
+                \frac{|J_m|^3 \, (|J_m| - 1)}{|\mathcal{J}_{t_m}(i_m)|}.
+\end{multline*}    
+\end{lemma}
+\begin{proof}
+The argument is similar to the bound on the difference in gradients in
+the proof of Theorem~\ref{T:log-pl-multiple-approx-error}.  The Hessians of 
+the weights are
 \begin{align}
     \begin{split}
     V_t(\beta,i;L)
@@ -2124,174 +2351,21 @@ The Hessians are
 The first is the covariance matrix of $\sum_{l=1}^L x_t(i,j_l)$ under
 $\mathbb{P}_{t,\beta,i;L}$; the second is the covariance matrix of the same
 quantity under $\tilde{\mathbb{P}}_{t,\beta,i;L}$.
-
-
-Write
-\[
-    \nabla \big[ \log \widetilde{\mathit{PL}}_t(\beta) \big]
-    -
-    \nabla \big[ \log \mathit{PL}_t(\beta )\big]
-        =
-        \sum_{t_m \leq t}
-            E_{t_m}\!(\beta, i_m; |J_m|)
-            -
-            \widetilde{E}_{t_m}\!(\beta, i_m; |J_m|).
-\]
-Recalling the representation in terms of probability laws $\mathbb{P}$ and
-$\tilde{\mathbb{P}}$,
-\[
-    E_{t}(\beta, i; L) - \widetilde{E}_t(\beta, i; L)
-        =
-        \mathbb{E}_{t,\beta,i;L}
-            \Big[ \sum_{l=1}^L x_t(i,j_l) \Big]
-        -
-        \widetilde{\mathbb{E}}_{t,\beta,i;L}
-            \Big[ \sum_{l=1}^L x_t(i,j_l) \Big].
-\]
-We bound the difference by coupling $\mathbb{P}$ and $\widetilde{\mathbb{P}}$.
-We define probability law $\mathbb{P}^\ast_{t,\beta,i;L}$ and associated
-random variables $j_1, \ldots, j_L$ and
-$\tilde \jmath_1, \ldots, \tilde \jmath_L$, such that marginally
-$j_1, \ldots, j_L$ are distributed according to $\mathbb{P}_{t,\beta,i;L}$
-and $\tilde \jmath_1, \ldots, \tilde \jmath_L$ are distributed according
-to $\tilde{\mathbb{P}}_{t,\beta,i;L}$.  Then,
-\begin{align*}
-    \Big\| E_{t}(\beta, i; L) &- \widetilde{E}_t(\beta, i; L) \Big\| \\
-        &=
-            \Big\|
-            \mathbb{E}_{t,\beta,i;L}^\ast
-            \Big[
-                \sum_{l=1}^L x_t(i,j_l)
-                -
-                \sum_{l=1}^L x_t(i, \tilde \jmath_l)
-            \Big]
-            \Big\| \\
-        &\leq
-            2 L
-            \cdot
-            \Big[
-                \sup_{j \in \mathcal{J}_t(i)}
-                \| x_t(i,j) \|
-            \Big]
-            \cdot
-            \mathbb{P}^\ast_{t,\beta,i;L}
-            \Big\{
-                (j_1, \ldots, j_L)
-                    \neq
-                    (\tilde \jmath_1, \ldots, \tilde \jmath_L)
-            \Big\}
-\end{align*}
-The coupling is as follows:
-\begin{enumerate}
-    \item Draw $(\tilde \jmath_1, \ldots, \tilde \jmath_L)$ according to
-        $\tilde{\mathbb{P}}_{t,\beta,i;L}$.
-    \item If $(\tilde \jmath_1, \ldots, \tilde \jmath_L)$ are all unique,
-        set $(j_1, \ldots, j_L) = (\tilde \jmath_1, \ldots, \tilde \jmath_L)$,
-        otherwise draw $(j_1, \ldots, j_L)$ independently according to
-        $\mathbb{P}_{t,\beta,i;L}$.
-\end{enumerate}
-Now,
-\begin{align*}
-    \mathbb{P}^\ast_{t,\beta,i;L}
-    \Big\{
-        (j_1, \ldots, j_L)
-            \neq
-            (\tilde \jmath_1, \ldots, \tilde \jmath_L)
-    \Big\}
-        &=
-        \mathbb{P}^\ast_{t,\beta,i;L}
-        \Big\{
-            \text{$\tilde \jmath_1, \ldots, \tilde \jmath_L$ has a duplicate}
-        \} \\
-        &\leq
-        \sum_{k \leq l}
-            \mathbb{P}^\ast_{t,\beta,i;L}
-            \Big\{
-                \tilde \jmath_k = \tilde \jmath_l
-            \Big\} \\
-        &=
-            {L \choose 2}
-            \sum_{j \in \mathcal{J}_t(i)}
-                \Big[
-                    \frac{
-                        w_t(\beta, i, j)
-                    }{
-                        \sum_{j' \in \mathcal{J}_t(i)} w_t(\beta, i, j')
-                    }
-                \Big]^2.
-\end{align*}
-
-
-Set $K = \sup_t \| x_t(i,j) \|$.  Then,
-\(
-    \exp\{-K \, \| \beta \|\}
-        \leq w_t(\beta,i,j)
-        \leq \exp\{K \| \, \beta \|\},
-\)
-so that
-\[
-    \mathbb{P}^\ast_{t,\beta,i;L}
-    \Big\{
-        (j_1, \ldots, j_L)
-            \neq
-            (\tilde \jmath_1, \ldots, \tilde \jmath_L)
-    \Big\}
-        \leq
-        {L \choose 2}
-        \cdot
-        \frac{\exp\{4 K \, \| \beta \|\}}{| \mathcal{J}_t(i) |},
-\]
-and
-\[
-    \Big\| E_{t}(\beta, i; L) - \widetilde{E}_t(\beta, i; L) \Big\|
-        \leq
-        K \, L^2 \, (L - 1)
-        \,
-        \frac{\exp\{4 K \, \| \beta \|\}}{| \mathcal{J}_t(i) |}.
-\]
-Thus,
-\[
-    \Big\|
-        \nabla\big[ \log \widetilde{\mathit{PL}}_t(\hat \beta _t ) \big]
-        -
-        \nabla\big[ \log {\mathit{PL}}_t(\hat \beta _t ) \big]
-    \Big\| \\
-        \leq
-            K
-            \exp\{4 K \| \beta \|\}
-            \cdot
-            \sum_{t_m \leq t}
-                \frac{|J_m|^2(|J_m| - 1)}{|\mathcal{J}_{t_m}(i_m)|}.
-\]
-We get the final bound by replacing the numerators of the summands
-with $\sup_m |J_m|$.
-
-The bound on the difference in Hessians follows by a similar argument.
-The relevant intermediate bounds are
+The result follows in the same manner as in the proof of 
+Theorem~\ref{T:log-pl-multiple-approx-error}.
+The relevant intermediate bounds is
 \[
     \Big\| V_{t}(\beta, i; L) - \widetilde{V}_t(\beta, i; L) \Big\|
         \leq
         2\, K^2 \, L^3 \, (L - 1)
         \,
         \frac{\exp\{4 K \, \| \beta \|\}}{| \mathcal{J}_t(i) |}.
+    \qedhere
 \]
-and
-\begin{multline*}
-    \Big\|
-        \nabla^2\big[ \log \widetilde{\mathit{PL}}_t(\beta) \big]
-        -
-        \nabla^2\big[ \log \mathit{PL}_t(\beta) \big]
-    \Big\| \\
-        \leq
-            2K^2
-            \exp\{4 K \| \beta \|\}
-            \cdot
-            \sum_{t_m \leq t}
-                \frac{|J_m|^3 \, (|J_m| - 1)}{|\mathcal{J}_{t_m}(i_m)|}.
-\end{multline*}
 \end{proof}
 
-\begin{proof}[Proof of Corollary~\ref{C:mple-approx-error}]
+
+\begin{proof}[Proof of Theorem~\ref{T:mple-approx-error}]
 
 We know that Newton's method applied to
 $\tfrac{1}{n}\log \widetilde{\mathit{PL}}_{\tau_n}(\cdot)$ converges to
