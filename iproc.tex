@@ -563,8 +563,8 @@ We don't actually require convergence of the whole sample path, but
 it turns out to be just as much effort to prove as convergence of the
 endpoint.  
 
-Consistency is a direct consequence of
-Theorem~\ref{T:score-fisher}.
+Consistency is a direct consequence of Theorem~\ref{T:score-fisher}
+(Appendix~\ref{S:MPLE-consistency-proofs} contains a proof).
 
 \begin{theorem}\label{T:consistency}
     Let $N$ be a multivariate counting process on with stochastic
@@ -792,104 +792,6 @@ The third term converges to zero by assumption~A\ref{A:integrated-cov-limit}, th
 
 \end{proof}
 
-\begin{proof}[Proof of Theorem~\ref{T:consistency}]
-We follow Haberman's approach to proving
-consistency, which relies on Kantorovich's analysis
-of Newton's method.  Tapia gives an elementary proof of the Kantorovich
-Theorem~\cite{haberman1977maximum,kantorovich1952functional,tapia1971kantorovich}.
-We state a weak form of the result as a lemma.
-
-\begin{lemma}[Kantorovich Theorem]\label{L:kantorovich}
-    Let $P(x) = 0$ be a general system of nonlinear equations, where $P$ is
-    a map between two Banach spaces.  Let $P'(x)$ denote the Jacobian
-    (Fr\'echet differential) of $P$ at $x$, assumed to exist in $D_0$,
-    a convex open neighborhood of $x_0$.  Assume the following:
-    \begin{enumerate}[(i)]
-        \item $\| [P'(x_0)]^{-1} \| \leq B$,
-        \item $\| [P'(x_0)]^{-1} P(x_0) \| \leq \eta$,
-        \item $\| P'(x) - P'(y) \| \leq K \| x - y \|$,\quad
-            for all $x$ and $y$ in $D_0$,
-    \end{enumerate}
-    with $h = B K \eta \leq \tfrac{1}{2}$.
-
-    Let $\Omega_\ast = \{ x : \| x - x_0 \| \leq 2 \eta \}$.
-    If $\Omega_\ast \subset D_0$, then the Newton iterates,
-    $x_{k+1} = x_k - [P'(x_k)]^{-1} P(x_k)$, are well defined, remain
-    in $\Omega_\ast$, and converge to $x^\ast$ in $\Omega_\ast$ such
-    that $P(x^\ast) = 0$.  In addition,
-    \[
-        \| x^\ast - x_k \|
-            \leq
-                \frac{\eta}{h}
-                \frac{(2h)^{2^k}}{2^k},
-        \qquad
-        k = 0, 1, 2, \ldots.
-    \]
-\end{lemma}
-
-Set $U_t(\cdot)$ and $I_t(\cdot)$ to be the gradient and negative
-Hessian of the log partial likelihood, as defined in
-(\ref{E:log-pl-gradient}--\ref{E:log-pl-neg-hessian}).  Since
-$I_t(\beta)$ is a sum of rank-one matrices with positive weights,
-it is positive semi-definite, and $\log \mathit{PL}_t(\cdot)$ is
-a concave function.  By the assumption that the smallest
-eigenvalue of $\Sigma_1(\cdot)$ is bounded away from zero in a neighborhood
-of $\beta_0$, for $n$ sufficiently large, if $\log \mathit{PL}_t(\cdot)$ has a 
-local minimum in that neighborhood then it must be the unique global maximum.
-
-We find the local maximum by applying Newton's method to the
-gradient of $\tfrac{1}{n} \log \mathit{PL}_{\tau_n}(\cdot)$, taking
-$\beta_0$ as the initial iterate.  Define
-\[
-   Z_n = -[\tfrac{1}{n} I_{\tau_n}(\beta_0)]^{-1} [ \tfrac{1}{n} U_{\tau_n}(\beta_0)].
-\]
-The first Newton iterate, $\beta_{n,1}$ is equal to $\beta_0 - Z_n$.
-Part (ii) of Theorem~\ref{T:score-fisher} and the
-assumptions of the theorem imply $[\tfrac{1}{n} I_{\tau_n}(\beta_0)]^{-1}$
-exists for $n$ large enough so that $Z_n$ is well-defined.  
-Moreover, Part (i) of Theorem~\ref{T:score-fisher} and Slutzky's Theorem imply
-$Z_n \toP 0$ and
-$\sqrt{n} \, Z_n \tod \Normal(0,\, [\Sigma_1(\beta_0)]^{-1})$.
-
-
-Apply Kantorovich's Theorem to bound $\| \hat \beta_n - \beta_0 \|$
-and $\| \hat \beta_n - \beta_{n,1} \|$.  By assumption, there exists
-a neighborhood of $\beta_0$, say $D_0$, and finite $K$ and $B$, such that
-\(
-    \|
-        \frac{1}{n} I_{\tau_n} (\beta)
-        -
-        \frac{1}{n} I_{\tau_n}(\beta')
-    \|
-    \leq
-    K
-    \|
-        \beta
-        -
-        \beta'
-    \|
-\)
-and
-\(
-    \| \frac{1}{n} [I_{\tau_n}(\beta_0)]^{-1} \| \leq B
-\)
-for $\beta, \beta' \in D_0$.
-Define $\eta_n = \| Z_n \|$ and $h_n = B K \eta_n$, noting that $h_n$ and
-$\eta_n$ are size $\OhP(n^{-1/2})$.  Thus, for $n$ large enough, the
-\begin{enumerate}[(i)]
-    \item $\| \hat \beta_n - \beta_0 \| \leq 2 \, \eta_n \toP 0$,
-    \item
-        \(
-            \sqrt{n} \, \| \hat \beta_n - (\beta_0 - Z_n) \|
-            \leq
-            2 \sqrt{n} \, \eta_n \, h_n
-            \toP 0.
-        \)
-\end{enumerate}
-Thus, $\hat \beta_n \toP \beta_0$, and $\sqrt{n} (\hat \beta_n - \beta_0)$
-and $\sqrt{n} \, Z_n$ converge weakly to the same limit.
-
-\end{proof}
 
 \section{Multicast Interactions}\label{S:multiple-receivers}
 
@@ -2187,6 +2089,106 @@ must converge to zero.  This proves that the second term in the bound on
     \right\|
 \)
 converges to zero uniformly in $\alpha$, concluding the proof.
+\end{proof}
+
+\subsection{Proof of Theorem~\ref{T:consistency}}\label{S:proof-consistency}
+
+We follow Haberman's approach to proving
+consistency, which relies on Kantorovich's analysis
+of Newton's method.  Tapia gives an elementary proof of the Kantorovich
+Theorem~\cite{haberman1977maximum,kantorovich1952functional,tapia1971kantorovich}.
+We state a weak form of the result as a lemma.
+
+\begin{lemma}[Kantorovich Theorem]\label{L:kantorovich}
+    Let $P(x) = 0$ be a general system of nonlinear equations, where $P$ is
+    a map between two Banach spaces.  Let $P'(x)$ denote the Jacobian
+    (Fr\'echet differential) of $P$ at $x$, assumed to exist in $D_0$,
+    a convex open neighborhood of $x_0$.  Assume the following:
+    \begin{enumerate}[(i)]
+        \item $\| [P'(x_0)]^{-1} \| \leq B$,
+        \item $\| [P'(x_0)]^{-1} P(x_0) \| \leq \eta$,
+        \item $\| P'(x) - P'(y) \| \leq K \| x - y \|$,\quad
+            for all $x$ and $y$ in $D_0$,
+    \end{enumerate}
+    with $h = B K \eta \leq \tfrac{1}{2}$.
+
+    Let $\Omega_\ast = \{ x : \| x - x_0 \| \leq 2 \eta \}$.
+    If $\Omega_\ast \subset D_0$, then the Newton iterates,
+    $x_{k+1} = x_k - [P'(x_k)]^{-1} P(x_k)$, are well defined, remain
+    in $\Omega_\ast$, and converge to $x^\ast$ in $\Omega_\ast$ such
+    that $P(x^\ast) = 0$.  In addition,
+    \[
+        \| x^\ast - x_k \|
+            \leq
+                \frac{\eta}{h}
+                \frac{(2h)^{2^k}}{2^k},
+        \qquad
+        k = 0, 1, 2, \ldots.
+    \]
+\end{lemma}
+
+\begin{proof}[Proof of Theorem~\ref{T:consistency}]
+Set $U_t(\cdot)$ and $I_t(\cdot)$ to be the gradient and negative
+Hessian of the log partial likelihood, as defined in
+(\ref{E:log-pl-gradient}--\ref{E:log-pl-neg-hessian}).  Since
+$I_t(\beta)$ is a sum of rank-one matrices with positive weights,
+it is positive semi-definite, and $\log \mathit{PL}_t(\cdot)$ is
+a concave function.  By the assumption that the smallest
+eigenvalue of $\Sigma_1(\cdot)$ is bounded away from zero in a neighborhood
+of $\beta_0$, for $n$ sufficiently large, if $\log \mathit{PL}_t(\cdot)$ has a 
+local minimum in that neighborhood then it must be the unique global maximum.
+
+We find the local maximum by applying Newton's method to the
+gradient of $\tfrac{1}{n} \log \mathit{PL}_{\tau_n}(\cdot)$, taking
+$\beta_0$ as the initial iterate.  Define
+\[
+   Z_n = -[\tfrac{1}{n} I_{\tau_n}(\beta_0)]^{-1} [ \tfrac{1}{n} U_{\tau_n}(\beta_0)].
+\]
+The first Newton iterate, $\beta_{n,1}$ is equal to $\beta_0 - Z_n$.
+Part (ii) of Theorem~\ref{T:score-fisher} and the
+assumptions of the theorem imply $[\tfrac{1}{n} I_{\tau_n}(\beta_0)]^{-1}$
+exists for $n$ large enough so that $Z_n$ is well-defined.  
+Moreover, Part (i) of Theorem~\ref{T:score-fisher} and Slutzky's Theorem imply
+$Z_n \toP 0$ and
+$\sqrt{n} \, Z_n \tod \Normal(0,\, [\Sigma_1(\beta_0)]^{-1})$.
+
+
+Apply Kantorovich's Theorem to bound $\| \hat \beta_n - \beta_0 \|$
+and $\| \hat \beta_n - \beta_{n,1} \|$.  By assumption, there exists
+a neighborhood of $\beta_0$, say $D_0$, and finite $K$ and $B$, such that
+\(
+    \|
+        \frac{1}{n} I_{\tau_n} (\beta)
+        -
+        \frac{1}{n} I_{\tau_n}(\beta')
+    \|
+    \leq
+    K
+    \|
+        \beta
+        -
+        \beta'
+    \|
+\)
+and
+\(
+    \| \frac{1}{n} [I_{\tau_n}(\beta_0)]^{-1} \| \leq B
+\)
+for $\beta, \beta' \in D_0$.
+Define $\eta_n = \| Z_n \|$ and $h_n = B K \eta_n$, noting that $h_n$ and
+$\eta_n$ are size $\OhP(n^{-1/2})$.  Thus, for $n$ large enough, the
+\begin{enumerate}[(i)]
+    \item $\| \hat \beta_n - \beta_0 \| \leq 2 \, \eta_n \toP 0$,
+    \item
+        \(
+            \sqrt{n} \, \| \hat \beta_n - (\beta_0 - Z_n) \|
+            \leq
+            2 \sqrt{n} \, \eta_n \, h_n
+            \toP 0.
+        \)
+\end{enumerate}
+Thus, $\hat \beta_n \toP \beta_0$, and $\sqrt{n} (\hat \beta_n - \beta_0)$
+and $\sqrt{n} \, Z_n$ converge weakly to the same limit.
 \end{proof}
 
 \section{Proofs of Multiple Recipient Results}\label{S:multiple-recipient-proofs}
