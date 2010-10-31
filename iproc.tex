@@ -1251,21 +1251,21 @@ of $\mathcal{J}_{t_m}(i_m)$ with size $|J_m|$ whose elements are drawn
 proportional to $w_{t_m}(\tilde \beta, i_m, \cdot)$.
 We then get a bootstrap approximate MPLE, $\tilde \beta^{(r)}$, by maximizing
 $\widetilde{\mathit{PL}}_{t_n}^{(r)}$, where
-\begin{multline*}
+\[
     \log \widetilde{\mathit{PL}}_{t}^{(r)}\!(\beta) \\
         =
         \sum_{t_m \leq t}
-        \bigg\{
+        \bigg\{\!\!
             \sum_{j \in J_m^{(r)}}\!
                 \beta^\trans x_{t_m}\!(i_m, j)
             -
             \log\big[
                 \!\!\!\!
-                \sum_{j \in \mathcal{J}_{t_m}\!(i_m)}
+                \sum_{j \in \mathcal{J}_{t_m}\!(i_m)}\!\!\!\!\!\!
                     \exp\{ \beta^\trans x_{t_m}\!(i_m, j)\}
             \big]^{|J_m^{(r)}|}
         \bigg\}.
-\end{multline*}
+\]
 Note that $x_t(i,j)$ is determined from the original dataset, not the
 bootstrap dataset.  For each bootstrap replicate, we get a residual
 $\tilde \beta_n^{(r)} - \tilde \beta_n$.  With $R$ bootstrap
