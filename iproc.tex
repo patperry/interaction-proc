@@ -1019,7 +1019,7 @@ Introduce the receiver set growth sequence
     G_n
         =
             \sum_{t_m \leq \tau_n}
-                \frac{1}{|\mathcal{J}_{t_m}(i_m)|}.
+                \frac{1\{|J_m| > 1\}}{|\mathcal{J}_{t_m}(i_m)|}.
 \end{equation}
 This sequence plays a critical role in bounded the error introduced by
 replacing $\log \mathit{PL}$ with $\log \widetilde{\mathit{PL}}$.
@@ -1033,7 +1033,7 @@ growth.  For example, the Cauchy-Schwartz inequality gives
             \cdot
             \bigg[
                 \sum_{t_m \leq \tau_n}
-                    \frac{1}{|\mathcal{J}_{t_m}(i_m)|^2}
+                    \frac{1\{|J_m| > 1\}}{|\mathcal{J}_{t_m}(i_m)|^2}
             \bigg]^{1/2},
 \]
 so if $|\mathcal{J}_{t_m}(i_m)| = \omega(\sqrt{m})$ then
@@ -1273,7 +1273,7 @@ Using the same methods, Lemma~\ref{L:hessian-approx-bound} derives the bound
 on the difference in Hessians.
 \end{proof}
 
-\subsection{Bias from the Approximate Partial Likelihood}
+\subsection{Bias Correction from the Approximate Partial Likelihood}
 \label{S:approximation-bias}
 
 When we use ad-hoc duplication, we are performing approximate inference
@@ -1282,7 +1282,7 @@ multicast model, computing the partial likelihood in \eqref{E:log-pl-multiple}
 involves an intractable combinatorial sum, so we may result to using the
 approximation instead.  Maximizing $\log \widetilde{\mathit{PL}}_t(\cdot)$ 
 instead of $\log \mathit{PL}_t(\cdot)$ introduces bias in the estimate of 
-$\beta_0$.  Theorem~\ref{T:mple-approx-error} bounds the bias.
+$\beta_0$.  Theorem~\ref{T:mple-approx-error} (proved in Appendix~\ref{S:multiple-recipient-proofs}) bounds the bias.
 
 \begin{theorem}\label{T:mple-approx-error}
     Assume the setup of Theorem~\ref{T:log-pl-multiple-approx-error}.
@@ -1301,69 +1301,22 @@ $\beta_0$.  Theorem~\ref{T:mple-approx-error} bounds the bias.
     in a neighborhood of $\hat \beta_n$.
     If $G_n/n \toP 0$, then
     \[
-        \| \tilde \beta_{\tau_n} - \hat \beta_{\tau_n} \|
+        \| \tilde \beta_{n} - \hat \beta_{n} \|
             =
             \OhP(G_n/n).
     \]
 \end{theorem}
 
-\clearpage
-
-
-Theorems in Section~\ref{S:bias-correction} show that in certain situations,
-the bias is on the order of the standard error of the estimate and can be
-corrected.
-
-
-
-
-%This form provides ease of interpretability, in the sense that at time
-%$t$, changing receiver $j$'s covariates from $x_t(i,j)$ to
-%$x'_t(i,j)$ results in scaling the rate of interactions $i \rightarrow j$ by
-%\(
-%    \exp\big\{ \beta_0^\trans \big(x'_t(i,j) - x_t(i,j)\big) \big\};
-%\)
-%importantly, this does not depend on $\bar \lambda_t(i; L)$.
-
-\begin{figure}
-    %\includegraphics[scale=0.6]{figures/recipient-counts}
-    \caption{
-        \textsc{Message recipient counts.}
-        Each of the 21,635 points corresponds to a message, with the
-        $y$-value equal to the log (base 2) of the number of recipients
-        for that message.  The message sent to the most people
-        had 57 recipients.  In our analysis, we exclude messages with more
-        than 10 recipients.
-    }\label{F:recipient-counts}
-\end{figure}
-
-
-
-
-
-*****
-
-The multicast case can be considered as a special case of
-the single receiver case where $\mathcal{I} \times \mathbb{N}_+$
-is the sender set and power set $\mathcal{P}(\mathcal{J})$ is the
-receiver set.  For sender $(i,L)$, take $\bar \lambda(i ; L)$ to be the
-baseline send intensity and take
-$\{ J \subseteq \mathcal{J}_t(i) : |J| = L\}$ to be the recipient set; for
-sender-receiver pair $\big((i,L), J\big)$, take $\sum_{j \in J} x_t(i,j)$ to
-be the covariate vector.  Consistency of the MPLE now follows from
-the theory for the single recipient case (proved in
-Section~\ref{S:MPLE-consistency}).
-
-
-
-Here, we analyze the bias introduced by using the approximate partial
-likelihood.  As noted previously, this is equivalent to treating messages with
-multiple recipients as multiple single-recipient messages.  Let
-$\mathit{PL}$ denote the true partial likelihood and let $\widetilde{\mathit{PL}}$
-denote the approximation as given in \eqref{E:log-pl-multiple}
-and \eqref{E:log-pl-multiple-approx}.  
-
-
+It remains to be shown that $\hat \beta_n$ is a consistent estimator of
+$\beta_0$.  This follows from the theory in Section~\ref{S:MPLE-consistency} 
+since the multicast case can be considered as a special case of
+the single receiver case.  The product $\mathcal{I} \times \mathbb{N}_+$
+is the sender set and the power set $\mathcal{P}(\mathcal{J})$ is the
+receiver set.  For sender $(i,L)$, the process $\bar \lambda(i ; L)$ is the
+baseline send intensity and $\{ J \subseteq \mathcal{J}_t(i) : |J| = L\}$ is the receiver set; for
+sender-receiver pair $\big((i,L), J\big)$, vector $\sum_{j \in J} x_t(i,j)$ is
+the covariate vector.  Consistency of the MPLE now follows from
+Theorem~\ref{T:consistency}.
 
 
 
@@ -1422,6 +1375,20 @@ replicates, we estimate the bias by
 \]
 We adjust for the bias by replacing $\tilde \beta_n$ with
 $\tilde \beta_n - \widehat{\mathrm{bias}}$.
+
+
+\begin{figure}
+    %\includegraphics[scale=0.6]{figures/recipient-counts}
+    \caption{
+        \textsc{Message recipient counts.}
+        Each of the 21,635 points corresponds to a message, with the
+        $y$-value equal to the log (base 2) of the number of recipients
+        for that message.  The message sent to the most people
+        had 57 recipients.  In our analysis, we exclude messages with more
+        than 10 recipients.
+    }\label{F:recipient-counts}
+\end{figure}
+
 
 
 \section{Modeling the Enron Data}\label{S:enron-modeling}
