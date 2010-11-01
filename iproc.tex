@@ -418,6 +418,14 @@ $\log \mathit{PL}_t(\cdot)$ are
 We call $U_t(\beta_0)$ the unnormalized score and $I_t(\beta_0)$
 the Fisher information matrix.
 
+For small-to-medium datasets, one can fit proportional intensity models
+using \texttt{coxph} from the \texttt{survival} package for R
+\cite{therneau2009survival}.  Unfortunately, with time-varying
+covariates, there are no sufficient statistics and most interaction datasets
+are too large for the package to handle.  We describe a custom gradient-based
+optimization method in  Appendix~\ref{S:implementation} that takes advantage
+of sparsity in $x_t(i,j)$.
+
 \section{Consistency of Maximum Partial Likelihood Inference}
 \label{S:MPLE-consistency}
 
@@ -1319,7 +1327,7 @@ the asymptotic framework are natural.
 
 ****
 
-, and Appendix~\ref{S:implementaiton} presents
+, and Appendix~\ref{S:implementation} presents
 an efficient algorithm for computing them.  In practice, the
 Hessian of $\log \mathit{PL}_t(\cdot)$ may be singular; when this is
 the case, we introduce linear constraints on the parameters to make
@@ -1702,7 +1710,7 @@ Assistant, Attorney, Counsel, Employee, Manager, Specialist, Trader).
 
 
 
-\section{Implementation}\label{S:implementaiton}
+\section{Implementation}\label{S:implementation}
 
 For small-to-medium datasets, one can fit proportional intensity models
 using \texttt{coxph} from the \texttt{survival} package for R
