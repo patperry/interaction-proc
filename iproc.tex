@@ -689,10 +689,10 @@ locally square integrable with predictable variation
 \end{align}
 
 Now we rescale time.  For each positive $n$ define a discretized time-scaled version of the score that is right-continuous with limits from the left.  The process is defined for times $\alpha$ in $[0,1]$; between times in $[\tfrac{k}{n}, \tfrac{k+1}{n})$, it takes the value $U_{\tau_k}$; i.e.,
-\[
+\begin{equation}\label{E:score-time-scaled}
     \tilde U_{\alpha}^{(n)}(\beta)
         = U_{\tau_{\lfloor \alpha n \rfloor}}(\beta).
-\]
+\end{equation}
 
 Part~\textit{(\ref{I:score-part})}: 
 Lemma~\ref{L:adapted-martingale} shows that $\tilde U_\alpha^{(n)}(\beta_0)$ is a square-integrable martingale
@@ -777,6 +777,7 @@ using the relation~\eqref{E:var-estimate-relation} yields
             \Sigma_{\alpha}(\beta_0)
         \right\|.
 \end{align*}
+We show that all three terms converge to zero in probability.
 The first term above is uniformly bounded by
 \(
     \sup_{n',i}
@@ -786,9 +787,15 @@ The first term above is uniformly bounded by
             V_{\tau_{n'}}(\beta_0, i)
         \|,
 \)
-which converges to zero since $\hat \beta_n \toP \beta_0$ by hypothesis of the theorem and
-$\{ V_{\tau_{n'}}(\cdot, i) \}$ is an equicontinuous family by assumption~A\ref{A:var-equicont}.  Lemma~\ref{L:Lenglart} proves, as a consequence of assumption~A\ref{A:message-times-finite} and Lenglart's Inequality~\cite{lenglart1977relation}, that the second term converges to zero uniformly in $\alpha$.
-The third term converges to zero by assumption~A\ref{A:integrated-cov-limit}, thereby concluding the proof.
+which converges to zero since $\hat \beta_n \toP \beta_0$ by 
+hypothesis of the theorem and $\{ V_{\tau_{n'}}(\cdot, i) \}$ is an 
+equicontinuous family by assumption~A\ref{A:var-equicont}.  
+Lemma~\ref{L:Lenglart} proves, as a consequence of 
+assumption~A\ref{A:message-times-finite} and Lenglart's 
+Inequality~\cite{lenglart1977relation}, that the second term converges to zero 
+uniformly in $\alpha$.
+The third term converges to zero by 
+assumption~A\ref{A:integrated-cov-limit}, thereby concluding the proof.
 
 \end{proof}
 
@@ -1957,8 +1964,9 @@ With $\Oh(|\mathcal{I}|)$ processors, we can compute these quantities in time
 \section{Proofs of MPLE Results}\label{S:MPLE-consistency-proofs}
 
 \begin{lemma}\label{L:adapted-martingale}
-$\tilde U_\alpha^{(n)}(\beta_0)$ from *** is a square-integrable martingale
-adapted to
+Using the notation of Theorem~\ref{T:score-fisher}, under assumption 
+A\ref{A:square-int} the process $\tilde U_\alpha^{(n)}(\beta_0)$ 
+from~\eqref{E:score-time-scaled} is a square-integrable martingale adapted to
 \(
     \mathcal{\tilde F}^{(n)}_\alpha
         =
@@ -2016,7 +2024,9 @@ square integrability, note
 \end{proof}
 
 \begin{lemma}\label{L:Lindeberg-condition}
-The Lindeberg condition is that for any positive $\varepsilon$,
+Using the notation of Theorem~\ref{T:score-fisher}, under assumption 
+A\ref{A:square-int}, the Lindeburg condition for Rebolledo's Centrial Limit 
+Theorem is satisfied: for any positive $\varepsilon$,
 \[
     \frac{1}{n}
     \sum_{i,j}
@@ -2036,19 +2046,31 @@ With $K = \sup_{t,i,j} \| x_t(i,j)\|$ as above, the integral is bounded by
     \cdot
     \frac{\Lambda_{\tau_n}}{n}.
 \)
-Since $\E K^2 < \infty$, the first term converges to zero in probability.
-Since $\E \Lambda_{\tau_n} = \E N_{\tau_n} = n$, the product of the two also
+Since $\E K^2 < \infty$ by assumption A\ref{A:square-int}, the first term 
+converges to zero in probability.  Since
+$\E \Lambda_{\tau_n} = \E N_{\tau_n} = n$, the product of the two also
 converges to zero in probability.  Thus, the Lindeberg condition is satisfied.
 \end{proof}
 
 
 \begin{lemma}\label{L:Lenglart}
-Foo
+Using the notation of Theorem~\ref{T:score-fisher}, under assumptions
+A\ref{A:square-int}~and~A\ref{A:message-times-finite}
+\[
+    \left\|
+            \frac{1}{n}
+            \sum_i
+            \int_0^{\tau_{\lfloor \alpha n \rfloor}}
+                V_s(\beta_0, i) \, dM_s(i)
+    \right\|
+        \toP 0
+\]
+uniformly in $\alpha$.
 \end{lemma}
 
 \begin{proof}
-Lenglart's Inequality and assumption~A\ref{A:message-times-finite} imply that for
-any positive $\rho$ and $\delta$,
+Lenglart's Inequality and assumption~A\ref{A:message-times-finite} imply that 
+for any positive $\rho$ and $\delta$,
 \begin{multline*}
     \mathbb{P}\left\{
         \sup_{t \in [0,\tau_n]}
@@ -2076,19 +2098,11 @@ any positive $\rho$ and $\delta$,
 (see Fleming and Harrington's Cor.~3.4.1 for a related proof
 \cite{fleming1991counting}).    As in the proof of
 Lemma~\ref{L:adapted-martingale}, set $K = \sup_{t,i,j} \| x_t(i,j) \|$.
-The sum in the second term is bounded by
-$\frac{K^4}{n} \cdot \frac{\Lambda_{\tau_n}}{n}$.  Since $n^{-1/2} K^2 \toP 0$
-and $\E \Lambda_{\tau_n} = n$, the right hand side of the inequality converges
-to $\frac{\delta}{\rho^2}$.  Since $\delta$ is arbitrary, the right hand side
-must converge to zero.  This proves that the second term in the bound on
-\(
-    \left\|
-        \tfrac{1}{n} I_{\tau_{\lfloor \alpha n \rfloor}}(\hat \beta_n)
-        -
-        \Sigma_{\alpha} (\beta_0)
-    \right\|
-\)
-converges to zero uniformly in $\alpha$, concluding the proof.
+The sum is bounded by $\frac{K^4}{n} \cdot \frac{\Lambda_{\tau_n}}{n}$.  
+Since $n^{-1/2} K^2 \toP 0$ by assumption A\ref{A:square-int} and
+$\E \Lambda_{\tau_n} = n$, the right hand side of the inequality converges to 
+$\frac{\delta}{\rho^2}$.  Since $\delta$ is arbitrary, the right hand side
+must converge to zero.
 \end{proof}
 
 \subsection{Proof of Theorem~\ref{T:consistency}}\label{S:proof-consistency}
