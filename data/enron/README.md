@@ -56,6 +56,9 @@ SQlite3 database called `enron.db`. It then imports the data from
 the `sqlite3` program must be in your path. See `schema.sql` for the database
 schema.
 
+The raw data files from Zhou et al. are `employeeDirsChp3New.txt` and
+`EmpInfo.pdf`.
+
 
 Employee Information (employees.tsv)
 ------------------------------------
