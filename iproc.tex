@@ -25,7 +25,7 @@
 \title{%
     Consistent partial-likelihood
     %Maximum-likelihood
-    inference for directed interaction data with covariates
+    inference for directed interaction data with covariates%
     %A model for repeated interactions with applications to e-mail traffic
     %analysis%
     \protect\thanksref{T1}
@@ -60,18 +60,7 @@
 \end{aug}
 
 \begin{abstract}
-Data derived from repeated directed interactions amongst entities are fast becoming
-common in statistical analysis, communications networks being one canonical example.  Here we consider partial-likelihood inference for the general case of directed interaction data in the presence of covariates.  We model these interactions in continuous time as a point process, by way of a Cox multiplicative intensity model to adjust for reciprocation effects and obtain accurate
-estimates of group-level *** social behavior.  We prove that the estimation
-procedure is asymptotically consistent as the time increases.  We also prove
-that improper handling of interactions between more than two individuals
-leads to bias in the estimates, and we show how to correct the bias.  Our
-motivating example is estimating gender-level e-mail preferences in a
-corporate e-mail network.
-
-We give conditions under which the bias can be corrected.
-
-*** And also describe an efficient implementation of the resulting inference and bootstrap procedures.
+Network data often take the form of counts of repeated interactions over time.  Here we consider partial-likelihood inference for the general case of \emph{directed} interactions involving initiators and receivers, communications data being a canonical example.  We model these data in continuous time by way of a point process representation, using a Cox multiplicative intensity model that takes into account covariates that depend on the history of the process.  We prove consistency and asymptotic Normality of our estimation procedure as time increases, in contrast to the fixed-interval setting typical of the clinical trials literature.  We also address the issue of consistent inference for interactions with multiple receivers, which has been largely ignored in the network literature to date.  We show that treating these as multiple separate interactions leads to biased estimators, and we give conditions under which this bias can be corrected. We also describe an efficient implementation of the resulting inference and bootstrap procedures, and conclude with a data analysis example showing the effects of reciprocity and group-level preferences on message sending behavior in a corporate e-mail dataset.
 \end{abstract}
 
 \begin{keyword}[class=AMS]
@@ -80,10 +69,10 @@ We give conditions under which the bias can be corrected.
 \end{keyword}
 
 \begin{keyword}
-    \kwd{random graphs}
-    \kwd{networks}
+    \kwd{Cox proportional hazards model}
+    \kwd{network data analysis}
+    \kwd{partial likelihood inference}
     \kwd{point processes}
-    \kwd{inference}
 \end{keyword}
 
 \end{frontmatter}
@@ -91,126 +80,22 @@ We give conditions under which the bias can be corrected.
 
 \section{Introduction}
 
-Networks of relational data are fast becoming more prevalent, and therefore an increasingly pressing subject of scientific and statistical enquiry.  While such networks are typically framed as ``ties'' between entities, it is often the case in practice that network observables comprise counts of interactions between individuals or groups tabulated over time.  Modern-day communications networks give rise to important examples of \emph{directed} interactions: phone calls, text messages, or e-mails exchanged amongst a given set of individuals over a specific time period \cite{eagle2006reality,tyler2005email}.  Other examples of interactions include animal association patterns (for instance, zebras congregate at locations in their habitat \cite{sundaresan2007network}); gang homicides (e.g., gangs in Chicago murder members of rival factions \cite{papachristos2009murder}; legislation cosponsorship (legislators author bills, which others then sponsor \cite{fowler2006connecting}); and migration patterns (for example, families migrate between communities in Mexico \cite{mckenzie2007network}).
+Much effort has recently been devoted to the statistical analysis of network data; see~\cite{goldenberg2009survey,jackson2010social,kolaczyk2009statistical} for recent overviews.  While such data are typically treated as ``ties'' between entities, it is often the case in practice that network observables comprise counts of interactions between individuals or groups tabulated over time.  Modern-day communications networks give rise to important examples of \emph{directed} interactions: phone calls, text messages, or e-mails exchanged amongst a given set of individuals over a specific time period \cite{eagle2006reality,tyler2005email}.  Other examples of tabulated interactions include animal association patterns (for instance, zebras congregate at locations in their habitat \cite{sundaresan2007network}); gang homicides (e.g., gangs in Chicago murder members of rival factions \cite{papachristos2009murder}; legislation cosponsorship (legislators author bills, which others then sponsor \cite{fowler2006connecting}); and migration patterns (for example, families migrate between communities in Mexico \cite{mckenzie2007network}).
 
-In this article, we consider partial-likelihood inference for the general case of directed interaction data in the presence of covariates.  We first develop the theory for the case in which interactions are strictly pairwise, and then generalize our results to the multiple-interaction case; we also provide efficient algorithms for partial likelihood maximization in these settings.  Our main assumptions are that the interactions are instantaneous; that the corresponding stochastic intensities used to model them are formally predictable and continuous; and that any covariates are locally bounded and predictable.
+In this article, we consider partial-likelihood inference for the general case of directed interaction data in the presence of covariates.  We first develop asymptotic theory for the case in which interactions are strictly pairwise, and then generalize our results to the multiple-interaction case; we also provide efficient algorithms for partial likelihood maximization in these settings.  Our main assumptions are that the interactions are instantaneous; that the corresponding stochastic intensities used to model them are formally predictable and continuous; and that any covariates are locally bounded and predictable.
 
-The interaction datasets we consider comprise a set of triples $(t,i,j)$ indicating that at time $t$, the directed interaction $i\rightarrow j$ took place; for instance, individual $i$ e-mailed individual $j$.  Given a set of such triples and covariate information about the corresponding initiators and receivers, a primary modeling goal is to determine which characteristics and behaviors are predictive of interaction.  In this vein, at least two questions are relevant:
+The interaction data we consider comprise a set of triples $(t,i,j)$ indicating that at time $t$, the directed interaction $i\rightarrow j$ took place; for instance, individual $i$ sent a message to individual $j$.  Given a set of such triples and covariate information about the corresponding initiators and receivers, a primary modeling goal is to determine which characteristics and behaviors are predictive of interaction.  In this vein, three important questions stand out; the first is a longstanding one in studies of human behavior~\cite{mcpherson2001birds}, whereas the latter two have yet to receive due attention in the network literature:
 
-\begin{enumerate}
-    \item Is a shared attribute between entities predictive of increased
-    interaction?
+\begin{description}
+    \item[Homophily] Is a shared attribute predictive of increased
+    interaction between entities?  Is evidence of homophily---a heightened rate of interaction among similar individuals---present?
 
-    \item If entity $i$ initiates an interaction with entity $j$, is this
-    associated with $j$ being more likely to interact with $i$ in the future?
-    If so, how does this effect decay with time?
-\end{enumerate}
+    \item[Reciprocity] Are past interactions $i \rightarrow j$ predictive of future reciprocal interactions $j \rightarrow i$? If so, how might this effect decay with time?
 
-%We begin with a motivating example:
+    \item[Multiplicity] How should multiple-recipient interactions of the type $i \rightarrow \{j_1,j_2,\ldots\}$ be modeled?  What are the effects of treating these as separate pairwise interactions?
+\end{description}
 
-In the remainder of this article, we provide a modeling framework and efficient maximum-likelihood inference procedures to facilitate an analysis of such questions.  Section~\ref{S:model-elicitation} elicits a model appropriate for directed interactions.
-Section~\ref{S:point-process-model} presents the basic multiplicative
-intensity model,
-Section~\ref{S:multiple-receivers} discusses extensions for multiple
-receivers, and Sections~\ref{S:enron-modeling}~and~\ref{S:gender-bias}
-present the results of fitting the model to the e-mail network.  We
-prove asymptotic consistency for the single-receiver setting in
-Section~\ref{S:MPLE-consistency}, and investigate bias in the multiple
-receiver setting in Section~\ref{S:bias-correction}.
-Section~\ref{S:discussion} concludes with discussion; further details and
-proof of the theorems are provided in the appendices.
-
-\section{Model Elicitation}\label{S:model-elicitation}
-
-In studying human behavior, Sociologists repeatedly find evidence of homophily,
-the tendency of individuals to associate with similar others
-\cite{mcpherson2001birds}. A typical inquiry is to see if people with identical
-genders interact more often then people with differing genders.  For instance, in a standard dataset comprising 4 years of e-mail exchanges amongst members of the Enron corporation (see Appendix~\ref{S:enron-corpus}), one might wish to test for gender bias in both group-level behaviors. The relevant data are summarized in Table~\ref{T:gender-send-counts},
-\begin{table}[t]
-    \input{tables/gender-send-counts}
-    \caption{
-        Directed interactions (21,635 e-mails) among 43 female and 114 male Enron employees; multiple-recipient messages are tabulated as separate pairwise interactions (38,388 total).
-    }
-    \label{T:gender-send-counts}
-\end{table}
-if we treat the messages as independent and identically distributed observations,
-then any reasonable test will find gender bias in both group-level behaviors.
-Given that a female is sending a message, the probability that the recipient
-is male will be estimated to be about 0.48, with a standard error around
-0.004; given that a male is sending a message, the estimate will be about
-0.23 with a standard error around 0.002.  Since these proportions fail to agree with the proportions of 28\% female and 72\% male employees, we would apparently conclude that bias is present in each group, associated with higher
-within-group sending rates.
-
-There are three main problems with this simple analysis:
-\begin{enumerate}
-    \item \textbf{Self-interactions may be excluded.} In the language of contingency table analysis, there may be ``structural zeros'' along the main *** diagonal of the table; this is well known to preclude closed-form maximum likelihood estimates even under simple models.\footnote{In network terminology, ``self-loops'' may be excluded; this often results in an approximate maximum-likelihood analysis.}
-
-    \item \textbf{Interactions cannot necessarily be assumed independent.} For instance, as we show in Section~\ref{**}, we may wish to test for group-level reciprocation effects: whether or not recent interactions are predictive of future interactions.
-
-    \item \textbf{Interactions may not be strictly pairwise.} As we show in Section~\ref{**}, treating extra-dyadic interactions as separate pairwise ones in general leads to bias in parameter estimates.
-\end{enumerate}
-The first issue is easy to fix, but the other two require significant
-attention.
-
-***
-
-Traditionally, count data such as these are treated via contingency table analysis; in the presence of covariates, log-linear models are often used.
-
-Consider the example of data derived from a communications network:
-
-As far as we are aware, this is the first time that such machinery has been brought to bear on network-style relational data.
-
-***
-
-In the motivating example of e-mail exchanges given above, 1) corresponds to the fact that users do not typically interact with themselves via e-mail; 2) to the fact that if $i$ sends $j$ a message today, $j$ is more likely to send to $i$ tomorrow---any inherent gender bias will be exaggerated by reciprocation effects; and 3) is evidenced by the fact that more than 30\% of the messages in the Enron dataset have more than one recipient.
-
-
-\begin{figure}
-    %\includegraphics[scale=0.6]{figures/kernel-intensity}
-    \caption{
-        \textsc{Messages sent by the first employee in the Enron dataset.}
-        Each of the 413 messages sent by the employee is represented by a point
-        whose $x$ value is the time of the message and whose $y$ value is a
-        random jitter around zero.  The curve above the points is a kernel
-        intensity estimate of the sending rate with a Gaussian kernel
-        and bandwidth chosen by Silverman's rule of thumb.  The area
-        under the curve is 413, the number of messages sent by the
-        employee.
-    }
-    \label{F:kernel-intensity}
-\end{figure}
-
-We propose using a Cox proportional intensity model with history-dependent
-covariates to address the first two issues mentioned above, and a parametric
-bootstrap to address the third.
-
-******
-
-One feature of~\eqref{E:log-pl} deserving emphasis is that we are using
-a different baseline intensity for each sender. In the survival analysis
-terminology, the model is stratified by sender. We make this modeling
-choice because the individuals have highly idiosyncratic sending behaviors
-(see Fig.~\ref{F:send-intensities}).
-\begin{figure}
-    %\includegraphics[scale=0.6]{figures/send-intensities}
-    \caption{
-        \textsc{Send intensities of all 156 employees in the Enron
-        dataset.}  The curves in the right panel are constructed as in
-        Fig.~\ref{F:kernel-intensity}, except normalized so that the
-        area under each curve is one.   The left panel shows a quantile plot
-        of the number of the normalization constants,
-        the messages sent per sender (numbers range from 1 to 3,844).
-        Colors are consistent across the two panels.
-        The two panels reveal inhomogeneity of sending volumes and of
-        activity behaviors.
-    }
-    \label{F:send-intensities}
-\end{figure}
-Malmgen et. al use a hidden Markov
-model to capture individual and seasonal idiosyncrasies
-\cite{malmgen2009characterizing}; we use a nonparametric model instead.
-
-******
+In the remainder of this article, we provide a modeling framework and computationally efficient partial-likelihood inference procedures to facilitate an analysis of these questions.  We employ a Cox proportional intensity model incorporating both static and history-dependent covariates to address the first of these two questions, and a parametric bootstrap to address the third.  Section~\ref{S:point-process-model} presents our point process model for directed pairwise interactions, along with the resultant inference procedures.  Section~\ref{S:MPLE-consistency} proves consistency and asymptotic Normality of the corresponding maximum partial likelihood estimator, and Section~\ref{S:multiple-receivers} extends our framework to the case of multiple-receiver interactions.  A data analysis example is presented in Section~\ref{S:enron-modeling}, and Section~\ref{S:discussion} concludes with a brief discussion.  Details of implementation and technical lemmas are provided in the appendices.
 
 \section{A Point Process Model and Partial-Likelihood Inference}\label{S:point-process-model}
 
@@ -1294,421 +1179,145 @@ We adjust for the bias by replacing $\tilde \beta_n$ with
 $\tilde \beta_n - \widehat{\mathrm{bias}}$.
 
 
-\begin{figure}
-    %\includegraphics[scale=0.6]{figures/recipient-counts}
-    \caption{
-        \textsc{Message recipient counts.}
-        Each of the 21,635 points corresponds to a message, with the
-        $y$-value equal to the log (base 2) of the number of recipients
-        for that message.  The message sent to the most people
-        had 57 recipients.  In our analysis, we exclude messages with more
-        than 10 recipients.
-    }\label{F:recipient-counts}
-\end{figure}
+\section{Analysis of a Corporate E-mail Network}\label{S:enron-modeling}
 
+We now consider a data analysis example to demonstrate the efficacy of the models and inference methods introduced above, and to show how they enable us to address the three key concerns of interaction data analysis (homophily, reciprocity, and multiplicity) raised in the Introduction of this article.  To do so we employ the multiple-recipient proportional intensity modeling framework developed above; we include static covariates reflecting group membership to account for the possibility of homophily, and dynamic covariates capturing past interactions to measure reciprocity effects.
 
+To fit this model to all but the smallest interaction datasets, we require a partial likelihood maximization algorithm that is more efficient than standard tools from survival analysis (e.g., the function \texttt{coxph} from the \texttt{survival} package for R~\cite{therneau2009survival}).  In Appendix~\ref{S:implementation} we outline such an algorithm and analyze its complexity; we have implemented this algorithm as a freely-available stand-alone software package *** \texttt{PackageName} and employ it for all results in this section.
 
-\section{Modeling the Enron Data}\label{S:enron-modeling}
-% Retitle: Data Analysis?
+\subsection{Data and Methods}
 
-****
-
- In the Enron dataset,
-approximately 30\% of messages have more than one recipient, with
-a few messages having more than fifty recipients
-(see Fig.~\ref{F:recipient-counts}).  
-
-****
-
-For the data example we now consider,
-the covariates are bounded and the message count is high, so
-assumptions A\ref{A:square-int}--A\ref{A:var-equicont} and
-the asymptotic framework are natural.
-
-****
-
-, and Appendix~\ref{S:implementation} presents
-an efficient algorithm for computing them.  In practice, the
-Hessian of $\log \mathit{PL}_t(\cdot)$ may be singular; when this is
-the case, we introduce linear constraints on the parameters to make
-them identifiable.
-
-*****
-
-
-*****
-
-    In other e-mail datasets, people
-    do sometimes e-mail themselves, but arguably these messages should be
-    handled differently then messages exchanged between different individuals.
-
-*****
-
-Our motivating example is to test for gender bias in a corporate e-mail
-network.  The dataset we use is a large collection of e-mail messages sent
-within the Enron corporation during the last four years of the company's
-existence.  Appendix~\ref{S:enron-corpus} describes the data collection and
-preprocessing.  Briefly, there are 21,635 messages in the dataset, which
-were sent between 156 executives in the company.  We know the genders,
-seniorities, and departments of the employees (summarized in
-Table~\ref{T:employee-summary}).
-
-\begin{table}[h]
+Our example analysis uses publicly available data from the Enron e-mail corpus~\cite{cohen2009enron}, a large subset of the e-mail messages sent within the Enron corporation between November 1998 and June 2002, and made public as the result of a subpoena by the U.S.~Federal Energy Regulatory Commission during an investigation into fraudulent accounting practices.  We analyze the dataset compiled by~\cite{zhou2007strategies} (see *** \texttt{www....edu}), comprising $21,635$ messages sent among $156$ employees between November 13, 1998 and June 21, 2002, along with the genders, seniorities, and departments of these employees (summarized in Table~\ref{T:employee-summary}).
+\begin{table}[t]
     \input{tables/employee-summary}
     \caption{
-        Characteristics of the 156 employees in the Enron dataset.
+        Characteristics of the 156 employees in the Enron dataset~\cite{zhou2007strategies}.
     }
     \label{T:employee-summary}
 \end{table}
+Approximately 30\% of these messages have more than one recipient across their \texttt{To}, \texttt{CC}, and \texttt{BCC} fields, with a few messages having more than fifty recipients (see Fig.~\ref{F:recipient-counts}).
+\begin{figure}
+    \includegraphics[scale=0.6]{figures/recipient-counts}
+    \caption{
+        \textsc{Message recipient counts.}
+        Each of the 21,635 points corresponds to a message, with
+        $y$-value showing the base-2 logarithm of its number of recipients (ranging from 1--57).
+    }\label{F:recipient-counts}
+\end{figure}
+In the subsequent analysis, we exclude messages with more than 10 recipients---a subjectively-chosen cutoff at the 99th percentile that avoids e-mails sent \emph{en masse} to large groups.
 
-*****
+We model these data using the multiple-recipient proportional intensity model of Section~\ref{S:multiple-receivers}, with $\mathcal{I} = \mathcal{J} = \{ 1, 2, \ldots, 156 \}$ and $\mathcal{J}_t(i) = \mathcal{I} \setminus \{ i \}$, and with static and dynamic covariates taking the form of indicator variables as described below.  We fit the model by first maximizing the approximate log partial likelihood of~\eqref{E:log-pl-multiple-approx}, and then employing a parametric bootstrap to estimate and correct the resultant bias in parameter estimates.  Standard errors are calculated using the corresponding asymptotic theory, along with the delta method as appropriate.  Note that in the setting of this data analysis example, the covariates are bounded and the interaction count is high, and so assumptions A\ref{A:square-int}--A\ref{A:var-equicont} and the asymptotic framework developed in Sections~\ref{S:MPLE-consistency} and~\ref{S:multiple-receivers} are natural.
 
-To model the Enron data, we use the proportional intensity model with multiple
-recipients from Section~\ref{S:multiple-recipients}.  Our analysis excludes
-messages with more than 10 recipients---a
-subjectively-chosen cutoff that includes 99\% of the corpus---because many of
-these are ``broadcast'' and we are only interested in inter-personal
-communication.  We fit the model by maximizing the approximate log partial
-likelihood from \eqref{E:log-pl-multiple-approx}, and then apply
-a bias-correction to be described in Section~\ref{S:bias-correction}.  For standard
-errors, we use the forthcoming asymptotic theory and employ the delta method where
-appropriate.
+\subsection{Covariates and Identifiability}
 
-The senders and receivers are the 156 employees in the dataset, so
-$\mathcal{I} = \mathcal{J} = \{ 1, 2, \ldots, 156 \}$.  To disallow
-self-loops, we set $\mathcal{J}_t(i) = \mathcal{I} \setminus \{ i \}$.
-We use two types of covariates: static and dynamic.  The static covariates
-don't change over time, and are determined by the sender- and
-receiver-specific group memberships summarized in
-Table~\ref{T:employee-summary}.  The dynamic covariates depend on the
-history of the process, and are chosen to allow adjusting for reciprocation
-effects.  The next few paragraphs discuss the covariates in detail.
-
-Considering gender (2 levels), seniority (2 levels), and department
-(3 levels), each individual belongs to one of 12 groups.  Each
-sender-receiver pair involves 2 of these groups, for $12^2 = 144$ possible
-group-group combinations.  We introduce a static binary covariate for each
-combination.  The dyad covariate vector $x_t(i,j)$ has 144 components
-corresponding to these covariates.  For concreteness, abbreviate the codes
-for gender, department, and seniority by F/M, L/T/O, and J/S.  For
-individual $i$, define $s(i)$ in $\reals^{12}$ by
-\begin{align*}
+For each $i \in \mathcal{I}$ and $j \in \mathcal{J}_t(i)$, we employ dyad covariate vectors $x_t(i,j) \in \{0,1\}^{165}$, each with $144 + 21$ binary components, corresponding respectively to static and dynamic regressors.  The former are determined by the sender- and receiver-specific group memberships summarized in Table~\ref{T:employee-summary}: abbreviating the codes for gender, department, and seniority by F/M, L/T/O, and J/S, the $144$ static components of $x_t(i,j)$ are obtained by stacking the columns of $s(i) \otimes s(j)$, where
+\begin{multline*}
     s(i)
-    =
-    \big(
-        &\text{1\{$i$ is FLJ\}},
+    = \big(
+        \text{1\{$i$ is FLJ\}},
         \text{1\{$i$ is FLS\}},
         \text{1\{$i$ is FTJ\}},
         \text{1\{$i$ is FTS\}}, \\
-        &\,\,\text{1\{$i$ is FOJ\}},
+        \text{1\{$i$ is FOJ\}},
         \text{1\{$i$ is FOS\}},
         \text{1\{$i$ is MLJ\}},
         \text{1\{$i$ is MLS\}}, \\
-        &\,\,\,\,\text{1\{$i$ is MTJ\}},
+        \text{1\{$i$ is MTJ\}},
         \text{1\{$i$ is MTS\}},
         \text{1\{$i$ is MOJ\}},
         \text{1\{$i$ is MOS\}}
-    \big).
-\end{align*}
-The 144 static covariates of $x_t(i,j)$ are the interactions,
-the components of $\vecm\big(s(i) \otimes s(j)\big)$, where
-$a \otimes b = a b^\trans$ and $\vecm(\cdot)$ maps a matrix to a vector
-by stacking columns.
-
-
-\begin{table}[h]
-    \tiny
-    \input{tables/group-effects-bc}
-    \caption{
-        Estimated group-level effects and their standard errors for the
-        model described in Section~\ref{S:enron-modeling}.  Gender,
-        Department, and Seniority codes are abbreviated as F/M, L/T/O,
-        and J/S.  Standard errors are shown in parentheses.  Read
-        the table as follows: the group-level effect of 2.46 for sender
-        FLJ and receiver FLS means that an FLJ executive sends e-mails to a
-        FLS executive at 2.46 times her baseline activity rate.  The highest
-        effect in each column is shown in boldface; females appear to
-        exhibit more within-group homophily than males do.
-    }
-    \label{T:group-effects}
-\end{table}
-
-\begin{figure}[h]
-    %\includegraphics[scale=0.6]{figures/reciprocation-bc}
-    \caption{
-        \textsc{Reciprocation Effect.}
-        Estimated reciprocation effect and standard errors for the
-        model described in Section~\ref{S:enron-modeling}.  The solid
-        (orange) curve is determined from the 21 estimated coefficients
-        for the reciprocation effects at intervals of ``\,$2^l$ hours''
-        for $l$ ranging from $-6$ to $14$.  The dashed (purple) curve gives
-        one standard error around the estimate.  Read the figure as follows:
-        if employee $j$'s most recent message to employee $i$ was 30 minutes
-        ago, then $i$ sends to $j$ at about 200 times his baseline rate.
-    }\label{F:reciprocation}
-\end{figure}
-
-The components of $\beta_0$ corresponding to the static components are not
-identifiable, since any $\tilde \beta_0$ satisfying
-$\tilde \beta_0^\trans x_t(i,j) = \beta_0^\trans x_t(i,j) + \alpha_t(i)$
-gives rise to the same partial likelihood.  We identify $\beta_0$ by
-by imposing ``sum-to-zero'' constraints within receiver classes.
-This reduces the degrees of freedom in the static coefficients from 144 to
-132.
-
-We use history-dependent covariates to capture reciprocation effects.
-Specifically, we introduce 21 covariates of the form
+    \big)
+\end{multline*}
+is the group membership vector for individual $i$.  The $21$ dynamic components of $x_t(i,j)$ are history-dependent and designed to capture reciprocity effects; they take the form
 \[
-    1\{\text{$j$'s most recent message to $i$ was sent in $[t-\delta, t)$\}}.
+    1\{\text{$j$'s most recent message to $i$ was sent in $[t-2^k \text{ hours}, t)$\}},
 \]
-If, at time $t$, individual $j$ has never sent a message to $i$, then
-these covariates are all zero.  The 21 values for the time interval
-$\delta$ are of the form ``$2^k$ hours,'' where $k$ is an integer ranging
-from $-6$ to $14$.  The shortest time interval is $56.25$ seconds, and the
-longest is $1.87$ years.
+where $k$ ranges from $-6$ to $14$, yielding time intervals from $56.25$ seconds to $1.87$ years.  (Effects of intervals outside of this range could not be estimated, with significance, from the available data.)
 
+Note that the components of $\beta_0$ corresponding to the static covariates are not identifiable, since any $\tilde \beta_0$ satisfying $\tilde \beta_0^\trans x_t(i,j) = \beta_0^\trans x_t(i,j) + \alpha_t(i)$ gives rise to the same partial likelihood.  We identify $\beta_0$ by by imposing ``sum-to-zero'' constraints within each of the $12$ receiver classes, reducing the corresponding degrees of freedom from $144$ to $132$.
 
-Table~\ref{T:group-effects} shows the estimated group-level
-(static) effects, and Fig.~\ref{F:reciprocation} shows the reciprocation
-(dynamic) effects.  Reciprocation is stronger by orders of magnitude,
-amplifying the sending rate by between about $10^1$ and $10^3$.  Group level
-effects, on the other hand are on the order of $10^{-1}$ to $10^0$.
+\subsection{Results}
 
-\begin{table}[h]
-    \input{tables/deviance.tex}
-    \caption{
-        Ad-hoc analysis of deviance for the Enron model.  Residual deviance
-        is defined as twice the approximate negative log-partial likelihood
-        when messages.  The ``Static'' term contains the group-level effects,
-        and the ``Dynamic'' term contains the reciprocation effects.
-    }
-    \label{T:deviance}
-\end{table}
-
-Table~\ref{T:deviance} gives an ad-hoc analysis of deviance for the fitted
-model, showing group-level (static) effects account for 18\% of the
-residual deviance and reciprocation (dynamic) effects account for 24\%.
-If the model fit perfectly, we would expect the residual deviance to be
-about equal to the residual degrees of freedom; here, the residual deviance
-is about $5.9$ times what we would expect.  Scaling the reported standard errors
-by $\sqrt{5.9}$ is an ad-hoc adjustment for this overdispersion.
-
-
-%\section{Gender Bias in the Enron Dataset}\label{S:gender-bias}
-%
-%We use the estimated group level effects to quantify the gender bias of
-%females and males.  This is defined as follows:
-%\begin{enumerate}
-%    \item go to the company on the day that it opens, so that there are no
-%          reciprocation effects;
-%    \item choose a random female employee proportional to how many
-%          messages she sent in the dataset;
-%    \item \label{I:bias-description-block}
-%          block all messages sent to this employee;
-%    \item wait for the first message she sends and record the gender
-%          of its recipient;
-%    \item if the probability of the recipient being female does not
-%          agree with the proportion of females in the company ($43 / 156$),
-%          then declare there to be gender bias;
-%    \item do the same for the first message sent by a male.
-%\end{enumerate}
-%Step \ref{I:bias-description-block} is necessary because if the chosen
-%employee receives a message before she sends one, then her sending
-%probabilities will change.
-%
-%According to Table~\ref{T:gender-effects-dynamic-bc}, females are biased
-%towards sending to females, and males are biased towards sending to
-%males, even after adjusting for reciprocation effects.  The sub-tables in
-%Table~\ref{T:gender-effects} show the impacts of the corrections we have
-%made (adjusting for self loops, reciprocation, and multiple recipients).
-%As expected, when we adjust for reciprocation, apparent gender bias is less
-%pronounced.  Interestingly, the starkest change is for the females,
-%indicating that females are more prone to reciprocation than males are
-%(we have not explored this interaction in depth).  It turns out that excluding
-%self-loops and adjusting for multiple recipients have minor impacts, but we
-%could not have known this beforehand.
-%
-%\begin{table}[h]
-%    \label{T:gender-effects}
-%    \subtable[Na\"{i}ve Estimates]{
-%        \input{tables/gender-effects-naive}
-%        \label{T:gender-effects-naive}
-%    }
-%    \subtable[Adjusted for Self-Loops]{
-%        \input{tables/gender-effects-static}
-%        \label{T:gender-effects-static}
-%
-%    }
-%    \subtable[Adjusted for Reciprocation]{
-%        \input{tables/gender-effects-dynamic}
-%        \label{T:gender-effects-dynamic}
-%    }
-%    \subtable[Adjusted for Multiple Recipients]{
-%        \input{tables/gender-effects-dynamic-bc}
-%        \label{T:gender-effects-dynamic-bc}
-%    }
-%    \caption{
-%        Estimated gender-level sending preferences.  Probabilities
-%        should be compared to the proportions of females and males
-%        at the company ($0.276$ and $0.724$, respectively).  Sub-tables
-%        show the cumulative estimates after excluding self-loops,
-%        including dynamic covariates to adjust for reciprocation, and
-%        applying a bias-correction to deal with messages with multiple
-%        recipients.
-%    }
-%\end{table}
-
-\section{Bias Correction for Multiple Recipients}\label{S:bias-correction}
-
-
-
-For the Enron corpus the recipient set doesn't grow with the number
-of messages, so the bias in the parameter estimate is of order
-$1/|\mathcal{J}|$, where $\mathcal{J}$ is the recipient set.  Fortunately,
-$|\mathcal{J}|$ is on the order of the square root of the number of messages
-in the dataset, so we can correct the bias ($|J|$ is $156$ and there are
-$21,365$ messages).  Figure~\ref{F:boot-resid} shows a summary of the bootstrap
-residuals from $R = 500$ replicates.  We can see that treating messages with
-multiple recipients as multiple single-recipient messages leads to negative
-bias in the coefficient estimates.
-
-\begin{figure}
-    %\includegraphics[scale=0.6]{figures/boot-resid}
+Given the model specification, data, and covariates outlined above, we may estimate the parameter vector $\beta_0$ under the approximate log partial likelihood of~\eqref{E:log-pl-multiple-approx}.  Recall that the results of Section~\ref{S:multiple-receivers} bound the bias resulting from this approximate MPLE procedure as a function of the growth rate of the recipient set $\mathcal{J}$ over time.  Here, treating the set $\mathcal{J}$ of 156 Enron employees as constant, the resultant bias is of order $1/|\mathcal{J}|$---and, since $|\mathcal{J}| = 156$ is on the order of the square root of the number $21,365$ of messages in the dataset, we can correct this bias using the parametric bootstrap outlined at the end of Section~\ref{S:multiple-receivers}.  Figure~\ref{F:boot-resid}
+\begin{figure}[t]
+    \includegraphics[scale=0.6]{figures/boot-resid}
     \caption{
         \textsc{Enron Bootstrap Residuals.} Summary of bootstrap residuals for
-        the coefficients in the Enron dataset, normalized by estimated
+        estimated coefficients using the Enron dataset, normalized by estimated
         standard errors.  The points (orange) show the means, and the
         error bars (purple) show one standard deviation.  Coefficients
         1--144 are the group-level (static) effects, and coefficients
-        145--165 are the reciprocation (dynamic) effects, ordered from
+        145--165 are the reciprocity (dynamic) effects, ordered from
         shortest time interval to longest.  The bias is on the order of
         the standard error, and is near zero for most---but not all---of the
         coefficients.
     }
     \label{F:boot-resid}
 \end{figure}
+summarizes the corresponding bootstrap residuals (from $500$ replicates) for each component of the estimated parameter vector $\beta_0$; we can see from this figure that treating messages with multiple recipients as multiple single-recipient messages leads to negative bias in the coefficient estimates.
 
+The bias-corrected results of inference on $\beta_0$ are summarized as follows.  Table~\ref{T:group-effects}
+\begin{table}[t]
+    \tiny
+    \input{tables/group-effects-bc}
+    \caption{
+        Estimated group level effects and their standard errors for the
+        model described in Section~\ref{S:enron-modeling}.  Gender,
+        Department, and Seniority codes are abbreviated as F/M, L/T/O,
+        and J/S.  Standard errors are shown in parentheses.  Read
+        the table as follows: the group-level effect of 2.46 for sender
+        FLJ and receiver FLS means that an FLJ executive sends e-mails to a
+        FLS executive at 2.46 times her baseline activity rate.  The highest
+        effect in each column is shown in boldface.
+    }
+    \label{T:group-effects}
+\end{table}
+shows the estimated group-level (static) effects, and Fig.~\ref{F:reciprocation}
+\begin{figure}[t]
+    \includegraphics[scale=0.6]{figures/reciprocation-bc}
+    \caption{
+        \textsc{Reciprocity Effect.}
+        Estimated reciprocity effect and standard errors for the
+        model described in Section~\ref{S:enron-modeling}.  The solid
+        (orange) curve is determined from the 21 estimated coefficients
+        for the reciprocity effects at intervals of ``\,$2^l$ hours''
+        for $l$ ranging from $-6$ to $14$.  The dashed (purple) curve gives
+        one standard error around the estimate.  Read the figure as follows:
+        if employee $j$'s most recent message to employee $i$ was 30 minutes
+        ago, then $i$ sends to $j$ at about 200 times his baseline rate.
+    }\label{F:reciprocation}
+\end{figure}
+shows the reciprocity (dynamic) effects.  We observe that reciprocity is stronger by orders of magnitude, amplifying the sending rate by between about $10^1$ and $10^3$.  In contrast, group level effects are on the order of $10^{-1}$ to $10^0$.
+
+Finally, Table~\ref{T:deviance}
+\begin{table}[t]
+    \input{tables/deviance.tex}
+    \caption{
+        Ad-hoc analysis of deviance for the Enron model.  Residual deviance
+        is defined as twice the approximate negative log-partial likelihood
+        when messages.  The ``Static'' term contains the group level effects,
+        and the ``Dynamic'' term contains the reciprocity effects.
+    }
+    \label{T:deviance}
+\end{table}
+gives an ad-hoc analysis of deviance for the fitted model, showing that group-level (static) effects account for 18\% of the residual deviance and reciprocation (dynamic) effects account for 24\%.  If the model fit perfectly, we would expect the residual deviance to be about equal to the residual degrees of freedom; here, the residual deviance is about $5.9$ times what we would expect.  Scaling the reported standard errors by $\sqrt{5.9}$ is an ad-hoc adjustment for this overdispersion.
 
 \section{Discussion}\label{S:discussion}
 
-e-mail and other types of ``network'' data are becoming more and more pervasive,
-and methods for studying network data are being developed at an accelerating
-pace (see Goldenberg et al. and Kolaczyk for recent
-overviews~\cite{goldenberg2009survey,kolaczyk2009statistical}).  Unfortunately,
-with ``network science'' increasing in popularity, there is a tendency to
-shoehorn disparate forms of data into binary ties between actors.  An e-mail
-sent between two people is \emph{not} a tie, it is an instantaneous event.
-This hasn't discouraged practitioners from forming social networks from
-communications data.  One popular approach is to divide the observation period
-into time intervals ranging in duration from a week to a month, and then form
-a sequence of binary networks by thresholding the number of times pairs of
-actors communicate in each interval.  However, as De Choudhury et al. have
-shown, the choice of threshold dramatically affects the resulting networks and
-downstream analysis~\cite{dechoudhury2010}.  Like
-Heard et al.~\cite{heard2010bayesian}, we have avoided these issues by
-eschewing network representations entirely.
+Our data analysis example above has demonstrated that static and dynamic effects are both evident in e-mail communication, and we expect this to hold broadly for other types of interactions.  The proportional intensity model with time-varying covariates is a simple, flexible, and well-established model for incorporating these effects into the analysis of interaction data.  As far as we are aware, this is the first time that such an approach has been brought directly to bear on relational data in the form of a network of directed interactions.  With such data becoming more pervasive, and practitioners from across fields eager for new analytical tools, there is an unfortunate tendency to shoehorn disparate forms of data into binary ties between entities.  However, it is important to bear in mind that the observables in such modeling scenarios often come in the form of counts of directed interactions; as shown in~\cite{dechoudhury2010}, thresholding counts to obtain binary adjacency data can dramatically affect both the structure of the resultant network, and the conclusions of subsequent analysis.
 
-The models used in this report borrow very little from network science.
-Still, they have a lot in common with the agent-based models from that
-literature (see \cite{snijders2010introduction} for a recent survey).  Both
-conceive of the data as arising from ego-centric decisions made by the actors.
-The main difference between agent-based models and our treatment is that we
-are dealing with instantaneous events, and they are dealing with ties that
-persist in time.  Agent-based models typically involve transitivity (the fact
-that your friends' friends are likely to be your friends, too), a behavior
-which we have ignored completely.  However, nothing precludes adding covariates
-to capture this behavior in our model.
+In contrast, the foundation of our work is Cox's proportional intensity model and partial likelihood theory, tools which he first introduced almost forty years ago and which have been significantly developed since then~\cite{andersen1993statistical, cook2007statistical, cox1972regression, cox1975partial, fleming1991counting, martinussen2006dynamic}. These tools are used extensively in the context of clinical trials, but require further development to enable their application to directed interaction data.  In this vein, we have extended the associated theory in two directions: first, we have provided results that are asymptotic in time rather than in the population of individuals under study; and second, we have shown that treating multiple-receiver interactions as separate pairwise interactions leads to bias in the corresponding parameter estimates, and we have shown when and how this bias can be corrected.
 
-We are not the first to model dyadic interactions with a point processes.
-Malmgren et al.\ and Heard et al.\ both use
-hidden Markov models for communication activity~\cite{heard2010bayesian,
-malmgen2009characterizing}.  Neither of these models model uses covariate
-information, and neither uses continuous time.
+We are not the first to model dyadic interactions using a point process framework; in a similar vein, Malmgren et al.\ and Heard et al.\ both apply hidden Markov models to communication activity~\cite{heard2010bayesian, malmgen2009characterizing}.  However, neither of these models uses covariate information, and neither posits the problem in continuous time.  Another feature of our model deserving emphasis is that we are using a different baseline intensity for each initiator. In the survival analysis terminology, the model is stratified by initiator.  Our nonparametric approach takes into account the fact that individuals may have highly idiosyncratic initiating behaviors; in contrast, Malmgen et al.\ use a hidden Markov model to capture individual and seasonal idiosyncrasies~\cite{malmgen2009characterizing}.  The issue of modeling extra-dyadic interactions, which we have also addressed here, has seen less attention in the literature; however, Lunag\'omez et al.~\cite{lunagomez2009geometric} have recent work in the context of graphical models that is relevant.
 
-The foundation of our work is Cox's proportional intensity model and partial
-likelihood theory, tools which he first introduced almost forty years ago and
-which have been significantly developed since then
-\cite{andersen1993statistical,cook2007statistical,cox1972regression,cox1975partial,fleming1991counting,martinussen2006dynamic}.
-These tools are used extensively in the context of clinical trials, but have
-not yet made an appearance in network data.
-
-We have made two contributions to the theory:
-first, we have given asymptotic results which take the limit as the number
-of messages grow to infinity instead of assuming a fixed observation interval
-and letting the number of subjects grow; second, we have shown that treating
-messages with multiple recipients as multiple single-recipient messages leads
-to bias in the parameter estimates, but in certain situations this bias can
-be corrected. The issue of multiple recipients or interactions with more than
-two actors has largely been ignored in the network literature.
-Lunag\'omez et al.~\cite{lunagomez2009geometric} have done some relevant
-work in the context of graphical models.  We hope the results from
-Section~\ref{S:bias-correction} encourage others to take this issue more
-seriously.
-
-Our analysis of the Enron data has shown that dynamic effects are important
-to e-mail communication, and we expect this to hold broadly for other
-types of interactions.  The proportional intensity model with time-varying
-covariates is a simple, flexible, and well-established model for incorporating
-these effects into the analysis of interaction data.
-
+Finally, we point out similarities to agent-based models from the network analysis literature; see~\cite{snijders2010introduction} for a recent survey.  These approaches and ours both conceive of the data as arising from ego-centric decisions made by the agents under study.  The main difference of approach lies in the fact that we are treating instantaneous interactions rather than ties such as friendship that persist over time.  However, features such as transitivity (the notion that your friends' friends are likely to be your friends) that are typical of such models can easily be incorporated into our framework, simply by adding history-dependent covariates as described in Section~\ref{S:point-process-model} of this article.
 
 \section*{Acknowledgement}
 
 The authors thank Joe Blitzstein, Susan Holmes, Art Owen, and Andrew Thomas
 for helpful remarks and encouragement.
 
-
 \appendix
-
-\section{The Enron e-mail Corpus}\label{S:enron-corpus}
-
-The Enron e-mail corpus is a large subset of the e-mail messages sent within the
-corporation between November 1998 and June 2002. Enron was an energy company
-based in Texas that became notorious in late 2001 for its fraudulent
-accounting practices. These practices eventually lead to the resignation of
-its CEO, to an external audit into its accounting procedures, to massive
-readjustments to its earnings statements, and eventually to its bankruptcy.
-Later, many of the top executives were prosecuted and convicted of criminal
-fraud and insider trading. As part of the investigation, the Federal Energy
-Regulatory Commission (FERC) subpoenaed the e-mail correspondences of the top
-employees and posted those not related to the criminal trial to their website
-(619,446 messages, roughly 92\% of those subpoenaed).
-
-Leslie Kaelbling, a computer scientist at MIT, purchased the corpus from the
-FERC with the intention of making it available to the research community. A
-team of researchers at SRI International worked to fix a number of apparent
-integrity problems with the data, and then it was released to the public by
-William Cohen, at CMU. This is the ``March 2, 2004 Version'' of the dataset.
-Later, a former Enron employee requested that one message be removed from the
-data; this removal prompted the ``August 21, 2009 Version,'' widely regarded
-to be the authoritative version \cite{cohen2009enron}.
-
-Zhou et al. have gone through substantial work to preprocess the Enron corpus
-into a useful form \cite{zhou2007strategies}. We rely on their preprocessed
-version for our analysis. They reduce the data to the set of e-mails sent by
-high-ranking Enron executives, eliminating messages sent by non-employees,
-support staff and administrative assistants. They also filter out messages
-with missing timestamps. After this culling process, there are 21,635 messages
-sent by 156 employees between November 13, 1998 and June 21, 2002. Each e-mail
-message has a message body consisting of text, along with header fields
-including \texttt{Date}, \texttt{From}, \texttt{To}, \texttt{CC},
-\texttt{BCC}, and \texttt{Subject}. The \texttt{From} field always lists a
-unique e-mail address, but the \texttt{To}, \texttt{CC}, and \texttt{BCC}
-fields sometimes specify multiple recipients. We make no distinction between
-\texttt{To}, \texttt{CC}, and \texttt{BCC}, combining them all to determine
-the recipients of a message.
-
-We can associate a set of static covariates for each of the 156 individuals in
-the dataset. Zhou et al. have extracted the employees' names, departments, and
-titles. We use the forenames of the employees to associate genders to the
-employees (e.g, John is male, Susan is female). For ambiguously-gendered names
-like Dana, Robin, and Sean, we use personal pronouns in the messages to help
-code the genders. We code the department as one of three categories: Legal,
-Trading, or Other. Finally, we code the position as Senior (CEO, CFO, COO,
-Director, Managing Director, VP, President) or Junior (Administrator, Analyst,
-Assistant, Attorney, Counsel, Employee, Manager, Specialist, Trader).
-
-
 
 \section{Implementation}\label{S:implementation}
 
