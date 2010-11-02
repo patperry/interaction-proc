@@ -173,6 +173,15 @@ In \bbooktitle{{WWW 2010: Proceedings of the 19th international conference on
 \end{barticle}
 \endbibitem
 
+\bibitem{jackson2008social}
+\begin{bbook}[author]
+\bauthor{\bsnm{Jackson},~\bfnm{M.~O.}\binits{M.~O.}}
+(\byear{2008}).
+\btitle{{Social and Economic Networks}}.
+\bpublisher{Princeton University Press}.
+\end{bbook}
+\endbibitem
+
 \bibitem{kantorovich1952functional}
 \begin{bbook}[author]
 \bauthor{\bsnm{Kantorovich},~\bfnm{L.~V.}\binits{L.~V.}}
