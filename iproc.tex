@@ -1321,36 +1321,34 @@ for helpful remarks and encouragement.
 
 \section{Implementation}\label{S:implementation}
 
-For small-to-medium datasets, one can fit proportional intensity models
-using \texttt{coxph} from the \texttt{survival} package for R
-\cite{therneau2009survival}.  Unfortunately, with 156 senders and
-over $20,000$ messages, the Enron dataset is too large for the package
-to handle.  We instead wrote custom software to maximize the partial
-likelihood.
+To compute the maximum partial likelihood estimator, we use the
+Broyden-Fletcher-Goldfarb-Shanno (BFGS) algorithm, a gradient-based 
+optimization method described by Nocedal and Write 
+\cite{nocedal2006numerical}.  This requires an efficient algorithm for 
+computing the gradient of the log partial likelihood.  For simplicity, we 
+describe the case of strictly pairwise interactions with no ties in the 
+interaction times.  We use the notation from 
+Section~\ref{S:point-process-model}, assuming
+model~\eqref{E:cox-intensity} and partial likelihood~\eqref{E:log-pl}.
+Assume that $|\mathcal{I}| = I$ and $|\mathcal{J}| = J$.
 
 Suppose $(t_1, i_1, j_1), \ldots, (t_n, i_n, j_n)$ is the sequence of observed
-messages, where tuple $(t,i,j)$ indicates that at time $t$, sender $i$ sent a
-message to receiver $j$.  Define the following message sets:
-\begin{align*}
-  \mathcal{M}_t(i,j)
-    &= \{ m : t_m \leq t, \, i_m = i, \, j_m = j \}, \\
-  \mathcal{M}_t(i)
-    &= \cup_{j \in \mathcal{J}} \mathcal{M}_t(i,j), \\
-  \mathcal{M}_t
-    &= \cup_{i \in \mathcal{I}} \mathcal{M}_t(i).
-\end{align*}
+messages, where tuple $(t,i,j)$ indicates that at time $t$, sender $i$
+interacted with receiver $j$.  Set
+$n(i) = \#\{ i_m : i_m = i \} = N_{t_n}(i).$
 The partial likelihood factors into a product of terms, one for each sender:
 \begin{align*}
     \mathit{PL}_t(\beta)
-        &=
+        =
         \,\,
         \prod_{i \in \mathcal{I}}
             \,\,
-            \mathit{PL}_t(\beta, i), \\
+            \mathit{PL}_t(\beta, i), 
+    \qquad\qquad
     \mathit{PL}_t(\beta, i)
-        &=
+        =
         \!\!\!\!
-        \prod_{m \in \mathcal{M}_t(i)}
+        \prod_{\substack{t_m \leq t, \\ i_m = i}}
             \!\!\!
             \frac{w_{t_m} (\beta, i, j_m)}
                  {W_{t_m}(\beta, i)}.
@@ -1359,13 +1357,12 @@ This factorization allows us to compute $\log \mathit{PL}_t(\beta)$ and
 its derivatives by computing the sender-specific terms in parallel and
 then adding them together.
 
-The sender-specific log-partial likelihood and its derivatives are
-\begin{align*}
+The sender-specific log-partial likelihood and its gradient are
+\begin{gather*}
     \log \mathit{PL}_t(\beta, i)
-        &=
+        =
         \!\!\!\!
-        \sum_{m \in \mathcal{M}_t(i)}
-            \!\!\!
+        \sum_{\substack{t_m \leq t, \\ i_m = i}}
             \beta^\trans
             x_{t_m}\!(i, j_m)
             \,
@@ -1373,131 +1370,110 @@ The sender-specific log-partial likelihood and its derivatives are
             \,
             \log W_{t_m}\!(\beta, i), \\
     \nabla [ \log \mathit{PL}_t(\beta, i) ]
-        &=
+        =
         \!\!\!\!
-        \sum_{m \in \mathcal{M}_t(i)}
-            \!\!\!
+        \sum_{\substack{t_m \leq t, \\ i_m = i}}
             x_{t_m}\!(i,j_m)
             \,
             -
             \,
             \frac{1}{W_{t_m}\!(\beta,i)}
-                \sum_{j \in \mathcal{J}(i)}
+                \sum_{j \in \mathcal{J}_{t_m}\!(i)}
                     w_{t_m}\!(\beta,i,j) \,
-                    x_{t_m}\!(i,j), \\
-    \begin{split}
-    \nabla^2 [ \log \mathit{PL}_t(\beta, i) ]
-        &=
-        -
-        \!\!\!\!
-        \sum_{m \in \mathcal{M}_t(i)}
-            \!\!
-            \bigg\{
-            \frac{1}{W_{t_m}\!(\beta,i)}
-            \sum_{j \in \mathcal{J}(i)}
-                w_{t_m}\!(\beta,i,j) \,
-                \big[
-                    x_{t_m}\!(i,j)
-                \big]^{\otimes 2} \\
-        &\qquad\qquad\qquad-
-            \Big[
-                \frac{1}{W_{t_m}\!(\beta,i)}
-                \sum_{j \in \mathcal{J}(i)}
-                    w_{t_m}\!(\beta,i,j) \,
-                    x_{t_m}\!(i,j)
-            \Big]^{\otimes 2}
-            \bigg\},
-    \end{split}
-\end{align*}
-where $a^{\otimes 2} = a a^\trans$.  When $x_t(i,j)$ is constant over time,
+                    x_{t_m}\!(i,j).
+\end{gather*}
+When $x_t(i,j)$ is constant over time,
 there are sufficient statistics for $\beta$ and these formulas reduce.
-Otherwise, computing $\log \mathit{PL}_t(\beta,i)$ and its derivatives
+Otherwise, computing $\log \mathit{PL}_{t_n}(\beta)$ and its gradient
 requires iterating over all messages, potentially taking time
-$\Oh(|\mathcal{M}_t(i)| \cdot |\mathcal{J}(i)| \cdot p^2)$.
-The serial computation time for computing the full partial likelihood
-and its derivatives is $\Oh(M \cdot J \cdot p^2)$.
-For the Enron data, $M \approx 20,\!000$, $J \approx 150$,
-and $p \approx 200$.  This is relatively small by modern standards.  Often
-$M$ on the order of $10^9$ and $J$ on the order of $10^6$.  Computations
-taking time $\Oh(M \cdot J)$ are prohibitive for large datasets.
+$\Oh(p \, n \, J)$.  For small- to medium-sized datasets, this is manageable,
+but for large network datasets computations taking time $\Oh(n \, J)$ are
+prohibitive.  In the rest of the section we show how to exploit sparsity
+in the data, reducing the computation time to
+$\Oh\big(p \, (n + I \, J)\big)$ or in some cases
+$\Oh\big(p \, (n + J)\big)$.
 
-Taking advantage of sparsity, the serial time for computing the
-gradient reduces to $\Oh(M \cdot p + I \cdot J)$.   Our implementation
-uses a gradient-based optimization method (the
-Broyden-Fletcher-Goldfarb-Shanno algorithm \cite{nocedal2006numerical}) to
-compute the MPLE in linear time.
-
-Assume for the remainder that
-$\mathcal{J}_t(i) = \mathcal{J}(i)$, i.e., that $\mathcal{J}_t(i)$ is
-constant.  Decompose $x$ into its static (non time-varying) and dynamic parts:
-\[
+Decompose $x$ into its static (non-time-varying) and dynamic parts:
+\begin{equation}\label{E:x-static-dynamic}
     x_t(i,j)
         = x_0(i,j) + d_t(i,j).
-\]
+\end{equation}
 Typically, the dynamic part, $d_t(i,j)$, is sparse, with at most $\bar p$
 nonzero components.  Moreover $d_t(i,j)$ is zero for most $(i,j)$
-pairs---often $d_t(i,j)$ is zero unless $i$ and $j$ have exchanged
-messages in the past.  Let
+pairs---often $d_t(i,j)$ is zero unless $i$ and $j$ have interacted in
+the past.  Let
 \[
     \mathcal{\bar J}(i)
         =
         \{
-            j \in \mathcal{J}(i) : d_t(i,j) \neq 0
-            \,\,
-            \text{for some $t$}
+            j \in \mathcal{J} :
+            \text{
+                $j \in \mathcal{J}_t(i)$ and $d_t(i,j) \neq 0$
+                for some $t$
+            }
         \}.
 \]
-Assume $|\mathcal{\bar J}(i)| \ll |\mathcal{J}(i)|$ and that
+Assume $|\mathcal{\bar J}(i)| \le \bar J \ll J$ and that
 computing $d_t(i,j)$ takes amortized time $\Oh(\bar p)$ for each
 $(t,i,j)$ triple.
 
 Notice
-\begin{align*}
+\begin{subequations}\label{E:weight-update}
+\begin{align}
     w_{t}(\beta,i,j)
         &=
             w_{0}(\beta,i,j)
             \cdot
-            \exp\{ \beta^\trans d_t(i,j) \}, \\
-    W_{\beta,t}(i)
+            \exp\{ \beta^\trans d_t(i,j) \}, 
+    \label{E:weight-update-pair}        
+    \\
+    W_{t}(\beta,i)
         &=
             W_{0}(\beta,i)
-            +
-            \sum_{j \in \mathcal{\bar J}(i)}
+            +\!\!\!
+            \sum_{j \in \mathcal{\bar J}(i) \cap \mathcal{J}_t(i)}\!\!\!
                 w_{t}(\beta,i,j) - w_{0}(\beta,i,j)
-\end{align*}
-It takes time $\Oh(|\mathcal{J}(i)| \cdot p)$ to compute the values of
+    \label{E:weight-sum-update}
+\end{align}
+\end{subequations}
+It takes time $\Oh(p \, J)$ to compute the values of
 $W_{0}(\beta,i)$ and $w_{0}(\beta,i,j)$ for any $i$ and all
-$j$ in $\mathcal{J}(i)$; once these values are known, computing the values
-of $W_{t}(\beta,i)$ and $w_{t}(\beta,i,j)$ takes time
+$j$ in $\mathcal{J}(i)$; using~\eqref{E:weight-update} once these values are 
+known, computing  $W_{t}(\beta,i)$ and $w_{t}(\beta,i,j)$ takes time
 \(
-    \Oh(|\mathcal{\bar J}(i)| \cdot \bar p).
-\)
-Since
-\[
-    \sum_{m\in \mathcal{M}_t(i)}
-        x_{t_m}\!(i,j_m)
-        =
-            \sum_{j \in \mathcal{J}(i)}
-                |\mathcal{M}_t(i,j)| \, x_0(i,j)
-            \,\,\,
-            +
-            \sum_{m \in \mathcal{M}_t(i)}
-                d_{t_m}\!(i,j),
-\]
-%computing sum on the left hand side takes time
-%\(
-%    \Oh(|\mathcal{M}_t(i)| \cdot \bar p + |\mathcal{J}(i)| \cdot p);
-%\)
-computing $\log \mathit{PL}_t(\beta, i)$ takes time
-\(
-    \Oh(
-        |\mathcal{M}_t(i)| \cdot |\mathcal{\bar J}(i)| \cdot \bar p
-        +
-        |\mathcal{J}(i)| \cdot p
-    ).
+    \Oh(\bar p \, \bar J).
 \)
 
-The second term in the gradient is
+The sender-specific log partial likelihood and the first term in the gradient 
+involve a sum of covariates.  Using~\eqref{E:x-static-dynamic}, this sum can 
+be decomposed as
+\[
+    \sum_{\substack{t_m \leq t, \\ i_m = i}}
+        x_{t_m}\!(i,j_m)
+        =
+            \sum_{j \in \mathcal{J}}
+                N_t(i,j) \, x_0(i,j)
+            \,\,\,
+            +
+            \sum_{\substack{t_m \leq t, \\ i_m = i}}
+                d_{t_m}\!(i,j);
+\]
+computing first term takes time $\Oh(p \, \bar J)$ and computing the second 
+term takes time $\Oh(\bar p \, n(i) \, \bar J)$.  Since it takes time
+$\Oh(\bar p \, n(i) \bar J)$
+to compute
+\(
+    \sum_{\substack{t_m \leq t, \\ i_m = i}}
+        \log W_{t_m}\!(\beta, i)
+\)
+once the static weights are known, computing $\log \mathit{PL}_{t_n}(\beta)$ 
+as the sum of sender-specific terms takes time
+\(
+    \Oh(p \, I \, \bar J + \bar p \, n \, \bar J).
+\)
+
+The second term in the gradient of the sender-specific log partial likelihood
+can be decomposed as
 \begin{multline*}
     \sum_{m \in \mathcal{M}_t(i)}
         \frac{1}{W_{t_m}\!(\beta,i)}
