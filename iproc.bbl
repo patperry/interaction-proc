@@ -4,11 +4,11 @@
 \begin{bbook}[author]
 \bauthor{\bsnm{Andersen},~\bfnm{P.~K.}\binits{P.~K.}},
   \bauthor{\bsnm{Borgan},~\bfnm{O.}\binits{O.}},
-  \bauthor{\bsnm{Gill},~\bfnm{R.D.}\binits{R.}} \AND
+  \bauthor{\bsnm{Gill},~\bfnm{R.~D.}\binits{R.~D.}} \AND
   \bauthor{\bsnm{Keiding},~\bfnm{N.}\binits{N.}}
 (\byear{1993}).
-\btitle{{Statistical Models Based on Counting Processes}}.
-\bpublisher{Springer-Verlag}.
+\btitle{Statistical Models Based on Counting Processes}.
+\bpublisher{Springer-Verlag}, \baddress{New York}.
 \end{bbook}
 \endbibitem
 
@@ -17,7 +17,7 @@
 \bauthor{\bsnm{Andersen},~\bfnm{P.~K.}\binits{P.~K.}} \AND
   \bauthor{\bsnm{Gill},~\bfnm{R.~D.}\binits{R.~D.}}
 (\byear{1982}).
-\btitle{{Cox's regrssion model for counting processes: a large sample study}}.
+\btitle{{C}ox's Regression Model for Counting Processes: A Large Sample Study}.
 \bjournal{Ann. Statist.}
 \bvolume{10}
 \bpages{1100--1120}.
@@ -28,10 +28,10 @@
 \begin{barticle}[author]
 \bauthor{\bsnm{Brostr\"{o}m},~\bfnm{G.}\binits{G.}}
 (\byear{2002}).
-\btitle{{Cox regression; ties without tears}}.
-\bjournal{Commun. Stat. Theory}
+\btitle{{C}ox Regression; Ties Without Tears}.
+\bjournal{Commun. Stat. Theory Meth.}
 \bvolume{31}
-\bpages{285--197}.
+\bpages{285--297}.
 \end{barticle}
 \endbibitem
 
@@ -39,8 +39,9 @@
 \begin{bmisc}[author]
 \bauthor{\bsnm{Cohen},~\bfnm{W.~W.}\binits{W.~W.}}
 (\byear{2009}).
-\btitle{{Enron email dataset}}.
-\bhowpublished{\url{http://www.cs.cmu.edu/~enron/}}.
+\btitle{{E}nron Email Dataset}.
+\bhowpublished{http://www.cs.cmu.edu/\~{}enron/}
+\bnote{Version of 21 August 2009}.
 \end{bmisc}
 \endbibitem
 
@@ -49,8 +50,8 @@
 \bauthor{\bsnm{Cook},~\bfnm{R.~J.}\binits{R.~J.}} \AND
   \bauthor{\bsnm{Lawless},~\bfnm{J.~F.}\binits{J.~F.}}
 (\byear{2007}).
-\btitle{{The Statistical Analysis of Recurrent Events}}.
-\bpublisher{Springer}.
+\btitle{The Statistical Analysis of Recurrent Events}.
+\bpublisher{Springer}, \baddress{Berlin}.
 \end{bbook}
 \endbibitem
 
@@ -58,7 +59,7 @@
 \begin{barticle}[author]
 \bauthor{\bsnm{Cox},~\bfnm{D.~R.}\binits{D.~R.}}
 (\byear{1972}).
-\btitle{{Regression models and life-tables (with discussion)}}.
+\btitle{Regression Models and Life-Tables (With Discussion)}.
 \bjournal{J. R. Statist. Soc. B}
 \bvolume{34}
 \bpages{187--220}.
@@ -69,7 +70,7 @@
 \begin{barticle}[author]
 \bauthor{\bsnm{Cox},~\bfnm{D.~R.}\binits{D.~R.}}
 (\byear{1975}).
-\btitle{Partial likelihood}.
+\btitle{Partial Likelihood}.
 \bjournal{Biometrika}
 \bvolume{62}
 \bpages{269--276}.
@@ -78,15 +79,15 @@
 
 \bibitem{dechoudhury2010}
 \begin{binproceedings}[author]
-\bauthor{\bsnm{De~Chudhury},~\bfnm{M.}\binits{M.}},
+\bauthor{\bsnm{De~Choudhury},~\bfnm{M.}\binits{M.}},
   \bauthor{\bsnm{Mason},~\bfnm{W.~A.}\binits{W.~A.}},
   \bauthor{\bsnm{Hofman},~\bfnm{J.~M.}\binits{J.~M.}} \AND
   \bauthor{\bsnm{Watts},~\bfnm{D.~J.}\binits{D.~J.}}
 (\byear{2010}).
-\btitle{{Inferring relevant social networks from interpersonal communication}}.
-In \bbooktitle{{WWW 2010: Proceedings of the 19th international conference on
-  the World Wide Web}}
+\btitle{Inferring Relevant Social Networks from Interpersonal Communication}.
+In \bbooktitle{Proc. 19th Intl Conf. World Wide Web}
 \bpages{301--310}.
+\bpublisher{New York: Association for Computing Machinery}.
 \end{binproceedings}
 \endbibitem
 
@@ -95,7 +96,7 @@ In \bbooktitle{{WWW 2010: Proceedings of the 19th international conference on
 \bauthor{\bsnm{Eagle},~\bfnm{N.}\binits{N.}} \AND
   \bauthor{\bsnm{Pentland},~\bfnm{A.~S.}\binits{A.~S.}}
 (\byear{2006}).
-\btitle{{Reality mining: sensing complex social systems}}.
+\btitle{Reality Mining: Sensing Complex Social Systems}.
 \bjournal{Pers. Ubiquit. Comput.}
 \bvolume{10}
 \bpages{255--268}.
@@ -106,8 +107,8 @@ In \bbooktitle{{WWW 2010: Proceedings of the 19th international conference on
 \begin{barticle}[author]
 \bauthor{\bsnm{Efron},~\bfnm{B.}\binits{B.}}
 (\byear{1977}).
-\btitle{{The efficiency of {C}ox's likelihood function for censored data}}.
-\bjournal{J. Am. Stat. Assoc.}
+\btitle{The Efficiency of {C}ox's Likelihood Function for Censored Data}.
+\bjournal{J. Am. Statist. Ass.}
 \bvolume{72}
 \bpages{557--565}.
 \end{barticle}
@@ -118,8 +119,8 @@ In \bbooktitle{{WWW 2010: Proceedings of the 19th international conference on
 \bauthor{\bsnm{Fleming},~\bfnm{T.~R.}\binits{T.~R.}} \AND
   \bauthor{\bsnm{Harrington},~\bfnm{D.~P.}\binits{D.~P.}}
 (\byear{1991}).
-\btitle{{Counting Processes and Survival Analysis}}.
-\bpublisher{John Wiley \& Sons}.
+\btitle{Counting Processes and Survival Analysis}.
+\bpublisher{Wiley}, \baddress{New York}.
 \end{bbook}
 \endbibitem
 
@@ -127,7 +128,7 @@ In \bbooktitle{{WWW 2010: Proceedings of the 19th international conference on
 \begin{barticle}[author]
 \bauthor{\bsnm{Fowler},~\bfnm{J.~H.}\binits{J.~H.}}
 (\byear{2006}).
-\btitle{{Connecting the congress: a study of cosponsorship networks}}.
+\btitle{Connecting the {C}ongress: A Study of Cosponsorship Networks}.
 \bjournal{Polit. Anal.}
 \bvolume{14}
 \bpages{456--487}.
@@ -141,7 +142,7 @@ In \bbooktitle{{WWW 2010: Proceedings of the 19th international conference on
   \bauthor{\bsnm{Fienberg},~\bfnm{S.~E.}\binits{S.~E.}} \AND
   \bauthor{\bsnm{Airoldi},~\bfnm{E.~M.}\binits{E.~M.}}
 (\byear{2009}).
-\btitle{{A survey of statistical network models}}.
+\btitle{A Survey of Statistical Network Models}.
 \bjournal{Found. Trends Mach. Learn.}
 \bvolume{2}
 \bpages{129--233}.
@@ -152,7 +153,7 @@ In \bbooktitle{{WWW 2010: Proceedings of the 19th international conference on
 \begin{barticle}[author]
 \bauthor{\bsnm{Haberman},~\bfnm{S.~J.}\binits{S.~J.}}
 (\byear{1977}).
-\btitle{{Maximum likelihood estimates in exponential response models}}.
+\btitle{Maximum Likelihood Estimates in Exponential Response Models}.
 \bjournal{Ann. Statist.}
 \bvolume{5}
 \bpages{815--841}.
@@ -166,7 +167,7 @@ In \bbooktitle{{WWW 2010: Proceedings of the 19th international conference on
   \bauthor{\bsnm{Platanioti},~\bfnm{K.}\binits{K.}} \AND
   \bauthor{\bsnm{Hand},~\bfnm{D.~J.}\binits{D.~J.}}
 (\byear{2010}).
-\btitle{{Bayesian anomaly detection methods for social networks}}.
+\btitle{{B}ayesian Anomaly Detection Methods for Social Networks}.
 \bjournal{Ann. Appl. Statist.}
 \bvolume{4}
 \bpages{645--662}.
@@ -177,26 +178,30 @@ In \bbooktitle{{WWW 2010: Proceedings of the 19th international conference on
 \begin{bbook}[author]
 \bauthor{\bsnm{Jackson},~\bfnm{M.~O.}\binits{M.~O.}}
 (\byear{2008}).
-\btitle{{Social and Economic Networks}}.
-\bpublisher{Princeton University Press}.
+\btitle{Social and Economic Networks}.
+\bpublisher{Princeton University Press}, \baddress{Princeton, NJ}.
 \end{bbook}
 \endbibitem
 
 \bibitem{kantorovich1952functional}
-\begin{bbook}[author]
+\begin{barticle}[author]
 \bauthor{\bsnm{Kantorovich},~\bfnm{L.~V.}\binits{L.~V.}}
-(\byear{1952}).
-\btitle{{Functional Analysis and Applied Mathematics}}.
-\bnote{translated by C. D. Benster, National Bureau of Standards Report 1509}.
-\end{bbook}
+(\byear{1948}).
+\btitle{Functional Analysis and Applied Mathematics}.
+\bjournal{Uspekhi Matematicheskikh Nauk}
+\bvolume{3}
+\bpages{89--185}.
+\bnote{Translated by C. D. Benster, National Bureau of Standards Report
+  No.~1509, 1952}.
+\end{barticle}
 \endbibitem
 
 \bibitem{kolaczyk2009statistical}
 \begin{bbook}[author]
 \bauthor{\bsnm{Kolaczyk},~\bfnm{E.~D.}\binits{E.~D.}}
 (\byear{2009}).
-\btitle{{Statistical Analysis of Network Data: Methods and Models}}.
-\bpublisher{Springer}.
+\btitle{Statistical Analysis of Network Data: Methods and Models}.
+\bpublisher{Springer}, \baddress{New York}.
 \end{bbook}
 \endbibitem
 
@@ -204,23 +209,25 @@ In \bbooktitle{{WWW 2010: Proceedings of the 19th international conference on
 \begin{barticle}[author]
 \bauthor{\bsnm{Lenglart},~\bfnm{E.}\binits{E.}}
 (\byear{1977}).
-\btitle{{Relation de domination entre deux processus}}.
+\btitle{Relation de Domination entre Deux Processus}.
 \bjournal{Ann. Inst. Henri Poincar\'e}
 \bvolume{13}
-\bpages{171--9}.
+\bpages{171--179}.
 \end{barticle}
 \endbibitem
 
 \bibitem{lunagomez2009geometric}
-\begin{bunpublished}[author]
-\bauthor{\bsnm{Lunag\'omez},~\bfnm{S.}\binits{S.}},
+\begin{btechreport}[author]
+\bauthor{\bsnm{Lunag\'{o}mez},~\bfnm{S.}\binits{S.}},
   \bauthor{\bsnm{Mukherjee},~\bfnm{S.}\binits{S.}} \AND
   \bauthor{\bsnm{Wolpert},~\bfnm{R.~L.}\binits{R.~L.}}
 (\byear{2009}).
-\btitle{{Geometric representations of hypergraphs for prior specification and
-  posterior sampling}}.
+\btitle{Geometric Representations of Hypergraphs for Prior Specification and
+  Posterior Sampling}
+\btype{Technical Report} No. \bnumber{2009-01},
+\binstitute{Duke University}, \baddress{Durham, NC}
 \bnote{arXiv:0912.3648v1 [math.ST]}.
-\end{bunpublished}
+\end{btechreport}
 \endbibitem
 
 \bibitem{malmgen2009characterizing}
@@ -230,10 +237,11 @@ In \bbooktitle{{WWW 2010: Proceedings of the 19th international conference on
   \bauthor{\bsnm{Amaral},~\bfnm{L.~A.}\binits{L.~A.}} \AND
   \bauthor{\bsnm{Watts},~\bfnm{D.~J.}\binits{D.~J.}}
 (\byear{2009}).
-\btitle{{Characterizing individual communication patterns}}.
-In \bbooktitle{KDD '09: Proceedings of the 15th ACM SIGKDD international
-  conference on Knowledge Discovery and Data Mining}
+\btitle{Characterizing Individual Communication Patterns}.
+In \bbooktitle{Proc. 15th ACM SIGKDD Intl Conf. Knowledge Discovery Data
+  Mining}
 \bpages{607--616}.
+\bpublisher{New York: Association for Computing Machinery}.
 \end{binproceedings}
 \endbibitem
 
@@ -242,8 +250,8 @@ In \bbooktitle{KDD '09: Proceedings of the 15th ACM SIGKDD international
 \bauthor{\bsnm{Martinussen},~\bfnm{T.}\binits{T.}} \AND
   \bauthor{\bsnm{Scheike},~\bfnm{T.~H.}\binits{T.~H.}}
 (\byear{2006}).
-\btitle{{Dynamic Regression Models for Survival Data}}.
-\bpublisher{Springer}.
+\btitle{Dynamic Regression Models for Survival Data}.
+\bpublisher{Springer}, \baddress{New York}.
 \end{bbook}
 \endbibitem
 
@@ -252,8 +260,8 @@ In \bbooktitle{KDD '09: Proceedings of the 15th ACM SIGKDD international
 \bauthor{\bsnm{Mckenzie},~\bfnm{D.}\binits{D.}} \AND
   \bauthor{\bsnm{Rapoport},~\bfnm{H.}\binits{H.}}
 (\byear{2007}).
-\btitle{{Network effects and the dynamics of migration and inequality: theory
-  and evidence from Mexico}}.
+\btitle{Network Effects and the Dynamics of Migration and Inequality: Theory
+  and Evidence from {M}exico}.
 \bjournal{J. Dev. Econ.}
 \bvolume{84}
 \bpages{1--24}.
@@ -266,7 +274,7 @@ In \bbooktitle{KDD '09: Proceedings of the 15th ACM SIGKDD international
   \bauthor{\bsnm{Smith-Lovin},~\bfnm{L.}\binits{L.}} \AND
   \bauthor{\bsnm{Cook},~\bfnm{J.~M.}\binits{J.~M.}}
 (\byear{2001}).
-\btitle{{Birds of a feather: homophily in social networks}}.
+\btitle{Birds of a Feather: Homophily in Social Networks}.
 \bjournal{Annu. Rev. Sociol.}
 \bvolume{27}
 \bpages{415--444}.
@@ -278,8 +286,8 @@ In \bbooktitle{KDD '09: Proceedings of the 15th ACM SIGKDD international
 \bauthor{\bsnm{Nocedal},~\bfnm{J.}\binits{J.}} \AND
   \bauthor{\bsnm{Wright},~\bfnm{S.~J.}\binits{S.~J.}}
 (\byear{2006}).
-\btitle{{Numerical Optimization}}, \bedition{2nd} ed.
-\bpublisher{Springer}.
+\btitle{Numerical Optimization}, \bedition{Second} ed.
+\bpublisher{Springer}, \baddress{New York}.
 \end{bbook}
 \endbibitem
 
@@ -287,8 +295,8 @@ In \bbooktitle{KDD '09: Proceedings of the 15th ACM SIGKDD international
 \begin{barticle}[author]
 \bauthor{\bsnm{Papachristos},~\bfnm{A.~V.}\binits{A.~V.}}
 (\byear{2009}).
-\btitle{{Murder by structure: dominance relations and the social structure of
-  gang homicide}}.
+\btitle{Murder by Structure: Dominance Relations and the Social Structure of
+  Gang Homicide}.
 \bjournal{Am. J. Sociol.}
 \bvolume{115}
 \bpages{74--128}.
@@ -299,21 +307,21 @@ In \bbooktitle{KDD '09: Proceedings of the 15th ACM SIGKDD international
 \begin{barticle}[author]
 \bauthor{\bsnm{Rebolledo},~\bfnm{R.}\binits{R.}}
 (\byear{1980}).
-\btitle{{Central limit theorems for local martingales}}.
-\bjournal{Probabl. Theory Rel.}
+\btitle{Central Limit Theorems for Local Martingales}.
+\bjournal{Probab. Theory Rel. Fields}
 \bvolume{51}
-\bpages{269-286}.
+\bpages{269--286}.
 \end{barticle}
 \endbibitem
 
 \bibitem{snijders2010introduction}
 \begin{barticle}[author]
 \bauthor{\bsnm{Snijders},~\bfnm{T.~A.~B.}\binits{T.~A.~B.}},
-  \bauthor{\bparticle{van~d }\bsnm{eBunt},~\bfnm{G.~V.}\binits{G.~V.}} \AND
+  \bauthor{\bparticle{Van~de }\bsnm{Bunt},~\bfnm{G.~V.}\binits{G.~V.}} \AND
   \bauthor{\bsnm{Steglich},~\bfnm{C.~E.~G.}\binits{C.~E.~G.}}
 (\byear{2010}).
-\btitle{{Introduction to stochastic actor-based models for network dynamics}}.
-\bjournal{Soc. Networks}
+\btitle{Introduction to Stochastic Actor-Based Models for Network Dynamics}.
+\bjournal{Soc. Netw.}
 \bvolume{32}
 \bpages{44--60}.
 \end{barticle}
@@ -326,8 +334,8 @@ In \bbooktitle{KDD '09: Proceedings of the 15th ACM SIGKDD international
   \bauthor{\bsnm{Dushoff},~\bfnm{J.}\binits{J.}} \AND
   \bauthor{\bsnm{Rubenstein},~\bfnm{D.~I.}\binits{D.~I.}}
 (\byear{2007}).
-\btitle{{Network metrics reveal differences in social organization between two
-  fission-fusion species, Grevy's zebra and onager}}.
+\btitle{Network Metrics Reveal Differences in Social Organization Between Two
+  Fission-Fusion Species, {G}revy's Zebra and Onager}.
 \bjournal{Oecologia}
 \bvolume{151}
 \bpages{140--149}.
@@ -338,7 +346,7 @@ In \bbooktitle{KDD '09: Proceedings of the 15th ACM SIGKDD international
 \begin{barticle}[author]
 \bauthor{\bsnm{Tapia},~\bfnm{R.~A.}\binits{R.~A.}}
 (\byear{1971}).
-\btitle{{The Kantorovich theorem for Newton's method}}.
+\btitle{The {K}antorovich Theorem for {N}ewton's Method}.
 \bjournal{Am. Math. Mon.}
 \bvolume{78}
 \bpages{389--392}.
@@ -346,14 +354,13 @@ In \bbooktitle{KDD '09: Proceedings of the 15th ACM SIGKDD international
 \endbibitem
 
 \bibitem{therneau2009survival}
-\begin{bmanual}[author]
-\bauthor{\bsnm{Therneau},~\bfnm{Terry}\binits{T.}} \AND
-  \bauthor{\bsnm{Lumley},~\bfnm{Thomas}\binits{T.}}
+\begin{bunpublished}[author]
+\bauthor{\bsnm{Therneau},~\bfnm{T.}\binits{T.}} \AND
+  \bauthor{\bsnm{Lumley},~\bfnm{T.}\binits{T.}}
 (\byear{2009}).
-\btitle{\texttt{survival}: Survival analysis, including penalised likelihood.}
-\bnote{R package version 2.35-8.
-  \url{http://CRAN.R-project.org/package=survival}}.
-\end{bmanual}
+\btitle{\texttt{survival}: Survival Analysis, Including Penalised Likelihood}.
+\bnote{R package version 2.35-8, http://CRAN.R-project.org/package=survival}.
+\end{bunpublished}
 \endbibitem
 
 \bibitem{tyler2005email}
@@ -362,8 +369,8 @@ In \bbooktitle{KDD '09: Proceedings of the 15th ACM SIGKDD international
   \bauthor{\bsnm{Wilkinson},~\bfnm{D.~M.}\binits{D.~M.}} \AND
   \bauthor{\bsnm{Huberman},~\bfnm{B.~A.}\binits{B.~A.}}
 (\byear{2005}).
-\btitle{E-mail as spectroscopy: automated discovery of community structure
-  within organizations}.
+\btitle{E-mail as Spectroscopy: Automated Discovery of Community Structure
+  Within Organizations}.
 \bjournal{Inform. Soc.}
 \bvolume{21}
 \bpages{143--153}.
@@ -374,7 +381,7 @@ In \bbooktitle{KDD '09: Proceedings of the 15th ACM SIGKDD international
 \begin{barticle}[author]
 \bauthor{\bsnm{Wong},~\bfnm{W.~H.}\binits{W.~H.}}
 (\byear{1986}).
-\btitle{{Theory of partial likelihood}}.
+\btitle{Theory of Partial Likelihood}.
 \bjournal{Ann. Statist.}
 \bvolume{14}
 \bpages{88--123}.
@@ -388,10 +395,11 @@ In \bbooktitle{KDD '09: Proceedings of the 15th ACM SIGKDD international
   \bauthor{\bsnm{Magdon-Ismail},~\bfnm{M.}\binits{M.}} \AND
   \bauthor{\bsnm{Wallace},~\bfnm{W.~A.}\binits{W.~A.}}
 (\byear{2007}).
-\btitle{{Strategies for cleaning organizational emails with an application to
-  Enron email dataset}}.
-In \bbooktitle{5th Conf. of North American Association for Computational Social
-  and Organizational Science (NAACSOS 07)}.
+\btitle{Strategies for Cleaning Organizational Emails with an Application to
+  {E}nron Email Dataset}.
+In \bbooktitle{5th Annu. Conf. North Am. Ass. Computat. Social Organizat. Sci.}
+\bpublisher{Pittsburgh, PA: North American Association for Computational Social
+  and Organizational Science}.
 \end{binproceedings}
 \endbibitem
 
