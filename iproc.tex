@@ -61,7 +61,7 @@
 \end{aug}
 
 \begin{abstract}
-Network data often take the form of counts of repeated interactions over time.  Here we consider partial-likelihood inference for the general case of \emph{directed} interactions involving senders and receivers, communications data being a canonical example.  We model these data in continuous time by way of a point process representation, using a Cox multiplicative intensity model that takes into account covariates that depend on the history of the process.  We prove consistency and asymptotic Normality of our estimation procedure as time increases, in contrast to the fixed-interval setting typical of the clinical trials literature.  We also address the issue of consistent inference for interactions with multiple receivers, which has been largely ignored in the network literature to date.  We show that treating these as multiple separate interactions leads to biased estimators, and we give conditions under which this bias can be corrected. We also describe an efficient implementation of the resulting inference and bootstrap procedures, and conclude with a data analysis example showing the effects of reciprocity and group-level preferences on message sending behavior in a corporate e-mail dataset.
+Network data often take the form of counts of repeated interactions over time.  Here we consider partial-likelihood inference for the general case of \emph{directed} interactions involving senders and receivers, communications data being a canonical example.  We model these data in continuous time by way of a point process representation, using a Cox multiplicative intensity model that takes into account covariates that depend on the history of the process.  We prove consistency and asymptotic Normality of our estimation procedure as time increases, in contrast to the fixed-interval setting typical of the clinical trials literature.  We also address the issue of consistent inference for interactions with multiple receivers, which has been largely ignored in the network literature to date.  We show that treating these as multiple separate interactions leads to biased estimators, and we give conditions under which this bias can be corrected. We also describe an efficient implementation of the resulting inference and bootstrap procedures, and conclude with a data analysis example showing the effects of reciprocation and group-level preferences on message sending behavior in a corporate e-mail dataset.
 \end{abstract}
 
 \begin{keyword}[class=AMS]
@@ -80,6 +80,7 @@ Network data often take the form of counts of repeated interactions over time.  
 
 
 \section{Introduction}
+\label{S:introduction}
 
 Much effort has been devoted to the statistical analysis of network data;
 see~\cite{goldenberg2009survey,jackson2008social,kolaczyk2009statistical}
@@ -1252,34 +1253,77 @@ $\tilde \beta_n - \widehat{\mathrm{bias}}$.
 
 \section{Analysis of a Corporate E-mail Network}\label{S:enron-modeling}
 
-We now consider a data analysis example to demonstrate the efficacy of the models and inference methods introduced above, and to show how they enable us to address the three key concerns of interaction data analysis (homophily, reciprocity, and multiplicity) raised in the Introduction of this article.  To do so we employ the multiple-recipient proportional intensity modeling framework developed above; we include static covariates reflecting group membership to account for the possibility of homophily, and dynamic covariates capturing past interactions to measure reciprocity effects.
+We now consider a data analysis example to demonstrate the efficacy of the
+models and inference methods introduced above, and to show how they enable
+us to address the three key concerns of interaction data analysis
+(homophily, reciprocation, and multiplicity) raised in
+Section~\ref{S:introduction}.  To do so we employ the multicast
+proportional intensity modeling framework developed above; we include static
+covariates reflecting group membership to account for the possibility of
+homophily, and dynamic covariates capturing past interactions to measure
+reciprocation effects.
 
 \subsection{Data and Methods}
 
-Our example analysis uses publicly available data from the Enron e-mail corpus~\cite{cohen2009enron}, a large subset of the e-mail messages sent within the Enron corporation between November 1998 and June 2002, and made public as the result of a subpoena by the U.S.~Federal Energy Regulatory Commission during an investigation into fraudulent accounting practices.  We analyze the dataset compiled by~\cite{zhou2007strategies}, comprising $21,635$ messages sent among $156$ employees between November 13, 1998 and June 21, 2002, along with the genders, seniorities, and departments of these employees (summarized in Table~\ref{T:employee-summary}).
+Our example analysis uses publicly available data from the Enron e-mail
+corpus~\cite{cohen2009enron}, a large subset of the e-mail messages sent
+within the Enron corporation between November 1998 and June 2002, and made
+public as the result of a subpoena by the U.S.~Federal Energy Regulatory
+Commission during an investigation into fraudulent accounting practices.
+We analyze the dataset compiled by~\cite{zhou2007strategies}, comprising
+21,635 messages sent among 156 employees between November 13, 1998 and
+June 21, 2002, along with the genders, seniorities, and departments of
+these employees (summarized in Table~\ref{T:employee-summary}).
 \begin{table}[t]
     \input{tables/employee-summary}
     \caption{
-        Characteristics of the 156 employees in the Enron dataset~\cite{zhou2007strategies}.
+        Characteristics of the 156 employees in the Enron dataset.
     }
     \label{T:employee-summary}
 \end{table}
-Approximately 30\% of these messages have more than one recipient across their \texttt{To}, \texttt{CC}, and \texttt{BCC} fields, with a few messages having more than fifty recipients (see Fig.~\ref{F:recipient-counts}).
+Approximately 30\% of these messages have more than one recipient across
+their \texttt{To}, \texttt{CC}, and \texttt{BCC} fields, with a few
+messages having more than fifty recipients
+(see Fig.~\ref{F:recipient-counts}).
 \begin{figure}
     \includegraphics[scale=0.6]{figures/recipient-counts}
     \caption{
         \textsc{Message recipient counts.}
         Each of the 21,635 points corresponds to a message, with
-        $y$-value showing the base-2 logarithm of its number of recipients (ranging from 1--57).
+        $y$-value showing the base-2 logarithm of its number of recipients
+        (ranging from 1--57).
     }\label{F:recipient-counts}
 \end{figure}
-In the subsequent analysis, we exclude messages with more than 10 recipients---a subjectively-chosen cutoff at the 99th percentile that avoids e-mails sent \emph{en masse} to large groups.
+In the subsequent analysis, we exclude messages with more than 10
+recipients---a subjectively-chosen cutoff that avoids e-mails sent
+\emph{en masse} to large groups.
 
-We model these data using the multiple-recipient proportional intensity model of Section~\ref{S:multiple-receivers}, with $\mathcal{I} = \mathcal{J} = \{ 1, 2, \ldots, 156 \}$ and $\mathcal{J}_t(i) = \mathcal{I} \setminus \{ i \}$, and with static and dynamic covariates taking the form of indicator variables as described below.  We fit the model by first maximizing the approximate log partial likelihood of~\eqref{E:log-pl-multiple-approx}, and then employing a parametric bootstrap to estimate and correct the resultant bias in parameter estimates.  Standard errors are calculated using the corresponding asymptotic theory, along with the delta method as appropriate.  Note that in the setting of this data analysis example, the covariates are bounded and the interaction count is high, and so assumptions A\ref{A:square-int}--A\ref{A:var-equicont} and the asymptotic framework developed in Sections~\ref{S:MPLE-consistency} and~\ref{S:multiple-receivers} are natural.
+We model these data using the multicast proportional intensity
+model of Section~\ref{S:multiple-receivers}, with
+$\mathcal{I} = \mathcal{J} = \{ 1, 2, \ldots, 156 \}$ and
+$\mathcal{J}_t(i) = \mathcal{I} \setminus \{ i \}$, and with static and
+dynamic covariates taking the form of indicator variables as described
+below.  We fit the model by first maximizing the approximate log partial
+likelihood of~\eqref{E:log-pl-multiple-approx}, and then employing a
+parametric bootstrap to estimate and correct the resultant bias in
+parameter estimates.  Standard errors are calculated using the
+corresponding asymptotic theory, along with the delta method as
+appropriate.  Note that in the setting of this data analysis example,
+the covariates are bounded and the interaction count is high, and so
+assumptions A\ref{A:square-int}--A\ref{A:var-equicont} and the asymptotic
+framework developed in Sections~\ref{S:MPLE-consistency}
+and~\ref{S:multiple-receivers} are natural.
 
 \subsection{Covariates and Identifiability}
 
-For each $i \in \mathcal{I}$ and $j \in \mathcal{J}_t(i)$, we employ dyad covariate vectors $x_t(i,j) \in \{0,1\}^{165}$, each with $144 + 21$ binary components, corresponding respectively to static and dynamic regressors.  The former are determined by the sender- and receiver-specific group memberships summarized in Table~\ref{T:employee-summary}: abbreviating the codes for gender, department, and seniority by F/M, L/T/O, and J/S, the $144$ static components of $x_t(i,j)$ are obtained by stacking the columns of $s(i) \otimes s(j)$, where
+For each $i \in \mathcal{I}$ and $j \in \mathcal{J}_t(i)$, we employ dyad
+covariate vectors $x_t(i,j) \in \{0,1\}^{165}$, each with $144 + 21$ binary
+components, corresponding respectively to static and dynamic regressors.
+The former are determined by the sender- and receiver-specific group
+memberships summarized in Table~\ref{T:employee-summary}: abbreviating the
+codes for gender, department, and seniority by F/M, L/T/O, and J/S, the
+$144$ static components of $x_t(i,j)$ are obtained by stacking the columns
+of $s(i) \otimes s(j)$, where
 \begin{multline*}
     s(i)
     = \big(
@@ -1297,35 +1341,61 @@ For each $i \in \mathcal{I}$ and $j \in \mathcal{J}_t(i)$, we employ dyad covari
         \text{1\{$i$ is MOS\}}
     \big)
 \end{multline*}
-is the group membership vector for individual $i$.  The $21$ dynamic components of $x_t(i,j)$ are history-dependent and designed to capture reciprocity effects; they take the form
+is the group membership vector for individual $i$.  The $21$ dynamic
+components of $x_t(i,j)$ are history-dependent and designed to capture
+reciprocation effects; they take the form
 \[
-    1\{\text{$j$'s most recent message to $i$ was sent in $[t-2^k \text{ hours}, t)$\}},
+    1\{\text{$j$'s most recent message to $i$ was sent in
+             $[t-2^k \text{ hours}, t)$\}},
 \]
-where $k$ ranges from $-6$ to $14$, yielding time intervals from $56.25$ seconds to $1.87$ years.  (Effects of intervals outside of this range could not be estimated, with significance, from the available data.)
+where $k$ ranges from $-6$ to $14$, yielding time intervals from
+$56.25$ seconds to $1.87$ years.  (Effects involving intervals outside
+of this range were initially included in the model but were not found
+to be significant.)
 
-Note that the components of $\beta_0$ corresponding to the static covariates are not identifiable, since any $\tilde \beta_0$ satisfying $\tilde \beta_0^\trans x_t(i,j) = \beta_0^\trans x_t(i,j) + \alpha_t(i)$ gives rise to the same partial likelihood.  We identify $\beta_0$ by by imposing ``sum-to-zero'' constraints within each of the $12$ receiver classes, reducing the corresponding degrees of freedom from $144$ to $132$.
+Note that the components of $\beta_0$ corresponding to the static
+covariates are not identifiable, since any $\tilde \beta_0$ satisfying
+$\tilde \beta_0^\trans x_t(i,j) = \beta_0^\trans x_t(i,j) + \alpha_t(i)$
+gives rise to the same partial likelihood.  We identify $\beta_0$ by by
+imposing sum-to-zero constraints within each of the $12$ receiver
+classes, reducing the corresponding degrees of freedom from $144$ to $132$.
 
 \subsection{Results}
 
-Given the model specification, data, and covariates outlined above, we may estimate the parameter vector $\beta_0$ under the approximate log partial likelihood of~\eqref{E:log-pl-multiple-approx}.  Recall that the results of Section~\ref{S:multiple-receivers} bound the bias resulting from this approximate MPLE procedure as a function of the growth rate of the recipient set $\mathcal{J}$ over time.  Here, treating the set $\mathcal{J}$ of 156 Enron employees as constant, the resultant bias is of order $1/|\mathcal{J}|$---and, since $|\mathcal{J}| = 156$ is on the order of the square root of the number $21,365$ of messages in the dataset, we can correct this bias using the parametric bootstrap outlined at the end of Section~\ref{S:multiple-receivers}.  Figure~\ref{F:boot-resid}
+Given the model specification, data, and covariates outlined above, we can
+estimate the parameter vector $\beta_0$ under the approximate
+log partial likelihood of~\eqref{E:log-pl-multiple-approx}.  Recall
+that the results of Section~\ref{S:multiple-receivers} bound the bias
+resulting from this approximate MPLE procedure as a function of the growth
+rate of the recipient set $\mathcal{J}$ over time.  Here, treating the
+set $\mathcal{J}$ of 156 Enron employees as constant, the resultant bias
+is of order $1/|\mathcal{J}|$---and, since $|\mathcal{J}| = 156$ is on the
+order of the square root of the number 21,365 of messages in the dataset,
+we can correct this bias using the parametric bootstrap outlined at the
+end of Section~\ref{S:multiple-receivers}.  Fig.~\ref{F:boot-resid}
 \begin{figure}[t]
     \includegraphics[scale=0.6]{figures/boot-resid}
     \caption{
-        \textsc{Enron Bootstrap Residuals.} Summary of bootstrap residuals for
-        estimated coefficients using the Enron dataset, normalized by estimated
-        standard errors.  The points (orange) show the means, and the
-        error bars (purple) show one standard deviation.  Coefficients
+        \textsc{Enron Bootstrap Residuals.} Summary of bootstrap residuals
+        for estimated coefficients using the Enron dataset, normalized by
+        estimated standard errors.  The points (orange) show the means, and
+        the error bars (purple) show one standard deviation.  Coefficients
         1--144 are the group-level (static) effects, and coefficients
-        145--165 are the reciprocity (dynamic) effects, ordered from
+        145--165 are the reciprocation (dynamic) effects, ordered from
         shortest time interval to longest.  The bias is on the order of
         the standard error, and is near zero for most---but not all---of the
         coefficients.
     }
     \label{F:boot-resid}
 \end{figure}
-summarizes the corresponding bootstrap residuals (from $500$ replicates) for each component of the estimated parameter vector $\beta_0$; we can see from this figure that treating messages with multiple recipients as multiple single-recipient messages leads to negative bias in the coefficient estimates.
+summarizes the corresponding bootstrap residuals (from $500$ replicates) for
+each component of the estimated parameter vector $\beta_0$; we can see from
+this figure that treating messages with multiple recipients as multiple
+single-recipient messages leads to negative bias in the coefficient
+estimates.
 
-The bias-corrected results of inference on $\beta_0$ are summarized as follows.  Table~\ref{T:group-effects}
+The bias-corrected results of inference on $\beta_0$ are summarized as
+follows.  Table~\ref{T:group-effects}
 \begin{table}[t]
     \tiny
     \input{tables/group-effects-bc}
@@ -1341,22 +1411,26 @@ The bias-corrected results of inference on $\beta_0$ are summarized as follows. 
     }
     \label{T:group-effects}
 \end{table}
-shows the estimated group-level (static) effects, and Fig.~\ref{F:reciprocation}
+shows the estimated group-level (static) effects, and
+Fig.~\ref{F:reciprocation}
 \begin{figure}[t]
     \includegraphics[scale=0.6]{figures/reciprocation-bc}
     \caption{
-        \textsc{Reciprocity Effect.}
-        Estimated reciprocity effect and standard errors for the
+        \textsc{Reciprocation Effect.}
+        Estimated reciprocation effect and standard errors for the
         model described in Section~\ref{S:enron-modeling}.  The solid
         (orange) curve is determined from the 21 estimated coefficients
-        for the reciprocity effects at intervals of ``\,$2^l$ hours''
+        for the reciprocation effects at intervals of ``\,$2^l$ hours''
         for $l$ ranging from $-6$ to $14$.  The dashed (purple) curve gives
         one standard error around the estimate.  Read the figure as follows:
         if employee $j$'s most recent message to employee $i$ was 30 minutes
         ago, then $i$ sends to $j$ at about 200 times his baseline rate.
     }\label{F:reciprocation}
 \end{figure}
-shows the reciprocity (dynamic) effects.  We observe that reciprocity is stronger by orders of magnitude, amplifying the sending rate by between about $10^1$ and $10^3$.  In contrast, group level effects are on the order of $10^{-1}$ to $10^0$.
+shows the reciprocation (dynamic) effects.  We observe that reciprocation
+is stronger by orders of magnitude, amplifying the sending rate by between
+about $10^1$ and $10^3$.  In contrast, group level effects are on the order
+of $10^{-1}$ to $10^0$.
 
 Finally, Table~\ref{T:deviance}
 \begin{table}[t]
@@ -1365,11 +1439,18 @@ Finally, Table~\ref{T:deviance}
         Ad-hoc analysis of deviance for the Enron model.  Residual deviance
         is defined as twice the approximate negative log-partial likelihood
         when messages.  The ``Static'' term contains the group level effects,
-        and the ``Dynamic'' term contains the reciprocity effects.
+        and the ``Dynamic'' term contains the reciprocation effects.
     }
     \label{T:deviance}
 \end{table}
-gives an ad-hoc analysis of deviance for the fitted model, showing that group-level (static) effects account for 18\% of the residual deviance and reciprocation (dynamic) effects account for 24\%.  If the model fit perfectly, we would expect the residual deviance to be about equal to the residual degrees of freedom; here, the residual deviance is about $5.9$ times what we would expect.  Scaling the reported standard errors by $\sqrt{5.9}$ is an ad-hoc adjustment for this overdispersion.
+gives an ad-hoc analysis of deviance for the fitted model, showing that
+group-level (static) effects account for 18\% of the residual deviance and
+reciprocation (dynamic) effects account for 24\%.  If the model fit
+perfectly, we would expect the residual deviance to be about equal to the
+residual degrees of freedom; here, the residual deviance is about $5.9$
+times what we would expect.  Scaling the reported standard errors by
+$\sqrt{5.9}$ is an ad-hoc adjustment for this overdispersion.
+
 
 \section{Discussion}\label{S:discussion}
 
