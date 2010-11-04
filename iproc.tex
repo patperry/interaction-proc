@@ -758,12 +758,12 @@ assumption~A\ref{A:integrated-cov-limit}, thereby concluding the proof.
 \section{Multicast Interactions}\label{S:multiple-receivers}
 
 In Sections~\ref{S:point-process-model}~and~\ref{S:MPLE-consistency},
-we have assumed each interaction to involve a single sender and a single
+we have assumed that each interaction involves a single sender and a single
 receiver.  The model and corresponding asymptotic theory are sufficient to
 cover strictly pairwise directed interactions (e.g., phone calls), but they
-do not describe interactions that can involve multiple receivers (e.g., e-mail
-messages).  We call an interaction involving a single sender and possibly
-multiple receivers a multicast interaction.
+do not describe interactions that can involve multiple receivers (e.g.,
+e-mail messages).  We call an interaction involving a single sender and
+possibly multiple receivers a multicast interaction.
 
 In practice, multicast interactions are typically treated in an ad-hoc manner
 via duplication---for example, interaction $i \to \{ j_1, j_2, j_3 \}$ gets
@@ -771,8 +771,9 @@ recorded as three separate pairwise interactions $i \to j_1$, $i \to j_2$,
 and $i \to j_3$---giving rise to approximate likelihood and inference.
 In this section we explore the implications of using this approximate
 likelihood in the multicast setting.  In particular we show it to be closely
-related to an extension of our model for directed pairwise interactions, and that the bias introduced by such an
-approximation can be quantified and in certain cases corrected.
+related to an extension of our model for directed pairwise interactions, and
+that the bias introduced by such an approximation can be quantified and in
+certain cases corrected.
 
 To this end, we introduce an extension of the model to the multicast setting.
 Let $\mathcal{I}$, $\mathcal{J}$, $\mathcal{J}_t(i)$, $x_t(i,j)$,
@@ -780,9 +781,9 @@ and $\beta_0$ be as in Section~\ref{S:point-process-model}.  For each sender
 $i$ and positive integer $L$, let $\bar \lambda_t(i ; L)$ be a non-negative
 predictable process called the baseline $L$-receiver intensity of sender $i$.
 Let $(t_1, i_1, J_1), \ldots, (t_n, i_n, J_n)$ be the
-sequence of observed multicast interactions, with tuple $(t, i, J)$ indicating
-that at  time $t$, sender $i$ interacted with receiver set $J$.  For a set
-$J$, let $|J|$ denote its cardinality.
+sequence of observed multicast interactions, with tuple $(t, i, J)$
+indicating that at  time $t$, sender $i$ interacted with receiver set $J$.
+For a set $J$, let $|J|$ denote its cardinality.
 
 Consider a model for multicast interactions where the rate of interaction
 between sender $i$ and receiver set $J$ is
@@ -845,8 +846,9 @@ the interaction times, we obtain an approximate partial likelihood:
 
 We claim $\log \widetilde{\mathit{PL}}_t(\beta)$ approximates
 $\log \mathit{PL}_t(\beta)$.  Heuristically, replacing the
-sum over all sets of size $|J_m|$ in~\eqref{E:log-pl-multiple} with a sum over all multisets of size
-$|J_m|$ (i.e., allowing duplicate elements from each $\mathcal{J}_{t_m}(i_m)$), we observe the relation to~\eqref{E:log-pl-multiple-approx} as follows:
+sum over all sets of size $|J_m|$ in~\eqref{E:log-pl-multiple}
+with a sum over all multisets of size $|J_m|$ (i.e., allowing
+duplicate elements from $\mathcal{J}_{t_m}(i_m)$), observe
 \begin{align*}
     \log\big[\!\!
         \sum_{\substack{J \subseteq \mathcal{J}_{t_m}(i_m) \\
@@ -891,9 +893,9 @@ Define the receiver set growth sequence
 \end{equation}
 This sequence plays a critical role in bounding the error introduced by
 replacing $\log \mathit{PL}$ with $\log \widetilde{\mathit{PL}}$.
-Note that when $|\mathcal{J}_{t_m}(i_m)|$ is constant $G_n$ has linear growth,
-but when $|\mathcal{J}_{t_m}(i_m)|$ increases, $G_n$ often has sublinear
-growth.  For example, the Cauchy-Schwartz inequality gives
+Note that when $|\mathcal{J}_{t_m}(i_m)|$ is constant $G_n$ has linear
+growth, but when $|\mathcal{J}_{t_m}(i_m)|$ increases, $G_n$ often has
+sublinear growth.  For example, the Cauchy-Schwartz inequality gives
 \[
     G_n
         \leq
@@ -970,7 +972,8 @@ take ``$w_t(\beta, i, j)$'' to mean $w_t(\beta, i, \{j\})$.  Define weights
             \Big[ \sum_{j \in \mathcal{J}_t(i)} w_t(\beta, i, j) \Big]^L,
 \end{gather*}
 \end{subequations}
-and note that the approximation error in $\log \widetilde{\mathit{PL}}_t(\beta)$ comes from replacing
+and note that the approximation error in
+$\log \widetilde{\mathit{PL}}_t(\beta)$ comes from replacing
 $W$ with $\widetilde W$.
 
 The gradients of the weights are
@@ -1007,7 +1010,11 @@ Let $\tilde{\mathbb{P}}_{t,\beta,i;L}$ and $\mathbb{P}_{t,\beta,i;L}$
 denote the two probability laws for $j_1, \ldots, j_L$, and let
 $\tilde{\mathbb{E}}_{t,\beta,i;L}$ and $\mathbb{E}_{t,\beta,i;L}$ denote
 expectations with respect to them, so that
-$E_t(\beta,i;L) = \mathbb{E}_{t,\beta,i;L} \big[ \sum_{l=1}^L x_t(i,j_l)\big]$
+\(
+    E_t(\beta,i;L)
+        =
+        \mathbb{E}_{t,\beta,i;L} \big[ \sum_{l=1}^L x_t(i,j_l)\big]
+\)
 and
 \(
     \widetilde E_t(\beta,i;L)
@@ -1161,7 +1168,7 @@ $\beta_0$.  Theorem~\ref{T:mple-approx-error} (proved in Appendix~\ref{S:multipl
     \(
         \tfrac{1}{n}
         \nabla^2
-        [ \log \mathit{PL}_{\tau_n}(\cdot)]
+        [ \log \mathit{\widetilde{PL}}_{\tau_n}(\cdot)]
     \)
     is uniformly locally Lipschitz and with smallest eigenvalue bounded away from zero
     in a neighborhood of $\hat \beta_n$.
