@@ -317,7 +317,8 @@ The function $\log \mathit{PL}_t(\cdot)$ is concave, and so can be maximized
 via Newton's method or a gradient-based optimization approach
 \cite{nocedal2006numerical}.  These methods require one or both of the
 first two derivatives of $\log\mathit{PL}_t(\cdot)$, which can be
-expressed in terms of weighted means and covariances of the covariates.  The weights are
+expressed in terms of weighted means and covariances of the covariates.  The
+weights are
 \begin{subequations}
 \begin{gather}
     w_{t}(\beta, i,j)
@@ -327,7 +328,7 @@ expressed in terms of weighted means and covariances of the covariates.  The wei
         1\{ j \in \mathcal{J}_t(i)\}, \\
     W_{t}(\beta, i)
         =
-        \sum_{j \in \mathcal{J}} w_{t}(\beta, i,j).
+        \sum_{j \in \mathcal{J}_t(i)} w_{t}(\beta, i,j).
 \end{gather}
 \end{subequations}
 The inner sum in $\log \mathit{PL}_t(\beta)$ is
