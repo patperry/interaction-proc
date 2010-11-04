@@ -81,24 +81,73 @@ Network data often take the form of counts of repeated interactions over time.  
 
 \section{Introduction}
 
-Much effort has recently been devoted to the statistical analysis of network data; see~\cite{goldenberg2009survey,jackson2008social,kolaczyk2009statistical} for recent overviews.  While such data are typically treated as ``ties'' between entities, it is often the case in practice that network observables comprise counts of interactions between individuals or groups tabulated over time.  Modern-day communications networks give rise to important examples of \emph{directed} interactions: phone calls, text messages, or e-mails exchanged amongst a given set of individuals over a specific time period \cite{eagle2006reality,tyler2005email}.  Other examples of tabulated interactions include animal association patterns (for instance, zebras congregate at locations in their habitat \cite{sundaresan2007network}); gang homicides (e.g., gangs in Chicago murder members of rival factions \cite{papachristos2009murder}; legislation cosponsorship (legislators author bills, which others then sponsor \cite{fowler2006connecting}); and migration patterns (for example, families migrate between communities in Mexico \cite{mckenzie2007network}).
+Much effort has been devoted to the statistical analysis of network data;
+see~\cite{goldenberg2009survey,jackson2008social,kolaczyk2009statistical}
+for recent overviews.  While such data are typically reduced to ``ties''
+between entities, often network observables comprise counts of interactions
+between individuals or groups tabulated over time.  Communications networks
+give rise to \emph{directed} interactions: phone calls, text messages, or
+e-mails exchanged amongst a given set of individuals over a specific time
+period \cite{eagle2006reality,tyler2005email}.  Other examples of repeated
+interactions include animal association patterns (e.g., zebras congregate
+at locations in their habitat \cite{sundaresan2007network}); gang homicides
+(e.g., gangs in Chicago murder members of rival factions
+\cite{papachristos2009murder}); legislation cosponsorship (e.g., legislators
+author bills which others then sponsor \cite{fowler2006connecting}); and
+migration patterns (e.g., families migrate between communities in Mexico
+\cite{mckenzie2007network}).
 
-In this article, we consider partial-likelihood inference for the general case of directed interaction data in the presence of covariates.  We first develop asymptotic theory for the case in which interactions are strictly pairwise, and then generalize our results to the multiple-interaction case; we also provide efficient algorithms for partial likelihood maximization in these settings.  Our main assumptions are that the interactions are instantaneous; that the corresponding stochastic intensities used to model them are formally predictable and continuous; and that any covariates are locally bounded and predictable.
+In this article, we consider partial-likelihood-based inference for general
+directed interaction data in the presence of covariates.  We first develop
+asymptotic theory for the case in which interactions are strictly pairwise,
+and then generalize our results to the multiple-interaction case; we also
+provide efficient algorithms for partial likelihood maximization in these
+settings.  Our main assumption on the covariates is that they be predictable,
+which allows them to vary with time and potentially depend on the past.
 
-The interaction data we consider comprise a set of triples $(t,i,j)$ indicating that at time $t$, the directed interaction $i\rightarrow j$ took place; for instance, individual $i$ sent a message to individual $j$.  Given a set of such triples and covariate information about the corresponding senders and receivers, a primary modeling goal is to determine which characteristics and behaviors are predictive of interaction.  In this vein, three important questions stand out; the first is a longstanding one in studies of human behavior~\cite{mcpherson2001birds}, whereas the latter two have yet to receive due attention in the network literature:
+The interaction data we consider comprise a set of triples, with triple
+$(t,i,j)$ indicating that at time $t$, directed interaction
+$i\rightarrow j$ took place---for instance, individual $i$ sent a message
+to individual $j$.  Given such a set of triples, a primary modeling goal is
+determining which characteristics and behaviors of the senders and
+receivers are predictive of interaction.  In this vein, three important
+questions stand out; the first is common in studies of human
+behavior~\cite{mcpherson2001birds}, whereas the latter two have
+yet to receive due attention:
 
 \begin{description}
-    \item[Homophily] Is a shared attribute predictive of increased
-    interaction between entities?  Is evidence of homophily---a heightened rate of interaction among similar individuals---present?
+    \item[Homophily] Is there evidence for homophily (an increased rate of
+    interaction among similar individuals)?  To what degree is a shared
+    attribute predictive of heightened interaction?
 
-    \item[Reciprocity] Are past interactions $i \rightarrow j$ predictive of future reciprocal interactions $j \rightarrow i$? If so, how might this effect decay with time?
+    \item[Reciprocation] Are past interactions $i \rightarrow j$ predictive
+    of future reciprocal interactions $j \rightarrow i$? If so, how does this
+    effect decay with time?
 
-    \item[Multiplicity] How should multiple-recipient interactions of the type $i \rightarrow \{j_1,j_2,\ldots\}$ be modeled?  What are the effects of treating these as separate pairwise interactions?
+    \item[Multiplicity] How should multiple-receiver interactions of the
+    type $i \rightarrow \{j_1,j_2,\ldots, j_L\}$ be modeled?  What are the
+    implications of treating these as separate pairwise interactions?
 \end{description}
 
-In the remainder of this article, we provide a modeling framework and computationally efficient partial-likelihood inference procedures to facilitate an analysis of these questions.  We employ a Cox proportional intensity model incorporating both static and history-dependent covariates to address the first of these two questions, and a parametric bootstrap to address the third.  Section~\ref{S:point-process-model} presents our point process model for directed pairwise interactions, along with the resultant inference procedures.  Section~\ref{S:MPLE-consistency} proves consistency and asymptotic Normality of the corresponding maximum partial likelihood estimator, and Section~\ref{S:multiple-receivers} extends our framework to the case of multiple-receiver interactions.  A data analysis example is presented in Section~\ref{S:enron-modeling}, and Section~\ref{S:discussion} concludes with a brief discussion.  Details of implementation and technical lemmas are provided in the appendices.
+In the remainder of this article, we provide a modeling framework and
+computationally efficient partial-likelihood inference procedures to
+facilitate analysis of these questions.  We employ a Cox proportional
+intensity model incorporating both static and history-dependent covariates
+to address the first of these two questions, and a parametric bootstrap to
+address the third. Section~\ref{S:point-process-model} presents our point
+process model for directed pairwise interactions, along with the resultant
+inference procedures. Section~\ref{S:MPLE-consistency} proves consistency
+and asymptotic normality of the corresponding maximum partial likelihood
+estimator, and Section~\ref{S:multiple-receivers} extends our framework to
+the case of multiple-receiver interactions.  Section~\ref{S:enron-modeling}
+presents a data analysis example, and Section~\ref{S:discussion} concludes
+with a brief discussion.  Appendices~\ref{S:implementation}--%
+\ref{S:multiple-recipient-proofs} contain implementation details and
+technical lemmas.
 
-\section{A Point Process Model and Partial-Likelihood Inference}\label{S:point-process-model}
+
+\section{A Point Process Model and Partial-Likelihood Inference}
+\label{S:point-process-model}
 
 Every interaction process can be encoded by a multivariate counting measure.
 For sender $i$, receiver $j$, and positive time $t$, define
@@ -305,7 +354,7 @@ We call $U_t(\beta_0)$ the unnormalized score and $I_t(\beta_0)$
 the Fisher information matrix.
 
 Note that the dependence of these terms on time-varying covariates means that there are no sufficient statistics available to reduce the complexity of partial likelihood maximization.
-Therefore, for all but the smallest interaction datasets, maximization of $\log \mathit{PL}_t(\cdot)$ 
+Therefore, for all but the smallest interaction datasets, maximization of $\log \mathit{PL}_t(\cdot)$
 requires an approach that is more computationally efficient than
 standard tools from survival analysis (e.g., the function
 \texttt{coxph} from the \texttt{survival} package for R
@@ -795,7 +844,7 @@ $|J_m|$ (i.e., allowing duplicate elements from each $\mathcal{J}_{t_m}(i_m)$), 
                 \exp\big\{
                     \beta^\trans x_{t_m}\!(i_m, j)
                 \big\}
-        \big)^{|J_m|} 
+        \big)^{|J_m|}
         \big] \\
     &=
         |J_m|
