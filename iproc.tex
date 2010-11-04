@@ -527,8 +527,8 @@ and is proved in Appendix~\ref{S:MPLE-consistency-proofs}.
         -\tfrac{1}{n} \nabla^2 [ \log \mathit{PL}_{\tau_n}(\beta)]
             \toP \Sigma_1(\beta),
     \)
-    where $\Sigma_1(\cdot)$ is locally Lipschitz and with smallest eigenvalue bounded
-    away from zero.
+    where $\Sigma_1(\cdot)$ is locally Lipschitz and with smallest
+    eigenvalue bounded away from zero.
     If $\hat \beta_n$ maximizes $\log \mathit{PL}_{\tau_n}(\cdot)$ and
     conclusion~(\ref{I:score-part}) of Theorem~\ref{T:score-fisher} holds,
     then the following are true as $n\to\infty$:
@@ -549,11 +549,10 @@ Observe that the process $N_t(i,j)$ has compensator
 \)
 similarly, processes $N_t(i)$ and $N_t$ have compensators
 $\Lambda_t(i) = \sum_{j \in \mathcal{J}} \Lambda_t(i,j)$
-and $\Lambda_t = \sum_{i \in \mathcal{I}} \Lambda_t(i)$.  Correspondingly, define local
-martingales $M_t(i,j) = N_t(i,j) - \Lambda_t(i,j)$,
-$M_t(i) = N_t(i) - \Lambda_t(i)$, and
-$M_t = N_t - \Lambda_t$.
-Also define
+and $\Lambda_t = \sum_{i \in \mathcal{I}} \Lambda_t(i)$.  Correspondingly,
+define local martingales $M_t(i,j) = N_t(i,j) - \Lambda_t(i,j)$,
+$M_t(i) = N_t(i) - \Lambda_t(i)$, and $M_t = N_t - \Lambda_t$;
+also define
 \[
     H_t(i,j)
         =
@@ -586,7 +585,9 @@ since
     =
     0.
 \)
-Since by Assumption A\ref{A:square-int}, $x$ is uniformly bounded, $H$ is as well.  Each term in the sum above is thus locally square integrable, with predictable covariation
+Since by Assumption A\ref{A:square-int}, $x$ is uniformly bounded, $H$
+is as well.  Each term in the sum above is thus locally square integrable,
+with predictable covariation
 \begin{align*}
     \begin{split}
         \bigg\langle
@@ -628,15 +629,18 @@ locally square integrable with predictable variation
 \end{split}
 \end{align}
 
-Now we rescale time.  For each positive $n$ define a discretized time-scaled version of the score that is right-continuous with limits from the left.  The process is defined for times $\alpha$ in $[0,1]$; between times in $[\tfrac{k}{n}, \tfrac{k+1}{n})$, it takes the value $U_{\tau_k}$; i.e.,
+Now we rescale time.  For each positive $n$ define a discretized time-scaled
+version of the score that is right-continuous with limits from the left.
+The process is defined for times $\alpha$ in $[0,1]$; between times in
+$[\tfrac{k}{n}, \tfrac{k+1}{n})$, it takes the value $U_{\tau_k}$; i.e.,
 \begin{equation}\label{E:score-time-scaled}
     \tilde U_{\alpha}^{(n)}(\beta)
         = U_{\tau_{\lfloor \alpha n \rfloor}}(\beta).
 \end{equation}
 
 Part~\textit{(\ref{I:score-part})}:
-Lemma~\ref{L:adapted-martingale} shows that $\tilde U_\alpha^{(n)}(\beta_0)$ is a square-integrable martingale
-adapted to
+Lemma~\ref{L:adapted-martingale} shows that $\tilde U_\alpha^{(n)}(\beta_0)$
+is a square-integrable martingale adapted to
 \(
     \mathcal{\tilde F}^{(n)}_\alpha
         =
@@ -647,19 +651,26 @@ $\tau_{\lfloor \alpha n \rfloor}$.
 Since it only depends on values at jump times, the
 quadratic variation of $\tilde U^{(n)}(\beta_0)$ at time $\alpha$ is
 equal to the quadratic variation of $U(\beta_0)$ at time
-$\tau_{\lfloor \alpha n \rfloor}$.  Therefore, since quadratic and predictable
-variation have the same limit when it exists
-\cite[Prop.~1]{rebolledo1980central}, assumption A\ref{A:integrated-cov-limit}
-implies that
+$\tau_{\lfloor \alpha n \rfloor}$.  Therefore, since quadratic and
+predictable variation have the same limit when it exists
+\cite[Prop.~1]{rebolledo1980central}, assumption
+A\ref{A:integrated-cov-limit} implies that
 \(
     \langle \frac{1}{\sqrt{n}} \tilde U^{(n)}(\beta_0) \rangle_\alpha
         \toP
             \Sigma_\alpha(\beta_0).
 \)
-Lemma~\ref{L:Lindeberg-condition} in turn verifies that $\frac{1}{\sqrt{n}} \tilde U^{(n)}(\beta_0)$ satisfies a Lindeberg condition necessary for the application of Rebolledo's Martingale Central Limit Theorem~\cite{rebolledo1980central}.  Thus the process converges in distribution to a Gaussian process with covariance function $\Sigma_\alpha(\beta_0)$ as claimed.
+Lemma~\ref{L:Lindeberg-condition} in turn verifies that
+$\frac{1}{\sqrt{n}} \tilde U^{(n)}(\beta_0)$ satisfies a Lindeberg
+condition necessary for the application of Rebolledo's Martingale Central
+Limit Theorem~\cite{rebolledo1980central}.  Thus the process converges in
+distribution to a Gaussian process with covariance function
+$\Sigma_\alpha(\beta_0)$ as claimed.
 
 Part~\textit{(\ref{I:fisher-part})}:
-Recalling $M_t(i) = N_t(i) - \Lambda_t(i)$, we may combine~\eqref{E:log-pl-neg-hessian} and~\eqref{E:score-compensator} to obtain the relation
+Recalling $M_t(i) = N_t(i) - \Lambda_t(i)$,
+combine~\eqref{E:log-pl-neg-hessian} and~\eqref{E:score-compensator}
+to obtain the relation
 \begin{equation}\label{E:var-estimate-relation}
             \sum_i
             \int_0^{\tau_{\lfloor \alpha n \rfloor}}
@@ -670,13 +681,17 @@ Recalling $M_t(i) = N_t(i) - \Lambda_t(i)$, we may combine~\eqref{E:log-pl-neg-h
             \big\langle \tilde U^{(n)}(\beta_0) \big\rangle_\alpha.
 \end{equation}
 
-When $\alpha \in [0, 1]$, then a repeated application of the triangle inequality
-to
+When $\alpha \in [0, 1]$, a repeated application of the triangle
+inequality to
 \(
     \left\|
         \tfrac{1}{n} I_{\tau_{\lfloor \alpha n \rfloor}}(\hat \beta_n)
         -
-        \tfrac{1}{n} \{ I_{\tau_{\lfloor \alpha n \rfloor}}(\beta_0) - I_{\tau_{\lfloor \alpha n \rfloor}}(\beta_0) \}
+        \tfrac{1}{n} \big(
+            I_{\tau_{\lfloor \alpha n \rfloor}}(\beta_0)
+            -
+            I_{\tau_{\lfloor \alpha n \rfloor}}(\beta_0)
+        \big)
         -
         \Sigma_{\alpha} (\beta_0)
     \right\|
@@ -732,8 +747,8 @@ hypothesis of the theorem and $\{ V_{\tau_{n'}}(\cdot, i) \}$ is an
 equicontinuous family by assumption~A\ref{A:var-equicont}.
 Lemma~\ref{L:Lenglart} proves, as a consequence of
 assumption~A\ref{A:message-times-finite} and Lenglart's
-Inequality~\cite{lenglart1977relation}, that the second term converges to zero
-uniformly in $\alpha$.
+Inequality~\cite{lenglart1977relation}, that the second term converges
+to zero uniformly in $\alpha$.
 The third term converges to zero by
 assumption~A\ref{A:integrated-cov-limit}, thereby concluding the proof.
 
