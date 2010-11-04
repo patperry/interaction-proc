@@ -60,7 +60,7 @@
 \end{aug}
 
 \begin{abstract}
-Network data often take the form of counts of repeated interactions over time.  Here we consider partial-likelihood inference for the general case of \emph{directed} interactions involving initiators and receivers, communications data being a canonical example.  We model these data in continuous time by way of a point process representation, using a Cox multiplicative intensity model that takes into account covariates that depend on the history of the process.  We prove consistency and asymptotic Normality of our estimation procedure as time increases, in contrast to the fixed-interval setting typical of the clinical trials literature.  We also address the issue of consistent inference for interactions with multiple receivers, which has been largely ignored in the network literature to date.  We show that treating these as multiple separate interactions leads to biased estimators, and we give conditions under which this bias can be corrected. We also describe an efficient implementation of the resulting inference and bootstrap procedures, and conclude with a data analysis example showing the effects of reciprocity and group-level preferences on message sending behavior in a corporate e-mail dataset.
+Network data often take the form of counts of repeated interactions over time.  Here we consider partial-likelihood inference for the general case of \emph{directed} interactions involving senders and receivers, communications data being a canonical example.  We model these data in continuous time by way of a point process representation, using a Cox multiplicative intensity model that takes into account covariates that depend on the history of the process.  We prove consistency and asymptotic Normality of our estimation procedure as time increases, in contrast to the fixed-interval setting typical of the clinical trials literature.  We also address the issue of consistent inference for interactions with multiple receivers, which has been largely ignored in the network literature to date.  We show that treating these as multiple separate interactions leads to biased estimators, and we give conditions under which this bias can be corrected. We also describe an efficient implementation of the resulting inference and bootstrap procedures, and conclude with a data analysis example showing the effects of reciprocity and group-level preferences on message sending behavior in a corporate e-mail dataset.
 \end{abstract}
 
 \begin{keyword}[class=AMS]
@@ -84,7 +84,7 @@ Much effort has recently been devoted to the statistical analysis of network dat
 
 In this article, we consider partial-likelihood inference for the general case of directed interaction data in the presence of covariates.  We first develop asymptotic theory for the case in which interactions are strictly pairwise, and then generalize our results to the multiple-interaction case; we also provide efficient algorithms for partial likelihood maximization in these settings.  Our main assumptions are that the interactions are instantaneous; that the corresponding stochastic intensities used to model them are formally predictable and continuous; and that any covariates are locally bounded and predictable.
 
-The interaction data we consider comprise a set of triples $(t,i,j)$ indicating that at time $t$, the directed interaction $i\rightarrow j$ took place; for instance, individual $i$ sent a message to individual $j$.  Given a set of such triples and covariate information about the corresponding initiators and receivers, a primary modeling goal is to determine which characteristics and behaviors are predictive of interaction.  In this vein, three important questions stand out; the first is a longstanding one in studies of human behavior~\cite{mcpherson2001birds}, whereas the latter two have yet to receive due attention in the network literature:
+The interaction data we consider comprise a set of triples $(t,i,j)$ indicating that at time $t$, the directed interaction $i\rightarrow j$ took place; for instance, individual $i$ sent a message to individual $j$.  Given a set of such triples and covariate information about the corresponding senders and receivers, a primary modeling goal is to determine which characteristics and behaviors are predictive of interaction.  In this vein, three important questions stand out; the first is a longstanding one in studies of human behavior~\cite{mcpherson2001birds}, whereas the latter two have yet to receive due attention in the network literature:
 
 \begin{description}
     \item[Homophily] Is a shared attribute predictive of increased
@@ -105,22 +105,22 @@ For sender $i$, receiver $j$, and positive time $t$, define
     N_t(i,j)
         =
         \#\{
-            \text{directed interactions $i\rightarrow j$ in time interval 
+            \text{directed interactions $i\rightarrow j$ in time interval
             $[0,t]$}
         \}.
 \]
-For technical reasons, assume $N_0(i,j) = 0$ and that $N_t(i,j)$ is adapted to 
+For technical reasons, assume $N_0(i,j) = 0$ and that $N_t(i,j)$ is adapted to
 a stochastic basis of $\sigma$-algebras $\{ \mathcal{F}_t \}_{t \geq 0}$
-satisfying the usual  conditions.  Then, $N_t(i,j)$ is a 
-local submartingale, so by the Doob-Meyer decomposition, there exists a 
-predictable increasing process $\Lambda_t(i,j)$, null at zero, such that $N_t(i,j) - \Lambda_t(i,j)$ is an $\mathcal{F}_t$ local martingale.  Under mild conditions---the most important of which is that no two 
-interactions happen simultaneously---there exists a predictable continuous 
+satisfying the usual  conditions.  Then, $N_t(i,j)$ is a
+local submartingale, so by the Doob-Meyer decomposition, there exists a
+predictable increasing process $\Lambda_t(i,j)$, null at zero, such that $N_t(i,j) - \Lambda_t(i,j)$ is an $\mathcal{F}_t$ local martingale.  Under mild conditions---the most important of which is that no two
+interactions happen simultaneously---there exists a predictable continuous
 process $\lambda_t(i,j)$ such that
 \(
     \Lambda_t(i,j) = \int_0^t \lambda_s(i,j) \, ds.
 \)
 (In practical applications, simultaneous events exist and are an annoyance;
-Efron be handles them through an ad-hoc adjustment, while Brostr\"om adds a 
+Efron handles them through an ad-hoc adjustment, while Brostr\"om adds a
 discrete component to $\Lambda$ \cite{efron1977efficiency,brostrom2002cox}.)
 The process $\lambda$ is known as the stochastic intensity of $N$.
 Heuristically,
@@ -132,18 +132,18 @@ Heuristically,
         \}.
 \]
 We will model $N$ through $\lambda$ using a version of the Cox
-proportional intensity model \cite{cox1972regression}.  
+proportional intensity model \cite{cox1972regression}.
 
 Let $\mathcal{I}$ be a set of senders and $\mathcal{J}$ be a set of receivers.
 For each sender $i$, let $\bar \lambda_t(i)$ be a non-negative predictable
-process called the baseline intensity of sender $i$; let $\mathcal{J}_t(i)$ be 
+process called the baseline intensity of sender $i$; let $\mathcal{J}_t(i)$ be
 a predictable subset of $\mathcal{J}$ called the receiver set of sender $i$.
 For each sender-receiver pair $(i,j)$, let $x_t(i,j)$ be a predictable
 locally bounded vector of covariates in $\reals^p$.  Let $\beta_0$
-be an unknown vector of coefficients in  $\reals^p$.  For this section, 
-assume each interaction has a single receiver.
+be an unknown vector of coefficients in  $\reals^p$.  For the remainder of this section,
+assume that each interaction has a single receiver.
 
-Given a multivariate counting process $N$ on 
+Given a multivariate counting process $N$ on
 $\reals_+ \times \mathcal{I} \times \mathcal{J}$,
 we model its stochastic intensity as
 \begin{equation}\label{E:cox-intensity}
@@ -155,42 +155,42 @@ we model its stochastic intensity as
         \cdot
         1{\{j \in \mathcal{J}_t(i)\}}.
 \end{equation}
-The model posits sender $i$ in $\mathcal{I}$ interacts  with receiver $j$ 
-in $\mathcal{J}_t(i)$ at a baseline rate $\bar \lambda_t(i)$ modulated up or 
+The model posits sender $i$ in $\mathcal{I}$ interacts  with receiver $j$
+in $\mathcal{J}_t(i)$ at a baseline rate $\bar \lambda_t(i)$ modulated up or
 down according to the pair's covariate vector, $x_t(i,j)$.  As Efron notes
 \cite{efron1977efficiency}, the specific parametric form for the multiplier
-$\exp\{ \beta_0^\trans x_t(i,j) \}$ is not central to the theoretical 
+$\exp\{ \beta_0^\trans x_t(i,j) \}$ is not central to the theoretical
 analysis, but this form is amenable to computation and gives
 the parameter vector $\beta_0$ a straightforward interpretation.
 
-The form of \eqref{E:cox-intensity} is deceptively simple but remains 
+The form of \eqref{E:cox-intensity} is deceptively simple but remains
 flexible enough to be useful in practice.  Of course, the model allows for
-homophily and group level effects via inclusion of covariates like
-``$1\{\text{$i$ and $j$ belong to the same group}\}$,'' where ``group'' is 
+homophily and group level effects via inclusion of covariates of the form
+``$1\{\text{$i$ and $j$ belong to the same group}\}$,'' where ``group'' is
 some observable trait like ethnicity, gender, or age group.  The real strength
 of the model is that $x_t(i,j)$ is allowed to be \emph{any} predictable
-process, in particular it can depend on the history of interactions.  To
-model reciprocation or transitivity in the interactions  (assuming 
-$\mathcal{I} = \mathcal{J}$), choose a positive $\delta$ and include 
-covariates in $x_t(i,j)$ like
+process; in particular, it can depend on the history of interactions.  To
+model reciprocation or transitivity in the interactions  (assuming
+$\mathcal{I} = \mathcal{J}$), choose a positive $\delta$ and include
+covariates in $x_t(i,j)$ such as
 \[
     1\{\text{interaction $j \to i$ occurred in $[t - \delta,t)$}\}
 \]
 or
 \[
-    1\{\text{for some $k$, interaction $i\to k$ and $k \to j$ occurred in
+    1\{\text{for some $k$, interactions $i\to k$ and $k \to j$ occurred in
              $[t - \delta, t)$}\}.
 \]
 Any process measurable with respect to the predictable $\sigma$-algebra is
-a valid covariate; this only excludes covariates depending on the future
+a valid covariate; this excludes only covariates depending on the future
 or the immediate present.
 
 Following Cox \cite{cox1975partial}, we treat the baseline rate
-$\bar \lambda_t(i)$ as a nuisance parameter estimate the coefficient
-$\beta_0$ vector using a partial likelihood.  Let
+$\bar \lambda_t(i)$ as a nuisance parameter, and estimate the coefficient
+vector $\beta_0$ using a partial likelihood.  Specifically, let
 $(t_1, i_1, j_1), \ldots, (t_n, i_n, j_n)$ be the sequence of observed
-interactions.  Heuristically, partial likelihood is motivated by decomposing 
-the likelihood as
+interactions.  Heuristically, partial likelihood is motivated by decomposing
+the full likelihood as
 \begin{align*}
     \begin{split}
     f(t_1&, i_1, j_1, t_2, i_2, j_2, \ldots, t_n, i_n, j_n) \\
@@ -221,7 +221,7 @@ the likelihood as
             \Big];
     \end{split}
 \end{align*}
-the latter term is dubbed a partial likelihood.  In continuous time, the
+the latter term is dubbed a partial likelihood.  In continuous time,
 the log partial likelihood at time $t$, evaluated at $\beta$, is
 \begin{equation}\label{E:log-pl}
     \log
@@ -238,15 +238,15 @@ the log partial likelihood at time $t$, evaluated at $\beta$, is
             \big]
         \bigg\}.
 \end{equation}
-In Section~\ref{S:MPLE-consistency} we prove under suitable regularity
+In Section~\ref{S:MPLE-consistency}, we prove under suitable regularity
 conditions that the maximizer of $\log \mathit{PL}_t(\cdot)$ is a
 consistent estimator of $\beta_0$ as $t$ increases.
 
-Function $\log \mathit{PL}_t(\cdot)$ is concave, and so can be maximized
-via Newton's method or a gradient-based optimization method
+The function $\log \mathit{PL}_t(\cdot)$ is concave, and so can be maximized
+via Newton's method or a gradient-based optimization approach
 \cite{nocedal2006numerical}.  These methods require one or both of the
 first two derivatives of $\log\mathit{PL}_t(\cdot)$, which can be
-expressed as weighted mean and covariance of the covariates.  The weights are
+expressed in terms of a weighted mean and covariance of the covariates.  The weights are
 \begin{subequations}
 \begin{align}
     w_{t}(\beta, i,j)
@@ -263,7 +263,7 @@ expressed as weighted mean and covariance of the covariates.  The weights are
 The inner sum in $\log \mathit{PL}_t(\beta)$ is
 $W_{t_m}\!(\beta, i_m)$.  The function
 $\log W_{t}(\cdot, i)$ has gradient $E_{t}(\cdot, i)$ and Hessian
-$V_{t}(\cdot, i)$, given by
+$V_{t}(\cdot, i)$, given respectively by
 \begin{subequations}
 \begin{gather}
     E_{t}(\beta, i)
@@ -303,12 +303,13 @@ $\log \mathit{PL}_t(\cdot)$ are
 We call $U_t(\beta_0)$ the unnormalized score and $I_t(\beta_0)$
 the Fisher information matrix.
 
-For small-to-medium datasets, one can fit proportional intensity models
-using \texttt{coxph} from the \texttt{survival} package for R
-\cite{therneau2009survival}.  Unfortunately, with time-varying
-covariates, there are no sufficient statistics and most interaction datasets
-are too large for the package to handle.  We describe a custom gradient-based
-optimization method in  Appendix~\ref{S:implementation} that takes advantage
+Because the introduction of time-varying covariates precludes the use of sufficient statistics, 
+partial likelihood maximization for all but the smallest interaction datasets 
+requires an algorithm that is more efficient than
+standard tools from survival analysis (e.g., the function 
+\texttt{coxph} from the \texttt{survival} package for R
+\cite{therneau2009survival}).  We describe in  Appendix~\ref{S:implementation} a custom gradient-based
+optimization method that takes advantage
 of sparsity in $x_t(i,j)$.
 
 \section{Consistency of Maximum Partial Likelihood Inference}
@@ -320,42 +321,42 @@ evaluated at the MPLE is a natural estimate of its covariance matrix.
 We now give conditions under which these
 estimators are consistent as $t$ goes to infinity.
 
-In the sampling regime where observation time $t$ is fixed and the number of 
+In the sampling regime where observation time $t$ is fixed and the number of
 senders $|\mathcal{I}|$ increases, Anderson and Gill's consistency proof for
 the Cox proportional hazards model in survival analysis extends
-to cover model~\eqref{E:cox-intensity}.  This setting is natural in the 
-context of clinical trial data, where $\mathcal{I}$ corresponds to the set of 
-patients under study, but does not meet the requirements typical of 
-interaction data.  For most interaction 
-data we cannot control $\mathcal{I}$ and $\mathcal{J}$, and the only way to 
-get more data is to increase $t$.  Cox gives a rough proof for general
-MPLE consistency which applies to our sampling regime but his argument is 
-heuristic; Wong's treatment is more rigorous but does not cover continuous or 
-time-varying covariates \cite{cox1975partial,wong1986theory}. The general 
+to cover model~\eqref{E:cox-intensity}.  This setting is natural in the
+context of clinical trial data, where $\mathcal{I}$ corresponds to the set of
+patients under study, but does not meet the requirements typical of
+interaction data.  For most interaction
+data we cannot control $\mathcal{I}$ and $\mathcal{J}$, and the only way to
+observe more data is to increase $t$.  Cox \cite{cox1972regression} outlines a proof for general
+MPLE consistency that applies to our sampling regime, but his argument is
+heuristic; Wong's treatment is more rigorous but does not cover continuous or
+time-varying covariates \cite{cox1975partial,wong1986theory}. Thus, the general
 interaction data sampling regime mandates a new consistency proof.
 
-Despite assuming $\mathcal{I}$ and $\mathcal{J}$ to be effects, our analysis 
-allows senders and receivers to enter and leave the study during the 
+Despite assuming $\mathcal{I}$ and $\mathcal{J}$ to be fixed, our analysis
+allows senders and receivers to enter and leave the study during the
 observation period.  The effective number of senders at time $t$ is the
 set of $i$ such that $\bar \lambda_t(i) \neq 0$, which potentially varies
 with time.  Likewise, the effective number of receivers is controlled through
 $\mathcal{J}_t(i)$.
 
-Our consistency proof relies on rescaling time to make the interaction 
+Our consistency proof relies on rescaling time to make the interaction
 times uniform.  To this end, define marginal processes
 \(
     N_t(i) = \sum_{j \in \mathcal{J}} N_t(i,j)
 \)
 and
 \(
-    N_t = \sum_{i \in \mathcal{I}} N_t(i),
+    N_t = \sum_{i \in \mathcal{I}} N_t(i);
 \)
-define sequence of stopping times
+also define the sequence of stopping times
 \begin{equation}\label{E:message-times}
     \tau_n = \sup\{ t : N_t < n \},
 \end{equation}
 and let $\mathcal{F}_{\tau_n}$ be the $\sigma$-algebra of events prior to
-$\tau_n$. The main idea of the proof is to change time from the original scale 
+$\tau_n$. The main idea of the proof is to change time from the original scale
 to a scale on which $\tau_{n} - \tau_{n'}$ is proportional to $n - n'$.
 
 \subsection{Assumptions}
@@ -407,20 +408,19 @@ its spectral norm (largest eigenvalue).  We require the following assumptions:
     \]
 \end{enumerate}
 
-These technical assumptions are similar to those of Anderson and 
-Gill~\cite{andersen1982cox}, who investigate specific settings in which their 
-assumptions hold.  Under A\ref{A:message-times-finite} the other three 
-assumptions hold when $\| x_t(i,j) \|$ is bounded.
+These technical assumptions are similar to those of Anderson and
+Gill~\cite{andersen1982cox}, who investigate specific settings in which their
+assumptions hold.  Note that when $\| x_t(i,j) \|$ is bounded and Assumption
+A\ref{A:message-times-finite} is in force, the remaining assumptions follow.
 
 \subsection{Main Results}
 Assumptions A\ref{A:square-int}--A\ref{A:var-equicont} imply that the MPLE is consistent and asymptotically
-Gaussian, as shown by the following two theorems.  
-%Their proofs follow immediately, with technical lemmas deferred to Appendix~\ref{S:MPLE-consistency-proofs}.
+Gaussian, as shown by the following two theorems.
 
 \begin{theorem}\label{T:score-fisher}
     Let $N$ be a multivariate counting process with stochastic
     intensity as given in~\eqref{E:cox-intensity}, with true parameter
-    vector $\beta_0$.  Let $\tau_n$ be the sequence of message arrival times
+    vector $\beta_0$.  Let $\tau_n$ be the sequence of interaction times
     defined in~\eqref{E:message-times}, set $U_t(\beta)$ and $I_t(\beta)$ to
     be the gradient and negative Hessian of the log partial likelihood function
     as given in~(\ref{E:log-pl-gradient}--\ref{E:log-pl-neg-hessian}).  If
@@ -454,17 +454,17 @@ Gaussian, as shown by the following two theorems.
 \noindent
 We don't actually require convergence of the whole sample path, but
 it turns out to be just as much effort to prove as convergence of the
-endpoint.  
+endpoint.
 
-Consistency is a direct consequence of Theorem~\ref{T:score-fisher}
-(Appendix~\ref{S:MPLE-consistency-proofs} contains a proof).
+Consistency is a direct consequence of Theorem~\ref{T:score-fisher},
+and is proved in Appendix~\ref{S:MPLE-consistency-proofs}.
 
 \begin{theorem}\label{T:consistency}
-    Let $N$ be a multivariate counting process on with stochastic
+    Let $N$ be a multivariate counting process with stochastic
     intensity as given in~\eqref{E:cox-intensity}, with true parameter
     vector $\beta_0$.  Let the log partial likelihood,
     $\log \mathit{PL}_t(\cdot)$, be as defined in \eqref{E:log-pl}.
-    Let $\tau_n$ be the sequence of message arrival times defined
+    Let $\tau_n$ be the sequence of interaction times defined
     in~\eqref{E:message-times}.
 
     Assume for $\beta$ in a
@@ -486,7 +486,7 @@ Consistency is a direct consequence of Theorem~\ref{T:score-fisher}
     \end{enumerate}
 \end{theorem}
 
-\begin{proof}[Proof of Theorem~\ref{T:score-fisher}]%, Part \textit{(\ref{I:score-part})}]
+\begin{proof}[Proof of Theorem~\ref{T:score-fisher}]
 Observe that the process $N_t(i,j)$ has compensator
 \(
     \Lambda_t(i,j)
@@ -499,7 +499,7 @@ and $\Lambda_t = \sum_{i \in \mathcal{I}} \Lambda_t(i)$.  Correspondingly, defin
 martingales $M_t(i,j) = N_t(i,j) - \Lambda_t(i,j)$,
 $M_t(i) = N_t(i) - \Lambda_t(i)$, and
 $M_t = N_t - \Lambda_t$.
-Define
+Also define
 \[
     H_t(i,j)
         =
@@ -507,8 +507,8 @@ Define
 \]
 where $E_t(\beta,i)$ is as defined in \eqref{E:wt-expectation}.
 
-As observed by Andersen and Gill \cite{andersen1982cox}, the score function 
-$U_t(\cdot)$ evaluated at $\beta_0$ has 
+As observed by Andersen and Gill \cite{andersen1982cox}, the score function
+$U_t(\cdot)$ evaluated at $\beta_0$ has
 a simple representation in terms of these processes:
 \begin{align*}
     U_t(\beta_0)
@@ -571,14 +571,7 @@ locally square integrable with predictable variation
             \int_0^t
                 V_s(\beta_0, i) \,
                 d\Lambda_s(i).
-\end{split}% \\
-%\intertext{Note}\label{E:var-estimate}
-%    I_t(\beta)
-%        &=
-%            \sum_{i \in \mathcal{I}}
-%            \int_0^t
-%                V_s(\beta, i) \,
-%                dN_s(i).
+\end{split}
 \end{align}
 
 Now we rescale time.  For each positive $n$ define a discretized time-scaled version of the score that is right-continuous with limits from the left.  The process is defined for times $\alpha$ in $[0,1]$; between times in $[\tfrac{k}{n}, \tfrac{k+1}{n})$, it takes the value $U_{\tau_k}$; i.e.,
@@ -587,7 +580,7 @@ Now we rescale time.  For each positive $n$ define a discretized time-scaled ver
         = U_{\tau_{\lfloor \alpha n \rfloor}}(\beta).
 \end{equation}
 
-Part~\textit{(\ref{I:score-part})}: 
+Part~\textit{(\ref{I:score-part})}:
 Lemma~\ref{L:adapted-martingale} shows that $\tilde U_\alpha^{(n)}(\beta_0)$ is a square-integrable martingale
 adapted to
 \(
@@ -623,8 +616,8 @@ Recalling $M_t(i) = N_t(i) - \Lambda_t(i)$, we may combine~\eqref{E:log-pl-neg-h
             \big\langle \tilde U^{(n)}(\beta_0) \big\rangle_\alpha.
 \end{equation}
 
-When $\alpha \in [0, 1]$, then, a repeated application of the triangle inequality 
-to 
+When $\alpha \in [0, 1]$, then a repeated application of the triangle inequality
+to
 \(
     \left\|
         \tfrac{1}{n} I_{\tau_{\lfloor \alpha n \rfloor}}(\hat \beta_n)
@@ -680,14 +673,14 @@ The first term above is uniformly bounded by
             V_{\tau_{n'}}(\beta_0, i)
         \|,
 \)
-which converges to zero since $\hat \beta_n \toP \beta_0$ by 
-hypothesis of the theorem and $\{ V_{\tau_{n'}}(\cdot, i) \}$ is an 
-equicontinuous family by assumption~A\ref{A:var-equicont}.  
-Lemma~\ref{L:Lenglart} proves, as a consequence of 
-assumption~A\ref{A:message-times-finite} and Lenglart's 
-Inequality~\cite{lenglart1977relation}, that the second term converges to zero 
+which converges to zero since $\hat \beta_n \toP \beta_0$ by
+hypothesis of the theorem and $\{ V_{\tau_{n'}}(\cdot, i) \}$ is an
+equicontinuous family by assumption~A\ref{A:var-equicont}.
+Lemma~\ref{L:Lenglart} proves, as a consequence of
+assumption~A\ref{A:message-times-finite} and Lenglart's
+Inequality~\cite{lenglart1977relation}, that the second term converges to zero
 uniformly in $\alpha$.
-The third term converges to zero by 
+The third term converges to zero by
 assumption~A\ref{A:integrated-cov-limit}, thereby concluding the proof.
 
 \end{proof}
@@ -696,30 +689,30 @@ assumption~A\ref{A:integrated-cov-limit}, thereby concluding the proof.
 \section{Multicast Interactions}\label{S:multiple-receivers}
 
 In Sections~\ref{S:point-process-model}~and~\ref{S:MPLE-consistency},
-we have assumed each interaction involves a single sender and a single 
-receiver.  The model and corresponding asymptotic theory are sufficient to 
-cover strictly pairwise directed interactions (e.g. phone calls), but they
-do not extend to interactions that can involve multiple receivers (e.g. e-mail 
-messages).  We call an interaction involving a single sender and possibly 
-multiple receivers a multicast interaction.  
+we have assumed that each interaction involves a single sender and a single
+receiver.  The model and corresponding asymptotic theory are sufficient to
+cover strictly pairwise directed interactions (e.g., phone calls), but they
+do not describe interactions that can involve multiple receivers (e.g., e-mail
+messages).  We call an interaction involving a single sender and possibly
+multiple receivers a multicast interaction.
 
-In practice, multicast interactions usually get treated in an ad-hoc manner 
-via duplication---for example, interaction $i \to \{ j_1, j_2, j_3 \}$ gets 
-recorded as three separate pairwise interactions, $i \to j_1$, $i \to j_2$, 
+In practice, multicast interactions are typically treated in an ad-hoc manner
+via duplication---for example, interaction $i \to \{ j_1, j_2, j_3 \}$ gets
+recorded as three separate pairwise interactions $i \to j_1$, $i \to j_2$,
 and $i \to j_3$---giving rise to approximate likelihood and inference.
 In this section we explore the implications of using this approximate
-likelihood for our model.  In particular we show  the approximation is closely 
-related to an extension of the model and that bias introduced by the 
-approximation can be quantified and in certain cases corrected.
+likelihood for our model.  In particular we show this approximation to be closely
+related to an extension of the model, and that the estimator bias it
+introduces can be quantified and in certain cases corrected.
 
 To this end, we introduce an extension of the model to the multicast setting.
 Let $\mathcal{I}$, $\mathcal{J}$, $\mathcal{J}_t(i)$, $x_t(i,j)$,
-and $\beta_0$ be as in Section~\ref{S:point-process-model}.  For each sender 
-$i$ and positive integer $L$, let $\bar \lambda_t(i ; L)$ be a non-negative 
-predictable process called the baseline $L$-receiver intensity of sender $i$
-Let $(t_1, i_1, J_1), \ldots, (t_n, i_n, J_n)$ be the 
-sequence of observed multicast interactions, with tuple $(t, i, J)$ indicating 
-that at  time $t$ sender $i$ interacted with receiver set $J$.  For a set
+and $\beta_0$ be as in Section~\ref{S:point-process-model}.  For each sender
+$i$ and positive integer $L$, let $\bar \lambda_t(i ; L)$ be a non-negative
+predictable process called the baseline $L$-receiver intensity of sender $i$.
+Let $(t_1, i_1, J_1), \ldots, (t_n, i_n, J_n)$ in turn be the
+sequence of observed multicast interactions, with tuple $(t, i, J)$ indicating
+that at  time $t$, sender $i$ interacted with receiver set $J$.  For a set
 $J$, let $|J|$ denote its cardinality.
 
 Consider a model for multicast interactions where the rate of interaction
@@ -781,10 +774,10 @@ the interaction times, we get an approximate partial likelihood:
         \bigg\}.
 \end{equation}
 
-We claim $\log \widetilde{\mathit{PL}}_t(\beta)$ is an approximation of
+We claim $\log \widetilde{\mathit{PL}}_t(\beta)$ approximates
 $\log \mathit{PL}_t(\beta)$.  Heuristically, replacing the
-sum over all sets of size $|J_m|$ with a sum over all multisets of size
-$|J_m|$ allowing duplicate elements,
+sum over all sets of size $|J_m|$ in~\eqref{E:log-pl-multiple} with a sum over all multisets of size
+$|J_m|$ allowing duplicate elements, we observe
 \begin{align*}
     \log\big[\!\!
         \sum_{\substack{J \subseteq \mathcal{J}_{t_m}(i_m) \\
@@ -813,20 +806,22 @@ $|J_m|$ allowing duplicate elements,
 In this sense,
 $\log \mathit{PL}_t(\beta) \approx \log \widetilde{\mathit{PL}}_t(\beta)$.
 Section~\ref{S:approximation-error} makes this statement more precise,
-and Section~\ref{S:approximation-bias} analyzes the bias introduced by the approximation
+and Section~\ref{S:approximation-bias} analyzes the bias introduced by
+maximizing $\log \widetilde{\mathit{PL}}_t(\beta)$ in lieu of
+$\log \mathit{PL}_t(\beta)$.
 
 \subsection{Approximation Error}\label{S:approximation-error}
-Introduce the receiver set growth sequence
+Define the receiver set growth sequence
 \begin{equation}\label{E:growth-constant}
     G_n
         =
             \sum_{t_m \leq \tau_n}
                 \frac{1\{|J_m| > 1\}}{|\mathcal{J}_{t_m}(i_m)|}.
 \end{equation}
-This sequence plays a critical role in bounded the error introduced by
+This sequence plays a critical role in bounding the error introduced by
 replacing $\log \mathit{PL}$ with $\log \widetilde{\mathit{PL}}$.
-Note when $|\mathcal{J}_{t_m}(i_m)|$ is constant $G_n$ has linear growth,
-but when $|\mathcal{J}_{t_m}(i_m)|$ increases $G_n$ often has sublinear 
+Note that $G_n$ has linear growth when $|\mathcal{J}_{t_m}(i_m)|$ is constant,
+but that when $|\mathcal{J}_{t_m}(i_m)|$ increases, $G_n$ often has sublinear
 growth.  For example, the Cauchy-Schwartz inequality gives
 \[
     G_n
@@ -838,7 +833,7 @@ growth.  For example, the Cauchy-Schwartz inequality gives
                     \frac{1\{|J_m| > 1\}}{|\mathcal{J}_{t_m}(i_m)|^2}
             \bigg]^{1/2},
 \]
-so if $|\mathcal{J}_{t_m}(i_m)| = \omega(\sqrt{m})$ then
+and so if $|\mathcal{J}_{t_m}(i_m)| = \omega(\sqrt{m})$, then
 $G_n = \Oh(\sqrt{n})$.  Theorem~\ref{T:log-pl-multiple-approx-error} bounds
 the approximation error in terms of $G_n$.
 
@@ -880,7 +875,7 @@ the approximation error in terms of $G_n$.
     \]
 \end{theorem}
 
-\begin{proof}[Proof of Theorem~\ref{T:log-pl-multiple-approx-error}]
+\begin{proof}
 
 When $J \subseteq \mathcal{J}_t(i)$, set
 \(
@@ -901,10 +896,10 @@ take ``$w_t(\beta, i, j)$'' to mean $w_t(\beta, i, \{j\})$.  Define weights
               w_t(\beta,i,J), \\
     \widetilde W_t(\beta, i; L)
         =
-            \Big[ \sum_{j \in \mathcal{J}_t(i)} w_t(\beta, i, j) \Big]^L.
+            \Big[ \sum_{j \in \mathcal{J}_t(i)} w_t(\beta, i, j) \Big]^L,
 \end{gather*}
 \end{subequations}
-Approximation error in $\log \widetilde{\mathit{PL}}$ comes from replacing
+and note that the approximation error in $\log \widetilde{\mathit{PL}}_t(\beta)$ comes from replacing
 $W$ with $\widetilde W$.
 
 The gradients of the weights are
@@ -949,7 +944,7 @@ and
     \tilde{\mathbb{E}}_{t,\beta,i;L} \big[ \sum_{l=1}^L x_t(i,j_l)\big].
 \)
 
-The bound on 
+The bound on
 \(
     \nabla [\log \mathit{PL}_{\tau_n}(\beta) ]
     -
@@ -971,7 +966,7 @@ Write
         \widetilde{\mathbb{E}}_{t,\beta,i;L}
             \Big[ \sum_{l=1}^L x_t(i,j_l) \Big].
 \]
-We define probability law $\mathbb{P}^\ast_{t,\beta,i;L}$ and 
+We define probability law $\mathbb{P}^\ast_{t,\beta,i;L}$ and
 associated random variables $j_1, \ldots, j_L$ and
 $\tilde \jmath_1, \ldots, \tilde \jmath_L$, such that marginally
 $j_1, \ldots, j_L$ are distributed according to $\mathbb{P}_{t,\beta,i;L}$
@@ -1013,7 +1008,7 @@ The coupling is as follows:
         otherwise draw $(j_1, \ldots, j_L)$ independently according to
         $\mathbb{P}_{t,\beta,i;L}$.
 \end{enumerate}
-With $K = \sup_{j \in \mathcal{J}_t(i)} \| x_t(i,j) \|$, 
+With $K = \sup_{j \in \mathcal{J}_t(i)} \| x_t(i,j) \|$,
 Lemma~\ref{L:coupling-prob-bound} shows
 \[
     \mathbb{P}^\ast_{t,\beta,i;L}
@@ -1027,7 +1022,7 @@ Lemma~\ref{L:coupling-prob-bound} shows
         \cdot
         \frac{\exp\{4 K \, \| \beta \|\}}{| \mathcal{J}_t(i) |}.
 \]
-The resulting bound on 
+The resulting bound on
 \(
     \|
     \nabla [\log \mathit{PL}_{t}(\beta) ]
@@ -1068,10 +1063,10 @@ we get
             \sum_{t_m \leq t}
                 \frac{|J_m|^2(|J_m| - 1)}{|\mathcal{J}_{t_m}(i_m)|}.
 \]
-We get the final bound for the gradients by replacing the numerators of the 
+We get the final bound for the gradients by replacing the numerators of the
 summands with $\sup_m |J_m|$.
 
-Using the same methods, Lemma~\ref{L:hessian-approx-bound} derives the bound 
+Using the same methods, Lemma~\ref{L:hessian-approx-bound} derives the bound
 on the difference in Hessians.
 \end{proof}
 
@@ -1080,10 +1075,10 @@ on the difference in Hessians.
 
 When we use ad-hoc duplication, we are performing approximate inference
 under the multicast model.  In practice, even if we explicitly want to use the
-multicast model, computing the partial likelihood in \eqref{E:log-pl-multiple} 
-involves an intractable combinatorial sum, so we may result to using the
-approximation instead.  Maximizing $\log \widetilde{\mathit{PL}}_t(\cdot)$ 
-instead of $\log \mathit{PL}_t(\cdot)$ introduces bias in the estimate of 
+multicast model, computing the partial likelihood in \eqref{E:log-pl-multiple}
+involves an intractable combinatorial sum, so we may resort to using the
+approximation instead.  Maximizing $\log \widetilde{\mathit{PL}}_t(\cdot)$
+instead of $\log \mathit{PL}_t(\cdot)$ introduces bias in the estimate of
 $\beta_0$.  Theorem~\ref{T:mple-approx-error} (proved in Appendix~\ref{S:multiple-recipient-proofs}) bounds the bias.
 
 \begin{theorem}\label{T:mple-approx-error}
@@ -1091,15 +1086,13 @@ $\beta_0$.  Theorem~\ref{T:mple-approx-error} (proved in Appendix~\ref{S:multipl
     Let $\hat \beta_n$ maximize $\log \mathit{PL}_{\tau_n}(\cdot)$
     and let $\tilde \beta_n$ maximize
     $\log \widetilde{\mathit{PL}}_{\tau_n}(\cdot)$.
-    Suppose for all $n$ that the norm of the Hessian,
+    Suppose for all $n$ that the Hessian
     \(
-        \|
         \tfrac{1}{n}
         \nabla^2
         [ \log \mathit{PL}_{\tau_n}(\cdot)]
-        \|,
     \)
-    is uniformly locally Lipschitz and bounded away from zero
+    is uniformly locally Lipschitz and with smallest eigenvalue bounded away from zero
     in a neighborhood of $\hat \beta_n$.
     If $G_n/n \toP 0$, then
     \[
@@ -1110,12 +1103,12 @@ $\beta_0$.  Theorem~\ref{T:mple-approx-error} (proved in Appendix~\ref{S:multipl
 \end{theorem}
 
 It remains to be shown that $\hat \beta_n$ is a consistent estimator of
-$\beta_0$.  This follows from the theory in Section~\ref{S:MPLE-consistency} 
+$\beta_0$.  This follows directly from the theory in Section~\ref{S:MPLE-consistency},
 since the multicast case can be considered as a special case of
-the single receiver case.  The product $\mathcal{I} \times \mathbb{N}_+$
-is the sender set and the power set $\mathcal{P}(\mathcal{J})$ is the
-receiver set.  For sender $(i,L)$, the process $\bar \lambda(i ; L)$ is the
-baseline send intensity and $\{ J \subseteq \mathcal{J}_t(i) : |J| = L\}$ is the receiver set; for
+the single receiver case:  Consider the product $\mathcal{I} \times \mathbb{N}_+$
+as the sender set, and the power set $\mathcal{P}(\mathcal{J})$ as the
+receiver set.  For sender $(i,L)$, the process $\bar \lambda(i ; L)$ is then the
+baseline send intensity, and $\{ J \subseteq \mathcal{J}_t(i) : |J| = L\}$ is the receiver set; for
 sender-receiver pair $\big((i,L), J\big)$, vector $\sum_{j \in J} x_t(i,j)$ is
 the covariate vector.  Consistency of the MPLE now follows from
 Theorem~\ref{T:consistency}.
@@ -1123,10 +1116,10 @@ Theorem~\ref{T:consistency}.
 
 
 Suppose the true MPLE, $\hat \beta_n$, is a $\sqrt{n}$-consistent estimate of
-$\beta_0$ (Theorem~\ref{T:consistency} gives sufficient conditions).
+$\beta_0$. (Theorem~\ref{T:consistency} gives sufficient conditions.)
 Theorem~\ref{T:mple-approx-error} says that if
 $|\mathcal{J}_{t_m}(i_m)|$ grows fast enough to make $G_n$ smaller than
-$\OhP(\sqrt{n})$, then the approximate MPLE, $\tilde \beta_n$ is \emph{also}
+$\OhP(\sqrt{n})$, then the approximate MPLE, $\tilde \beta_n$, is \emph{also}
 $\sqrt{n}$-consistent.
 Moreover, if $\sqrt{n}(\hat \beta_n - \beta_0)$ is asymptotically Gaussian,
 then $\sqrt{n}(\tilde \beta_n - \beta_0)$ is asymptotically Gaussian with
@@ -1139,11 +1132,11 @@ Under enough regularity,
 \)
 consistently estimates the limiting covariance
 of $\sqrt{n}(\tilde \beta_n - \beta_0)$.  To get the mean, we use
-a parametric bootstrap.
+a parametric bootstrap as follows.
 
 Assume the conditions of Theorem~\ref{T:mple-approx-error}.
 The residual $\tilde \beta_n - \beta_0$ depends continuously on $\beta_0$
-and the covariates, $x_t(i,j)$.  Since $\tilde \beta_n$ is a consistent
+and the covariates $x_t(i,j)$.  Since $\tilde \beta_n$ is a consistent
 estimator of $\beta_0$, we can estimate the bias in $\tilde \beta_n$ via
 a parametric bootstrap.  We generate a bootstrap replicate dataset
 $\{ (t_m, i_m, J_m^{(r)}) \}$ by drawing $J_m^{(r)}$, a random subset
@@ -1175,7 +1168,7 @@ replicates, we estimate the bias by
         =
             \frac{1}{R} \sum_{r=1}^{R} \tilde \beta_n^{(r)} - \tilde \beta_n.
 \]
-We adjust for the bias by replacing $\tilde \beta_n$ with
+We may then adjust for estimator bias by replacing $\tilde \beta_n$ with
 $\tilde \beta_n - \widehat{\mathrm{bias}}$.
 
 
@@ -1183,11 +1176,9 @@ $\tilde \beta_n - \widehat{\mathrm{bias}}$.
 
 We now consider a data analysis example to demonstrate the efficacy of the models and inference methods introduced above, and to show how they enable us to address the three key concerns of interaction data analysis (homophily, reciprocity, and multiplicity) raised in the Introduction of this article.  To do so we employ the multiple-recipient proportional intensity modeling framework developed above; we include static covariates reflecting group membership to account for the possibility of homophily, and dynamic covariates capturing past interactions to measure reciprocity effects.
 
-To fit this model to all but the smallest interaction datasets, we require a partial likelihood maximization algorithm that is more efficient than standard tools from survival analysis (e.g., the function \texttt{coxph} from the \texttt{survival} package for R~\cite{therneau2009survival}).  In Appendix~\ref{S:implementation} we outline such an algorithm and analyze its complexity; we have implemented this algorithm as a freely-available stand-alone software package *** \texttt{PackageName} and employ it for all results in this section.
-
 \subsection{Data and Methods}
 
-Our example analysis uses publicly available data from the Enron e-mail corpus~\cite{cohen2009enron}, a large subset of the e-mail messages sent within the Enron corporation between November 1998 and June 2002, and made public as the result of a subpoena by the U.S.~Federal Energy Regulatory Commission during an investigation into fraudulent accounting practices.  We analyze the dataset compiled by~\cite{zhou2007strategies} (see *** \texttt{www....edu}), comprising $21,635$ messages sent among $156$ employees between November 13, 1998 and June 21, 2002, along with the genders, seniorities, and departments of these employees (summarized in Table~\ref{T:employee-summary}).
+Our example analysis uses publicly available data from the Enron e-mail corpus~\cite{cohen2009enron}, a large subset of the e-mail messages sent within the Enron corporation between November 1998 and June 2002, and made public as the result of a subpoena by the U.S.~Federal Energy Regulatory Commission during an investigation into fraudulent accounting practices.  We analyze the dataset compiled by~\cite{zhou2007strategies}, comprising $21,635$ messages sent among $156$ employees between November 13, 1998 and June 21, 2002, along with the genders, seniorities, and departments of these employees (summarized in Table~\ref{T:employee-summary}).
 \begin{table}[t]
     \input{tables/employee-summary}
     \caption{
@@ -1308,7 +1299,7 @@ Our data analysis example above has demonstrated that static and dynamic effects
 
 In contrast, the foundation of our work is Cox's proportional intensity model and partial likelihood theory, tools which he first introduced almost forty years ago and which have been significantly developed since then~\cite{andersen1993statistical, cook2007statistical, cox1972regression, cox1975partial, fleming1991counting, martinussen2006dynamic}. These tools are used extensively in the context of clinical trials, but require further development to enable their application to directed interaction data.  In this vein, we have extended the associated theory in two directions: first, we have provided results that are asymptotic in time rather than in the population of individuals under study; and second, we have shown that treating multiple-receiver interactions as separate pairwise interactions leads to bias in the corresponding parameter estimates, and we have shown when and how this bias can be corrected.
 
-We are not the first to model dyadic interactions using a point process framework; in a similar vein, Malmgren et al.\ and Heard et al.\ both apply hidden Markov models to communication activity~\cite{heard2010bayesian, malmgen2009characterizing}.  However, neither of these models uses covariate information, and neither posits the problem in continuous time.  Another feature of our model deserving emphasis is that we are using a different baseline intensity for each initiator. In the survival analysis terminology, the model is stratified by initiator.  Our nonparametric approach takes into account the fact that individuals may have highly idiosyncratic initiating behaviors; in contrast, Malmgen et al.\ use a hidden Markov model to capture individual and seasonal idiosyncrasies~\cite{malmgen2009characterizing}.  The issue of modeling extra-dyadic interactions, which we have also addressed here, has seen less attention in the literature; however, Lunag\'omez et al.~\cite{lunagomez2009geometric} have recent work in the context of graphical models that is relevant.
+We are not the first to model dyadic interactions using a point process framework; in a similar vein, Malmgren et al.\ and Heard et al.\ both apply hidden Markov models to communication activity~\cite{heard2010bayesian, malmgen2009characterizing}.  However, neither of these models uses covariate information, and neither posits the problem in continuous time.  Another feature of our model deserving emphasis is that we are using a different baseline intensity for each sender. In the survival analysis terminology, the model is stratified by sender.  Our nonparametric approach takes into account the fact that individuals may have highly idiosyncratic initiating behaviors; in contrast, Malmgen et al.\ use a hidden Markov model to capture individual and seasonal idiosyncrasies~\cite{malmgen2009characterizing}.  The issue of modeling extra-dyadic interactions, which we have also addressed here, has seen less attention in the literature; however, Lunag\'omez et al.~\cite{lunagomez2009geometric} have recent work in the context of graphical models that is relevant.
 
 Finally, we point out similarities to agent-based models from the network analysis literature; see~\cite{snijders2010introduction} for a recent survey.  These approaches and ours both conceive of the data as arising from ego-centric decisions made by the agents under study.  The main difference of approach lies in the fact that we are treating instantaneous interactions rather than ties such as friendship that persist over time.  However, features such as transitivity (the notion that your friends' friends are likely to be your friends) that are typical of such models can easily be incorporated into our framework, simply by adding history-dependent covariates as described in Section~\ref{S:point-process-model} of this article.
 
@@ -1322,12 +1313,12 @@ for helpful remarks and encouragement.
 \section{Implementation}\label{S:implementation}
 
 To compute the maximum partial likelihood estimator, we use the
-Broyden-Fletcher-Goldfarb-Shanno (BFGS) algorithm, a gradient-based 
-optimization method described by Nocedal and Write 
-\cite{nocedal2006numerical}.  This requires an efficient algorithm for 
-computing the log partial likelihood and its gradient. For simplicity, we 
-describe the case of strictly pairwise interactions with no ties in the 
-interaction times.  We use the notation from 
+Broyden-Fletcher-Goldfarb-Shanno (BFGS) algorithm, a gradient-based
+optimization method described by Nocedal and Write
+\cite{nocedal2006numerical}.  This requires an efficient algorithm for
+computing the gradient of the log partial likelihood.  For simplicity, we
+describe the case of strictly pairwise interactions with no ties in the
+interaction times.  We use the notation from
 Section~\ref{S:point-process-model}, assuming
 model~\eqref{E:cox-intensity} and partial likelihood~\eqref{E:log-pl}.
 Assume that $|\mathcal{I}| = I$ and $|\mathcal{J}| = J$.
@@ -1341,7 +1332,7 @@ The partial likelihood factors into a product of terms, one for each sender:
         \,\,
         \prod_{i \in \mathcal{I}}
             \,\,
-            \mathit{PL}_t(\beta, i), 
+            \mathit{PL}_t(\beta, i),
     \qquad\qquad
     \mathit{PL}_t(\beta, i)
         =
@@ -1429,7 +1420,7 @@ Since $\mathcal{J}_0(i) = \mathcal{J}$,
             \exp\{ \beta^\trans d_t(i,j) \}
             \cdot
             1\{j \in \mathcal{J}_t(i)\},
-    \label{E:weight-update-pair}        
+    \label{E:weight-update-pair}
     \\
     W_{t}(\beta,i)
         &=
@@ -1442,7 +1433,7 @@ Since $\mathcal{J}_0(i) = \mathcal{J}$,
 \end{subequations}
 It takes time $\Oh(p \, J)$ to compute the values of
 $W_{0}(\beta,i)$ and $w_{0}(\beta,i,j)$ for any $i$ and all
-$j$ in $\mathcal{J}(i)$; using~\eqref{E:weight-update} once these values are 
+$j$ in $\mathcal{J}(i)$; using~\eqref{E:weight-update} once these values are
 known, computing  $W_{t}(\beta,i)$ and $w_{t}(\beta,i,j)$ takes time
 \(
     \Oh(\bar p \, \bar J).
@@ -1484,7 +1475,7 @@ be decomposed as
             \sum_{\substack{t_m \leq t_n, \\ i_m = i}}
                 d_{t_m}\!(i,j);
 \]
-computing first term takes time $\Oh(p \, \bar J)$ and computing the second 
+computing first term takes time $\Oh(p \, \bar J)$ and computing the second
 term takes time $\Oh(\bar p \, n(i) \, \bar J)$.  Since it takes time
 $\Oh(\bar p \, n(i) \bar J)$
 to compute
@@ -1492,7 +1483,7 @@ to compute
     \sum_{\substack{t_m \leq t_n, \\ i_m = i}}
         \log W_{t_m}\!(\beta, i)
 \)
-once the static weights are known, computing $\log \mathit{PL}_{t_n}(\beta)$ 
+once the static weights are known, computing $\log \mathit{PL}_{t_n}(\beta)$
 as the sum of sender-specific terms takes time
 \(
     \Oh(p \, I \, \bar J + \bar p \, n \, \bar J).
@@ -1547,13 +1538,16 @@ To summarize, the time complexity for computing the initial weights and
 expectations, the log partial likelihood, and the gradient of the log partial 
 likelihood is
 $\Oh(p \, \bar I \, J + p \, I \, \bar J + \bar p \, n \, \bar J)$.
-The algorithm works in space $\Oh(p + \bar J)$.
 
-\section{Proofs of MPLE Results}\label{S:MPLE-consistency-proofs}
+
+\section{Results from Section~\ref{S:MPLE-consistency}}
+\label{S:MPLE-consistency-proofs}
+
+\subsection{Lemmas From the Proof of Theorem~\ref{T:score-fisher}}
 
 \begin{lemma}\label{L:adapted-martingale}
-Using the notation of Theorem~\ref{T:score-fisher}, under assumption 
-A\ref{A:square-int} the process $\tilde U_\alpha^{(n)}(\beta_0)$ 
+Using the notation of Theorem~\ref{T:score-fisher}, under assumption
+A\ref{A:square-int} the process $\tilde U_\alpha^{(n)}(\beta_0)$
 from~\eqref{E:score-time-scaled} is a square-integrable martingale adapted to
 \(
     \mathcal{\tilde F}^{(n)}_\alpha
@@ -1612,8 +1606,8 @@ square integrability, note
 \end{proof}
 
 \begin{lemma}\label{L:Lindeberg-condition}
-Using the notation of Theorem~\ref{T:score-fisher}, under assumption 
-A\ref{A:square-int}, the Lindeburg condition for Rebolledo's Centrial Limit 
+Using the notation of Theorem~\ref{T:score-fisher}, under assumption
+A\ref{A:square-int}, the Lindeberg condition for Rebolledo's Central Limit
 Theorem is satisfied: for any positive $\varepsilon$,
 \[
     \frac{1}{n}
@@ -1634,7 +1628,7 @@ With $K = \sup_{t,i,j} \| x_t(i,j)\|$ as above, the integral is bounded by
     \cdot
     \frac{\Lambda_{\tau_n}}{n}.
 \)
-Since $\E K^2 < \infty$ by assumption A\ref{A:square-int}, the first term 
+Since $\E K^2 < \infty$ by assumption A\ref{A:square-int}, the first term
 converges to zero in probability.  Since
 $\E \Lambda_{\tau_n} = \E N_{\tau_n} = n$, the product of the two also
 converges to zero in probability.  Thus, the Lindeberg condition is satisfied.
@@ -1643,7 +1637,7 @@ converges to zero in probability.  Thus, the Lindeberg condition is satisfied.
 
 \begin{lemma}\label{L:Lenglart}
 Using the notation of Theorem~\ref{T:score-fisher}, under assumptions
-A\ref{A:square-int}~and~A\ref{A:message-times-finite}
+A\ref{A:square-int}~and~A\ref{A:message-times-finite} we have that
 \[
     \left\|
             \frac{1}{n}
@@ -1657,7 +1651,7 @@ uniformly in $\alpha$.
 \end{lemma}
 
 \begin{proof}
-Lenglart's Inequality and assumption~A\ref{A:message-times-finite} imply that 
+Lenglart's Inequality and assumption~A\ref{A:message-times-finite} imply that
 for any positive $\rho$ and $\delta$,
 \begin{multline*}
     \mathbb{P}\left\{
@@ -1686,10 +1680,10 @@ for any positive $\rho$ and $\delta$,
 (see Fleming and Harrington's Cor.~3.4.1 for a related proof
 \cite{fleming1991counting}).    As in the proof of
 Lemma~\ref{L:adapted-martingale}, set $K = \sup_{t,i,j} \| x_t(i,j) \|$.
-The sum is bounded by $\frac{K^4}{n} \cdot \frac{\Lambda_{\tau_n}}{n}$.  
+The sum is bounded by $\frac{16 K^4}{n} \cdot \frac{\Lambda_{\tau_n}}{n}$.
 Since $n^{-1/2} K^2 \toP 0$ by assumption A\ref{A:square-int} and
-$\E \Lambda_{\tau_n} = n$, the right hand side of the inequality converges to 
-$\frac{\delta}{\rho^2}$.  Since $\delta$ is arbitrary, the right hand side
+$\E \Lambda_{\tau_n} = n$, the right-hand side of the inequality converges to
+$\frac{\delta}{\rho^2}$.  Since $\delta$ is arbitrary, the right-hand side
 must converge to zero.
 \end{proof}
 
@@ -1737,7 +1731,7 @@ $I_t(\beta)$ is a sum of rank-one matrices with positive weights,
 it is positive semi-definite, and $\log \mathit{PL}_t(\cdot)$ is
 a concave function.  By the assumption that the smallest
 eigenvalue of $\Sigma_1(\cdot)$ is bounded away from zero in a neighborhood
-of $\beta_0$, for $n$ sufficiently large, if $\log \mathit{PL}_t(\cdot)$ has a 
+of $\beta_0$, for $n$ sufficiently large, if $\log \mathit{PL}_t(\cdot)$ has a
 local minimum in that neighborhood then it must be the unique global maximum.
 
 We find the local maximum by applying Newton's method to the
@@ -1749,7 +1743,7 @@ $\beta_0$ as the initial iterate.  Define
 The first Newton iterate, $\beta_{n,1}$ is equal to $\beta_0 - Z_n$.
 Part (ii) of Theorem~\ref{T:score-fisher} and the
 assumptions of the theorem imply $[\tfrac{1}{n} I_{\tau_n}(\beta_0)]^{-1}$
-exists for $n$ large enough so that $Z_n$ is well-defined.  
+exists for $n$ large enough so that $Z_n$ is well-defined.
 Moreover, Part (i) of Theorem~\ref{T:score-fisher} and Slutzky's Theorem imply
 $Z_n \toP 0$ and
 $\sqrt{n} \, Z_n \tod \Normal(0,\, [\Sigma_1(\beta_0)]^{-1})$.
@@ -1793,10 +1787,11 @@ Thus, $\hat \beta_n \toP \beta_0$, and $\sqrt{n} (\hat \beta_n - \beta_0)$
 and $\sqrt{n} \, Z_n$ converge weakly to the same limit.
 \end{proof}
 
-\section{Proofs of Multiple Recipient Results}\label{S:multiple-recipient-proofs}
+\section{Results from Section~\ref{S:multiple-receivers}}
+\label{S:multiple-recipient-proofs}
 
 \begin{lemma}\label{L:coupling-prob-bound}
-Using the notation and assumptions of 
+Using the notation and assumptions of
 Theorem~\ref{T:log-pl-multiple-approx-error},
 \[
     \mathbb{P}^\ast_{t,\beta,i;L}
@@ -1861,12 +1856,12 @@ so that
     \leq
         \frac{\exp\{4 K \, \| \beta \|\}}{| \mathcal{J}_t(i) |}.
     \qedhere
-\]    
+\]
 \end{proof}
 
 
 \begin{lemma}\label{L:hessian-approx-bound}
-Using the notation and assumptions of 
+Using the notation and assumptions of
 Theorem~\ref{T:log-pl-multiple-approx-error},
 \begin{multline*}
     \Big\|
@@ -1880,11 +1875,11 @@ Theorem~\ref{T:log-pl-multiple-approx-error},
             \cdot
             \sum_{t_m \leq t}
                 \frac{|J_m|^3 \, (|J_m| - 1)}{|\mathcal{J}_{t_m}(i_m)|}.
-\end{multline*}    
+\end{multline*}
 \end{lemma}
 \begin{proof}
 The argument is similar to the bound on the difference in gradients in
-the proof of Theorem~\ref{T:log-pl-multiple-approx-error}.  The Hessians of 
+the proof of Theorem~\ref{T:log-pl-multiple-approx-error}.  The Hessians of
 the weights are
 \begin{align}
     \begin{split}
@@ -1922,7 +1917,7 @@ the weights are
 The first is the covariance matrix of $\sum_{l=1}^L x_t(i,j_l)$ under
 $\mathbb{P}_{t,\beta,i;L}$; the second is the covariance matrix of the same
 quantity under $\tilde{\mathbb{P}}_{t,\beta,i;L}$.
-The result follows in the same manner as in the proof of 
+The result follows in the same manner as in the proof of
 Theorem~\ref{T:log-pl-multiple-approx-error}.
 The relevant intermediate bounds is
 \[
