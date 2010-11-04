@@ -141,7 +141,7 @@ a predictable subset of $\mathcal{J}$ called the receiver set of sender $i$.
 For each sender-receiver pair $(i,j)$, let $x_t(i,j)$ be a predictable
 locally bounded vector of covariates in $\reals^p$.  Let $\beta_0$
 be an unknown vector of coefficients in  $\reals^p$.  For the remainder of this section,
-assume that each interaction has a single receiver.
+assume each interaction to have a single receiver.
 
 Given a multivariate counting process $N$ on
 $\reals_+ \times \mathcal{I} \times \mathcal{J}$,
@@ -160,7 +160,7 @@ in $\mathcal{J}_t(i)$ at a baseline rate $\bar \lambda_t(i)$ modulated up or
 down according to the pair's covariate vector, $x_t(i,j)$.  As Efron notes
 \cite{efron1977efficiency}, the specific parametric form for the multiplier
 $\exp\{ \beta_0^\trans x_t(i,j) \}$ is not central to the theoretical
-analysis, but this form is amenable to computation and gives
+analysis, but this choice is amenable to computation and gives
 the parameter vector $\beta_0$ a straightforward interpretation.
 
 The form of \eqref{E:cox-intensity} is deceptively simple but remains
@@ -169,7 +169,7 @@ homophily and group level effects via inclusion of covariates of the form
 ``$1\{\text{$i$ and $j$ belong to the same group}\}$,'' where ``group'' is
 some observable trait like ethnicity, gender, or age group.  The real strength
 of the model is that $x_t(i,j)$ is allowed to be \emph{any} predictable
-process; in particular, it can depend on the history of interactions.  To
+process, in particular $x_t(i,j)$ can depend on the history of interactions.  To
 model reciprocation or transitivity in the interactions  (assuming
 $\mathcal{I} = \mathcal{J}$), choose a positive $\delta$ and include
 covariates in $x_t(i,j)$ such as
@@ -186,7 +186,7 @@ a valid covariate; this excludes only covariates depending on the future
 or the immediate present.
 
 Following Cox \cite{cox1975partial}, we treat the baseline rate
-$\bar \lambda_t(i)$ as a nuisance parameter, and estimate the coefficient
+$\bar \lambda_t(i)$ as a nuisance parameter and estimate the coefficient
 vector $\beta_0$ using a partial likelihood.  Specifically, let
 $(t_1, i_1, j_1), \ldots, (t_n, i_n, j_n)$ be the sequence of observed
 interactions.  Heuristically, partial likelihood is motivated by decomposing
@@ -246,7 +246,7 @@ The function $\log \mathit{PL}_t(\cdot)$ is concave, and so can be maximized
 via Newton's method or a gradient-based optimization approach
 \cite{nocedal2006numerical}.  These methods require one or both of the
 first two derivatives of $\log\mathit{PL}_t(\cdot)$, which can be
-expressed in terms of a weighted mean and covariance of the covariates.  The weights are
+expressed in terms of weighted means and covariances of the covariates.  The weights are
 \begin{subequations}
 \begin{align}
     w_{t}(\beta, i,j)
@@ -263,7 +263,7 @@ expressed in terms of a weighted mean and covariance of the covariates.  The wei
 The inner sum in $\log \mathit{PL}_t(\beta)$ is
 $W_{t_m}\!(\beta, i_m)$.  The function
 $\log W_{t}(\cdot, i)$ has gradient $E_{t}(\cdot, i)$ and Hessian
-$V_{t}(\cdot, i)$, given respectively by
+$V_{t}(\cdot, i)$, given by
 \begin{subequations}
 \begin{gather}
     E_{t}(\beta, i)
@@ -303,10 +303,10 @@ $\log \mathit{PL}_t(\cdot)$ are
 We call $U_t(\beta_0)$ the unnormalized score and $I_t(\beta_0)$
 the Fisher information matrix.
 
-Because the introduction of time-varying covariates precludes the use of sufficient statistics, 
-partial likelihood maximization for all but the smallest interaction datasets 
-requires an algorithm that is more efficient than
-standard tools from survival analysis (e.g., the function 
+Note that the dependence of these terms on time-varying covariates means that there are no sufficient statistics available to reduce the complexity of partial likelihood maximization.
+Therefore, for all but the smallest interaction datasets, maximization of $\log \mathit{PL}_t(\cdot)$ 
+requires an approach that is more computationally efficient than
+standard tools from survival analysis (e.g., the function
 \texttt{coxph} from the \texttt{survival} package for R
 \cite{therneau2009survival}).  We describe in  Appendix~\ref{S:implementation} a custom gradient-based
 optimization method that takes advantage
@@ -329,11 +329,11 @@ context of clinical trial data, where $\mathcal{I}$ corresponds to the set of
 patients under study, but does not meet the requirements typical of
 interaction data.  For most interaction
 data we cannot control $\mathcal{I}$ and $\mathcal{J}$, and the only way to
-observe more data is to increase $t$.  Cox \cite{cox1972regression} outlines a proof for general
+collect more data is to increase $t$.  Cox \cite{cox1972regression} outlines a proof for general
 MPLE consistency that applies to our sampling regime, but his argument is
 heuristic; Wong's treatment is more rigorous but does not cover continuous or
-time-varying covariates \cite{cox1975partial,wong1986theory}. Thus, the general
-interaction data sampling regime mandates a new consistency proof.
+time-varying covariates \cite{cox1975partial,wong1986theory}. The general
+interaction data sampling regime warrants a new consistency proof.
 
 Despite assuming $\mathcal{I}$ and $\mathcal{J}$ to be fixed, our analysis
 allows senders and receivers to enter and leave the study during the
@@ -689,7 +689,7 @@ assumption~A\ref{A:integrated-cov-limit}, thereby concluding the proof.
 \section{Multicast Interactions}\label{S:multiple-receivers}
 
 In Sections~\ref{S:point-process-model}~and~\ref{S:MPLE-consistency},
-we have assumed that each interaction involves a single sender and a single
+we have assumed each interaction to involve a single sender and a single
 receiver.  The model and corresponding asymptotic theory are sufficient to
 cover strictly pairwise directed interactions (e.g., phone calls), but they
 do not describe interactions that can involve multiple receivers (e.g., e-mail
@@ -701,16 +701,16 @@ via duplication---for example, interaction $i \to \{ j_1, j_2, j_3 \}$ gets
 recorded as three separate pairwise interactions $i \to j_1$, $i \to j_2$,
 and $i \to j_3$---giving rise to approximate likelihood and inference.
 In this section we explore the implications of using this approximate
-likelihood for our model.  In particular we show this approximation to be closely
-related to an extension of the model, and that the estimator bias it
-introduces can be quantified and in certain cases corrected.
+likelihood in the multicast setting.  In particular we show it to be closely
+related to an extension of our model for directed pairwise interactions, and that the bias introduced by such an
+approximation can be quantified and in certain cases corrected.
 
 To this end, we introduce an extension of the model to the multicast setting.
 Let $\mathcal{I}$, $\mathcal{J}$, $\mathcal{J}_t(i)$, $x_t(i,j)$,
 and $\beta_0$ be as in Section~\ref{S:point-process-model}.  For each sender
 $i$ and positive integer $L$, let $\bar \lambda_t(i ; L)$ be a non-negative
 predictable process called the baseline $L$-receiver intensity of sender $i$.
-Let $(t_1, i_1, J_1), \ldots, (t_n, i_n, J_n)$ in turn be the
+Let $(t_1, i_1, J_1), \ldots, (t_n, i_n, J_n)$ be the
 sequence of observed multicast interactions, with tuple $(t, i, J)$ indicating
 that at  time $t$, sender $i$ interacted with receiver set $J$.  For a set
 $J$, let $|J|$ denote its cardinality.
@@ -755,7 +755,7 @@ The log partial likelihood at time $t$, evaluated at $\beta$, is
 Suppose instead of using the multicast model, we use duplication to get
 pairwise interactions from the original multicast data.  If we use
 model~\eqref{E:cox-intensity} for the pairwise data and ignore ties in
-the interaction times, we get an approximate partial likelihood:
+the interaction times, we obtain an approximate partial likelihood:
 \begin{equation}\label{E:log-pl-multiple-approx}
     \log
     \widetilde{\mathit{PL}}_t(\beta)
@@ -777,7 +777,7 @@ the interaction times, we get an approximate partial likelihood:
 We claim $\log \widetilde{\mathit{PL}}_t(\beta)$ approximates
 $\log \mathit{PL}_t(\beta)$.  Heuristically, replacing the
 sum over all sets of size $|J_m|$ in~\eqref{E:log-pl-multiple} with a sum over all multisets of size
-$|J_m|$ allowing duplicate elements, we observe
+$|J_m|$ (i.e., allowing duplicate elements from each $\mathcal{J}_{t_m}(i_m)$), we observe the relation to~\eqref{E:log-pl-multiple-approx} as follows:
 \begin{align*}
     \log\big[\!\!
         \sum_{\substack{J \subseteq \mathcal{J}_{t_m}(i_m) \\
@@ -788,12 +788,14 @@ $|J_m|$ allowing duplicate elements, we observe
             \big\}
     \big]
     &\approx
-        \log\big[\!\!\!
+        \log\big[
+            \big(\!\!\!
             \sum_{j \in \mathcal{J}_{t_m}(i_m)}\!\!\!\!\!
                 \exp\big\{
                     \beta^\trans x_{t_m}\!(i_m, j)
                 \big\}
-        \big]^{|J_m|} \\
+        \big)^{|J_m|} 
+        \big] \\
     &=
         |J_m|
         \log\big[\!\!\!
@@ -820,8 +822,8 @@ Define the receiver set growth sequence
 \end{equation}
 This sequence plays a critical role in bounding the error introduced by
 replacing $\log \mathit{PL}$ with $\log \widetilde{\mathit{PL}}$.
-Note that $G_n$ has linear growth when $|\mathcal{J}_{t_m}(i_m)|$ is constant,
-but that when $|\mathcal{J}_{t_m}(i_m)|$ increases, $G_n$ often has sublinear
+Note that when $|\mathcal{J}_{t_m}(i_m)|$ is constant $G_n$ has linear growth,
+but when $|\mathcal{J}_{t_m}(i_m)|$ increases, $G_n$ often has sublinear
 growth.  For example, the Cauchy-Schwartz inequality gives
 \[
     G_n
@@ -833,7 +835,7 @@ growth.  For example, the Cauchy-Schwartz inequality gives
                     \frac{1\{|J_m| > 1\}}{|\mathcal{J}_{t_m}(i_m)|^2}
             \bigg]^{1/2},
 \]
-and so if $|\mathcal{J}_{t_m}(i_m)| = \omega(\sqrt{m})$, then
+so if $|\mathcal{J}_{t_m}(i_m)| = \omega(\sqrt{m})$, then
 $G_n = \Oh(\sqrt{n})$.  Theorem~\ref{T:log-pl-multiple-approx-error} bounds
 the approximation error in terms of $G_n$.
 
@@ -1136,7 +1138,7 @@ a parametric bootstrap as follows.
 
 Assume the conditions of Theorem~\ref{T:mple-approx-error}.
 The residual $\tilde \beta_n - \beta_0$ depends continuously on $\beta_0$
-and the covariates $x_t(i,j)$.  Since $\tilde \beta_n$ is a consistent
+and the covariate process $x_t(i,j)$.  Since $\tilde \beta_n$ is a consistent
 estimator of $\beta_0$, we can estimate the bias in $\tilde \beta_n$ via
 a parametric bootstrap.  We generate a bootstrap replicate dataset
 $\{ (t_m, i_m, J_m^{(r)}) \}$ by drawing $J_m^{(r)}$, a random subset
@@ -1168,7 +1170,7 @@ replicates, we estimate the bias by
         =
             \frac{1}{R} \sum_{r=1}^{R} \tilde \beta_n^{(r)} - \tilde \beta_n.
 \]
-We may then adjust for estimator bias by replacing $\tilde \beta_n$ with
+We adjust for estimator bias by replacing $\tilde \beta_n$ with
 $\tilde \beta_n - \widehat{\mathrm{bias}}$.
 
 
@@ -1461,8 +1463,8 @@ For the remaining complexity estimates we assume $w_0(\beta, i,j)$,
 $W_0(\beta, i)$, and $E_0(\beta, i)$ have been cached and can be recalled
 in constant time.
 
-The sender-specific log partial likelihood and the first term in the gradient 
-involve a sum of covariates.  Using~\eqref{E:x-static-dynamic}, this sum can 
+The sender-specific log partial likelihood and the first term in the gradient
+involve a sum of covariates.  Using~\eqref{E:x-static-dynamic}, this sum can
 be decomposed as
 \[
     \sum_{\substack{t_m \leq t_n, \\ i_m = i}}
@@ -1520,7 +1522,7 @@ can be decomposed as
                         W_{t_m}\!(\beta,i)
                     }
             \bigg]
-            x_0(i,j) \\            
+            x_0(i,j) \\
     &\quad+
         \sum_{\substack{t_m \leq t, \\ i_m = i}}
             \sum_{j \in \mathcal{\bar J}(i)}
@@ -1530,12 +1532,12 @@ can be decomposed as
 \end{align*}
 The computation time for each of these terms is
 $\Oh(\bar p \, n(i) \, \bar J)$.  Thus, once the initial weights and
-expectations are known, the time for computing 
+expectations are known, the time for computing
 $\nabla [ \log \mathit{PL}_{t_n}\!(\beta) ]$ is
 $\Oh(p I \bar J + \bar p \, n \, \bar J)$.
 
-To summarize, the time complexity for computing the initial weights and 
-expectations, the log partial likelihood, and the gradient of the log partial 
+To summarize, the time complexity for computing the initial weights and
+expectations, the log partial likelihood, and the gradient of the log partial
 likelihood is
 $\Oh(p \, \bar I \, J + p \, I \, \bar J + \bar p \, n \, \bar J)$.
 
