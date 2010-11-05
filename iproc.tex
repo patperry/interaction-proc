@@ -1,7 +1,7 @@
 \documentclass[final]{statsoc}
 \pdfoutput=1    % Make arXiv happy
 
-\RequirePackage[a4paper]{geometry} 
+\RequirePackage[a4paper]{geometry}
 \RequirePackage[OT1]{fontenc}
 \RequirePackage{graphicx}
 \RequirePackage{enumerate}
@@ -15,8 +15,8 @@
 \newcommand{\qedhere}{}
 %\endlocaldefs
 
-\title[Point Process Models for Networks of Directed Interactions]{%
-    Point process models for networks of directed interactions
+\title[Point Process Modeling of Directed Interaction Networks]{%
+    Point process modeling of directed interaction networks
 }
 
 \author[P.\ O.\ Perry and P.\ J.\ Wolfe]{%
@@ -40,7 +40,7 @@ submitted for publication November 2010.]}}
 \begin{abstract}
 Network data often take the form of repeated interactions between senders
 and receivers tabulated over time.  Rather than reducing these data to
-binary ties, a model is introduced for treating the interactions as a
+binary ties, a model is introduced for treating directed interactions as a
 multivariate point process: a Cox multiplicative intensity model using
 covariates that depend on the history of the process.
 Consistency and asymptotic normality are proved for the resulting
@@ -90,12 +90,12 @@ $i\rightarrow j$ took place---for instance, individual $i$ sent a message
 to individual $j$.  Given such a set of triples, a primary modeling goal is
 determining which characteristics and behaviors of the senders and
 receivers are predictive of interaction.  In this vein, three important
-questions stand out; the first is common in studies of human
+questions stand out; the first is prevalent in studies of human
 behavior~\cite{mcpherson2001birds}, whereas the latter two have
 yet to receive due attention:
 
 \begin{description}
-    \item[Homophily] Is there evidence for homophily (an increased rate of
+    \item[Homophily] Is there evidence of homophily (an increased rate of
     interaction among similar individuals)?  To what degree is a shared
     attribute predictive of heightened interaction?
 
@@ -105,7 +105,7 @@ yet to receive due attention:
 
     \item[Multiplicity] How should multiple-receiver interactions of the
     type $i \rightarrow \{j_1,j_2,\ldots, j_L\}$ be modeled?  What are the
-    implications of treating these as separate pairwise interactions?
+    implications of treating these as $L$ separate pairwise interactions?
 \end{description}
 
 In the remainder of this article, we provide a modeling framework and
@@ -138,12 +138,12 @@ For sender $i$, receiver $j$, and positive time $t$, define
             $[0,t]$}
         \}.
 \]
-For technical reasons, assume $N_0(i,j) = 0$ and $N_t(i,j)$ is
+For technical reasons, assume $N_0(i,j) = 0$ and that $N_t(i,j)$ is
 adapted to a stochastic basis of $\sigma$-algebras
 $\{ \mathcal{F}_t \}_{t \geq 0}$ satisfying the usual conditions.  Then,
 $N_t(i,j)$ is a local submartingale, so by the Doob-Meyer decomposition,
 there exists a predictable increasing process $\Lambda_t(i,j)$, null at
-zero, such that $N_t(i,j) - \Lambda_t(i,j)$ is an $\mathcal{F}_t$ local
+zero, such that $N_t(i,j) - \Lambda_t(i,j)$ is an $\mathcal{F}_t$-local
 martingale.  Under mild conditions---the most important of which is that
 no two interactions happen simultaneously---there exists a predictable
 continuous process $\lambda_t(i,j)$ such that
@@ -151,11 +151,10 @@ continuous process $\lambda_t(i,j)$ such that
     \Lambda_t(i,j) = \int_0^t \lambda_s(i,j) \, ds.
 \)
 (In practical applications, simultaneous events exist and are an annoyance;
-Brostr\"om adds a discrete component to $\Lambda$ while
-Efron handles simultaneity through an ad-hoc adjustment
-\cite{brostrom2002cox,efron1977efficiency}.)
-The process $\lambda$ is known as the stochastic intensity of $N$.
-Heuristically,
+\citet{efron1977efficiency} handles simultaneity through an ad-hoc
+adjustment, while \citet{brostrom2002cox} adds a discrete component
+to $\Lambda$.)  The process $\lambda$ is known as the stochastic intensity
+of $N$.  Heuristically,
 \[
     \lambda_t(i,j) \, dt
         =
@@ -187,7 +186,7 @@ we model its stochastic intensity as
         \cdot
         1{\{j \in \mathcal{J}_t(i)\}}.
 \end{equation}
-The model posits sender $i$ in $\mathcal{I}$ interacts  with receiver $j$
+This model posits that sender $i$ in $\mathcal{I}$ interacts  with receiver $j$
 in $\mathcal{J}_t(i)$ at a baseline rate $\bar \lambda_t(i)$ modulated up or
 down according to the pair's covariate vector, $x_t(i,j)$.  As Efron notes
 \cite{efron1977efficiency}, the specific parametric form for the multiplier
@@ -199,7 +198,7 @@ The form of \eqref{E:cox-intensity} is deceptively simple but remains
 flexible enough to be useful in practice.  The model allows for
 homophily and group level effects via inclusion of covariates of the form
 ``$1\{\text{$i$ and $j$ belong to the same group}\}$,'' where ``group'' is
-some observable trait like ethnicity, gender, or age group.  The real
+some observable trait like ethnicity, gender, or age group.  Its real
 strength, though, is that $x_t(i,j)$ is allowed to be \emph{any}
 predictable process, in particular $x_t(i,j)$ can depend on the history
 of interactions.  To model reciprocation and transitivity in the
@@ -216,6 +215,13 @@ and
 Any process measurable with respect to the predictable $\sigma$-algebra is
 a valid covariate; this excludes only covariates depending on the future
 or the immediate present.
+
+Also note that despite assuming $\mathcal{I}$ and $\mathcal{J}$ to be fixed, our analysis
+allows senders and receivers to enter and leave the study during the
+observation period.  The effective number of senders at time $t$ is the
+set of $i$ such that $\bar \lambda_t(i) \neq 0$, which potentially varies
+with time.  Likewise, the effective number of receivers is controlled through
+$\mathcal{J}_t(i)$.
 
 Following Cox \cite{cox1975partial}, we treat the baseline rate
 $\bar \lambda_t(i)$ as a nuisance parameter and estimate the coefficient
@@ -338,10 +344,10 @@ the Fisher information matrix.
 Note the dependence of these terms on time-varying covariates,
 which precludes using sufficient statistics and introduces
 additional complexity in maximizing $\log \mathit{PL}_t(\cdot)$.
-For most large interaction datasets, we will not be able to use
+For most large interaction datasets,
 existing computational routines for handling Cox models
 (e.g., the function \texttt{coxph} from the \texttt{survival}
-package for R \cite{therneau2009survival}).  In
+package for R \cite{therneau2009survival}) will not suffice.  In
 Appendix~\ref{S:implementation}, we describe a custom method for
 maximizing $\log \mathit{PL}_t(\cdot)$ that exploits sparsity in
 $x_t(i,j)$.
@@ -353,30 +359,23 @@ Under the model of Section~\ref{S:point-process-model}, the maximum partial like
 estimate of $\beta_0$; the inverse Hessian of $\log \mathit{PL}_t(\cdot)$
 evaluated at the MPLE is a natural estimate of its covariance matrix.
 We now give conditions under which these
-estimators are consistent as $t$ goes to infinity.
+estimators are consistent.
 
 In the sampling regime where observation time $t$ is fixed and the number of
-senders $|\mathcal{I}|$ increases, Anderson and Gill's consistency proof for
+senders $|\mathcal{I}|$ increases, Anderson and Gill's \citeyearpar{andersen1982cox} consistency proof for
 the Cox proportional hazards model in survival analysis extends
 to cover model~\eqref{E:cox-intensity}.  This setting is natural in the
 context of clinical trial data, where $\mathcal{I}$ corresponds to the set of
 patients under study, but does not meet the requirements typical of
 interaction data.  For most interaction
 data we cannot control $\mathcal{I}$ and $\mathcal{J}$, and the only way to
-collect more data is to increase $t$.  Cox \cite{cox1972regression} outlines a proof for general
+collect more data is to increase the observation time.  Cox \cite{cox1972regression} outlines a proof for general
 MPLE consistency that applies to our sampling regime, but his argument is
 heuristic; Wong's treatment is more rigorous but does not cover continuous or
 time-varying covariates \cite{cox1975partial,wong1986theory}. The general
 interaction data sampling regime warrants a new consistency proof.
 
-Despite assuming $\mathcal{I}$ and $\mathcal{J}$ to be fixed, our analysis
-allows senders and receivers to enter and leave the study during the
-observation period.  The effective number of senders at time $t$ is the
-set of $i$ such that $\bar \lambda_t(i) \neq 0$, which potentially varies
-with time.  Likewise, the effective number of receivers is controlled through
-$\mathcal{J}_t(i)$.
-
-Our consistency proof relies on rescaling time to make the interaction
+Our proof of consistency relies on rescaling time to make the interaction
 times uniform.  To this end, define marginal processes
 \(
     N_t(i) = \sum_{j \in \mathcal{J}} N_t(i,j)
@@ -642,8 +641,8 @@ A\ref{A:integrated-cov-limit} implies that
 \)
 Lemma~\ref{L:Lindeberg-condition} in turn verifies that
 $\frac{1}{\sqrt{n}} \tilde U^{(n)}(\beta_0)$ satisfies a Lindeberg
-condition necessary for the application of Rebolledo's Martingale Central
-Limit Theorem~\cite{rebolledo1980central}.  Thus the process converges in
+condition necessary for the application of Rebolledo's \citeyearpar{rebolledo1980central} Martingale Central
+Limit Theorem.  Thus the process converges in
 distribution to a Gaussian process with covariance function
 $\Sigma_\alpha(\beta_0)$ as claimed.
 
@@ -726,8 +725,8 @@ which converges to zero since $\hat \beta_n \toP \beta_0$ by
 hypothesis of the theorem and $\{ V_{\tau_{n'}}(\cdot, i) \}$ is an
 equicontinuous family by assumption~A\ref{A:var-equicont}.
 Lemma~\ref{L:Lenglart} proves, as a consequence of
-assumption~A\ref{A:message-times-finite} and Lenglart's
-Inequality~\cite{lenglart1977relation}, that the second term converges
+assumption~A\ref{A:message-times-finite} and Lenglart's \citeyearpar{lenglart1977relation}
+Inequality, that the second term converges
 to zero uniformly in $\alpha$.
 The third term converges to zero by
 assumption~A\ref{A:integrated-cov-limit}, thereby concluding the proof.
@@ -1210,11 +1209,11 @@ maximizing $\widetilde{\mathit{PL}}_{t_n}^{(r)}$, where
             \sum_{j \in J_m^{(r)}}\!
                 \beta^\trans x_{t_m}\!(i_m, j)
             -
-            \log\big[
+            |J_m^{(r)}|\log\big[
                 \!\!\!\!
                 \sum_{j \in \mathcal{J}_{t_m}\!(i_m)}\!\!\!\!\!\!
                     \exp\{ \beta^\trans x_{t_m}\!(i_m, j)\}
-            \big]^{|J_m^{(r)}|}
+            \big]
         \bigg\}.
 \]
 Note that $x_t(i,j)$ is determined from the original dataset, not the
@@ -1283,7 +1282,7 @@ $\mathcal{I} = \mathcal{J} = \{ 1, 2, \ldots, 156 \}$ and
 $\mathcal{J}_t(i) = \mathcal{I} \setminus \{ i \}$, and with static and
 dynamic covariates taking the form of indicator variables as described
 below.  We fit the model by first maximizing the approximate log partial
-likelihood of~\eqref{E:log-pl-multiple-approx}, and then employing a
+likelihood $\log \widetilde{\mathit{PL}}_t(\beta)$ of~\eqref{E:log-pl-multiple-approx}, and then employing a
 parametric bootstrap to estimate and correct the resultant bias in
 parameter estimates.  Standard errors are calculated using the
 corresponding asymptotic theory, along with the delta method as
@@ -1443,19 +1442,19 @@ such a model has been brought directly to bear on relational data in
 the form of a network of directed interactions.
 
 With the increasing popularity of network science, there is an unfortunate
-tendency to shoehorn data into binary ties between entities.
+tendency amongst practitioners to treat data as binary ties between entities.
 It is important to bear in mind that the observables in such modeling
 scenarios often come in the form of repeated directed interactions.  As
 shown in~\cite{dechoudhury2010}, thresholding pairwise interaction
 counts to obtain binary ties gives dramatically different networks and
-subsequent conclusions depending on the choice of threshold.  We have
+subsequent conclusions, depending on the choice of threshold.  We have
 avoided such arbitrary outcomes by dealing directly with the observed
 data.
 
-The foundation of our work is Cox's proportional intensity model and
+The foundation of our work is Cox's \citeyearpar{cox1972regression} proportional intensity model and
 partial likelihood theory, tools which he first introduced almost
 forty years ago and which have been significantly developed since
-then~\cite{andersen1993statistical, cook2007statistical, cox1972regression, cox1975partial, fleming1991counting, martinussen2006dynamic}.
+then~\cite{andersen1993statistical, cook2007statistical, cox1975partial, fleming1991counting, martinussen2006dynamic}.
 These tools are used extensively in the context of survival analysis, but
 require further development for use in modeling interaction data.
 In this vein, we have extended the associated theory in
@@ -1466,17 +1465,17 @@ bias in the parameter estimates (we give a correction for the bias in
 certain regimes).
 
 We are not the first to model dyadic interactions using a point process
-framework; in a similar vein, Malmgren et al.\ and Heard et al.\ both
+framework; in a similar vein, \citet{malmgen2009characterizing} and \citet{heard2010bayesian} both
 apply hidden Markov models to communication
-activity~\cite{heard2010bayesian, malmgen2009characterizing}.  However,
+activity.  However,
 neither of these models uses covariate information, and neither tackles
 the problem in continuous time. Aside from
-Lunag\'omez et al.~\cite{lunagomez2009geometric}'s recent work in the
+Lunag\'omez \emph{et al}.'s \citeyearpar{lunagomez2009geometric} recent work in the
 context of graphical models, interactions involving more than two
 entities have largely been ignored.
 
 Finally, we point out relations to agent-based models from the
-social networks literature (see~\cite{snijders2010introduction} for a recent
+social networks literature (see~\citet{snijders2010introduction} for a recent
 survey).  These models are like ours in that they conceive of data as
 arising from ego-centric decisions made by individuals.  Typically,
 agent-based models work in discrete time rather than continuous time.
@@ -1506,7 +1505,7 @@ computing the gradient of the log partial likelihood.  For simplicity, we
 describe the case of strictly pairwise interactions with no ties in the
 interaction times.  We use the notation from
 Section~\ref{S:point-process-model}, assuming
-model~\eqref{E:cox-intensity} and partial likelihood~\eqref{E:log-pl}.
+the model of~\eqref{E:cox-intensity} and the partial likelihood of~\eqref{E:log-pl}.
 Assume that $|\mathcal{I}| = I$ and $|\mathcal{J}| = J$.
 
 Suppose $(t_1, i_1, j_1), \ldots, (t_n, i_n, j_n)$ is the sequence of observed
@@ -1519,7 +1518,7 @@ The partial likelihood factors into a product of terms, one for each sender:
         \prod_{i \in \mathcal{I}}
             \,\,
             \mathit{PL}_t(\beta, i),
-    \qquad\qquad
+    \qquad
     \mathit{PL}_t(\beta, i)
         =
         \!\!\!\!
@@ -1532,7 +1531,7 @@ This factorization allows us to compute $\log \mathit{PL}_t(\beta)$ and
 its derivatives by computing the sender-specific terms in parallel and
 then adding them together.
 
-The sender-specific log-partial likelihood and its gradient are
+The sender-specific log partial likelihood and its gradient are
 \begin{gather*}
     \log \mathit{PL}_t(\beta, i)
         =
@@ -1552,13 +1551,13 @@ The sender-specific log-partial likelihood and its gradient are
                 \,
                 x_{t_m}\!(i,j).
 \end{gather*}
-When $x_t(i,j)$ is constant over time,
+When $x_t(i,j) \in \reals^p$ is constant over time,
 there are sufficient statistics for $\beta$ and these formulas reduce.
 Otherwise, computing $\log \mathit{PL}_{t_n}(\beta)$ and its gradient
-requires iterating over all messages, potentially taking time
+requires iterating over all messages, potentially requiring time
 $\Oh(p \, n \, J)$.  For small- to medium-sized datasets, this is manageable,
-but for large network datasets computations taking time $\Oh(n \, J)$ are
-prohibitive.  In the rest of the section we show how to exploit sparsity
+but for large network datasets it can become
+prohibitive.  In the sequel we show how to exploit sparsity
 in the data, reducing the computation time to
 $\Oh\big(p \, (n + I \, J)\big)$ or in some cases
 $\Oh\big(p \, (n + J)\big)$.
@@ -1661,7 +1660,7 @@ be decomposed as
             \sum_{\substack{t_m \leq t_n, \\ i_m = i}}
                 d_{t_m}\!(i,j);
 \]
-computing first term takes time $\Oh(p \, \bar J)$ and computing the second
+computing the first term takes time $\Oh(p \, \bar J)$ and computing the second
 term takes time $\Oh(\bar p \, n(i) \, \bar J)$.  Since it takes time
 $\Oh(\bar p \, n(i) \bar J)$
 to compute
@@ -1794,7 +1793,7 @@ square integrability, note
 
 \begin{lemma}\label{L:Lindeberg-condition}
 Using the notation of Theorem~\ref{T:score-fisher}, under assumption
-A\ref{A:square-int}, the Lindeberg condition for Rebolledo's Central Limit
+A\ref{A:square-int}, the Lindeberg condition for Rebolledo's \citeyearpar{rebolledo1980central} Central Limit
 Theorem is satisfied: for any positive $\varepsilon$,
 \[
     \frac{1}{n}
@@ -1838,7 +1837,7 @@ uniformly in $\alpha$.
 \end{lemma}
 
 \begin{proof}
-Lenglart's Inequality and assumption~A\ref{A:message-times-finite} imply that
+Lenglart's \citeyearpar{lenglart1977relation} Inequality and assumption~A\ref{A:message-times-finite} imply that
 for any positive $\rho$ and $\delta$,
 \begin{multline*}
     \mathbb{P}\left\{
@@ -1864,8 +1863,7 @@ for any positive $\rho$ and $\delta$,
         \delta
     \right\}.
 \end{multline*}
-(see Fleming and Harrington's Cor.~3.4.1 for a related proof
-\cite{fleming1991counting}).    As in the proof of
+(see \citet[Cor.~3.4.1]{fleming1991counting} for a related proof).  As in the proof of
 Lemma~\ref{L:adapted-martingale}, set $K = \sup_{t,i,j} \| x_t(i,j) \|$.
 The sum is bounded by $\frac{16 K^4}{n} \cdot \frac{\Lambda_{\tau_n}}{n}$.
 Since $n^{-1/2} K^2 \toP 0$ by assumption A\ref{A:square-int} and
@@ -1920,7 +1918,7 @@ it is positive semi-definite, and $\log \mathit{PL}_t(\cdot)$ is
 a concave function.  By the assumption that the smallest
 eigenvalue of $\Sigma_1(\cdot)$ is bounded away from zero in a neighborhood
 of $\beta_0$, for $n$ sufficiently large, if $\log \mathit{PL}_t(\cdot)$ has a
-local minimum in that neighborhood then it must be the unique global maximum.
+local maximum in that neighborhood then it must be the unique global maximum.
 
 We find the local maximum by applying Newton's method to the
 gradient of $\tfrac{1}{n} \log \mathit{PL}_{\tau_n}(\cdot)$, taking
@@ -1928,10 +1926,10 @@ $\beta_0$ as the initial iterate.  Define
 \[
    Z_n = -[\tfrac{1}{n} I_{\tau_n}(\beta_0)]^{-1} [ \tfrac{1}{n} U_{\tau_n}(\beta_0)].
 \]
-The first Newton iterate, $\beta_{n,1}$ is equal to $\beta_0 - Z_n$.
+The first Newton iterate, $\beta_{n,1}$, is equal to $\beta_0 - Z_n$.
 Part (ii) of Theorem~\ref{T:score-fisher} and the
 assumptions of the theorem imply $[\tfrac{1}{n} I_{\tau_n}(\beta_0)]^{-1}$
-exists for $n$ large enough so that $Z_n$ is well-defined.
+exists for $n$ large enough, so that $Z_n$ is well-defined.
 Moreover, Part (i) of Theorem~\ref{T:score-fisher} and Slutzky's Theorem imply
 $Z_n \toP 0$ and
 $\sqrt{n} \, Z_n \tod \Normal(0,\, [\Sigma_1(\beta_0)]^{-1})$.
@@ -2010,7 +2008,7 @@ where $K = \sup_t \| x_t(i,j) \|$.
             \text{$\tilde \jmath_1, \ldots, \tilde \jmath_L$ has a duplicate}
         \} \\
         &\leq
-        \sum_{k \leq l}
+        \sum_{k < l}
             \mathbb{P}^\ast_{t,\beta,i;L}
             \Big\{
                 \tilde \jmath_k = \tilde \jmath_l
@@ -2108,7 +2106,7 @@ $\mathbb{P}_{t,\beta,i;L}$; the second is the covariance matrix of the same
 quantity under $\tilde{\mathbb{P}}_{t,\beta,i;L}$.
 The result follows in the same manner as in the proof of
 Theorem~\ref{T:log-pl-multiple-approx-error}.
-The relevant intermediate bounds is
+The relevant intermediate bound is
 \[
     \Big\| V_{t}(\beta, i; L) - \widetilde{V}_t(\beta, i; L) \Big\|
         \leq
@@ -2124,7 +2122,7 @@ The relevant intermediate bounds is
 
 We know that Newton's method applied to
 $\tfrac{1}{n}\log \widetilde{\mathit{PL}}_{\tau_n}(\cdot)$ converges to
-$\tilde \beta_n$ after enough iterations.  We use $\hat \beta_n$ as the
+$\tilde \beta_n$ after sufficiently many iterations.  We use $\hat \beta_n$ as the
 initial iterate and use the Kantorovich Theorem (Lemma~\ref{L:kantorovich})
 to bound $\|\tilde \beta_n - \hat \beta_n\|$.
 
