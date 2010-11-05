@@ -1477,60 +1477,51 @@ effects are both evident in e-mail communication, and we expect this to
 hold broadly for other types of interactions.  The proportional intensity
 model with time-varying covariates is a simple, flexible, and
 well-established model for incorporating these effects into the analysis
-of interaction data.  As far as we are aware, this is the first time that
-such an approach has been brought directly to bear on relational data in
-the form of a network of directed interactions.  With such data becoming
-more pervasive, and practitioners from across fields eager for new
-analytical tools, there is an unfortunate tendency to shoehorn disparate
-forms of data into binary ties between entities.  However, it is important
-to bear in mind that the observables in such modeling scenarios often come
-in the form of counts of directed interactions; as shown
-in~\cite{dechoudhury2010}, thresholding counts to obtain binary adjacency
-data can dramatically affect both the structure of the resultant network,
-and the conclusions of subsequent analysis.
+of interaction data.  As far as we are aware, this is the first time
+such a model has been brought directly to bear on relational data in
+the form of a network of directed interactions.
 
-In contrast, the foundation of our work is Cox's proportional intensity
-model and partial likelihood theory, tools which he first introduced almost
+With the increasing popularity of network science, there is an unfortunate
+tendency to shoehorn data into binary ties between entities.
+It is important to bear in mind that the observables in such modeling
+scenarios often come in the form of repeated directed interactions.  As
+shown in~\cite{dechoudhury2010}, thresholding pairwise interaction
+counts to obtain binary ties gives dramatically different networks and
+subsequent conclusions depending on the choice of threshold.  We have
+avoided such arbitrary outcomes by dealing directly with the observed
+data.
+
+The foundation of our work is Cox's proportional intensity model and
+partial likelihood theory, tools which he first introduced almost
 forty years ago and which have been significantly developed since
 then~\cite{andersen1993statistical, cook2007statistical, cox1972regression, cox1975partial, fleming1991counting, martinussen2006dynamic}.
-These tools are used extensively in the context of clinical trials, but
-require further development to enable their application to directed
-interaction data.  In this vein, we have extended the associated theory in
+These tools are used extensively in the context of survival analysis, but
+require further development for use in modeling interaction data.
+In this vein, we have extended the associated theory in
 two directions: first, we have provided results that are asymptotic in time
-rather than in the population of individuals under study; and second, we
-have shown that treating multiple-receiver interactions as separate pairwise
-interactions leads to bias in the corresponding parameter estimates, and we
-have shown when and how this bias can be corrected.
+rather than in the size of the population under study; and second, we
+have shown that treating multicast interactions via duplication leads to
+bias in the parameter estimates (we give a correction for the bias in
+certain regimes).
 
 We are not the first to model dyadic interactions using a point process
 framework; in a similar vein, Malmgren et al.\ and Heard et al.\ both
 apply hidden Markov models to communication
 activity~\cite{heard2010bayesian, malmgen2009characterizing}.  However,
-neither of these models uses covariate information, and neither posits
-the problem in continuous time.  Another feature of our model deserving
-emphasis is that we are using a different baseline intensity for each
-sender. In the survival analysis terminology, the model is stratified
-by sender.  Our nonparametric approach takes into account the fact that
-individuals may have highly idiosyncratic initiating behaviors; in
-contrast, Malmgen et al.\ use a hidden Markov model to capture individual
-and seasonal idiosyncrasies~\cite{malmgen2009characterizing}.  The issue
-of modeling extra-dyadic interactions, which we have also addressed here,
-has seen less attention in the literature; however,
-Lunag\'omez et al.~\cite{lunagomez2009geometric} have recent work in the
-context of graphical models that is relevant.
+neither of these models uses covariate information, and neither tackles
+the problem in continuous time. Aside from
+Lunag\'omez et al.~\cite{lunagomez2009geometric}'s recent work in the
+context of graphical models, interactions involving more than two
+entities have largely been ignored.
 
-Finally, we point out similarities to agent-based models from the network
-analysis literature; see~\cite{snijders2010introduction} for a recent
-survey.  These approaches and ours both conceive of the data as arising
-from ego-centric decisions made by the agents under study.  The main
-difference of approach lies in the fact that we are treating
-instantaneous interactions rather than ties such as friendship that
-persist over time.  However, features such as transitivity (the notion
-that your friends' friends are likely to be your friends) that are typical
-of such models can easily be incorporated into our framework, simply by
-adding history-dependent covariates as described in
-Section~\ref{S:point-process-model} of this article.
-
+Finally, we point out relations to agent-based models from the
+social networks literature (see~\cite{snijders2010introduction} for a recent
+survey).  These models are like ours in that they conceive of data as
+arising from ego-centric decisions made by individuals.  Typically,
+agent-based models work in discrete time rather than continuous time.
+The other main difference is agent-based models treat ties
+persisting in time (e.g., friendship), while we treat
+instantaneous events.
 
 \section*{Acknowledgement}
 
