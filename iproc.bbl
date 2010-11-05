@@ -1,406 +1,207 @@
-\begin{thebibliography}{0}
+\begin{thebibliography}{}
 
-\bibitem{andersen1993statistical}
-\begin{bbook}[author]
-\bauthor{\bsnm{Andersen},~\bfnm{P.~K.}\binits{P.~K.}},
-  \bauthor{\bsnm{Borgan},~\bfnm{O.}\binits{O.}},
-  \bauthor{\bsnm{Gill},~\bfnm{R.~D.}\binits{R.~D.}} \AND
-  \bauthor{\bsnm{Keiding},~\bfnm{N.}\binits{N.}}
-(\byear{1993}).
-\btitle{Statistical Models Based on Counting Processes}.
-\bpublisher{Springer-Verlag}, \baddress{New York}.
-\end{bbook}
-\endbibitem
+\bibitem[\protect\citeauthoryear{Andersen, Borgan, Gill, and Keiding}{Andersen
+  et~al.}{1993}]{andersen1993statistical}
+Andersen, P.~K., O.~Borgan, R.~D. Gill, and N.~Keiding (1993).
+\newblock {\em Statistical Models Based on Counting Processes}.
+\newblock New York: Springer-Verlag.
 
-\bibitem{andersen1982cox}
-\begin{barticle}[author]
-\bauthor{\bsnm{Andersen},~\bfnm{P.~K.}\binits{P.~K.}} \AND
-  \bauthor{\bsnm{Gill},~\bfnm{R.~D.}\binits{R.~D.}}
-(\byear{1982}).
-\btitle{{C}ox's Regression Model for Counting Processes: A Large Sample Study}.
-\bjournal{Ann. Statist.}
-\bvolume{10}
-\bpages{1100--1120}.
-\end{barticle}
-\endbibitem
+\bibitem[\protect\citeauthoryear{Andersen and Gill}{Andersen and
+  Gill}{1982}]{andersen1982cox}
+Andersen, P.~K. and R.~D. Gill (1982).
+\newblock {C}ox's regression model for counting processes: A large sample
+  study.
+\newblock {\em Ann. Statist.\/}~{\em 10}, 1100--1120.
 
-\bibitem{brostrom2002cox}
-\begin{barticle}[author]
-\bauthor{\bsnm{Brostr\"{o}m},~\bfnm{G.}\binits{G.}}
-(\byear{2002}).
-\btitle{{C}ox Regression; Ties Without Tears}.
-\bjournal{Commun. Stat. Theory Meth.}
-\bvolume{31}
-\bpages{285--297}.
-\end{barticle}
-\endbibitem
+\bibitem[\protect\citeauthoryear{Brostr\"{o}m}{Brostr\"{o}m}{2002}]{brostrom2002cox}
+Brostr\"{o}m, G. (2002).
+\newblock {C}ox regression; ties without tears.
+\newblock {\em Commun. Stat. Theory Meth.\/}~{\em 31}, 285--297.
 
-\bibitem{cohen2009enron}
-\begin{bmisc}[author]
-\bauthor{\bsnm{Cohen},~\bfnm{W.~W.}\binits{W.~W.}}
-(\byear{2009}).
-\btitle{{E}nron Email Dataset}.
-\bhowpublished{http://www.cs.cmu.edu/\~{}enron/}
-\bnote{Version of 21 August 2009}.
-\end{bmisc}
-\endbibitem
+\bibitem[\protect\citeauthoryear{Cohen}{Cohen}{2009}]{cohen2009enron}
+Cohen, W.~W. (2009).
+\newblock {E}nron email dataset.
+\newblock http://www.cs.cmu.edu/\~{}enron/.
+\newblock Version of 21 August 2009.
 
-\bibitem{cook2007statistical}
-\begin{bbook}[author]
-\bauthor{\bsnm{Cook},~\bfnm{R.~J.}\binits{R.~J.}} \AND
-  \bauthor{\bsnm{Lawless},~\bfnm{J.~F.}\binits{J.~F.}}
-(\byear{2007}).
-\btitle{The Statistical Analysis of Recurrent Events}.
-\bpublisher{Springer}, \baddress{Berlin}.
-\end{bbook}
-\endbibitem
+\bibitem[\protect\citeauthoryear{Cook and Lawless}{Cook and
+  Lawless}{2007}]{cook2007statistical}
+Cook, R.~J. and J.~F. Lawless (2007).
+\newblock {\em The Statistical Analysis of Recurrent Events}.
+\newblock Berlin: Springer.
 
-\bibitem{cox1972regression}
-\begin{barticle}[author]
-\bauthor{\bsnm{Cox},~\bfnm{D.~R.}\binits{D.~R.}}
-(\byear{1972}).
-\btitle{Regression Models and Life-Tables (With Discussion)}.
-\bjournal{J. R. Statist. Soc. B}
-\bvolume{34}
-\bpages{187--220}.
-\end{barticle}
-\endbibitem
+\bibitem[\protect\citeauthoryear{Cox}{Cox}{1972}]{cox1972regression}
+Cox, D.~R. (1972).
+\newblock Regression models and life-tables (with discussion).
+\newblock {\em J. R. Statist. Soc. B\/}~{\em 34}, 187--220.
 
-\bibitem{cox1975partial}
-\begin{barticle}[author]
-\bauthor{\bsnm{Cox},~\bfnm{D.~R.}\binits{D.~R.}}
-(\byear{1975}).
-\btitle{Partial Likelihood}.
-\bjournal{Biometrika}
-\bvolume{62}
-\bpages{269--276}.
-\end{barticle}
-\endbibitem
+\bibitem[\protect\citeauthoryear{Cox}{Cox}{1975}]{cox1975partial}
+Cox, D.~R. (1975).
+\newblock Partial likelihood.
+\newblock {\em Biometrika\/}~{\em 62}, 269--276.
 
-\bibitem{dechoudhury2010}
-\begin{binproceedings}[author]
-\bauthor{\bsnm{De~Choudhury},~\bfnm{M.}\binits{M.}},
-  \bauthor{\bsnm{Mason},~\bfnm{W.~A.}\binits{W.~A.}},
-  \bauthor{\bsnm{Hofman},~\bfnm{J.~M.}\binits{J.~M.}} \AND
-  \bauthor{\bsnm{Watts},~\bfnm{D.~J.}\binits{D.~J.}}
-(\byear{2010}).
-\btitle{Inferring Relevant Social Networks from Interpersonal Communication}.
-In \bbooktitle{Proc. 19th Intl Conf. World Wide Web}
-\bpages{301--310}.
-\bpublisher{New York: Association for Computing Machinery}.
-\end{binproceedings}
-\endbibitem
+\bibitem[\protect\citeauthoryear{De~Choudhury, Mason, Hofman, and
+  Watts}{De~Choudhury et~al.}{2010}]{dechoudhury2010}
+De~Choudhury, M., W.~A. Mason, J.~M. Hofman, and D.~J. Watts (2010).
+\newblock Inferring relevant social networks from interpersonal communication.
+\newblock In {\em Proc. 19th Intl Conf. World Wide Web}, pp.\  301--310. New
+  York: Association for Computing Machinery.
 
-\bibitem{eagle2006reality}
-\begin{barticle}[author]
-\bauthor{\bsnm{Eagle},~\bfnm{N.}\binits{N.}} \AND
-  \bauthor{\bsnm{Pentland},~\bfnm{A.~S.}\binits{A.~S.}}
-(\byear{2006}).
-\btitle{Reality Mining: Sensing Complex Social Systems}.
-\bjournal{Pers. Ubiquit. Comput.}
-\bvolume{10}
-\bpages{255--268}.
-\end{barticle}
-\endbibitem
+\bibitem[\protect\citeauthoryear{Eagle and Pentland}{Eagle and
+  Pentland}{2006}]{eagle2006reality}
+Eagle, N. and A.~S. Pentland (2006).
+\newblock Reality mining: Sensing complex social systems.
+\newblock {\em Pers. Ubiquit. Comput.\/}~{\em 10}, 255--268.
 
-\bibitem{efron1977efficiency}
-\begin{barticle}[author]
-\bauthor{\bsnm{Efron},~\bfnm{B.}\binits{B.}}
-(\byear{1977}).
-\btitle{The Efficiency of {C}ox's Likelihood Function for Censored Data}.
-\bjournal{J. Am. Statist. Ass.}
-\bvolume{72}
-\bpages{557--565}.
-\end{barticle}
-\endbibitem
+\bibitem[\protect\citeauthoryear{Efron}{Efron}{1977}]{efron1977efficiency}
+Efron, B. (1977).
+\newblock The efficiency of {C}ox's likelihood function for censored data.
+\newblock {\em J. Am. Statist. Ass.\/}~{\em 72}, 557--565.
 
-\bibitem{fleming1991counting}
-\begin{bbook}[author]
-\bauthor{\bsnm{Fleming},~\bfnm{T.~R.}\binits{T.~R.}} \AND
-  \bauthor{\bsnm{Harrington},~\bfnm{D.~P.}\binits{D.~P.}}
-(\byear{1991}).
-\btitle{Counting Processes and Survival Analysis}.
-\bpublisher{Wiley}, \baddress{New York}.
-\end{bbook}
-\endbibitem
+\bibitem[\protect\citeauthoryear{Fleming and Harrington}{Fleming and
+  Harrington}{1991}]{fleming1991counting}
+Fleming, T.~R. and D.~P. Harrington (1991).
+\newblock {\em Counting Processes and Survival Analysis}.
+\newblock New York: Wiley.
 
-\bibitem{fowler2006connecting}
-\begin{barticle}[author]
-\bauthor{\bsnm{Fowler},~\bfnm{J.~H.}\binits{J.~H.}}
-(\byear{2006}).
-\btitle{Connecting the {C}ongress: A Study of Cosponsorship Networks}.
-\bjournal{Polit. Anal.}
-\bvolume{14}
-\bpages{456--487}.
-\end{barticle}
-\endbibitem
+\bibitem[\protect\citeauthoryear{Fowler}{Fowler}{2006}]{fowler2006connecting}
+Fowler, J.~H. (2006).
+\newblock Connecting the {C}ongress: A study of cosponsorship networks.
+\newblock {\em Polit. Anal.\/}~{\em 14}, 456--487.
 
-\bibitem{goldenberg2009survey}
-\begin{barticle}[author]
-\bauthor{\bsnm{Goldenberg},~\bfnm{A.}\binits{A.}},
-  \bauthor{\bsnm{Zheng},~\bfnm{A.~X.}\binits{A.~X.}},
-  \bauthor{\bsnm{Fienberg},~\bfnm{S.~E.}\binits{S.~E.}} \AND
-  \bauthor{\bsnm{Airoldi},~\bfnm{E.~M.}\binits{E.~M.}}
-(\byear{2009}).
-\btitle{A Survey of Statistical Network Models}.
-\bjournal{Found. Trends Mach. Learn.}
-\bvolume{2}
-\bpages{129--233}.
-\end{barticle}
-\endbibitem
+\bibitem[\protect\citeauthoryear{Goldenberg, Zheng, Fienberg, and
+  Airoldi}{Goldenberg et~al.}{2009}]{goldenberg2009survey}
+Goldenberg, A., A.~X. Zheng, S.~E. Fienberg, and E.~M. Airoldi (2009).
+\newblock A survey of statistical network models.
+\newblock {\em Found. Trends Mach. Learn.\/}~{\em 2}, 129--233.
 
-\bibitem{haberman1977maximum}
-\begin{barticle}[author]
-\bauthor{\bsnm{Haberman},~\bfnm{S.~J.}\binits{S.~J.}}
-(\byear{1977}).
-\btitle{Maximum Likelihood Estimates in Exponential Response Models}.
-\bjournal{Ann. Statist.}
-\bvolume{5}
-\bpages{815--841}.
-\end{barticle}
-\endbibitem
+\bibitem[\protect\citeauthoryear{Haberman}{Haberman}{1977}]{haberman1977maximum}
+Haberman, S.~J. (1977).
+\newblock Maximum likelihood estimates in exponential response models.
+\newblock {\em Ann. Statist.\/}~{\em 5}, 815--841.
 
-\bibitem{heard2010bayesian}
-\begin{barticle}[author]
-\bauthor{\bsnm{Heard},~\bfnm{N.~A.}\binits{N.~A.}},
-  \bauthor{\bsnm{Weston},~\bfnm{D.~J.}\binits{D.~J.}},
-  \bauthor{\bsnm{Platanioti},~\bfnm{K.}\binits{K.}} \AND
-  \bauthor{\bsnm{Hand},~\bfnm{D.~J.}\binits{D.~J.}}
-(\byear{2010}).
-\btitle{{B}ayesian Anomaly Detection Methods for Social Networks}.
-\bjournal{Ann. Appl. Statist.}
-\bvolume{4}
-\bpages{645--662}.
-\end{barticle}
-\endbibitem
+\bibitem[\protect\citeauthoryear{Heard, Weston, Platanioti, and Hand}{Heard
+  et~al.}{2010}]{heard2010bayesian}
+Heard, N.~A., D.~J. Weston, K.~Platanioti, and D.~J. Hand (2010).
+\newblock {B}ayesian anomaly detection methods for social networks.
+\newblock {\em Ann. Appl. Statist.\/}~{\em 4}, 645--662.
 
-\bibitem{jackson2008social}
-\begin{bbook}[author]
-\bauthor{\bsnm{Jackson},~\bfnm{M.~O.}\binits{M.~O.}}
-(\byear{2008}).
-\btitle{Social and Economic Networks}.
-\bpublisher{Princeton University Press}, \baddress{Princeton, NJ}.
-\end{bbook}
-\endbibitem
+\bibitem[\protect\citeauthoryear{Jackson}{Jackson}{2008}]{jackson2008social}
+Jackson, M.~O. (2008).
+\newblock {\em Social and Economic Networks}.
+\newblock Princeton, NJ: Princeton University Press.
 
-\bibitem{kantorovich1952functional}
-\begin{barticle}[author]
-\bauthor{\bsnm{Kantorovich},~\bfnm{L.~V.}\binits{L.~V.}}
-(\byear{1948}).
-\btitle{Functional Analysis and Applied Mathematics}.
-\bjournal{Uspekhi Matematicheskikh Nauk}
-\bvolume{3}
-\bpages{89--185}.
-\bnote{Translated by C. D. Benster, National Bureau of Standards Report
-  No.~1509, 1952}.
-\end{barticle}
-\endbibitem
+\bibitem[\protect\citeauthoryear{Kantorovich}{Kantorovich}{1948}]{kantorovich1952functional}
+Kantorovich, L.~V. (1948).
+\newblock Functional analysis and applied mathematics.
+\newblock {\em Uspekhi Matematicheskikh Nauk\/}~{\em 3}, 89--185.
+\newblock Translated by C. D. Benster, National Bureau of Standards Report
+  No.~1509, 1952.
 
-\bibitem{kolaczyk2009statistical}
-\begin{bbook}[author]
-\bauthor{\bsnm{Kolaczyk},~\bfnm{E.~D.}\binits{E.~D.}}
-(\byear{2009}).
-\btitle{Statistical Analysis of Network Data: Methods and Models}.
-\bpublisher{Springer}, \baddress{New York}.
-\end{bbook}
-\endbibitem
+\bibitem[\protect\citeauthoryear{Kolaczyk}{Kolaczyk}{2009}]{kolaczyk2009statistical}
+Kolaczyk, E.~D. (2009).
+\newblock {\em Statistical Analysis of Network Data: Methods and Models}.
+\newblock New York: Springer.
 
-\bibitem{lenglart1977relation}
-\begin{barticle}[author]
-\bauthor{\bsnm{Lenglart},~\bfnm{E.}\binits{E.}}
-(\byear{1977}).
-\btitle{Relation de Domination entre Deux Processus}.
-\bjournal{Ann. Inst. Henri Poincar\'e}
-\bvolume{13}
-\bpages{171--179}.
-\end{barticle}
-\endbibitem
+\bibitem[\protect\citeauthoryear{Lenglart}{Lenglart}{1977}]{lenglart1977relation}
+Lenglart, E. (1977).
+\newblock Relation de domination entre deux processus.
+\newblock {\em Ann. Inst. Henri Poincar\'e\/}~{\em 13}, 171--179.
 
-\bibitem{lunagomez2009geometric}
-\begin{btechreport}[author]
-\bauthor{\bsnm{Lunag\'{o}mez},~\bfnm{S.}\binits{S.}},
-  \bauthor{\bsnm{Mukherjee},~\bfnm{S.}\binits{S.}} \AND
-  \bauthor{\bsnm{Wolpert},~\bfnm{R.~L.}\binits{R.~L.}}
-(\byear{2009}).
-\btitle{Geometric Representations of Hypergraphs for Prior Specification and
-  Posterior Sampling}
-\btype{Technical Report} No. \bnumber{2009-01},
-\binstitute{Duke University}, \baddress{Durham, NC}
-\bnote{arXiv:0912.3648v1 [math.ST]}.
-\end{btechreport}
-\endbibitem
+\bibitem[\protect\citeauthoryear{Lunag\'{o}mez, Mukherjee, and
+  Wolpert}{Lunag\'{o}mez et~al.}{2009}]{lunagomez2009geometric}
+Lunag\'{o}mez, S., S.~Mukherjee, and R.~L. Wolpert (2009).
+\newblock Geometric representations of hypergraphs for prior specification and
+  posterior sampling.
+\newblock Technical Report 2009-01, Duke University, Durham, NC.
+\newblock arXiv:0912.3648v1 [math.ST].
 
-\bibitem{malmgen2009characterizing}
-\begin{binproceedings}[author]
-\bauthor{\bsnm{Malmgren},~\bfnm{R.~D.}\binits{R.~D.}},
-  \bauthor{\bsnm{Hofman},~\bfnm{J.~M.}\binits{J.~M.}},
-  \bauthor{\bsnm{Amaral},~\bfnm{L.~A.}\binits{L.~A.}} \AND
-  \bauthor{\bsnm{Watts},~\bfnm{D.~J.}\binits{D.~J.}}
-(\byear{2009}).
-\btitle{Characterizing Individual Communication Patterns}.
-In \bbooktitle{Proc. 15th ACM SIGKDD Intl Conf. Knowledge Discovery Data
-  Mining}
-\bpages{607--616}.
-\bpublisher{New York: Association for Computing Machinery}.
-\end{binproceedings}
-\endbibitem
+\bibitem[\protect\citeauthoryear{Malmgren, Hofman, Amaral, and Watts}{Malmgren
+  et~al.}{2009}]{malmgen2009characterizing}
+Malmgren, R.~D., J.~M. Hofman, L.~A. Amaral, and D.~J. Watts (2009).
+\newblock Characterizing individual communication patterns.
+\newblock In {\em Proc. 15th ACM SIGKDD Intl Conf. Knowledge Discovery Data
+  Mining}, pp.\  607--616. New York: Association for Computing Machinery.
 
-\bibitem{martinussen2006dynamic}
-\begin{bbook}[author]
-\bauthor{\bsnm{Martinussen},~\bfnm{T.}\binits{T.}} \AND
-  \bauthor{\bsnm{Scheike},~\bfnm{T.~H.}\binits{T.~H.}}
-(\byear{2006}).
-\btitle{Dynamic Regression Models for Survival Data}.
-\bpublisher{Springer}, \baddress{New York}.
-\end{bbook}
-\endbibitem
+\bibitem[\protect\citeauthoryear{Martinussen and Scheike}{Martinussen and
+  Scheike}{2006}]{martinussen2006dynamic}
+Martinussen, T. and T.~H. Scheike (2006).
+\newblock {\em Dynamic Regression Models for Survival Data}.
+\newblock New York: Springer.
 
-\bibitem{mckenzie2007network}
-\begin{barticle}[author]
-\bauthor{\bsnm{Mckenzie},~\bfnm{D.}\binits{D.}} \AND
-  \bauthor{\bsnm{Rapoport},~\bfnm{H.}\binits{H.}}
-(\byear{2007}).
-\btitle{Network Effects and the Dynamics of Migration and Inequality: Theory
-  and Evidence from {M}exico}.
-\bjournal{J. Dev. Econ.}
-\bvolume{84}
-\bpages{1--24}.
-\end{barticle}
-\endbibitem
+\bibitem[\protect\citeauthoryear{Mckenzie and Rapoport}{Mckenzie and
+  Rapoport}{2007}]{mckenzie2007network}
+Mckenzie, D. and H.~Rapoport (2007).
+\newblock Network effects and the dynamics of migration and inequality: Theory
+  and evidence from {M}exico.
+\newblock {\em J. Dev. Econ.\/}~{\em 84}, 1--24.
 
-\bibitem{mcpherson2001birds}
-\begin{barticle}[author]
-\bauthor{\bsnm{McPherson},~\bfnm{M.}\binits{M.}},
-  \bauthor{\bsnm{Smith-Lovin},~\bfnm{L.}\binits{L.}} \AND
-  \bauthor{\bsnm{Cook},~\bfnm{J.~M.}\binits{J.~M.}}
-(\byear{2001}).
-\btitle{Birds of a Feather: Homophily in Social Networks}.
-\bjournal{Annu. Rev. Sociol.}
-\bvolume{27}
-\bpages{415--444}.
-\end{barticle}
-\endbibitem
+\bibitem[\protect\citeauthoryear{McPherson, Smith-Lovin, and Cook}{McPherson
+  et~al.}{2001}]{mcpherson2001birds}
+McPherson, M., L.~Smith-Lovin, and J.~M. Cook (2001).
+\newblock Birds of a feather: Homophily in social networks.
+\newblock {\em Annu. Rev. Sociol.\/}~{\em 27}, 415--444.
 
-\bibitem{nocedal2006numerical}
-\begin{bbook}[author]
-\bauthor{\bsnm{Nocedal},~\bfnm{J.}\binits{J.}} \AND
-  \bauthor{\bsnm{Wright},~\bfnm{S.~J.}\binits{S.~J.}}
-(\byear{2006}).
-\btitle{Numerical Optimization}, \bedition{Second} ed.
-\bpublisher{Springer}, \baddress{New York}.
-\end{bbook}
-\endbibitem
+\bibitem[\protect\citeauthoryear{Nocedal and Wright}{Nocedal and
+  Wright}{2006}]{nocedal2006numerical}
+Nocedal, J. and S.~J. Wright (2006).
+\newblock {\em Numerical Optimization\/} (Second ed.).
+\newblock New York: Springer.
 
-\bibitem{papachristos2009murder}
-\begin{barticle}[author]
-\bauthor{\bsnm{Papachristos},~\bfnm{A.~V.}\binits{A.~V.}}
-(\byear{2009}).
-\btitle{Murder by Structure: Dominance Relations and the Social Structure of
-  Gang Homicide}.
-\bjournal{Am. J. Sociol.}
-\bvolume{115}
-\bpages{74--128}.
-\end{barticle}
-\endbibitem
+\bibitem[\protect\citeauthoryear{Papachristos}{Papachristos}{2009}]{papachristos2009murder}
+Papachristos, A.~V. (2009).
+\newblock Murder by structure: Dominance relations and the social structure of
+  gang homicide.
+\newblock {\em Am. J. Sociol.\/}~{\em 115}, 74--128.
 
-\bibitem{rebolledo1980central}
-\begin{barticle}[author]
-\bauthor{\bsnm{Rebolledo},~\bfnm{R.}\binits{R.}}
-(\byear{1980}).
-\btitle{Central Limit Theorems for Local Martingales}.
-\bjournal{Probab. Theory Rel. Fields}
-\bvolume{51}
-\bpages{269--286}.
-\end{barticle}
-\endbibitem
+\bibitem[\protect\citeauthoryear{Rebolledo}{Rebolledo}{1980}]{rebolledo1980central}
+Rebolledo, R. (1980).
+\newblock Central limit theorems for local martingales.
+\newblock {\em Probab. Theory Rel. Fields\/}~{\em 51}, 269--286.
 
-\bibitem{snijders2010introduction}
-\begin{barticle}[author]
-\bauthor{\bsnm{Snijders},~\bfnm{T.~A.~B.}\binits{T.~A.~B.}},
-  \bauthor{\bparticle{Van~de }\bsnm{Bunt},~\bfnm{G.~V.}\binits{G.~V.}} \AND
-  \bauthor{\bsnm{Steglich},~\bfnm{C.~E.~G.}\binits{C.~E.~G.}}
-(\byear{2010}).
-\btitle{Introduction to Stochastic Actor-Based Models for Network Dynamics}.
-\bjournal{Soc. Netw.}
-\bvolume{32}
-\bpages{44--60}.
-\end{barticle}
-\endbibitem
+\bibitem[\protect\citeauthoryear{Snijders, Van~de Bunt, and Steglich}{Snijders
+  et~al.}{2010}]{snijders2010introduction}
+Snijders, T. A.~B., G.~V. Van~de Bunt, and C.~E.~G. Steglich (2010).
+\newblock Introduction to stochastic actor-based models for network dynamics.
+\newblock {\em Soc. Netw.\/}~{\em 32}, 44--60.
 
-\bibitem{sundaresan2007network}
-\begin{barticle}[author]
-\bauthor{\bsnm{Sundaresan},~\bfnm{S.~R.}\binits{S.~R.}},
-  \bauthor{\bsnm{Fischoff},~\bfnm{I.~R.}\binits{I.~R.}},
-  \bauthor{\bsnm{Dushoff},~\bfnm{J.}\binits{J.}} \AND
-  \bauthor{\bsnm{Rubenstein},~\bfnm{D.~I.}\binits{D.~I.}}
-(\byear{2007}).
-\btitle{Network Metrics Reveal Differences in Social Organization Between Two
-  Fission-Fusion Species, {G}revy's Zebra and Onager}.
-\bjournal{Oecologia}
-\bvolume{151}
-\bpages{140--149}.
-\end{barticle}
-\endbibitem
+\bibitem[\protect\citeauthoryear{Sundaresan, Fischoff, Dushoff, and
+  Rubenstein}{Sundaresan et~al.}{2007}]{sundaresan2007network}
+Sundaresan, S.~R., I.~R. Fischoff, J.~Dushoff, and D.~I. Rubenstein (2007).
+\newblock Network metrics reveal differences in social organization between two
+  fission-fusion species, {G}revy's zebra and onager.
+\newblock {\em Oecologia\/}~{\em 151}, 140--149.
 
-\bibitem{tapia1971kantorovich}
-\begin{barticle}[author]
-\bauthor{\bsnm{Tapia},~\bfnm{R.~A.}\binits{R.~A.}}
-(\byear{1971}).
-\btitle{The {K}antorovich Theorem for {N}ewton's Method}.
-\bjournal{Am. Math. Mon.}
-\bvolume{78}
-\bpages{389--392}.
-\end{barticle}
-\endbibitem
+\bibitem[\protect\citeauthoryear{Tapia}{Tapia}{1971}]{tapia1971kantorovich}
+Tapia, R.~A. (1971).
+\newblock The {K}antorovich theorem for {N}ewton's method.
+\newblock {\em Am. Math. Mon.\/}~{\em 78}, 389--392.
 
-\bibitem{therneau2009survival}
-\begin{bunpublished}[author]
-\bauthor{\bsnm{Therneau},~\bfnm{T.}\binits{T.}} \AND
-  \bauthor{\bsnm{Lumley},~\bfnm{T.}\binits{T.}}
-(\byear{2009}).
-\btitle{\texttt{survival}: Survival Analysis, Including Penalised Likelihood}.
-\bnote{R package version 2.35-8, http://CRAN.R-project.org/package=survival}.
-\end{bunpublished}
-\endbibitem
+\bibitem[\protect\citeauthoryear{Therneau and Lumley}{Therneau and
+  Lumley}{2009}]{therneau2009survival}
+Therneau, T. and T.~Lumley (2009).
+\newblock \texttt{survival}: Survival analysis, including penalised likelihood.
+\newblock R package version 2.35-8, http://CRAN.R-project.org/package=survival.
 
-\bibitem{tyler2005email}
-\begin{barticle}[author]
-\bauthor{\bsnm{Tyler},~\bfnm{J.~R.}\binits{J.~R.}},
-  \bauthor{\bsnm{Wilkinson},~\bfnm{D.~M.}\binits{D.~M.}} \AND
-  \bauthor{\bsnm{Huberman},~\bfnm{B.~A.}\binits{B.~A.}}
-(\byear{2005}).
-\btitle{E-mail as Spectroscopy: Automated Discovery of Community Structure
-  Within Organizations}.
-\bjournal{Inform. Soc.}
-\bvolume{21}
-\bpages{143--153}.
-\end{barticle}
-\endbibitem
+\bibitem[\protect\citeauthoryear{Tyler, Wilkinson, and Huberman}{Tyler
+  et~al.}{2005}]{tyler2005email}
+Tyler, J.~R., D.~M. Wilkinson, and B.~A. Huberman (2005).
+\newblock E-mail as spectroscopy: Automated discovery of community structure
+  within organizations.
+\newblock {\em Inform. Soc.\/}~{\em 21}, 143--153.
 
-\bibitem{wong1986theory}
-\begin{barticle}[author]
-\bauthor{\bsnm{Wong},~\bfnm{W.~H.}\binits{W.~H.}}
-(\byear{1986}).
-\btitle{Theory of Partial Likelihood}.
-\bjournal{Ann. Statist.}
-\bvolume{14}
-\bpages{88--123}.
-\end{barticle}
-\endbibitem
+\bibitem[\protect\citeauthoryear{Wong}{Wong}{1986}]{wong1986theory}
+Wong, W.~H. (1986).
+\newblock Theory of partial likelihood.
+\newblock {\em Ann. Statist.\/}~{\em 14}, 88--123.
 
-\bibitem{zhou2007strategies}
-\begin{binproceedings}[author]
-\bauthor{\bsnm{Zhou},~\bfnm{Y.}\binits{Y.}},
-  \bauthor{\bsnm{Goldberg},~\bfnm{M.}\binits{M.}},
-  \bauthor{\bsnm{Magdon-Ismail},~\bfnm{M.}\binits{M.}} \AND
-  \bauthor{\bsnm{Wallace},~\bfnm{W.~A.}\binits{W.~A.}}
-(\byear{2007}).
-\btitle{Strategies for Cleaning Organizational Emails with an Application to
-  {E}nron Email Dataset}.
-In \bbooktitle{5th Annu. Conf. North Am. Ass. Computat. Social Organizat. Sci.}
-\bpublisher{Pittsburgh, PA: North American Association for Computational Social
-  and Organizational Science}.
-\end{binproceedings}
-\endbibitem
+\bibitem[\protect\citeauthoryear{Zhou, Goldberg, Magdon-Ismail, and
+  Wallace}{Zhou et~al.}{2007}]{zhou2007strategies}
+Zhou, Y., M.~Goldberg, M.~Magdon-Ismail, and W.~A. Wallace (2007).
+\newblock Strategies for cleaning organizational emails with an application to
+  {E}nron email dataset.
+\newblock In {\em 5th Annu. Conf. North Am. Ass. Computat. Social Organizat.
+  Sci.} Pittsburgh, PA: North American Association for Computational Social and
+  Organizational Science.
 
 \end{thebibliography}

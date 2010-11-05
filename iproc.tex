@@ -1,64 +1,41 @@
-\documentclass[aoas,preprint]{imsart}
-%\pdfoutput=1    % Make arXiv happy
+\documentclass[final]{statsoc}
+\pdfoutput=1    % Make arXiv happy
 
+\RequirePackage[a4paper]{geometry} 
 \RequirePackage[OT1]{fontenc}
-\RequirePackage{amsthm,amsmath,amssymb}
-\RequirePackage[colorlinks,citecolor=blue,urlcolor=blue]{hyperref}
-\RequirePackage{hypernat}
 \RequirePackage{graphicx}
 \RequirePackage{enumerate}
 \RequirePackage{booktabs}
-\RequirePackage{subfigure}
-\belowbottomsep=0.5em
+\RequirePackage{amssymb}
+\RequirePackage[cmex10]{amsmath}
 
-\setattribute{journal}{name}{}  % Suppress text "Submitted to..."
 
-\startlocaldefs
+%\startlocaldefs
 \usepackage{iproc-macros}
-\newcommand{\binstitute}{} % not defined by the IMS template
-\endlocaldefs
+\newcommand{\qedhere}{}
+%\endlocaldefs
+
+\title[Point Process Models for Networks of Directed Interactions]{%
+    Point process models for networks of directed interactions
+}
+
+\author[P.\ O.\ Perry and P.\ J.\ Wolfe]{%
+    Patrick O.\ Perry and Patrick J.\ Wolfe
+}
+\runauthor{%
+    P.\ O.\ Perry and P.\ J.\ Wolfe
+}
+
+\coaddress{Statistics and Information Sciences Laboratory, Harvard
+University, Oxford Street, Cambridge, MA 02138-2901, USA}
+\email{patperry@seas.harvard.edu, wolfe@stat.harvard.edu}
+\address{Harvard University, Cambridge, USA\\\emph{[Manuscript
+submitted for publication November 2010.]}}
 
 
 \begin{document}
 
-\begin{frontmatter}
-
-\title{%
-    Point Process Modeling for Directed Interactions%
-    \protect\thanksref{T1}
-}
-
-\runtitle{Point Process Modeling for Directed Interactions}
-\thankstext{T1}{%
-    Work supported in part by the Army Research Office under
-    PECASE Award W911NF-09-1-0555 and by the Office of Naval
-    Research under MURI Award 58153-MA-MUR.
-}
-
-\begin{aug}
-    \author{%
-        \fnms{Patrick O.} \snm{Perry}\corref{}%
-        \ead[label=e1]{patperry@seas.harvard.edu}%
-    }%
-    \and%
-    \author{%
-        \fnms{Patrick J.} \snm{Wolfe}%
-        \ead[label=e2]{wolfe@stat.harvard.edu}%
-    }%
-
-    \runauthor{P.\ O.\ Perry and P.\ J.\ Wolfe}
-
-    \affiliation{Harvard University}
-
-    \address{
-        Statistics and Information Sciences Laboratory \\
-        Harvard University \\
-        33 Oxford Street \\
-        Cambridge, MA 02138 \\
-        \printead{e1}\\
-        \phantom{E-mail:\ }\printead*{e2}
-    }
-\end{aug}
+%\maketitle
 
 \begin{abstract}
 Network data often take the form of repeated interactions between senders
@@ -73,33 +50,10 @@ Multicast interactions---those involving a single sender
 but multiple receivers---are treated explicitly.   A motivating data
 example shows the effects of reciprocation and group-level preferences
 on message sending behavior in a corporate e-mail network.
-% We prove consistency and asymptotic normality of our estimation 
-% procedure as time increases, in
-% contrast to the fixed-interval setting typical of the clinical trials
-% literature.  We also address the issue of consistent inference for
-% interactions with multiple receivers, which has been largely ignored
-% in the network literature to date.  We show that treating these as
-% multiple separate interactions leads to biased estimators, and we give
-% conditions under which this bias can be corrected. We also describe an
-% efficient implementation of the resulting inference and bootstrap
-% procedures, and conclude with a data analysis example showing the
-% effects of reciprocation and group-level preferences on message sending
-% behavior in a corporate e-mail dataset.
+
+\keywords{Cox proportional hazards model; Network data analysis;
+Partial likelihood inference; Point processes}
 \end{abstract}
-
-\begin{keyword}[class=AMS]
-    \kwd[Primary ]{62M30}     % Statistics:Inference from stochastic processes:Spatial processes
-    \kwd[; secondary ]{62N01} % Statistics:Survival analysis and censored data:Censored data models
-\end{keyword}
-
-\begin{keyword}
-    \kwd{Cox proportional hazards model}
-    \kwd{network data analysis}
-    \kwd{partial likelihood inference}
-    \kwd{point processes}
-\end{keyword}
-
-\end{frontmatter}
 
 
 \section{Introduction}
@@ -709,7 +663,7 @@ to obtain the relation
 
 When $\alpha \in [0, 1]$, a repeated application of the triangle
 inequality to
-\(
+\[
     \left\|
         \tfrac{1}{n} I_{\tau_{\lfloor \alpha n \rfloor}}(\hat \beta_n)
         -
@@ -721,7 +675,7 @@ inequality to
         -
         \Sigma_{\alpha} (\beta_0)
     \right\|
-\)
+\]
 using the relation~\eqref{E:var-estimate-relation} yields
 \begin{align*}
     \left\|
@@ -1530,10 +1484,15 @@ The other main difference is agent-based models treat ties
 persisting in time (e.g., friendship), while we treat
 instantaneous events.
 
+
 \section*{Acknowledgement}
 
 The authors thank Joe Blitzstein, Susan Holmes, Art Owen, and Andrew Thomas
 for helpful remarks and encouragement.
+Work supported in part by the Army Research Office under
+PECASE Award W911NF-09-1-0555 and by the Office of Naval
+Research under MURI Award 58153-MA-MUR.
+
 
 \appendix
 
@@ -2207,7 +2166,7 @@ large enough,
 \end{proof}
 
 
-\bibliographystyle{imsart-number}
+\bibliographystyle{Chicago}
 \bibliography{iproc-sources}
 
 \end{document}
