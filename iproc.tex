@@ -60,20 +60,20 @@ Partial likelihood inference; Point processes}
 \label{S:introduction}
 
 Much effort has been devoted to the statistical analysis of network data;
-see~\cite{goldenberg2009survey,jackson2008social,kolaczyk2009statistical}
+see \citet{goldenberg2009survey}, \citet{jackson2008social}, and \citet{kolaczyk2009statistical}
 for recent overviews.  While such data are typically reduced to ``ties''
 between entities, often network observables comprise counts of interactions
 between individuals or groups tabulated over time.  Communications networks
 give rise to \emph{directed} interactions: phone calls, text messages, or
 e-mails exchanged amongst a given set of individuals over a specific time
-period \cite{eagle2006reality,tyler2005email}.  Other examples of repeated
+period \citep{tyler2005email,eagle2006reality}.  Other examples of repeated
 interactions include animal association patterns (e.g., zebras congregate
-at locations in their habitat \cite{sundaresan2007network}); gang homicides
+at locations in their habitat \citep{sundaresan2007network}); gang homicides
 (e.g., gangs in Chicago murder members of rival factions
-\cite{papachristos2009murder}); legislation cosponsorship (e.g., legislators
-author bills which others then sponsor \cite{fowler2006connecting}); and
+\citep{papachristos2009murder}); legislation cosponsorship (e.g., legislators
+author bills which others then sponsor \citep{fowler2006connecting}); and
 migration patterns (e.g., families migrate between communities in Mexico
-\cite{mckenzie2007network}).
+\citep{mckenzie2007network}).
 
 In this article, we consider partial-likelihood-based inference for general
 directed interaction data in the presence of covariates.  We first develop
@@ -91,7 +91,7 @@ to individual $j$.  Given such a set of triples, a primary modeling goal is
 determining which characteristics and behaviors of the senders and
 receivers are predictive of interaction.  In this vein, three important
 questions stand out; the first is prevalent in studies of human
-behavior~\cite{mcpherson2001birds}, whereas the latter two have
+behavior \citep{mcpherson2001birds}, whereas the latter two have
 yet to receive due attention:
 
 \begin{description}
@@ -162,8 +162,8 @@ of $N$.  Heuristically,
             \text{interaction $i\rightarrow j$ occurs in time interval $[t,t+dt)$}
         \}.
 \]
-We will model $N$ through $\lambda$ using a version of the Cox
-proportional intensity model \cite{cox1972regression}.
+We will model $N$ through $\lambda$ using a version of the \citet{cox1972regression}
+proportional intensity model.
 
 Let $\mathcal{I}$ be a set of senders and $\mathcal{J}$ be a set of receivers.
 For each sender $i$, let $\bar \lambda_t(i)$ be a non-negative predictable
@@ -188,8 +188,8 @@ we model its stochastic intensity as
 \end{equation}
 This model posits that sender $i$ in $\mathcal{I}$ interacts  with receiver $j$
 in $\mathcal{J}_t(i)$ at a baseline rate $\bar \lambda_t(i)$ modulated up or
-down according to the pair's covariate vector, $x_t(i,j)$.  As Efron notes
-\cite{efron1977efficiency}, the specific parametric form for the multiplier
+down according to the pair's covariate vector, $x_t(i,j)$.  As
+\citet{efron1977efficiency} notes, the specific parametric form for the multiplier
 $\exp\{ \beta_0^\trans x_t(i,j) \}$ is not central to the theoretical
 analysis, but this choice is amenable to computation and gives
 the parameter vector $\beta_0$ a straightforward interpretation.
@@ -223,7 +223,7 @@ set of $i$ such that $\bar \lambda_t(i) \neq 0$, which potentially varies
 with time.  Likewise, the effective number of receivers is controlled through
 $\mathcal{J}_t(i)$.
 
-Following Cox \cite{cox1975partial}, we treat the baseline rate
+Following \citet{cox1975partial}, we treat the baseline rate
 $\bar \lambda_t(i)$ as a nuisance parameter and estimate the coefficient
 vector $\beta_0$ using a partial likelihood.  Specifically, let
 $(t_1, i_1, j_1), \ldots, (t_n, i_n, j_n)$ be the sequence of observed
@@ -282,7 +282,7 @@ consistent estimator of $\beta_0$ as $t$ increases.
 
 The function $\log \mathit{PL}_t(\cdot)$ is concave, and so can be maximized
 via Newton's method or a gradient-based optimization approach
-\cite{nocedal2006numerical}.  These methods require one or both of the
+\citep{nocedal2006numerical}.  These methods require one or both of the
 first two derivatives of $\log\mathit{PL}_t(\cdot)$, which can be
 expressed in terms of weighted means and covariances of the covariates.  The
 weights are
@@ -347,7 +347,7 @@ additional complexity in maximizing $\log \mathit{PL}_t(\cdot)$.
 For most large interaction datasets,
 existing computational routines for handling Cox models
 (e.g., the function \texttt{coxph} from the \texttt{survival}
-package for R \cite{therneau2009survival}) will not suffice.  In
+package for R \citep{therneau2009survival}) will not suffice.  In
 Appendix~\ref{S:implementation}, we describe a custom method for
 maximizing $\log \mathit{PL}_t(\cdot)$ that exploits sparsity in
 $x_t(i,j)$.
@@ -369,10 +369,10 @@ context of clinical trial data, where $\mathcal{I}$ corresponds to the set of
 patients under study, but does not meet the requirements typical of
 interaction data.  For most interaction
 data we cannot control $\mathcal{I}$ and $\mathcal{J}$, and the only way to
-collect more data is to increase the observation time.  Cox \cite{cox1972regression} outlines a proof for general
+collect more data is to increase the observation time.  \citet{cox1972regression,cox1975partial} outlines a proof for general
 MPLE consistency that applies to our sampling regime, but his argument is
-heuristic; Wong's treatment is more rigorous but does not cover continuous or
-time-varying covariates \cite{cox1975partial,wong1986theory}. The general
+heuristic; Wong's \citeyearpar{wong1986theory} treatment is more rigorous but does not cover continuous or
+time-varying covariates. The general
 interaction data sampling regime warrants a new consistency proof.
 
 Our proof of consistency relies on rescaling time to make the interaction
@@ -441,8 +441,8 @@ its spectral norm (largest eigenvalue).  We require the following assumptions:
     \]
 \end{enumerate}
 
-These technical assumptions are similar to those of Anderson and
-Gill~\cite{andersen1982cox}, who investigate specific settings in which their
+These technical assumptions are similar to those of
+\citet{andersen1982cox}, who investigate specific settings in which their
 assumptions hold.  Note that when $\| x_t(i,j) \|$ is bounded and Assumption
 A\ref{A:message-times-finite} is in force, the remaining assumptions follow.
 
@@ -539,7 +539,7 @@ also define
 \]
 where $E_t(\beta,i)$ is as defined in \eqref{E:wt-expectation}.
 
-As observed by Andersen and Gill \cite{andersen1982cox}, the score function
+As observed by \citet{andersen1982cox}, the score function
 $U_t(\cdot)$ evaluated at $\beta_0$ has
 a simple representation in terms of these processes:
 \begin{align*}
@@ -588,7 +588,7 @@ with predictable covariation
             \cdot
             1\{ i = i', j = j' \}
 \end{align*}
-\cite[Thm.~2.4.3]{fleming1991counting}.  There exists a sequence
+\citep[Thm.~2.4.3]{fleming1991counting}.  There exists a sequence
 of stopping times localizing all $M(i,j)$ simultaneously, so $U(\beta_0)$ is
 locally square integrable with predictable variation
 \begin{align}
@@ -632,7 +632,7 @@ quadratic variation of $\tilde U^{(n)}(\beta_0)$ at time $\alpha$ is
 equal to the quadratic variation of $U(\beta_0)$ at time
 $\tau_{\lfloor \alpha n \rfloor}$.  Therefore, since quadratic and
 predictable variation have the same limit when it exists
-\cite[Prop.~1]{rebolledo1980central}, assumption
+\citep[Prop.~1]{rebolledo1980central}, assumption
 A\ref{A:integrated-cov-limit} implies that
 \(
     \langle \frac{1}{\sqrt{n}} \tilde U^{(n)}(\beta_0) \rangle_\alpha
@@ -1244,11 +1244,11 @@ reciprocation effects.
 \subsection{Data and Methods}
 
 Our example analysis uses publicly available data from the Enron e-mail
-corpus~\cite{cohen2009enron}, a large subset of the e-mail messages sent
+corpus \citep{cohen2009enron}, a large subset of the e-mail messages sent
 within the Enron corporation between November 1998 and June 2002, and made
 public as the result of a subpoena by the U.S.~Federal Energy Regulatory
 Commission during an investigation into fraudulent accounting practices.
-We analyze the dataset compiled by~\cite{zhou2007strategies}, comprising
+We analyze the dataset compiled by \citet{zhou2007strategies}, comprising
 21,635 messages sent among 156 employees between November 13, 1998 and
 June 21, 2002, along with the genders, seniorities, and departments of
 these employees (summarized in Table~\ref{T:employee-summary}).
@@ -1445,7 +1445,7 @@ With the increasing popularity of network science, there is an unfortunate
 tendency amongst practitioners to treat data as binary ties between entities.
 It is important to bear in mind that the observables in such modeling
 scenarios often come in the form of repeated directed interactions.  As
-shown in~\cite{dechoudhury2010}, thresholding pairwise interaction
+shown by \citet{dechoudhury2010}, thresholding pairwise interaction
 counts to obtain binary ties gives dramatically different networks and
 subsequent conclusions, depending on the choice of threshold.  We have
 avoided such arbitrary outcomes by dealing directly with the observed
@@ -1454,7 +1454,7 @@ data.
 The foundation of our work is Cox's \citeyearpar{cox1972regression} proportional intensity model and
 partial likelihood theory, tools which he first introduced almost
 forty years ago and which have been significantly developed since
-then~\cite{andersen1993statistical, cook2007statistical, cox1975partial, fleming1991counting, martinussen2006dynamic}.
+then \citep{andersen1993statistical, cook2007statistical, cox1975partial, fleming1991counting, martinussen2006dynamic}.
 These tools are used extensively in the context of survival analysis, but
 require further development for use in modeling interaction data.
 In this vein, we have extended the associated theory in
@@ -1470,12 +1470,12 @@ apply hidden Markov models to communication
 activity.  However,
 neither of these models uses covariate information, and neither tackles
 the problem in continuous time. Aside from
-Lunag\'omez \emph{et al}.'s \citeyearpar{lunagomez2009geometric} recent work in the
+Lunag\'omez et al.'s \citeyearpar{lunagomez2009geometric} recent work in the
 context of graphical models, interactions involving more than two
 entities have largely been ignored.
 
 Finally, we point out relations to agent-based models from the
-social networks literature (see~\citet{snijders2010introduction} for a recent
+social networks literature (see \citet{snijders2010introduction} for a recent
 survey).  These models are like ours in that they conceive of data as
 arising from ego-centric decisions made by individuals.  Typically,
 agent-based models work in discrete time rather than continuous time.
@@ -1499,8 +1499,8 @@ Research under MURI Award 58153-MA-MUR.
 
 To compute the maximum partial likelihood estimator, we use the
 Broyden-Fletcher-Goldfarb-Shanno (BFGS) algorithm, a gradient-based
-optimization method described by Nocedal and Write
-\cite{nocedal2006numerical}.  This requires an efficient algorithm for
+optimization method described by
+\citet{nocedal2006numerical}.  This requires an efficient algorithm for
 computing the gradient of the log partial likelihood.  For simplicity, we
 describe the case of strictly pairwise interactions with no ties in the
 interaction times.  We use the notation from
@@ -1775,8 +1775,8 @@ Note that $\|H_{t}(i,j)\| \leq 2 K$.  Thus,
 By assumption A\ref{A:square-int}, $\E K^2$ is finite, and by construction,
 $N_{\tau_n}$ is bounded.  Since $N_{t \wedge \tau_n}$ is a counting process,
 $\E \Lambda_{\tau_n}^2$ is finite, too
-(this follows from results in Section 2.3 of Fleming and Harrington
-\cite{fleming1991counting}).  Thus, $U_{t \wedge \tau_n}(\beta_0)$
+(this follows from results in Section 2.3 of
+\citet{fleming1991counting}).  Thus, $U_{t \wedge \tau_n}(\beta_0)$
 is uniformly integrable.  The Optional Sampling Theorem now applies to
 give the conditional expectation property of $\tilde U^{(n)}(\beta_0)$.  For
 square integrability, note
@@ -1875,10 +1875,10 @@ must converge to zero.
 
 \subsection{Proof of Theorem~\ref{T:consistency}}\label{S:proof-consistency}
 
-We follow Haberman's approach to proving
-consistency, which relies on Kantorovich's analysis
-of Newton's method.  Tapia gives an elementary proof of the Kantorovich
-Theorem~\cite{haberman1977maximum,kantorovich1952functional,tapia1971kantorovich}.
+We follow Haberman's \citeyearpar{haberman1977maximum} approach to proving
+consistency, which relies on Kantorovich's \citeyearpar{kantorovich1952functional} analysis
+of Newton's method.  \citet{tapia1971kantorovich} gives an elementary proof of the Kantorovich
+Theorem.
 We state a weak form of the result as a lemma.
 
 \begin{lemma}[Kantorovich Theorem]\label{L:kantorovich}
@@ -1930,7 +1930,7 @@ The first Newton iterate, $\beta_{n,1}$, is equal to $\beta_0 - Z_n$.
 Part (ii) of Theorem~\ref{T:score-fisher} and the
 assumptions of the theorem imply $[\tfrac{1}{n} I_{\tau_n}(\beta_0)]^{-1}$
 exists for $n$ large enough, so that $Z_n$ is well-defined.
-Moreover, Part (i) of Theorem~\ref{T:score-fisher} and Slutzky's Theorem imply
+Moreover, Part (i) of Theorem~\ref{T:score-fisher} and Slutsky's Theorem imply
 $Z_n \toP 0$ and
 $\sqrt{n} \, Z_n \tod \Normal(0,\, [\Sigma_1(\beta_0)]^{-1})$.
 
