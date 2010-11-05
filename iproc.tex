@@ -1238,9 +1238,9 @@ estimator of $\beta_0$, we can estimate the bias in $\tilde \beta_n$ via
 a parametric bootstrap.  We generate a bootstrap replicate dataset
 $\{ (t_m, i_m, J_m^{(r)}) \}$ by drawing $J_m^{(r)}$, a random subset
 of $\mathcal{J}_{t_m}(i_m)$ with size $|J_m|$ whose elements are drawn
-proportional to $w_{t_m}(\tilde \beta, i_m, \cdot)$.
-We then get a bootstrap approximate MPLE, $\tilde \beta^{(r)}$, by maximizing
-$\widetilde{\mathit{PL}}_{t_n}^{(r)}$, where
+proportional to $w_{t_m}(\tilde \beta_n, i_m, \cdot)$.
+We then get a bootstrap approximate MPLE, $\tilde \beta_n^{(r)}$, by
+maximizing $\widetilde{\mathit{PL}}_{t_n}^{(r)}$, where
 \[
     \log \widetilde{\mathit{PL}}_{t}^{(r)}\!(\beta) \\
         =
