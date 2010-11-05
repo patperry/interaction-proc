@@ -2163,24 +2163,10 @@ initial iterate and use the Kantorovich Theorem (Lemma~\ref{L:kantorovich})
 to bound $\|\tilde \beta_n - \hat \beta_n\|$.
 
 In the notation of the lemma, $P(\cdot)$ is the gradient of
-$\tfrac{1}{n} \log \widetilde{\mathit{PL}}_{\tau_n}(\cdot)$ and $P'(\cdot)$ is its Hessian.
-Singe $G_n/n \toP 0$, assumptions (i) and (iii) hold for
-some finite $B$ and $K$ uniformly for $n$ large enough with arbitrarily
-high probability by
-Theorem~\ref{T:log-pl-multiple-approx-error}
-and the assumptions on $\tfrac{1}{n} \nabla^2 [\log {\mathit{PL}}_{\tau_n}(\cdot)]$.
-Likewise, for large enough $n$,
-\(
-    \Big\|
-        \nabla^2\big[
-            \tfrac{1}{n}
-            \log \widetilde{\mathit{PL}}_{\tau_n}(\hat \beta_{\tau_n})
-        \big]
-    \Big\|
-\)
-is uniformly bounded away from zero with arbitrarily high probability.
-Equivalently, the norm of the inverse Hessian is bounded.
-
+$\tfrac{1}{n} \log \widetilde{\mathit{PL}}_{\tau_n}(\cdot)$ and
+$P'(\cdot)$ is its Hessian.
+The conditions of Theorem~\ref{T:mple-approx-error} imply assumptions
+(i) and (iii) hold uniformly in $n$ for some finite $B$ and $K$.
 Set
 \[
     \eta_n =
@@ -2202,7 +2188,7 @@ Set
 and set $h_n = B K \eta_n$.
 Since $\nabla\big[\log {\mathit{PL}}_{\tau_n}(\hat \beta_{\tau_n})\big] = 0$,
 Theorem~\ref{T:log-pl-multiple-approx-error} and the boundedness of the
-inverse Hessian give us that $\eta_n = \OhP(G_n/n)$.  Therefore, for $n$
+inverse Hessian imply $\eta_n = \OhP(G_n/n)$.  Therefore, for $n$
 large enough,
 \[
     \| \tilde \beta_n - \hat \beta_n \|
