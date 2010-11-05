@@ -24,16 +24,16 @@
 \begin{frontmatter}
 
 \title{%
-    Consistent partial likelihood
-    %Maximum-likelihood
-    inference for directed interaction data with covariates%
-    %A model for repeated interactions with applications to e-mail traffic
-    %analysis%
+    Point Process Modeling for Directed Interactions%
     \protect\thanksref{T1}
 }
 
-\runtitle{Inference for directed interaction data}
-\thankstext{T1}{Work supported in part by the Army Research Office under PECASE Award W911NF-09-1-0555 and by the Office of Naval Research under MURI Award 58153-MA-MUR.}
+\runtitle{Point Process Modeling for Directed Interactions}
+\thankstext{T1}{%
+    Work supported in part by the Army Research Office under
+    PECASE Award W911NF-09-1-0555 and by the Office of Naval
+    Research under MURI Award 58153-MA-MUR.
+}
 
 \begin{aug}
     \author{%
@@ -61,24 +61,30 @@
 \end{aug}
 
 \begin{abstract}
-Network data often take the form of counts of repeated interactions over
-time.  Here we consider partial likelihood inference for the general
-case of \emph{directed} interactions involving senders and receivers,
-communications data being a canonical example.  We model these data in
-continuous time by way of a point process representation, using a Cox
-multiplicative intensity model that takes into account covariates that
-depend on the history of the process.  We prove consistency and
-asymptotic Normality of our estimation procedure as time increases, in
-contrast to the fixed-interval setting typical of the clinical trials
-literature.  We also address the issue of consistent inference for
-interactions with multiple receivers, which has been largely ignored
-in the network literature to date.  We show that treating these as
-multiple separate interactions leads to biased estimators, and we give
-conditions under which this bias can be corrected. We also describe an
-efficient implementation of the resulting inference and bootstrap
-procedures, and conclude with a data analysis example showing the
-effects of reciprocation and group-level preferences on message sending
-behavior in a corporate e-mail dataset.
+Network data often take the form of repeated interactions between senders
+and receivers tabulated over time.  Rather than reducing these data to
+binary ties, a model is introduced for treating the interactions as a
+multivariate point process: a Cox multiplicative intensity model using
+covariates that depend on the history of the process.
+Consistency and asymptotic normality are proved for the resulting
+partial-likelihood-based estimators under suitable regularity
+conditions, and an efficient fitting procedure is described.
+Multicast interactions---those involving a single sender
+but multiple receivers---are treated explicitly.   A motivating data
+example shows the effects of reciprocation and group-level preferences
+on message sending behavior in a corporate e-mail network.
+% We prove consistency and asymptotic normality of our estimation 
+% procedure as time increases, in
+% contrast to the fixed-interval setting typical of the clinical trials
+% literature.  We also address the issue of consistent inference for
+% interactions with multiple receivers, which has been largely ignored
+% in the network literature to date.  We show that treating these as
+% multiple separate interactions leads to biased estimators, and we give
+% conditions under which this bias can be corrected. We also describe an
+% efficient implementation of the resulting inference and bootstrap
+% procedures, and conclude with a data analysis example showing the
+% effects of reciprocation and group-level preferences on message sending
+% behavior in a corporate e-mail dataset.
 \end{abstract}
 
 \begin{keyword}[class=AMS]
