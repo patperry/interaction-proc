@@ -1518,7 +1518,7 @@ describe the case of strictly pairwise interactions with no ties in the
 interaction times.  We use the notation from
 Section~\ref{S:point-process-model}, with
 the model from~\eqref{E:cox-intensity} and the partial likelihood
-from~\eqref{E:log-pl}.
+from~\eqref{E:log-pl}.  Recall that $x_t(i,j)$ is in $\reals^p$.
 Assume that $|\mathcal{I}| = I$ and $|\mathcal{J}| = J$.
 
 Suppose $(t_1, i_1, j_1), \ldots, (t_n, i_n, j_n)$ is the sequence of observed
@@ -1564,10 +1564,11 @@ The sender-specific log partial likelihood and its gradient are
                 \,
                 x_{t_m}\!(i,j).
 \end{gather*}
-When $x_t(i,j) \in \reals^p$ is constant over time,
+When $x_t(i,j)$ is constant over time,
 there are sufficient statistics for $\beta$ and these formulas reduce.
-Otherwise, computing $\log \mathit{PL}_{t_n}(\beta)$ and its gradient
-requires iterating over all messages, potentially requiring time
+Otherwise, computing
+$\log \mathit{PL}_{t_n}(\beta)$ and its gradient
+necessitates iterating over all messages, potentially requiring time
 $\Oh(p \, n \, J)$.  For small- to medium-sized datasets, this is manageable,
 but for large network datasets it can become
 prohibitive.  In the sequel we show how to exploit sparsity
