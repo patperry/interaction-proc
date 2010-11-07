@@ -1252,8 +1252,10 @@ We analyze the dataset compiled by \citet{zhou2007strategies}, comprising
 21,635 messages sent among 156 employees between November 13, 1998 and
 June 21, 2002, along with the genders, seniorities, and departments of
 these employees (summarized in Table~\ref{T:employee-summary}).
-\begin{table}[t]
-    \input{tables/employee-summary}
+\begin{table}
+    \makebox[0.66\textwidth]{\input{tables/employee-summary}}
+    \\
+    \\
     \caption{
         Characteristics of the 156 employees in the Enron dataset.
     }
@@ -1264,7 +1266,8 @@ their \texttt{To}, \texttt{CC}, and \texttt{BCC} fields, with a few
 messages having more than fifty recipients
 (see Fig.~\ref{F:recipient-counts}).
 \begin{figure}
-    \includegraphics[scale=0.6]{figures/recipient-counts}
+    \centering
+    \makebox{\includegraphics[scale=0.6]{figures/recipient-counts}}
     \caption{
         \textsc{Message recipient counts.}
         Each of the 21,635 points corresponds to a message, with
@@ -1352,7 +1355,8 @@ order of the square root of the number 21,365 of messages in the dataset,
 we can correct this bias using the parametric bootstrap outlined at the
 end of Section~\ref{S:multiple-receivers}.  Fig.~\ref{F:boot-resid}
 \begin{figure}[t]
-    \includegraphics[scale=0.6]{figures/boot-resid}
+    \centering
+    \makebox{\includegraphics[scale=0.6]{figures/boot-resid}}
     \caption{
         \textsc{Enron Bootstrap Residuals.} Summary of bootstrap residuals
         for estimated coefficients using the Enron dataset, normalized by
@@ -1374,9 +1378,11 @@ estimates.
 
 The bias-corrected results of inference on $\beta_0$ are summarized as
 follows.  Table~\ref{T:group-effects}
-\begin{table}[t]
+\begin{table}
     \tiny
-    \input{tables/group-effects-bc}
+    \makebox[\textwidth]{\input{tables/group-effects-bc}}
+    \\
+    \\
     \caption{
         Estimated group level effects and their standard errors for the
         model described in Section~\ref{S:enron-modeling}.  Gender,
@@ -1392,7 +1398,8 @@ follows.  Table~\ref{T:group-effects}
 shows the estimated group-level (static) effects, and
 Fig.~\ref{F:reciprocation}
 \begin{figure}[t]
-    \includegraphics[scale=0.6]{figures/reciprocation-bc}
+    \centering
+    \makebox{\includegraphics[scale=0.6]{figures/reciprocation-bc}}
     \caption{
         \textsc{Reciprocation Effect.}
         Estimated reciprocation effect and standard errors for the
@@ -1411,8 +1418,10 @@ about $10^1$ and $10^3$.  In contrast, group level effects are on the order
 of $10^{-1}$ to $10^0$.
 
 Finally, Table~\ref{T:deviance}
-\begin{table}[t]
-    \input{tables/deviance.tex}
+\begin{table}
+    \makebox[\textwidth]{\input{tables/deviance.tex}}
+    \\
+    \\
     \caption{
         Ad-hoc analysis of deviance for the Enron model.  Residual deviance
         is defined as twice the approximate negative log-partial likelihood
