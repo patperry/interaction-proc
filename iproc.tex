@@ -138,7 +138,7 @@ For sender $i$, receiver $j$, and positive time $t$, define
             $[0,t]$}
         \}.
 \]
-For technical reasons, assume $N_0(i,j) = 0$ and that $N_t(i,j)$ is
+For technical reasons, assume that $N_0(i,j) = 0$ and that $N_t(i,j)$ is
 adapted to a stochastic basis of $\sigma$-algebras
 $\{ \mathcal{F}_t \}_{t \geq 0}$ satisfying the usual conditions.  Then,
 $N_t(i,j)$ is a local submartingale, so by the Doob-Meyer decomposition,
@@ -171,8 +171,8 @@ process called the baseline intensity of sender $i$; let $\mathcal{J}_t(i)$ be
 a predictable subset of $\mathcal{J}$ called the receiver set of sender $i$.
 For each sender-receiver pair $(i,j)$, let $x_t(i,j)$ be a predictable
 locally bounded vector of covariates in $\reals^p$.  Let $\beta_0$
-be an unknown vector of coefficients in  $\reals^p$.  For the remainder of this section,
-assume each interaction has a single receiver.
+be an unknown vector of coefficients in  $\reals^p$.  For the remainder of 
+this section, assume that each interaction has a single receiver.
 
 Given a multivariate counting process $N$ on
 $\reals_+ \times \mathcal{I} \times \mathcal{J}$,
@@ -202,7 +202,7 @@ some observable trait like ethnicity, gender, or age group.  Its real
 strength, though, is that $x_t(i,j)$ is allowed to be \emph{any}
 predictable process, in particular $x_t(i,j)$ can depend on the history
 of interactions.  To model reciprocation and transitivity in the
-interactions  (assuming $\mathcal{I} = \mathcal{J}$), choose appropriate
+interactions  (with $\mathcal{I} = \mathcal{J}$), choose appropriate
 values for $\delta_l$ and include relevant covariates in $x_t(i,j)$:
 \[
     1\{\text{interaction $j \to i$ occurred in $[t - \delta_l,t)$}\}
@@ -216,7 +216,8 @@ Any process measurable with respect to the predictable $\sigma$-algebra is
 a valid covariate; this excludes only covariates depending on the future
 or the immediate present.
 
-Also note that despite assuming $\mathcal{I}$ and $\mathcal{J}$ to be fixed, our analysis
+Also note that despite presuming $\mathcal{I}$ and $\mathcal{J}$ to be fixed, 
+our analysis
 allows senders and receivers to enter and leave the study during the
 observation period.  The effective number of senders at time $t$ is the
 set of $i$ such that $\bar \lambda_t(i) \neq 0$, which potentially varies
@@ -500,7 +501,7 @@ and is proved in Appendix~\ref{S:MPLE-consistency-proofs}.
     Let $\tau_n$ be the sequence of interaction times defined
     in~\eqref{E:message-times}.
 
-    Assume for $\beta$ in a
+    Assume that for $\beta$ in a
     neighborhood of $\beta_0$ that
     \(
         -\tfrac{1}{n} \nabla^2 [ \log \mathit{PL}_{\tau_n}(\beta)]
@@ -892,7 +893,7 @@ the approximation error in terms of $G_n$.
 \begin{theorem}\label{T:log-pl-multiple-approx-error}
     Let $(t_m, i_m, J_m)$ be a sequence of observations from a multivariate
     point processes with intensity as given in~\eqref{E:intensity-multiple}.
-    Set $\tau_n = t_n$.  Assume
+    Set $\tau_n = t_n$.  Assume that
     \(
         \sup_t \| x_t (i,j) \|
     \)
@@ -1139,8 +1140,8 @@ instead of $\log \mathit{PL}_t(\cdot)$ introduces bias in the estimate of
 $\beta_0$.  Theorem~\ref{T:mple-approx-error} (proved in Appendix~\ref{S:multiple-recipient-proofs}) bounds the bias.
 
 \begin{theorem}\label{T:mple-approx-error}
-    Assume the setup of Theorem~\ref{T:log-pl-multiple-approx-error}.
-    Let $\hat \beta_n$ maximize $\log \mathit{PL}_{\tau_n}(\cdot)$
+    Under the setup of Theorem~\ref{T:log-pl-multiple-approx-error},
+    let $\hat \beta_n$ maximize $\log \mathit{PL}_{\tau_n}(\cdot)$
     and let $\tilde \beta_n$ maximize
     $\log \widetilde{\mathit{PL}}_{\tau_n}(\cdot)$.
     Suppose for all $n$ that the Hessian
@@ -1191,7 +1192,7 @@ consistently estimates the limiting covariance
 of $\sqrt{n}(\tilde \beta_n - \beta_0)$.  To get the mean, we use
 a parametric bootstrap as follows.
 
-Assume the conditions of Theorem~\ref{T:mple-approx-error}.
+Assume that the conditions of Theorem~\ref{T:mple-approx-error} hold.
 The residual $\tilde \beta_n - \beta_0$ depends continuously on $\beta_0$
 and the covariate process $x_t(i,j)$.  Since $\tilde \beta_n$ is a consistent
 estimator of $\beta_0$, we can estimate the bias in $\tilde \beta_n$ via
@@ -1513,8 +1514,9 @@ optimization method described by
 computing the gradient of the log partial likelihood.  For simplicity, we
 describe the case of strictly pairwise interactions with no ties in the
 interaction times.  We use the notation from
-Section~\ref{S:point-process-model}, assuming
-the model of~\eqref{E:cox-intensity} and the partial likelihood of~\eqref{E:log-pl}.
+Section~\ref{S:point-process-model}, with
+the model from~\eqref{E:cox-intensity} and the partial likelihood 
+from~\eqref{E:log-pl}.
 Assume that $|\mathcal{I}| = I$ and $|\mathcal{J}| = J$.
 
 Suppose $(t_1, i_1, j_1), \ldots, (t_n, i_n, j_n)$ is the sequence of observed
@@ -1599,9 +1601,9 @@ the past.  Let
                 }
             \}.
 \end{multline*}
-Assume $|\mathcal{\bar J}(i)| \le \bar J \ll J$ and that
+Assume that $|\mathcal{\bar J}(i)| \le \bar J \ll J$ and that
 computing $d_t(i,j)$ takes amortized time $\Oh(\bar p)$ for each
-$(t,i,j)$ triple.  Also, for convenience, assume
+$(t,i,j)$ triple.  Also, for convenience, set 
 $\mathcal{J}_0(i) = \mathcal{J}$.
 
 Since $\mathcal{J}_0(i) = \mathcal{J}$,
@@ -1651,7 +1653,7 @@ classes, say $\bar I$, such that $x_{0}(i,j) = x_{0}(i',j)$ whenever $i$ and
 $i'$ are in the same class; in this case the total computation time
 reduces to $\Oh(p \, \bar I \, J)$.
 
-For the remaining complexity estimates we assume $w_0(\beta, i,j)$,
+For the remaining complexity estimates we assume that $w_0(\beta, i,j)$,
 $W_0(\beta, i)$, and $E_0(\beta, i)$ have been cached and can be recalled
 in constant time.
 
