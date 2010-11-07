@@ -80,6 +80,12 @@ Haberman, S.~J. (1977).
 \newblock Maximum likelihood estimates in exponential response models.
 \newblock {\em Ann. Statist.\/}~{\em 5}, 815--841.
 
+\bibitem[\protect\citeauthoryear{Hanneke, Fu, and Xing}{Hanneke
+  et~al.}{2010}]{hanneke2010discrete}
+Hanneke, S., W.~Fu, and E.~P. Xing (2010).
+\newblock Discrete temporal models of social networks.
+\newblock {\em Electron. J. Statist.\/}~{\em 4}, 585--605.
+
 \bibitem[\protect\citeauthoryear{Heard, Weston, Platanioti, and Hand}{Heard
   et~al.}{2010}]{heard2010bayesian}
 Heard, N.~A., D.~J. Weston, K.~Platanioti, and D.~J. Hand (2010).
@@ -102,6 +108,12 @@ Kantorovich, L.~V. (1948).
 Kolaczyk, E.~D. (2009).
 \newblock {\em Statistical Analysis of Network Data: Methods and Models}.
 \newblock New York: Springer.
+
+\bibitem[\protect\citeauthoryear{Kolar, Song, Ahmed, and Xing}{Kolar
+  et~al.}{2010}]{kolar2010estimating}
+Kolar, M., L.~Song, A.~Ahmed, and E.~P. Xing (2010).
+\newblock Estimating time-varying networks.
+\newblock {\em Ann. Appl. Statist.\/}~{\em 4}, 94--123.
 
 \bibitem[\protect\citeauthoryear{Lenglart}{Lenglart}{1977}]{lenglart1977relation}
 Lenglart, E. (1977).
