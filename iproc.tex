@@ -66,14 +66,16 @@ between entities, often network observables comprise counts of interactions
 between individuals or groups tabulated over time.  Communications networks
 give rise to \emph{directed} interactions: phone calls, text messages, or
 e-mails exchanged amongst a given set of individuals over a specific time
-period \citep{tyler2005email,eagle2006reality}.  Other examples of repeated
-interactions include animal association patterns (e.g., zebras congregate
-at locations in their habitat \citep{sundaresan2007network}); gang homicides
-(e.g., gangs in Chicago murder members of rival factions
-\citep{papachristos2009murder}); legislation cosponsorship (e.g., legislators
-author bills which others then sponsor \citep{fowler2006connecting}); and
-migration patterns (e.g., families migrate between communities in Mexico
-\citep{mckenzie2007network}).
+period \citep{tyler2005email,eagle2006reality}.  Specific examples of repeated
+interactions from other types of networks include the following:
+\cite{sundaresan2007network}'s study of zebras congregating at locations in
+their habitat (an animal association network);
+\cite{papachristos2009murder}'s study of gangs in Chicago murdering members
+of rival factions (an organized crime network);
+\cite{fowler2006connecting}'s study of legislators authoring and cosponsoring
+bills (a collaboration network);
+\cite{mckenzie2007network}'s study of families migrating between communities
+in Mexico (a migration network).
 
 In this article, we consider partial-likelihood-based inference for general
 directed interaction data in the presence of covariates.  We first develop
@@ -171,7 +173,7 @@ process called the baseline intensity of sender $i$; let $\mathcal{J}_t(i)$ be
 a predictable subset of $\mathcal{J}$ called the receiver set of sender $i$.
 For each sender-receiver pair $(i,j)$, let $x_t(i,j)$ be a predictable
 locally bounded vector of covariates in $\reals^p$.  Let $\beta_0$
-be an unknown vector of coefficients in  $\reals^p$.  For the remainder of 
+be an unknown vector of coefficients in  $\reals^p$.  For the remainder of
 this section, assume that each interaction has a single receiver.
 
 Given a multivariate counting process $N$ on
@@ -216,7 +218,7 @@ Any process measurable with respect to the predictable $\sigma$-algebra is
 a valid covariate; this excludes only covariates depending on the future
 or the immediate present.
 
-Also note that despite presuming $\mathcal{I}$ and $\mathcal{J}$ to be fixed, 
+Also note that despite presuming $\mathcal{I}$ and $\mathcal{J}$ to be fixed,
 our analysis
 allows senders and receivers to enter and leave the study during the
 observation period.  The effective number of senders at time $t$ is the
@@ -453,7 +455,7 @@ Gaussian, as shown by the following two theorems.
     intensity as given in~\eqref{E:cox-intensity}, with true parameter
     vector $\beta_0$.  Let $t_n$ be the sequence of interaction times,
     set $U_t(\beta)$ and $I_t(\beta)$ to
-    be the gradient and negative Hessian of the log partial likelihood 
+    be the gradient and negative Hessian of the log partial likelihood
     function
     as given in~(\ref{E:log-pl-gradient}--\ref{E:log-pl-neg-hessian}).  If
     assumptions A\ref{A:square-int}--A\ref{A:integrated-cov-limit} hold, then
@@ -1512,7 +1514,7 @@ computing the gradient of the log partial likelihood.  For simplicity, we
 describe the case of strictly pairwise interactions with no ties in the
 interaction times.  We use the notation from
 Section~\ref{S:point-process-model}, with
-the model from~\eqref{E:cox-intensity} and the partial likelihood 
+the model from~\eqref{E:cox-intensity} and the partial likelihood
 from~\eqref{E:log-pl}.
 Assume that $|\mathcal{I}| = I$ and $|\mathcal{J}| = J$.
 
@@ -1600,7 +1602,7 @@ the past.  Let
 \end{multline*}
 Assume that $|\mathcal{\bar J}(i)| \le \bar J \ll J$ and that
 computing $d_t(i,j)$ takes amortized time $\Oh(\bar p)$ for each
-$(t,i,j)$ triple.  Also, for convenience, set 
+$(t,i,j)$ triple.  Also, for convenience, set
 $\mathcal{J}_0(i) = \mathcal{J}$.
 
 Since $\mathcal{J}_0(i) = \mathcal{J}$,
