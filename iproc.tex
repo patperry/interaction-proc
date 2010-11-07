@@ -385,13 +385,10 @@ and
 \(
     N_t = \sum_{i \in \mathcal{I}} N_t(i);
 \)
-also define the sequence of stopping times
-\begin{equation}\label{E:message-times}
-    \tau_n = \sup\{ t : N_t < n \},
-\end{equation}
-and let $\mathcal{F}_{\tau_n}$ be the $\sigma$-algebra of events prior to
-$\tau_n$. The main idea of the proof is to change time from the original scale
-to a scale on which $\tau_{n} - \tau_{n'}$ is proportional to $n - n'$.
+also note that $t_n = \sup\{ t : N_t < n \}$ is a stopping time
+and let $\mathcal{F}_{t_n}$ be the $\sigma$-algebra of events prior to
+$t_n$. The main idea of the proof is to change time from the original scale
+to a scale on which $t_{n} - t_{n'}$ is proportional to $n - n'$.
 
 \subsection{Assumptions}
 
@@ -414,7 +411,7 @@ its spectral norm (largest eigenvalue).  We require the following assumptions:
     \[
         \frac{1}{n}
         \sum_{i \in \mathcal{I}}
-        \int_0^{\tau_{\lfloor \alpha n \rfloor}}
+        \int_0^{t_{\lfloor \alpha n \rfloor}}
             V_s(\beta,i)
             \, W_s(\beta,i)
             \, \bar \lambda_s(i)
@@ -426,7 +423,7 @@ its spectral norm (largest eigenvalue).  We require the following assumptions:
     \item \label{A:message-times-finite}
     \textbf{The interaction arrival times are finite.}  For each $n$,
     \[
-        \mathbb{P}\{\tau_n < \infty\} = 1.
+        \mathbb{P}\{t_n < \infty\} = 1.
     \]
 
     \item \label{A:var-equicont}
@@ -434,7 +431,7 @@ its spectral norm (largest eigenvalue).  We require the following assumptions:
     More precisely,
     \[
         \Big\{
-            V_{\tau_n}(\cdot, i)
+            V_{t_n}(\cdot, i)
             :
             n \geq 1, i \in \mathcal{I}
         \Big\}
@@ -454,15 +451,16 @@ Gaussian, as shown by the following two theorems.
 \begin{theorem}\label{T:score-fisher}
     Let $N$ be a multivariate counting process with stochastic
     intensity as given in~\eqref{E:cox-intensity}, with true parameter
-    vector $\beta_0$.  Let $\tau_n$ be the sequence of interaction times
-    defined in~\eqref{E:message-times}, set $U_t(\beta)$ and $I_t(\beta)$ to
-    be the gradient and negative Hessian of the log partial likelihood function
+    vector $\beta_0$.  Let $t_n$ be the sequence of interaction times,
+    set $U_t(\beta)$ and $I_t(\beta)$ to
+    be the gradient and negative Hessian of the log partial likelihood 
+    function
     as given in~(\ref{E:log-pl-gradient}--\ref{E:log-pl-neg-hessian}).  If
     assumptions A\ref{A:square-int}--A\ref{A:integrated-cov-limit} hold, then
     as $n \to \infty$:
     \begin{enumerate}[(i)]
         \item \label{I:score-part}
-        $n^{-1/2} \, U_{\tau_{\lfloor \alpha n \rfloor}}(\beta_0)$
+        $n^{-1/2} \, U_{t_{\lfloor \alpha n \rfloor}}(\beta_0)$
         converges weakly to a Gaussian process on $[0,1]$ with
         covariance function $\Sigma_\alpha(\beta_0)$;
 
@@ -475,7 +473,7 @@ Gaussian, as shown by the following two theorems.
             \sup_{\alpha \in [0,1]}
             \left\|
                 \tfrac{1}{n}
-                I_{\tau_{\lfloor \alpha n \rfloor}}(\hat \beta_{n})
+                I_{t_{\lfloor \alpha n \rfloor}}(\hat \beta_{n})
                 -
                 \Sigma_\alpha(\beta_0)
             \right\|
@@ -498,18 +496,17 @@ and is proved in Appendix~\ref{S:MPLE-consistency-proofs}.
     intensity as given in~\eqref{E:cox-intensity}, with true parameter
     vector $\beta_0$.  Let the log partial likelihood,
     $\log \mathit{PL}_t(\cdot)$, be as defined in \eqref{E:log-pl}.
-    Let $\tau_n$ be the sequence of interaction times defined
-    in~\eqref{E:message-times}.
+    Let $t_n$ be the sequence of interaction times.
 
     Assume that for $\beta$ in a
     neighborhood of $\beta_0$ that
     \(
-        -\tfrac{1}{n} \nabla^2 [ \log \mathit{PL}_{\tau_n}(\beta)]
+        -\tfrac{1}{n} \nabla^2 [ \log \mathit{PL}_{t_n}(\beta)]
             \toP \Sigma_1(\beta),
     \)
     where $\Sigma_1(\cdot)$ is locally Lipschitz and with smallest
     eigenvalue bounded away from zero.
-    If $\hat \beta_n$ maximizes $\log \mathit{PL}_{\tau_n}(\cdot)$ and
+    If $\hat \beta_n$ maximizes $\log \mathit{PL}_{t_n}(\cdot)$ and
     conclusion~(\ref{I:score-part}) of Theorem~\ref{T:score-fisher} holds,
     then the following are true as $n\to\infty$:
     \begin{enumerate}[(i)]
@@ -612,10 +609,10 @@ locally square integrable with predictable variation
 Now we rescale time.  For each positive $n$ define a discretized time-scaled
 version of the score that is right-continuous with limits from the left.
 The process is defined for times $\alpha$ in $[0,1]$; between times in
-$[\tfrac{k}{n}, \tfrac{k+1}{n})$, it takes the value $U_{\tau_k}$; i.e.,
+$[\tfrac{k}{n}, \tfrac{k+1}{n})$, it takes the value $U_{t_k}$; i.e.,
 \begin{equation}\label{E:score-time-scaled}
     \tilde U_{\alpha}^{(n)}(\beta)
-        = U_{\tau_{\lfloor \alpha n \rfloor}}(\beta).
+        = U_{t_{\lfloor \alpha n \rfloor}}(\beta).
 \end{equation}
 
 Part~\textit{(\ref{I:score-part})}:
@@ -624,14 +621,14 @@ is a square-integrable martingale adapted to
 \(
     \mathcal{\tilde F}^{(n)}_\alpha
         =
-        \mathcal{F}_{\tau_{\lfloor \alpha n \rfloor}},
+        \mathcal{F}_{t_{\lfloor \alpha n \rfloor}},
 \)
 the $\sigma$-algebra of events prior to
-$\tau_{\lfloor \alpha n \rfloor}$.
+$t_{\lfloor \alpha n \rfloor}$.
 Since it only depends on values at jump times, the
 quadratic variation of $\tilde U^{(n)}(\beta_0)$ at time $\alpha$ is
 equal to the quadratic variation of $U(\beta_0)$ at time
-$\tau_{\lfloor \alpha n \rfloor}$.  Therefore, since quadratic and
+$t_{\lfloor \alpha n \rfloor}$.  Therefore, since quadratic and
 predictable variation have the same limit when it exists
 \citep[Prop.~1]{rebolledo1980central}, assumption
 A\ref{A:integrated-cov-limit} implies that
@@ -653,10 +650,10 @@ combine~\eqref{E:log-pl-neg-hessian} and~\eqref{E:score-compensator}
 to obtain the relation
 \begin{equation}\label{E:var-estimate-relation}
             \sum_i
-            \int_0^{\tau_{\lfloor \alpha n \rfloor}}
+            \int_0^{t_{\lfloor \alpha n \rfloor}}
                 V_s(\beta_0, i) \, dM_s(i)
         =
-            I_{\tau_{\lfloor \alpha n \rfloor}}(\beta_0)
+            I_{t_{\lfloor \alpha n \rfloor}}(\beta_0)
         -
             \big\langle \tilde U^{(n)}(\beta_0) \big\rangle_\alpha.
 \end{equation}
@@ -665,12 +662,12 @@ When $\alpha \in [0, 1]$, a repeated application of the triangle
 inequality to
 \[
     \left\|
-        \tfrac{1}{n} I_{\tau_{\lfloor \alpha n \rfloor}}(\hat \beta_n)
+        \tfrac{1}{n} I_{t_{\lfloor \alpha n \rfloor}}(\hat \beta_n)
         -
         \tfrac{1}{n} \big(
-            I_{\tau_{\lfloor \alpha n \rfloor}}(\beta_0)
+            I_{t_{\lfloor \alpha n \rfloor}}(\beta_0)
             -
-            I_{\tau_{\lfloor \alpha n \rfloor}}(\beta_0)
+            I_{t_{\lfloor \alpha n \rfloor}}(\beta_0)
         \big)
         -
         \Sigma_{\alpha} (\beta_0)
@@ -679,7 +676,7 @@ inequality to
 using the relation~\eqref{E:var-estimate-relation} yields
 \begin{align*}
     \left\|
-        \tfrac{1}{n} I_{\tau_{\lfloor \alpha n \rfloor}}(\hat \beta_n)
+        \tfrac{1}{n} I_{t_{\lfloor \alpha n \rfloor}}(\hat \beta_n)
         -
         \Sigma_{\alpha} (\beta_0)
     \right\|
@@ -687,7 +684,7 @@ using the relation~\eqref{E:var-estimate-relation} yields
         \left\|
             \frac{1}{n}
             \sum_i
-            \int_0^{\tau_{\lfloor \alpha n \rfloor}}
+            \int_0^{t_{\lfloor \alpha n \rfloor}}
                 \{
                     V_s(\hat \beta_n, i)
                     -
@@ -698,14 +695,14 @@ using the relation~\eqref{E:var-estimate-relation} yields
         \left\|
             \frac{1}{n}
             \sum_i
-            \int_0^{\tau_{\lfloor \alpha n \rfloor}}
+            \int_0^{t_{\lfloor \alpha n \rfloor}}
                 V_s(\beta_0, i) \, dM_s(i)
         \right\| \\
         &\quad+
         \left\|
             \frac{1}{n}
             \sum_i
-            \int_0^{\tau_{\lfloor \alpha n \rfloor}}
+            \int_0^{t_{\lfloor \alpha n \rfloor}}
                 V_s(\beta_0,i)
                 \, d\Lambda_s(i)
             -
@@ -717,13 +714,13 @@ The first term above is uniformly bounded by
 \(
     \sup_{n',i}
         \|
-            V_{\tau_{n'}}(\hat \beta_n, i)
+            V_{t_{n'}}(\hat \beta_n, i)
             -
-            V_{\tau_{n'}}(\beta_0, i)
+            V_{t_{n'}}(\beta_0, i)
         \|,
 \)
 which converges to zero since $\hat \beta_n \toP \beta_0$ by
-hypothesis of the theorem and $\{ V_{\tau_{n'}}(\cdot, i) \}$ is an
+hypothesis of the theorem and $\{ V_{t_{n'}}(\cdot, i) \}$ is an
 equicontinuous family by assumption~A\ref{A:var-equicont}.
 Lemma~\ref{L:Lenglart} proves, as a consequence of
 assumption~A\ref{A:message-times-finite} and Lenglart's \citeyearpar{lenglart1977relation}
@@ -868,7 +865,7 @@ Define the receiver set growth sequence
 \begin{equation}\label{E:growth-constant}
     G_n
         =
-            \sum_{t_m \leq \tau_n}
+            \sum_{t_m \leq t_n}
                 \frac{1\{|J_m| > 1\}}{|\mathcal{J}_{t_m}(i_m)|}.
 \end{equation}
 This sequence plays a critical role in bounding the error introduced by
@@ -882,7 +879,7 @@ sublinear growth.  For example, the Cauchy-Schwartz inequality gives
             \sqrt{n}
             \cdot
             \bigg[
-                \sum_{t_m \leq \tau_n}
+                \sum_{t_m \leq t_n}
                     \frac{1\{|J_m| > 1\}}{|\mathcal{J}_{t_m}(i_m)|^2}
             \bigg]^{1/2},
 \]
@@ -893,7 +890,7 @@ the approximation error in terms of $G_n$.
 \begin{theorem}\label{T:log-pl-multiple-approx-error}
     Let $(t_m, i_m, J_m)$ be a sequence of observations from a multivariate
     point processes with intensity as given in~\eqref{E:intensity-multiple}.
-    Set $\tau_n = t_n$.  Assume that
+    Assume that
     \(
         \sup_t \| x_t (i,j) \|
     \)
@@ -909,9 +906,9 @@ the approximation error in terms of $G_n$.
     then for $\beta$ in a neighborhood of $\beta_0$,
     \[
         \Big\|
-        \nabla [\log \mathit{PL}_{\tau_n}(\beta) ]
+        \nabla [\log \mathit{PL}_{t_n}(\beta) ]
         -
-        \nabla [\log \widetilde{\mathit{PL}}_{\tau_n}(\beta) ]
+        \nabla [\log \widetilde{\mathit{PL}}_{t_n}(\beta) ]
         \Big\|
             =
             \OhP(G_n),
@@ -919,9 +916,9 @@ the approximation error in terms of $G_n$.
     and
     \[
         \Big\|
-        \nabla^2 [\log \mathit{PL}_{\tau_n}(\beta) ]
+        \nabla^2 [\log \mathit{PL}_{t_n}(\beta) ]
         -
-        \nabla^2 [\log \widetilde{\mathit{PL}}_{\tau_n}(\beta) ]
+        \nabla^2 [\log \widetilde{\mathit{PL}}_{t_n}(\beta) ]
         \Big\|
             =
             \OhP(G_n).
@@ -1004,9 +1001,9 @@ and
 
 The bound on
 \(
-    \nabla [\log \mathit{PL}_{\tau_n}(\beta) ]
+    \nabla [\log \mathit{PL}_{t_n}(\beta) ]
     -
-    \nabla [\log \widetilde{\mathit{PL}}_{\tau_n}(\beta) ]
+    \nabla [\log \widetilde{\mathit{PL}}_{t_n}(\beta) ]
 \)
 derives from a bound on
 \(
@@ -1141,14 +1138,14 @@ $\beta_0$.  Theorem~\ref{T:mple-approx-error} (proved in Appendix~\ref{S:multipl
 
 \begin{theorem}\label{T:mple-approx-error}
     Under the setup of Theorem~\ref{T:log-pl-multiple-approx-error},
-    let $\hat \beta_n$ maximize $\log \mathit{PL}_{\tau_n}(\cdot)$
+    let $\hat \beta_n$ maximize $\log \mathit{PL}_{t_n}(\cdot)$
     and let $\tilde \beta_n$ maximize
-    $\log \widetilde{\mathit{PL}}_{\tau_n}(\cdot)$.
+    $\log \widetilde{\mathit{PL}}_{t_n}(\cdot)$.
     Suppose for all $n$ that the Hessian
     \(
         \tfrac{1}{n}
         \nabla^2
-        [ \log \mathit{\widetilde{PL}}_{\tau_n}(\cdot)]
+        [ \log \mathit{\widetilde{PL}}_{t_n}(\cdot)]
     \)
     is uniformly locally Lipschitz and with smallest eigenvalue bounded away from zero
     in a neighborhood of $\hat \beta_n$.
@@ -1185,7 +1182,7 @@ the same covariance matrix but possibly a different mean.
 Under enough regularity,
 \(
     -\tfrac{1}{n} [
-        \nabla^2 \log \widetilde{\mathit{PL}}_{\tau_n}(\tilde \beta_n)
+        \nabla^2 \log \widetilde{\mathit{PL}}_{t_n}(\tilde \beta_n)
     ]
 \)
 consistently estimates the limiting covariance
@@ -1749,55 +1746,55 @@ from~\eqref{E:score-time-scaled} is a square-integrable martingale adapted to
 \(
     \mathcal{\tilde F}^{(n)}_\alpha
         =
-        \mathcal{F}_{\tau_{\lfloor \alpha n \rfloor}}.
+        \mathcal{F}_{t_{\lfloor \alpha n \rfloor}}.
 \)
 \end{lemma}
 
 \begin{proof}
 The conditional expectation property holds provided
 \(
-    \E[ U_{\tau_{n}}(\beta_0) \mid \mathcal{F}_{\tau_{n-1}} ]
-        = U_{\tau_{n-1}}(\beta_0).
+    \E[ U_{t_{n}}(\beta_0) \mid \mathcal{F}_{t_{n-1}} ]
+        = U_{t_{n-1}}(\beta_0).
 \)
 Define $K = \sup_{t,i,j} \| x_{t}(i,j) \|$.
 Note that $\|H_{t}(i,j)\| \leq 2 K$.  Thus,
 \begin{align*}
-    \| U_{t \wedge \tau_n} (\beta_0) \|
+    \| U_{t \wedge t_n} (\beta_0) \|
         &\leq
             2 K
             \big(
-                N_{t \wedge \tau_n}
+                N_{t \wedge t_n}
                 +
-                \Lambda_{t \wedge \tau_n}
+                \Lambda_{t \wedge t_n}
             \big), \\
 \intertext{so that}
     \E \left[
         \sup_t
-        \| U_{t \wedge \tau_n} (\beta_0) \|^2
+        \| U_{t \wedge t_n} (\beta_0) \|^2
     \right]
         &\leq
             8 \cdot \big(\E K^2\big)^{1/2} \cdot
             \big(
-              \E N_{\tau_n}^2
+              \E N_{t_n}^2
               +
-              \E \Lambda_{\tau_n}^2
+              \E \Lambda_{t_n}^2
             \big)^{1/2}.
 \end{align*}
 By assumption A\ref{A:square-int}, $\E K^2$ is finite, and by construction,
-$N_{\tau_n}$ is bounded.  Since $N_{t \wedge \tau_n}$ is a counting process,
-$\E \Lambda_{\tau_n}^2$ is finite, too
+$N_{t_n}$ is bounded.  Since $N_{t \wedge t_n}$ is a counting process,
+$\E \Lambda_{t_n}^2$ is finite, too
 (this follows from results in Section 2.3 of
-\citet{fleming1991counting}).  Thus, $U_{t \wedge \tau_n}(\beta_0)$
+\citet{fleming1991counting}).  Thus, $U_{t \wedge t_n}(\beta_0)$
 is uniformly integrable.  The Optional Sampling Theorem now applies to
 give the conditional expectation property of $\tilde U^{(n)}(\beta_0)$.  For
 square integrability, note
 \(
     \sup_{1 \leq m \leq n}
-    \E \| U_{\tau_m} \|^2
+    \E \| U_{t_m} \|^2
         \leq
         \E \left[
            \sup_t
-           \| U_{t \wedge \tau_n} (\beta_0) \|^2
+           \| U_{t \wedge t_n} (\beta_0) \|^2
         \right].
 \)
 \end{proof}
@@ -1809,7 +1806,7 @@ Theorem is satisfied: for any positive $\varepsilon$,
 \[
     \frac{1}{n}
     \sum_{i,j}
-    \int_{0}^{\tau_n}
+    \int_{0}^{t_n}
         \| H_s(i,j) \|^2
         \, 1\{\| H_s(i,j) \| > \sqrt{n} \varepsilon \}
         \, d\Lambda_s(i,j)
@@ -1823,11 +1820,11 @@ With $K = \sup_{t,i,j} \| x_t(i,j)\|$ as above, the integral is bounded by
 \(
     4 \, K^2 \, 1\{n^{-1/2} K > \varepsilon / 2\}
     \cdot
-    \frac{\Lambda_{\tau_n}}{n}.
+    \frac{\Lambda_{t_n}}{n}.
 \)
 Since $\E K^2 < \infty$ by assumption A\ref{A:square-int}, the first term
 converges to zero in probability.  Since
-$\E \Lambda_{\tau_n} = \E N_{\tau_n} = n$, the product of the two also
+$\E \Lambda_{t_n} = \E N_{t_n} = n$, the product of the two also
 converges to zero in probability.  Thus, the Lindeberg condition is satisfied.
 \end{proof}
 
@@ -1839,7 +1836,7 @@ A\ref{A:square-int}~and~A\ref{A:message-times-finite} we have that
     \left\|
             \frac{1}{n}
             \sum_i
-            \int_0^{\tau_{\lfloor \alpha n \rfloor}}
+            \int_0^{t_{\lfloor \alpha n \rfloor}}
                 V_s(\beta_0, i) \, dM_s(i)
     \right\|
         \toP 0
@@ -1852,7 +1849,7 @@ Lenglart's \citeyearpar{lenglart1977relation} Inequality and assumption~A\ref{A:
 for any positive $\rho$ and $\delta$,
 \begin{multline*}
     \mathbb{P}\left\{
-        \sup_{t \in [0,\tau_n]}
+        \sup_{t \in [0,t_n]}
         \left\|
             \frac{1}{n}
             \sum_{i}
@@ -1867,7 +1864,7 @@ for any positive $\rho$ and $\delta$,
     \mathbb{P}\left\{
         \frac{1}{n^2}
         \sum_{i}
-        \int_{0}^{\tau_n}
+        \int_{0}^{t_n}
             \| V_s (\beta_0, i) \|^2
             \, d\Lambda_s(i)
         \geq
@@ -1876,9 +1873,9 @@ for any positive $\rho$ and $\delta$,
 \end{multline*}
 (see \citet[Cor.~3.4.1]{fleming1991counting} for a related proof).  As in the proof of
 Lemma~\ref{L:adapted-martingale}, set $K = \sup_{t,i,j} \| x_t(i,j) \|$.
-The sum is bounded by $\frac{16 K^4}{n} \cdot \frac{\Lambda_{\tau_n}}{n}$.
+The sum is bounded by $\frac{16 K^4}{n} \cdot \frac{\Lambda_{t_n}}{n}$.
 Since $n^{-1/2} K^2 \toP 0$ by assumption A\ref{A:square-int} and
-$\E \Lambda_{\tau_n} = n$, the right-hand side of the inequality converges to
+$\E \Lambda_{t_n} = n$, the right-hand side of the inequality converges to
 $\frac{\delta}{\rho^2}$.  Since $\delta$ is arbitrary, the right-hand side
 must converge to zero.
 \end{proof}
@@ -1932,14 +1929,14 @@ of $\beta_0$, for $n$ sufficiently large, if $\log \mathit{PL}_t(\cdot)$ has a
 local maximum in that neighborhood then it must be the unique global maximum.
 
 We find the local maximum by applying Newton's method to the
-gradient of $\tfrac{1}{n} \log \mathit{PL}_{\tau_n}(\cdot)$, taking
+gradient of $\tfrac{1}{n} \log \mathit{PL}_{t_n}(\cdot)$, taking
 $\beta_0$ as the initial iterate.  Define
 \[
-   Z_n = -[\tfrac{1}{n} I_{\tau_n}(\beta_0)]^{-1} [ \tfrac{1}{n} U_{\tau_n}(\beta_0)].
+   Z_n = -[\tfrac{1}{n} I_{t_n}(\beta_0)]^{-1} [ \tfrac{1}{n} U_{t_n}(\beta_0)].
 \]
 The first Newton iterate, $\beta_{n,1}$, is equal to $\beta_0 - Z_n$.
 Part (ii) of Theorem~\ref{T:score-fisher} and the
-assumptions of the theorem imply $[\tfrac{1}{n} I_{\tau_n}(\beta_0)]^{-1}$
+assumptions of the theorem imply $[\tfrac{1}{n} I_{t_n}(\beta_0)]^{-1}$
 exists for $n$ large enough, so that $Z_n$ is well-defined.
 Moreover, Part (i) of Theorem~\ref{T:score-fisher} and Slutsky's Theorem imply
 $Z_n \toP 0$ and
@@ -1951,9 +1948,9 @@ and $\| \hat \beta_n - \beta_{n,1} \|$.  By assumption, there exists
 a neighborhood of $\beta_0$, say $D_0$, and finite $K$ and $B$, such that
 \(
     \|
-        \frac{1}{n} I_{\tau_n} (\beta)
+        \frac{1}{n} I_{t_n} (\beta)
         -
-        \frac{1}{n} I_{\tau_n}(\beta')
+        \frac{1}{n} I_{t_n}(\beta')
     \|
     \leq
     K
@@ -1965,7 +1962,7 @@ a neighborhood of $\beta_0$, say $D_0$, and finite $K$ and $B$, such that
 \)
 and
 \(
-    \| \frac{1}{n} [I_{\tau_n}(\beta_0)]^{-1} \| \leq B
+    \| \frac{1}{n} [I_{t_n}(\beta_0)]^{-1} \| \leq B
 \)
 for $\beta, \beta' \in D_0$.
 Define $\eta_n = \| Z_n \|$ and $h_n = B K \eta_n$, noting that $h_n$ and
@@ -2132,13 +2129,13 @@ The relevant intermediate bound is
 \begin{proof}[Proof of Theorem~\ref{T:mple-approx-error}]
 
 We know that Newton's method applied to
-$\tfrac{1}{n}\log \widetilde{\mathit{PL}}_{\tau_n}(\cdot)$ converges to
+$\tfrac{1}{n}\log \widetilde{\mathit{PL}}_{t_n}(\cdot)$ converges to
 $\tilde \beta_n$ after sufficiently many iterations.  We use $\hat \beta_n$ as the
 initial iterate and use the Kantorovich Theorem (Lemma~\ref{L:kantorovich})
 to bound $\|\tilde \beta_n - \hat \beta_n\|$.
 
 In the notation of the lemma, $P(\cdot)$ is the gradient of
-$\tfrac{1}{n} \log \widetilde{\mathit{PL}}_{\tau_n}(\cdot)$ and
+$\tfrac{1}{n} \log \widetilde{\mathit{PL}}_{t_n}(\cdot)$ and
 $P'(\cdot)$ is its Hessian.
 The conditions of Theorem~\ref{T:mple-approx-error} imply assumptions
 (i) and (iii) hold uniformly in $n$ for some finite $B$ and $K$.
@@ -2149,19 +2146,19 @@ Set
         \Big[
             \nabla^2\big[
                 \tfrac{1}{n}
-                \log \widetilde{\mathit{PL}}_{\tau_n}(\hat \beta_{\tau_n})
+                \log \widetilde{\mathit{PL}}_{t_n}(\hat \beta_{n})
             \big]
         \Big]^{-1}
         \Big[
             \nabla\big[
                 \tfrac{1}{n}
-                \log \widetilde{\mathit{PL}}_{\tau_n}(\hat \beta_{\tau_n})
+                \log \widetilde{\mathit{PL}}_{t_n}(\hat \beta_{n})
             \big]
         \Big]
     \Big\|
 \]
 and set $h_n = B K \eta_n$.
-Since $\nabla\big[\log {\mathit{PL}}_{\tau_n}(\hat \beta_{\tau_n})\big] = 0$,
+Since $\nabla\big[\log {\mathit{PL}}_{t_n}(\hat \beta_{n})\big] = 0$,
 Theorem~\ref{T:log-pl-multiple-approx-error} and the boundedness of the
 inverse Hessian imply $\eta_n = \OhP(G_n/n)$.  Therefore, for $n$
 large enough,
