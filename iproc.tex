@@ -68,17 +68,17 @@ give rise to \emph{directed} interactions: phone calls, text messages, or
 e-mails exchanged amongst a given set of individuals over a specific time
 period \citep{tyler2005email,eagle2006reality}.  Specific examples of repeated
 interactions from other types of networks include the following:
-\citefullauthor{sundaresan2007network}'s \citeyearpar{sundaresan2007network}
-study of zebras congregating at locations in
-their habitat (an animal association network);
-\citefullauthor{papachristos2009murder}'s \citeyearpar{papachristos2009murder}
-study of gangs in Chicago murdering members of rival factions (an organized
-crime network);
 \citefullauthor{fowler2006connecting}'s \citeyearpar{fowler2006connecting}
 study of legislators authoring and cosponsoring bills (a collaboration
 network);
 \citefullauthor{mckenzie2007network}'s \citeyearpar{mckenzie2007network} study
-of families migrating between communities in Mexico (a migration network).
+of families migrating between communities in Mexico (a migration network);
+\citefullauthor{sundaresan2007network}'s \citeyearpar{sundaresan2007network}
+study of zebras congregating at locations in
+their habitat (an animal association network);
+and \citefullauthor{papachristos2009murder}'s \citeyearpar{papachristos2009murder}
+study of gangs in Chicago murdering members of rival factions (an organized
+crime network).
 
 In this article, we consider partial-likelihood-based inference for general
 directed interaction data in the presence of covariates.  We first develop
@@ -1432,7 +1432,7 @@ Finally, Table~\refTdeviance
     \caption{
         Ad-hoc analysis of deviance for the Enron model.  Residual deviance
         is defined as twice the approximate negative log partial likelihood
-        from equation~\eqref{E:log-pl-multiple-approx}.
+        from~\eqref{E:log-pl-multiple-approx}.
         The ``Static'' term contains the group level effects, and the
         ``Dynamic'' term contains the reciprocation effects.
     }
@@ -1458,10 +1458,10 @@ the choice of cutoff \citep{dechoudhury2010}.  We have avoided such arbitrary
 outcomes by working directly with the observed data.
 
 We are not the first to move beyond static tie-based representations of
-network data.  There are at least two treatments involving point processes,
+network data.  There are at least two recent treatments involving point processes,
 neither of which includes reciprocation effects or other covariate
 information: \citet{malmgen2009characterizing} model activity at the level of
-the individual using a hidden Markov model; \citet{heard2010bayesian} work
+the individual using a hidden Markov model, while \citet{heard2010bayesian} work
 at the level of the dyad, assuming a piecewise-constant interaction rate.
 Others have considered dynamic tie-based models: see the
 agent based models from social network as surveyed by
@@ -1473,7 +1473,7 @@ time-varying stochastic block model.  Dynamic tie-based models are able
 to capture some forms of reciprocation, but they are not universally
 applicable since they model ties persisting in time (e.g., friendship)
 instead of instantaneous events.
-Aside from Lunag\'omez et al.'s \citeyearpar{lunagomez2009geometric} recent
+Aside from \citefullauthor{lunagomez2009geometric}'s \citeyearpar{lunagomez2009geometric} recent
 work in the context of graphical models, interactions involving more than two
 entities have largely been ignored.
 
