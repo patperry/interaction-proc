@@ -130,7 +130,7 @@ with a brief discussion.  Appendices~\ref{S:implementation}--%
 technical lemmas.
 
 
-\section{A Point Process Model and Partial Likelihood Inference}
+\section{A point process model and partial likelihood inference}
 \label{S:point-process-model}
 
 Every interaction process can be encoded by a multivariate counting measure.
@@ -354,11 +354,11 @@ For most large interaction datasets,
 existing computational routines for handling Cox models
 (e.g., the function \texttt{coxph} from the \texttt{survival}
 package for R \citep{therneau2009survival}) will not suffice.  In
-Appendix~\ref{S:implementation}, we describe a custom method for
+Appendix~\ref{S:implementation}, we describe a customized method for
 maximizing $\log \mathit{PL}_t(\cdot)$ that exploits sparsity in
 $x_t(i,j)$.
 
-\section{Consistency of Maximum Partial Likelihood Inference}
+\section{Consistency of maximum partial likelihood inference}
 \label{S:MPLE-consistency}
 
 Under the model of Section~\ref{S:point-process-model}, the maximum partial likelihood estimator (MPLE) is a natural
@@ -449,7 +449,7 @@ These technical assumptions are similar to those of
 assumptions hold.  Note that when $\| x_t(i,j) \|$ is bounded and Assumption
 A\ref{A:message-times-finite} is in force, the remaining assumptions follow.
 
-\subsection{Main Results}
+\subsection{Main results}
 Assumptions A\ref{A:square-int}--A\ref{A:var-equicont} imply that the MPLE is consistent and asymptotically
 Gaussian, as shown by the following two theorems.
 
@@ -457,7 +457,7 @@ Gaussian, as shown by the following two theorems.
     Let $N$ be a multivariate counting process with stochastic
     intensity as given in~\eqref{E:cox-intensity}, with true parameter
     vector $\beta_0$.  Let $t_n$ be the sequence of interaction times,
-    set $U_t(\beta)$ and $I_t(\beta)$ to
+    and set $U_t(\beta)$ and $I_t(\beta)$ to
     be the gradient and negative Hessian of the log partial likelihood
     function
     as given in~(\ref{E:log-pl-gradient}--\ref{E:log-pl-neg-hessian}).  If
@@ -678,7 +678,7 @@ inequality to
         \Sigma_{\alpha} (\beta_0)
     \right\|
 \]
-using the relation~\eqref{E:var-estimate-relation} yields
+using the relation of~\eqref{E:var-estimate-relation} yields
 \begin{align*}
     \left\|
         \tfrac{1}{n} I_{t_{\lfloor \alpha n \rfloor}}(\hat \beta_n)
@@ -737,7 +737,7 @@ assumption~A\ref{A:integrated-cov-limit}, thereby concluding the proof.
 \end{proof}
 
 
-\section{Multicast Interactions}\label{S:multiple-receivers}
+\section{Multicast interactions}\label{S:multiple-receivers}
 
 In Sections~\ref{S:point-process-model}~and~\ref{S:MPLE-consistency},
 we have assumed that each interaction involves a single sender and a single
@@ -806,7 +806,7 @@ The log partial likelihood at time $t$, evaluated at $\beta$, is
 
 Suppose instead of using the multicast model, we use duplication to get
 pairwise interactions from the original multicast data.  If we use
-model~\eqref{E:cox-intensity} for the pairwise data and ignore ties in
+the model of~\eqref{E:cox-intensity} for the pairwise data and ignore ties in
 the interaction times, we obtain an approximate partial likelihood:
 \begin{equation}\label{E:log-pl-multiple-approx}
     \log
@@ -865,7 +865,7 @@ and Section~\ref{S:approximation-bias} analyzes the bias introduced by
 maximizing $\log \widetilde{\mathit{PL}}_t(\beta)$ in lieu of
 $\log \mathit{PL}_t(\beta)$.
 
-\subsection{Approximation Error}\label{S:approximation-error}
+\subsection{Approximation error}\label{S:approximation-error}
 Define the receiver set growth sequence
 \begin{equation}\label{E:growth-constant}
     G_n
@@ -1034,7 +1034,7 @@ and $\tilde \jmath_1, \ldots, \tilde \jmath_L$ are distributed according
 to $\tilde{\mathbb{P}}_{t,\beta,i;L}$, but the variables are coupled to have
 nontrivial chance of agreeing.  Then,
 \begin{align*}
-    \Big\| E_{t}(\beta, i; L) &- \widetilde{E}_t(\beta, i; L) \Big\| \\
+    \Big\| E_{t}(\beta, i; L) - \widetilde{E}_t(\beta, i; L) \Big\|
         &=
             \Big\|
             \mathbb{E}_{t,\beta,i;L}^\ast
@@ -1130,12 +1130,12 @@ Using the same methods, Lemma~\ref{L:hessian-approx-bound} derives the bound
 on the difference in Hessians.
 \end{proof}
 
-\subsection{Bias Correction from the Approximate Partial Likelihood}
+\subsection{Bias correction from the approximate partial likelihood}
 \label{S:approximation-bias}
 
 When we use ad-hoc duplication, we are performing approximate inference
-under the multicast model.  In practice, even if we explicitly want to use the
-multicast model, computing the partial likelihood in \eqref{E:log-pl-multiple}
+under the multicast model of~\eqref{E:intensity-multiple}.  In practice, even if we explicitly want to use the
+multicast model, computing the partial likelihood of~\eqref{E:log-pl-multiple}
 involves an intractable combinatorial sum, so we may resort to using the
 approximation instead.  Maximizing $\log \widetilde{\mathit{PL}}_t(\cdot)$
 instead of $\log \mathit{PL}_t(\cdot)$ introduces bias in the estimate of
@@ -1232,7 +1232,7 @@ We adjust for estimator bias by replacing $\tilde \beta_n$ with
 $\tilde \beta_n - \widehat{\mathrm{bias}}$.
 
 
-\section{Analysis of a Corporate E-mail Network}\label{S:enron-modeling}
+\section{Analysis of a corporate e-mail network}\label{S:enron-modeling}
 
 We now consider a data analysis example to demonstrate the efficacy of the
 models and inference methods introduced above, and to show how they enable
@@ -1244,11 +1244,11 @@ covariates reflecting group membership to account for the possibility of
 homophily, and dynamic covariates capturing past interactions to measure
 reciprocation effects.
 
-\subsection{Data and Methods}
+\subsection{Data and methods}
 
 Our example analysis uses publicly available data from the Enron e-mail
 corpus \citep{cohen2009enron}, a large subset of the e-mail messages sent
-within the Enron corporation between November 1998 and June 2002, and made
+within the Enron corporation between 1998 and 2002, and made
 public as the result of a subpoena by the U.S.~Federal Energy Regulatory
 Commission during an investigation into fraudulent accounting practices.
 We analyze the dataset compiled by \citet{zhou2007strategies}, comprising
@@ -1298,7 +1298,7 @@ assumptions A\ref{A:square-int}--A\ref{A:var-equicont} and the asymptotic
 framework developed in Sections~\ref{S:MPLE-consistency}
 and~\ref{S:multiple-receivers} are natural.
 
-\subsection{Covariates and Identifiability}
+\subsection{Covariates and identifiability}
 
 For each $i \in \mathcal{I}$ and $j \in \mathcal{J}_t(i)$, we employ dyad
 covariate vectors $x_t(i,j) \in \{0,1\}^{165}$, each with $144 + 21$ binary
@@ -1314,11 +1314,11 @@ of $s(i) \otimes s(j)$, where
         \text{1\{$i$ is FLJ\}},
         \text{1\{$i$ is FLS\}},
         \text{1\{$i$ is FTJ\}},
-        \text{1\{$i$ is FTS\}}, \\
+        \text{1\{$i$ is FTS\}},
         \text{1\{$i$ is FOJ\}},
-        \text{1\{$i$ is FOS\}},
+        \text{1\{$i$ is FOS\}}, \\
         \text{1\{$i$ is MLJ\}},
-        \text{1\{$i$ is MLS\}}, \\
+        \text{1\{$i$ is MLS\}},
         \text{1\{$i$ is MTJ\}},
         \text{1\{$i$ is MTS\}},
         \text{1\{$i$ is MOJ\}},
@@ -1455,8 +1455,8 @@ outcomes by working directly with the observed data.
 We are not the first to move beyond static tie-based representations of
 network data.  There are at least two treatments involving point processes,
 neither of which includes reciprocation effects or other covariate
-information: \citet{malmgen2009characterizing} models activity at the level of
-the individual using a hidden Markov model; \citet{heard2010bayesian} works
+information: \citet{malmgen2009characterizing} model activity at the level of
+the individual using a hidden Markov model; \citet{heard2010bayesian} work
 at the level of the dyad, assuming a piecewise-constant interaction rate.
 Others have considered dynamic tie-based models: see the
 agent based models from social network as surveyed by
@@ -1466,7 +1466,7 @@ exponential random graph model with time-varying coefficients and
 \citefullauthor{kolar2010estimating}'s \citeyearpar{kolar2010estimating}
 time-varying stochastic block model.  Dynamic tie-based models are able
 to capture some forms of reciprocation, but they are not universally
-applicable since they deal with ties persisting in time (e.g., friendship)
+applicable since they model ties persisting in time (e.g., friendship)
 instead of instantaneous events.
 Aside from Lunag\'omez et al.'s \citeyearpar{lunagomez2009geometric} recent
 work in the context of graphical models, interactions involving more than two
@@ -1484,7 +1484,7 @@ In this vein, we have extended the associated theory in
 two directions: first, we have provided results that are asymptotic in time
 rather than in the size of the population under study; and second, we
 have shown that treating multicast interactions via duplication leads to
-bias in the parameter estimates (we give a correction for the bias in
+bias in the parameter estimates (which can in turn be corrected in
 certain regimes).  As far as we are aware, this is the first time
 such a model has been brought directly to bear on relational data in
 the form of a network of directed interactions.
@@ -1525,7 +1525,7 @@ Assume that $|\mathcal{I}| = I$ and $|\mathcal{J}| = J$.
 Suppose $(t_1, i_1, j_1), \ldots, (t_n, i_n, j_n)$ is the sequence of observed
 interactions.  Set $n(i) = \#\{ i_m : i_m = i \}.$
 The partial likelihood factors into a product of terms, one for each sender:
-\begin{align*}
+\begin{equation*}
     \mathit{PL}_t(\beta)
         =
         \,\,
@@ -1540,7 +1540,7 @@ The partial likelihood factors into a product of terms, one for each sender:
             \!\!\!
             \frac{w_{t_m} (\beta, i, j_m)}
                  {W_{t_m}(\beta, i)}.
-\end{align*}
+\end{equation*}
 This factorization allows us to compute $\log \mathit{PL}_t(\beta)$ and
 its derivatives by computing the sender-specific terms in parallel and
 then adding them together.
@@ -1586,7 +1586,7 @@ Typically, the dynamic part, $d_t(i,j)$, is sparse, with at most $\bar p$
 nonzero components.  Moreover $d_t(i,j)$ is zero for most $(i,j)$
 pairs---often $d_t(i,j)$ is zero unless $i$ and $j$ have interacted in
 the past.  Let
-\begin{multline*}
+\begin{equation*}
     \mathcal{\bar J}(i)
         =
             \{
@@ -1604,7 +1604,7 @@ the past.  Let
                     for some $t$
                 }
             \}.
-\end{multline*}
+\end{equation*}
 Assume that $|\mathcal{\bar J}(i)| \le \bar J \ll J$ and that
 computing $d_t(i,j)$ takes amortized time $\Oh(\bar p)$ for each
 $(t,i,j)$ triple.  Also, for convenience, set
@@ -1744,7 +1744,7 @@ $\Oh(p \, \bar I \, J + p \, I \, \bar J + \bar p \, n \, \bar J)$.
 \section{Results from Section~\protect\MPLEconsistencysection{}}
 \label{S:MPLE-consistency-proofs}
 
-\subsection{Lemmas From the Proof of Theorem~\ref{T:score-fisher}}
+\subsection{Lemmas from the proof of Theorem~\ref{T:score-fisher}}
 
 \begin{lemma}\label{L:adapted-martingale}
 Using the notation of Theorem~\ref{T:score-fisher}, under assumption
@@ -1854,7 +1854,7 @@ uniformly in $\alpha$.
 \begin{proof}
 Lenglart's \citeyearpar{lenglart1977relation} Inequality and assumption~A\ref{A:message-times-finite} imply that
 for any positive $\rho$ and $\delta$,
-\begin{multline*}
+\begin{equation*}
     \mathbb{P}\left\{
         \sup_{t \in [0,t_n]}
         \left\|
@@ -1864,7 +1864,7 @@ for any positive $\rho$ and $\delta$,
                 V_s(\beta_0, i) \, dM_s(i)
         \right\|
         \geq \rho
-    \right\} \\
+    \right\}
     \leq
     \frac{\delta}{\rho^2}
     +
@@ -1877,7 +1877,7 @@ for any positive $\rho$ and $\delta$,
         \geq
         \delta
     \right\}.
-\end{multline*}
+\end{equation*}
 (see \citet[Cor.~3.4.1]{fleming1991counting} for a related proof).  As in the proof of
 Lemma~\ref{L:adapted-martingale}, set $K = \sup_{t,i,j} \| x_t(i,j) \|$.
 The sum is bounded by $\frac{16 K^4}{n} \cdot \frac{\Lambda_{t_n}}{n}$.
@@ -1973,7 +1973,7 @@ and
 \)
 for $\beta, \beta' \in D_0$.
 Define $\eta_n = \| Z_n \|$ and $h_n = B K \eta_n$, noting that $h_n$ and
-$\eta_n$ are size $\OhP(n^{-1/2})$.  Thus, for $n$ large enough, the
+$\eta_n$ are size $\OhP(n^{-1/2})$.  Thus, for $n$ large enough,
 \begin{enumerate}[(i)]
     \item $\| \hat \beta_n - \beta_0 \| \leq 2 \, \eta_n \toP 0$,
     \item
@@ -2054,7 +2054,7 @@ so that
             }{
                 \sum_{j' \in \mathcal{J}_t(i)} w_t(\beta, i, j')
             }
-        \Big]^2.
+        \Big]^2
     \leq
         \frac{\exp\{4 K \, \| \beta \|\}}{| \mathcal{J}_t(i) |}.
     \qedhere
@@ -2065,25 +2065,25 @@ so that
 \begin{lemma}\label{L:hessian-approx-bound}
 Using the notation and assumptions of
 Theorem~\ref{T:log-pl-multiple-approx-error},
-\begin{multline*}
+\begin{equation*}
     \Big\|
         \nabla^2\big[ \log \widetilde{\mathit{PL}}_t(\beta) \big]
         -
         \nabla^2\big[ \log \mathit{PL}_t(\beta) \big]
-    \Big\| \\
+    \Big\|
         \leq
             2K^2
             \exp\{4 K \| \beta \|\}
             \cdot
             \sum_{t_m \leq t}
                 \frac{|J_m|^3 \, (|J_m| - 1)}{|\mathcal{J}_{t_m}(i_m)|}.
-\end{multline*}
+\end{equation*}
 \end{lemma}
 \begin{proof}
 The argument is similar to the bound on the difference in gradients in
 the proof of Theorem~\ref{T:log-pl-multiple-approx-error}.  The Hessians of
 the weights are
-\begin{align}
+\begin{align*}
     \begin{split}
     V_t(\beta,i;L)
         &=
@@ -2115,7 +2115,7 @@ the weights are
                 w_t(\beta, i, j)
         }.
     \end{split}
-\end{align}
+\end{align*}
 The first is the covariance matrix of $\sum_{l=1}^L x_t(i,j_l)$ under
 $\mathbb{P}_{t,\beta,i;L}$; the second is the covariance matrix of the same
 quantity under $\tilde{\mathbb{P}}_{t,\beta,i;L}$.
@@ -2137,7 +2137,7 @@ The relevant intermediate bound is
 
 We know that Newton's method applied to
 $\tfrac{1}{n}\log \widetilde{\mathit{PL}}_{t_n}(\cdot)$ converges to
-$\tilde \beta_n$ after sufficiently many iterations.  We use $\hat \beta_n$ as the
+$\tilde \beta_n$ after sufficiently many iterations.  We employ $\hat \beta_n$ as the
 initial iterate and use the Kantorovich Theorem (Lemma~\ref{L:kantorovich})
 to bound $\|\tilde \beta_n - \hat \beta_n\|$.
 
