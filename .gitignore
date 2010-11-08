@@ -3,6 +3,7 @@
 *.log
 *.out
 *.synctex.gz
+arXiv
 iproc.pdf
 figures/recipient-counts.pdf
 
