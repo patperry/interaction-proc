@@ -463,7 +463,7 @@ Gaussian, as shown by the following two theorems.
     as given in~(\ref{E:log-pl-gradient}--\ref{E:log-pl-neg-hessian}).  If
     assumptions A\ref{A:square-int}--A\ref{A:integrated-cov-limit} hold, then
     as $n \to \infty$:
-    \begin{enumerate}[(i)]
+    \begin{enumerate}
         \item \label{I:score-part}
         $n^{-1/2} \, U_{t_{\lfloor \alpha n \rfloor}}(\beta_0)$
         converges weakly to a Gaussian process on $[0,1]$ with
@@ -514,7 +514,7 @@ and is proved in Appendix~\ref{S:MPLE-consistency-proofs}.
     If $\hat \beta_n$ maximizes $\log \mathit{PL}_{t_n}(\cdot)$ and
     conclusion~(\ref{I:score-part}) of Theorem~\ref{T:score-fisher} holds,
     then the following are true as $n\to\infty$:
-    \begin{enumerate}[(i)]
+    \begin{enumerate}
         \item $\hat \beta_n$ is a consistent estimator of $\beta_0$;
         \item $\sqrt{n} \, (\hat \beta_n - \beta_0)$ converges weakly
             to a mean-zero Gaussian random variable with covariance
@@ -1900,7 +1900,7 @@ We state a weak form of the result as a lemma.
     a map between two Banach spaces.  Let $P'(x)$ denote the Jacobian
     (Fr\'echet differential) of $P$ at $x$, assumed to exist in $D_0$,
     a convex open neighborhood of $x_0$.  Assume the following:
-    \begin{enumerate}[(i)]
+    \begin{enumerate}
         \item $\| [P'(x_0)]^{-1} \| \leq B$,
         \item $\| [P'(x_0)]^{-1} P(x_0) \| \leq \eta$,
         \item $\| P'(x) - P'(y) \| \leq K \| x - y \|$,\quad
@@ -1941,10 +1941,10 @@ $\beta_0$ as the initial iterate.  Define
    Z_n = -[\tfrac{1}{n} I_{t_n}(\beta_0)]^{-1} [ \tfrac{1}{n} U_{t_n}(\beta_0)].
 \]
 The first Newton iterate, $\beta_{n,1}$, is equal to $\beta_0 - Z_n$.
-Part (ii) of Theorem~\ref{T:score-fisher} and the
+Part (b) of Theorem~\ref{T:score-fisher} and the
 assumptions of the theorem imply $[\tfrac{1}{n} I_{t_n}(\beta_0)]^{-1}$
 exists for $n$ large enough, so that $Z_n$ is well-defined.
-Moreover, Part (i) of Theorem~\ref{T:score-fisher} and Slutsky's Theorem imply
+Moreover, Part (a) of Theorem~\ref{T:score-fisher} and Slutsky's Theorem imply
 $Z_n \toP 0$ and
 $\sqrt{n} \, Z_n \tod \Normal(0,\, [\Sigma_1(\beta_0)]^{-1})$.
 
@@ -1973,7 +1973,7 @@ and
 for $\beta, \beta' \in D_0$.
 Define $\eta_n = \| Z_n \|$ and $h_n = B K \eta_n$, noting that $h_n$ and
 $\eta_n$ are size $\OhP(n^{-1/2})$.  Thus, for $n$ large enough,
-\begin{enumerate}[(i)]
+\begin{enumerate}
     \item $\| \hat \beta_n - \beta_0 \| \leq 2 \, \eta_n \toP 0$,
     \item
         \(
@@ -2144,7 +2144,7 @@ In the notation of the lemma, $P(\cdot)$ is the gradient of
 $\tfrac{1}{n} \log \widetilde{\mathit{PL}}_{t_n}(\cdot)$ and
 $P'(\cdot)$ is its Hessian.
 The conditions of Theorem~\ref{T:mple-approx-error} imply assumptions
-(i) and (iii) hold uniformly in $n$ for some finite $B$ and $K$.
+(a) and (c) hold uniformly in $n$ for some finite $B$ and $K$.
 Set
 \[
     \eta_n =
