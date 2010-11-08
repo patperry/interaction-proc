@@ -1246,6 +1246,7 @@ reciprocation effects.
 
 \subsection{Data and methods}
 
+\newcommand{\refTemployeesummary}{1} %\ref{T:employee-summary}
 Our example analysis uses publicly available data from the Enron e-mail
 corpus \citep{cohen2009enron}, a large subset of the e-mail messages sent
 within the Enron corporation between 1998 and 2002, and made
@@ -1254,7 +1255,7 @@ Commission during an investigation into fraudulent accounting practices.
 We analyze the dataset compiled by \citet{zhou2007strategies}, comprising
 21,635 messages sent among 156 employees between November 13, 1998 and
 June 21, 2002, along with the genders, seniorities, and departments of
-these employees (summarized in Table~\ref{T:employee-summary}).
+these employees (summarized in Table~\refTemployeesummary).
 \begin{table}
     \makebox[0.66\textwidth]{\input{tables/employee-summary}}
     \\
@@ -1304,7 +1305,7 @@ For each $i \in \mathcal{I}$ and $j \in \mathcal{J}_t(i)$, we employ dyad
 covariate vectors $x_t(i,j) \in \{0,1\}^{165}$, each with $144 + 21$ binary
 components, corresponding respectively to static and dynamic regressors.
 The former are determined by the sender- and receiver-specific group
-memberships summarized in Table~\ref{T:employee-summary}: abbreviating the
+memberships summarized in Table~\refTemployeesummary: abbreviating the
 codes for gender, department, and seniority by F/M, L/T/O, and J/S, the
 $144$ static components of $x_t(i,j)$ are obtained by stacking the columns
 of $s(i) \otimes s(j)$, where
@@ -1379,8 +1380,9 @@ this figure that treating messages with multiple recipients as multiple
 single-recipient messages leads to negative bias in the coefficient
 estimates.
 
+\newcommand{\refTgroupeffects}{2} % \ref{T:group-effects}
 The bias-corrected results of inference on $\beta_0$ are summarized as
-follows.  Table~\ref{T:group-effects}
+follows.  Table~\refTgroupeffects
 \begin{table}
     \tiny
     \makebox[\textwidth]{\input{tables/group-effects-bc}}
@@ -1420,7 +1422,8 @@ is stronger by orders of magnitude, amplifying the sending rate by between
 about $10^1$ and $10^3$.  In contrast, group level effects are on the order
 of $10^{-1}$ to $10^0$.
 
-Finally, Table~\ref{T:deviance}
+\newcommand{\refTdeviance}{3}%\ref{T:deviance}
+Finally, Table~\refTdeviance
 \begin{table}
     \makebox[\textwidth]{\input{tables/deviance.tex}}
     \\
