@@ -37,9 +37,8 @@ departments from Zhou et al.'s employee information table and the raw message
 contents [2]. If you use the data in a publication, please cite the references
 below.
 
-  1. Perry, P. O.,  and Wolfe, P. J. (2010).  "A point-process model for
-     repeated interactions with applications to email traffic analysis."
-     _Submitted_.
+  1. Perry, P. O., and Wolfe, P.J. (2011).  "Point process modeling for
+     directed interaction networks." _Submitted_.
 
   2. Zhou, Y., Goldberg, M., Magdon-Ismail, M., and Wallace, W. A. (2007).
      "Strategies for cleaning organizational emails with an application to 
