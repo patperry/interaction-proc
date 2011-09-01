@@ -1234,15 +1234,15 @@ $\tilde \beta_n - \widehat{\mathrm{bias}}$.
 
 \section{Analysis of a corporate e-mail network}\label{S:enron-modeling}
 
-We now consider a data analysis example to demonstrate the efficacy of the
-models and inference methods introduced above, and to show how they enable
-us to address the three key concerns of interaction data analysis
-(homophily, reciprocation, and multiplicity) raised in
-Section~\ref{S:introduction}.  To do so we employ the multicast
-proportional intensity modeling framework developed above; we include static
-covariates reflecting group membership to account for the possibility of
-homophily, and dynamic covariates capturing past interactions to measure
-reciprocation effects.
+We now consider a data analysis example to demonstrate the efficacy of the models and inference methods introduced above, and to show how they enable us to address the three key concerns of interaction data analysis (homophily, reciprocation, and multiplicity) raised in Section~\ref{S:introduction}.  We study a corporate e-mail network consisting of a large subset of the e-mail messages sent within the Enron corporation between 1998 and 2002.  Our goal is to answer the following two questions:
+
+\begin{enumerate}
+    \item To what extent is homophily predictive of communication behavior?  Is the existence of a common trait between two actors (gender, department, or seniority) predictive of their e-mail sending?
+
+    \item What network effects are useful for predicting sending behavior?  Do some network effects matter more than others?
+\end{enumerate}
+
+To answer these questions we employ the multicast proportional intensity modeling framework developed above; we include static covariates reflecting actor traits, as well as dynamic covariates capturing network effects.
 
 \subsection{Data and methods}
 
@@ -1255,16 +1255,8 @@ Commission during an investigation into fraudulent accounting practices.
 We analyze the dataset compiled by \citet{zhou2007strategies}, comprising
 21,635 messages sent among 156 employees between November 13, 1998 and
 June 21, 2002, along with the genders, seniorities, and departments of
-these employees (summarized in Table~\refTemployeesummary).
-\begin{table}
-    \makebox[0.66\textwidth]{\input{tables/employee-summary}}
-    \\
-    \\
-    \caption{
-        Characteristics of the 156 employees in the Enron dataset.
-    }
-    \label{T:employee-summary}
-\end{table}
+these employees.
+
 Approximately 30\% of these messages have more than one recipient across
 their \texttt{To}, \texttt{CC}, and \texttt{BCC} fields, with a few
 messages having more than fifty recipients
@@ -1287,8 +1279,8 @@ We model these data using the multicast proportional intensity
 model of Section~\ref{S:multiple-receivers}, with
 $\mathcal{I} = \mathcal{J} = \{ 1, 2, \ldots, 156 \}$ and
 $\mathcal{J}_t(i) = \mathcal{I} \setminus \{ i \}$, and with static and
-dynamic covariates taking the form of indicator variables as described
-below.  We fit the model by first maximizing the approximate log partial
+dynamic covariates described in the next section.
+We fit the model by first maximizing the approximate log partial
 likelihood $\log \widetilde{\mathit{PL}}_t(\beta)$ of~\eqref{E:log-pl-multiple-approx}, and then employing a
 parametric bootstrap to estimate and correct the resultant bias in
 parameter estimates.  Standard errors are calculated using the
@@ -1299,34 +1291,41 @@ assumptions A\ref{A:square-int}--A\ref{A:var-equicont} and the asymptotic
 framework developed in Sections~\ref{S:MPLE-consistency}
 and~\ref{S:multiple-receivers} are natural.
 
-\subsection{Covariates and identifiability}
+\subsection{Covariates}
 
-For each $i \in \mathcal{I}$ and $j \in \mathcal{J}_t(i)$, we employ dyad
-covariate vectors $x_t(i,j) \in \{0,1\}^{165}$, each with $144 + 21$ binary
-components, corresponding respectively to static and dynamic regressors.
-The former are determined by the sender- and receiver-specific group
-memberships summarized in Table~\refTemployeesummary: abbreviating the
-codes for gender, department, and seniority by F/M, L/T/O, and J/S, the
-$144$ static components of $x_t(i,j)$ are obtained by stacking the columns
-of $s(i) \otimes s(j)$, where
-\begin{multline*}
-    s(i)
-    = \big(
-        \text{1\{$i$ is FLJ\}},
-        \text{1\{$i$ is FLS\}},
-        \text{1\{$i$ is FTJ\}},
-        \text{1\{$i$ is FTS\}},
-        \text{1\{$i$ is FOJ\}},
-        \text{1\{$i$ is FOS\}}, \\
-        \text{1\{$i$ is MLJ\}},
-        \text{1\{$i$ is MLS\}},
-        \text{1\{$i$ is MTJ\}},
-        \text{1\{$i$ is MTS\}},
-        \text{1\{$i$ is MOJ\}},
-        \text{1\{$i$ is MOS\}}
-    \big)
-\end{multline*}
-is the group membership vector for individual $i$.  The $21$ dynamic
+To assess the predictiveness of an effect (trait or behavior) in the
+in the proportional intensity model~\eqref{E:cox-intensity}, we must encode it in the time-varying covariate vector $x_t(i,j)$.
+
+\subsubsection{Static covariates to measure homophily and group-level effects}
+
+Consider first those actor traits that do not vary with time: the actors' genders, departments, and seniorities.  We encode the traits of actor $i$ and their second-order interactions using 9 actor-dependent binary ($0$/$1$) variables:
+
+\begin{center}
+\begin{tabular}{clc}
+\hline
+Variate & Characteristic of actor $i$ & Count \\
+\hline
+$L(i)$ & member of the Legal department & 25 \\
+$T(i)$ & member of the Trading department & 60 \\
+$J(i)$ & seniority is Junior & 82 \\
+$F(i)$ & gender is Female & 43 \\
+$LJ(i)$ & $L(i) \cdot J(i)$ & ??? \\
+$TJ(i)$ & $T(i) \cdot J(i)$ & ??? \\
+$LF(i)$ & $L(i) \cdot F(i)$ & ??? \\
+$TF(i)$ & $T(i) \cdot F(i)$ & ??? \\
+$JF(i)$ & $J(i) \cdot F(i)$ & ??? \\
+\hline
+\end{tabular}
+\end{center}
+
+We encode all 90 identifiable second-order interactions between the traits of sender $i$ and receiver $j$ as components of $x_t(i,j)$.  We do this by using variates of the form $Y(j)$ and $X(i)\cdot Y(j)$, where $X$ and $Y$ are chosen from the list of 9 actor-dependent variates ($L$, $T$, $J$, $F$, $LJ$, etc.).  We cannot identify the coefficients for covariates of the form $X(i)$; if a component of $x_t(i,j)$ is the same for all values of $j$, then the corresponding component of $\beta$ will not be identifiable; the product of the two can be absorbed into $\bar \lambda_t(i)$ without changing the likelihood.
+
+We measure homophily be the estimated coefficients for covariates of the form $X(i) \cdot X(j)$.  For example, if the coefficient of $J(i) \cdot J(j)$ is large and positive, this tells us that Junior employees exhibit homophily in their sending behaviors.
+
+
+\subsubsection{Dynamic covariates to measure network effects}
+
+The $21$ dynamic
 components of $x_t(i,j)$ are history-dependent and designed to capture
 reciprocation effects; they take the form
 \[
