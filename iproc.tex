@@ -1325,6 +1325,66 @@ We measure homophily be the estimated coefficients for covariates of the form $X
 
 \subsubsection{Dynamic covariates to measure network effects}
 
+We use the following effects:
+
+send:
+\setlength{\unitlength}{1em}
+\begin{picture}(4.75,1)
+\put(0,0){$i$}
+\put(1,0.25){\vector(1,0){2.5}}
+\put(4,0){$j$}
+\end{picture}
+
+receive:
+\setlength{\unitlength}{1em}
+\begin{picture}(4.75,1)
+\put(0,0){$i$}
+\put(3.5,0.25){\vector(-1,0){2.5}}
+\put(4,0){$j$}
+\end{picture}
+
+$2$-send:
+\setlength{\unitlength}{1em}
+\begin{picture}(9,1)
+\put(0,0){$i$}
+\put(1,0.25){\vector(1,0){2.5}}
+\put(4,0){$k$}
+\put(5,0.25){\vector(1,0){2.5}}
+\put(8.25,0){$j$}
+\end{picture}
+
+$2$-receive:
+\setlength{\unitlength}{1em}
+\begin{picture}(9,1)
+\put(0,0){$i$}
+\put(3.5,0.25){\vector(-1,0){2.5}}
+\put(4,0){$k$}
+\put(7.75,0.25){\vector(-1,0){2.5}}
+\put(8.25,0){$j$}
+\end{picture}
+
+sibling:
+\setlength{\unitlength}{1em}
+\begin{picture}(5,5)
+\put(2.5,4){$k$}
+\put(2.5,3.5){\vector(-1,-2){1.25}}
+\put(2.75,3.5){\vector(1,-2){1.25}}
+\put(1,0){$i$}
+\put(3.75,0){$j$}
+\end{picture}
+
+
+cosibling:
+\setlength{\unitlength}{1em}
+\begin{picture}(5,5)
+\put(2.5,4){$k$}
+\put(1.25,1){\vector(1,2){1.25}}
+\put(4,1){\vector(-1,2){1.25}}
+\put(1,0){$i$}
+\put(3.75,0){$j$}
+\end{picture}
+
+
 The $21$ dynamic
 components of $x_t(i,j)$ are history-dependent and designed to capture
 reciprocation effects; they take the form
