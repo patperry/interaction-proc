@@ -1324,7 +1324,7 @@ We encode all 90 identifiable second-order interactions between the traits of se
 We measure homophily be the estimated coefficients for covariates of the form $X(i) \cdot X(j)$.  For example, if the coefficient of $J(i) \cdot J(j)$ is large and positive, this tells us that Junior employees exhibit homophily in their sending behaviors.
 
 
-\subsubsection{Dynamic covariates to measure behavior effects}
+\subsubsection{Dynamic covariates to measure network effects}
 
 Static effects are useful for determining which traits are predictive of the relative rate of interaction between sender $i$ and receiver $j$, but they do not shed light on network effects.  We are interested in the predictive relevance of the following dynamic behaviors:
 
@@ -1356,12 +1356,12 @@ Static effects are useful for determining which traits are predictive of the rel
     \begin{picture}(9,1)
       \put(0,0){$i$}
       \put(1,0.25){\vector(1,0){2.5}}
-      \put(4,0){$k$}
+      \put(4,0){$h$}
       \put(5,0.25){\vector(1,0){2.5}}
       \put(8.25,0){$j$}
     \end{picture} &
-    there exists an actor $k$ such that $i$ has sent $k$ a message
-    and $k$ has sent $j$ a message in the past
+    there exists an actor $h$ such that $i$ has sent $h$ a message
+    and $h$ has sent $j$ a message in the past
     \\
   \textbf{$2$-receive} &
     \vspace{-3em}
@@ -1369,42 +1369,83 @@ Static effects are useful for determining which traits are predictive of the rel
     \begin{picture}(9,1)
       \put(0,0){$i$}
       \put(3.5,0.25){\vector(-1,0){2.5}}
-      \put(4,0){$k$}
+      \put(4,0){$h$}
       \put(7.75,0.25){\vector(-1,0){2.5}}
       \put(8.25,0){$j$}
     \end{picture} &
-    there exists an actor $k$ such that $i$ has received a message 
-    from $k$, and $k$ has received a message from~$j$
+    there exists an actor $h$ such that $i$ has received a message 
+    from $h$, and $h$ has received a message from~$j$
     \\
   \textbf{sibling} &
     \setlength{\unitlength}{1em}
     \begin{picture}(5,5)(0,4)
-      \put(2.5,4){$k$}
+      \put(2.5,4){$h$}
       \put(2.5,3.5){\vector(-1,-2){1.25}}
       \put(2.75,3.5){\vector(1,-2){1.25}}
       \put(1,0){$i$}
       \put(3.75,0){$j$}
     \end{picture} &
-    there exists an actor $k$ such that $k$ has sent $i$ and $j$
+    there exists an actor $k$ such that $h$ has sent $i$ and $j$
     messages in the past
     \\
   \textbf{cosibling} &
     \vspace{4em}
     \setlength{\unitlength}{1em}
     \begin{picture}(5,5)(0,4)
-      \put(2.5,4){$k$}
+      \put(2.5,4){$h$}
       \put(1.25,1){\vector(1,2){1.25}}
       \put(4,1){\vector(-1,2){1.25}}
       \put(1,0){$i$}
       \put(3.75,0){$j$}
     \end{picture} &
-    there exists an actor $k$ such that $k$ has received messages
+    there exists an actor $h$ such that $k$ has received messages
     from $i$ and~$j$
 \end{tabular}
 
 \noindent
-To this end, we introduce binary indicators for all $6$ effects as components of $x_t(i,j)$.  These indicators depend on the sender $i$, the receiver, $j$, and the history of the process at the current time $t$.
+The first two are ``dyadic,'' involving exactly two actors, and the last four are ``triadic,'' involving exactly three actors.
 
+To measure first-order dependence on the network effects, we introduce binary indicators for all $6$ effects as components of $x_t(i,j)$.  These indicators depend on the sender $i$, the receiver, $j$, and the history of the process at the current time $t$.
+
+To measure higher-order time dependence, we introduce further covariates.  We partition the interval $[-\infty, t)$ into $K = 7$ sub-intervals:
+\[
+  [-\infty, t) = 
+  [t - \Delta_K, t - \Delta_{K-1}) \cup [t - \Delta_{K-1}, t - \Delta_{K-2}) \cup \dotsb \cup [t - \Delta_1, t - \Delta_0)
+\]
+where $\infty = \Delta_K > \Delta_{K-1} > \dotsb > \Delta_1 > \Delta_0 = 0$ and ``$t - \infty$'' is defined to be $-\infty$.  Specifically, we set $\Delta_k = (7.5\text{ minutes}) \times 4^k$ for $k = 1, \dotsc, K-1$ so that for $k$ in this range $\Delta_k$ takes the values $30\text{ minutes}$, $2\text{ hours}$, $8\text{ hours}$, $32\text{ hours}$, $5.33\text{ days}$, $21.33\text{ days}$.  We define the half-open interval $I_{t}^{(k)} = [t - \Delta_k, t - \Delta_{k-1})$.
+
+For $k = 1, \dotsc, K$ we define the dyadic effects
+\begin{align*}
+  \text{\textbf{send}}^{(k)}_t(i,j)
+    &= \#\{ i \to j \text{ in } I_t^{(k)} \}, \\
+  \text{\textbf{receive}}^{(k)}_t(i,j)
+    &= \#\{ j \to i \text{ in } I_t^{(k)} \};
+\end{align*}
+for sender $i$ these measure the number of messages sent-to and received-by receiver $j$ in time interval $I_t^{(k)}$.  Likewise, for $k = 1, \dotsc, K$ and $l = 1, \dotsc, K$ we define the triadic effects
+\begin{align*}
+  \text{\textbf{2-send}}^{(k,l)}_t(i,j)
+    &= \sum_{h \neq i,j} 
+      \#\{ i \to h \text{ in } I_t^{(k)} \}
+      \cdot \#\{ h \to j \text{ in } I_t^{(l)} \}, \\
+  \text{\textbf{2-receive}}^{(k,l)}_t(i,j)
+    &= \sum_{h \neq i,j} 
+      \#\{ h \to i \text{ in } I_t^{(k)} \}
+      \cdot \#\{ j \to h \text{ in } I_t^{(l)} \}, \\
+  \text{\textbf{sibling}}^{(k,l)}_t(i,j)
+    &= \sum_{h \neq i,j} 
+      \#\{ h \to i \text{ in } I_t^{(k)} \}
+      \cdot \#\{ h \to j \text{ in } I_t^{(l)} \}, \\
+  \text{\textbf{cosibling}}^{(k,l)}_t(i,j)
+    &= \sum_{h \neq i,j} 
+      \#\{ i \to h \text{ in } I_t^{(k)} \}
+      \cdot \#\{ j \to h \text{ in } I_t^{(l)} \}.
+\end{align*}
+
+
+
+
+
+\clearpage
 The $21$ dynamic
 components of $x_t(i,j)$ are history-dependent and designed to capture
 reciprocation effects; they take the form
