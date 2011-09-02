@@ -8,6 +8,7 @@
 \RequirePackage{booktabs}
 \RequirePackage{amssymb}
 \RequirePackage[cmex10]{amsmath}
+\RequirePackage{subfig}
 
 
 %\startlocaldefs
@@ -1323,67 +1324,86 @@ We encode all 90 identifiable second-order interactions between the traits of se
 We measure homophily be the estimated coefficients for covariates of the form $X(i) \cdot X(j)$.  For example, if the coefficient of $J(i) \cdot J(j)$ is large and positive, this tells us that Junior employees exhibit homophily in their sending behaviors.
 
 
-\subsubsection{Dynamic covariates to measure network effects}
+\subsubsection{Dynamic covariates to measure behavior effects}
 
-We use the following effects:
+Static effects are useful for determining which traits are predictive of the relative rate of interaction between sender $i$ and receiver $j$, but they do not shed light on network effects.  We are interested in the predictive relevance of the following dynamic behaviors:
 
-send:
-\setlength{\unitlength}{1em}
-\begin{picture}(4.75,1)
-\put(0,0){$i$}
-\put(1,0.25){\vector(1,0){2.5}}
-\put(4,0){$j$}
-\end{picture}
+\vspace{1em}
+\begin{tabular}{p{2cm} c p{8cm}}
+  \textbf{send} &
+    \vspace{1em}
+    \setlength{\unitlength}{1em}
+    \begin{picture}(4.75,1)
+      \put(0,0){$i$}
+      \put(1,0.25){\vector(1,0){2.5}}
+      \put(4,0){$j$}
+      \end{picture} &
+    $i$ has sent $j$ a message in the past
+    \\
+  \textbf{receive} &
+    \vspace{1em}
+    \setlength{\unitlength}{1em}
+    \begin{picture}(4.75,1)
+      \put(0,0){$i$}
+      \put(3.5,0.25){\vector(-1,0){2.5}}
+      \put(4,0){$j$}
+    \end{picture} &
+    $i$ has received a message from $j$ in the past
+    \\
+  \textbf{$2$-send} &
+    \vspace{1em}
+    \setlength{\unitlength}{1em}
+    \begin{picture}(9,1)
+      \put(0,0){$i$}
+      \put(1,0.25){\vector(1,0){2.5}}
+      \put(4,0){$k$}
+      \put(5,0.25){\vector(1,0){2.5}}
+      \put(8.25,0){$j$}
+    \end{picture} &
+    there exists an actor $k$ such that $i$ has sent $k$ a message
+    and $k$ has sent $j$ a message in the past
+    \\
+  \textbf{$2$-receive} &
+    \vspace{-3em}
+    \setlength{\unitlength}{1em}
+    \begin{picture}(9,1)
+      \put(0,0){$i$}
+      \put(3.5,0.25){\vector(-1,0){2.5}}
+      \put(4,0){$k$}
+      \put(7.75,0.25){\vector(-1,0){2.5}}
+      \put(8.25,0){$j$}
+    \end{picture} &
+    there exists an actor $k$ such that $i$ has received a message 
+    from $k$, and $k$ has received a message from~$j$
+    \\
+  \textbf{sibling} &
+    \setlength{\unitlength}{1em}
+    \begin{picture}(5,5)(0,4)
+      \put(2.5,4){$k$}
+      \put(2.5,3.5){\vector(-1,-2){1.25}}
+      \put(2.75,3.5){\vector(1,-2){1.25}}
+      \put(1,0){$i$}
+      \put(3.75,0){$j$}
+    \end{picture} &
+    there exists an actor $k$ such that $k$ has sent $i$ and $j$
+    messages in the past
+    \\
+  \textbf{cosibling} &
+    \vspace{4em}
+    \setlength{\unitlength}{1em}
+    \begin{picture}(5,5)(0,4)
+      \put(2.5,4){$k$}
+      \put(1.25,1){\vector(1,2){1.25}}
+      \put(4,1){\vector(-1,2){1.25}}
+      \put(1,0){$i$}
+      \put(3.75,0){$j$}
+    \end{picture} &
+    there exists an actor $k$ such that $k$ has received messages
+    from $i$ and~$j$
+\end{tabular}
 
-receive:
-\setlength{\unitlength}{1em}
-\begin{picture}(4.75,1)
-\put(0,0){$i$}
-\put(3.5,0.25){\vector(-1,0){2.5}}
-\put(4,0){$j$}
-\end{picture}
-
-$2$-send:
-\setlength{\unitlength}{1em}
-\begin{picture}(9,1)
-\put(0,0){$i$}
-\put(1,0.25){\vector(1,0){2.5}}
-\put(4,0){$k$}
-\put(5,0.25){\vector(1,0){2.5}}
-\put(8.25,0){$j$}
-\end{picture}
-
-$2$-receive:
-\setlength{\unitlength}{1em}
-\begin{picture}(9,1)
-\put(0,0){$i$}
-\put(3.5,0.25){\vector(-1,0){2.5}}
-\put(4,0){$k$}
-\put(7.75,0.25){\vector(-1,0){2.5}}
-\put(8.25,0){$j$}
-\end{picture}
-
-sibling:
-\setlength{\unitlength}{1em}
-\begin{picture}(5,5)
-\put(2.5,4){$k$}
-\put(2.5,3.5){\vector(-1,-2){1.25}}
-\put(2.75,3.5){\vector(1,-2){1.25}}
-\put(1,0){$i$}
-\put(3.75,0){$j$}
-\end{picture}
-
-
-cosibling:
-\setlength{\unitlength}{1em}
-\begin{picture}(5,5)
-\put(2.5,4){$k$}
-\put(1.25,1){\vector(1,2){1.25}}
-\put(4,1){\vector(-1,2){1.25}}
-\put(1,0){$i$}
-\put(3.75,0){$j$}
-\end{picture}
-
+\noindent
+To this end, we introduce binary indicators for all $6$ effects as components of $x_t(i,j)$.  These indicators depend on the sender $i$, the receiver, $j$, and the history of the process at the current time $t$.
 
 The $21$ dynamic
 components of $x_t(i,j)$ are history-dependent and designed to capture
@@ -1443,23 +1463,23 @@ estimates.
 \newcommand{\refTgroupeffects}{2} % \ref{T:group-effects}
 The bias-corrected results of inference on $\beta_0$ are summarized as
 follows.  Table~\refTgroupeffects
-\begin{table}
-    \tiny
-    \makebox[\textwidth]{\input{tables/group-effects-bc}}
-    \\
-    \\
-    \caption{
-        Estimated group level effects and their standard errors for the
-        model described in Section~\ref{S:enron-modeling}.  Gender,
-        Department, and Seniority codes are abbreviated as F/M, L/T/O,
-        and J/S.  Standard errors are shown in parentheses.  Read
-        the table as follows: the group-level effect of 2.46 for sender
-        FLJ and receiver FLS means that an FLJ executive sends e-mails to a
-        FLS executive at 2.46 times her baseline activity rate.  The highest
-        effect in each column is shown in boldface.
-    }
-    \label{T:group-effects}
-\end{table}
+%\begin{table}
+%    \tiny
+%    \makebox[\textwidth]{\input{tables/group-effects-bc}}
+%    \\
+%    \\
+%    \caption{
+%        Estimated group level effects and their standard errors for the
+%        model described in Section~\ref{S:enron-modeling}.  Gender,
+%        Department, and Seniority codes are abbreviated as F/M, L/T/O,
+%        and J/S.  Standard errors are shown in parentheses.  Read
+%        the table as follows: the group-level effect of 2.46 for sender
+%        FLJ and receiver FLS means that an FLJ executive sends e-mails to a
+%        FLS executive at 2.46 times her baseline activity rate.  The highest
+%        effect in each column is shown in boldface.
+%    }
+%    \label{T:group-effects}
+%\end{table}
 shows the estimated group-level (static) effects, and
 Fig.~\ref{F:reciprocation}
 \begin{figure}[t]
@@ -1484,19 +1504,19 @@ of $10^{-1}$ to $10^0$.
 
 \newcommand{\refTdeviance}{3}%\ref{T:deviance}
 Finally, Table~\refTdeviance
-\begin{table}
-    \makebox[\textwidth]{\input{tables/deviance.tex}}
-    \\
-    \\
-    \caption{
-        Ad-hoc analysis of deviance for the Enron model.  Residual deviance
-        is defined as twice the approximate negative log partial likelihood
-        from~\eqref{E:log-pl-multiple-approx}.
-        The ``Static'' term contains the group level effects, and the
-        ``Dynamic'' term contains the reciprocation effects.
-    }
-    \label{T:deviance}
-\end{table}
+%\begin{table}
+%    \makebox[\textwidth]{\input{tables/deviance.tex}}
+%    \\
+%    \\
+%    \caption{
+%        Ad-hoc analysis of deviance for the Enron model.  Residual deviance
+%        is defined as twice the approximate negative log partial likelihood
+%        from~\eqref{E:log-pl-multiple-approx}.
+%        The ``Static'' term contains the group level effects, and the
+%        ``Dynamic'' term contains the reciprocation effects.
+%    }
+%    \label{T:deviance}
+%\end{table}
 gives an ad-hoc analysis of deviance for the fitted model, showing that
 group-level (static) effects account for 18\% of the residual deviance and
 reciprocation (dynamic) effects account for 24\%.  If the model fit
