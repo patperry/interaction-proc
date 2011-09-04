@@ -1421,7 +1421,12 @@ For $k = 1, \dotsc, K$ we define the dyadic effects
   \text{\textbf{receive}}^{(k)}_t(i,j)
     &= \#\{ j \to i \text{ in } I_t^{(k)} \};
 \end{align*}
-for sender $i$ these measure the number of messages sent-to and received-by receiver $j$ in time interval $I_t^{(k)}$.  Likewise, for $k = 1, \dotsc, K$ and $l = 1, \dotsc, K$ we define the triadic effects
+for sender $i$, these covariates measure the number of messages sent-to and received-by receiver $j$ in time interval $I_t^{(k)}$.  
+
+The dyadic effects have been defined as above to enable easy interpretation of the corresponding coefficients.  To illustrate this, for $k = 1, \dotsc, K$, suppose that $\beta_k$ is the coeffiecient corresponding to $\text{\textbf{send}}^{(k)}_t(i,j)$.  If we observe the message $i \to j$ at time $t$, then for future time $s$ in the interval $(t, t + \Delta_1]$, the rate $\lambda_s(i,j)$ will be multiplied be the factor $e^{\beta_1}$; for $s$ in the interval $(t + \Delta_1, t + \Delta_2]$, the rate will be multiplied by $e^{\beta_2}$; this continues similarly, with the rate being multiplied by $e^{\beta_k}$ whenever $s \in (t + \Delta_{k-1}, t + \Delta_{k}]$.  Thus, the coefficents $\beta_1, \dotsc, \beta_k$ measure the ``send effect'' of a single message, and how this effect decays over time. 
+We expect that $\beta_k$ will decrease as $k$ increases, but we do not enforce this constraint on the estimation procedure.  
+
+The triadic effects involve pairs of messages.  For $k = 1, \dotsc, K$ and $l = 1, \dotsc, K$ we define the triadic effects
 \begin{align*}
   \text{\textbf{2-send}}^{(k,l)}_t(i,j)
     &= \sum_{h \neq i,j} 
@@ -1440,6 +1445,8 @@ for sender $i$ these measure the number of messages sent-to and received-by rece
       \#\{ i \to h \text{ in } I_t^{(k)} \}
       \cdot \#\{ j \to h \text{ in } I_t^{(l)} \}.
 \end{align*}
+For sender $i$ and receiver $j$, the covariate
+$\text{\textbf{2-send}}^{(k,l)}_t(i,j)$ counts the pairs of messages such that for some $h$ distinct from $i$ and $j$, message $i \to h$ occured in interval $I_t^{(k)}$ and message $h \to j$ occured in interval $I_t^{(l)}$; the other covariates behave similarly.
 
 
 
