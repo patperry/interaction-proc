@@ -1423,8 +1423,8 @@ For $k = 1, \dotsc, K$ we define the dyadic effects
 \end{align*}
 for sender $i$, these covariates measure the number of messages sent-to and received-by receiver $j$ in time interval $I_t^{(k)}$.  
 
-The dyadic effects have been defined as above to enable easy interpretation of the corresponding coefficients.  To illustrate this, for $k = 1, \dotsc, K$, suppose that $\beta_k$ is the coeffiecient corresponding to $\text{\textbf{send}}^{(k)}_t(i,j)$.  If we observe the message $i \to j$ at time $t$, then for future time $s$ in the interval $(t, t + \Delta_1]$, the rate $\lambda_s(i,j)$ will be multiplied be the factor $e^{\beta_1}$; for $s$ in the interval $(t + \Delta_1, t + \Delta_2]$, the rate will be multiplied by $e^{\beta_2}$; this continues similarly, with the rate being multiplied by $e^{\beta_k}$ whenever $s \in (t + \Delta_{k-1}, t + \Delta_{k}]$.  Thus, the coefficents $\beta_1, \dotsc, \beta_k$ measure the ``send effect'' of a single message, and how this effect decays over time. 
-We expect that $\beta_k$ will decrease as $k$ increases, but we do not enforce this constraint on the estimation procedure.  
+The dyadic effects have been defined as above to enable easy interpretation of the corresponding coefficients.  To illustrate this, for $k = 1, \dotsc, K$, suppose that $\beta_{k}$ is the coeffiecient corresponding to $\text{\textbf{send}}^{(k)}_t(i,j)$.  If we observe the message $i \to j$ at time $t$, then for future time $t'$ in the interval $(t, t + \Delta_1]$, the rate $\lambda_{t'}(i,j)$ will be multiplied be the factor $e^{\beta_{1}}$; for $t'$ in the interval $(t + \Delta_1, t + \Delta_2]$, the rate will be multiplied by $e^{\beta_{2}}$; this continues similarly, with the rate being multiplied by $e^{\beta_{k}}$ whenever $t' \in (t + \Delta_{k-1}, t + \Delta_{k}]$; equivalently, when $\Delta_{k-1} < t' - t \leq \Delta_k$.  Thus, the coefficients $\beta_{1}, \dotsc, \beta_{K}$ measure the effect of a ``send event'' and how this effect decays over time. 
+We expect that $\beta_{k}$ will decrease as $k$ increases, but we do not enforce this constraint on the estimation procedure.  
 
 The triadic effects involve pairs of messages.  For $k = 1, \dotsc, K$ and $l = 1, \dotsc, K$ we define the triadic effects
 \begin{align*}
@@ -1446,9 +1446,9 @@ The triadic effects involve pairs of messages.  For $k = 1, \dotsc, K$ and $l = 
       \cdot \#\{ j \to h \text{ in } I_t^{(l)} \}.
 \end{align*}
 For sender $i$ and receiver $j$, the covariate
-$\text{\textbf{2-send}}^{(k,l)}_t(i,j)$ counts the pairs of messages such that for some $h$ distinct from $i$ and $j$, message $i \to h$ occured in interval $I_t^{(k)}$ and message $h \to j$ occured in interval $I_t^{(l)}$; the other covariates behave similarly.
+$\text{\textbf{2-send}}^{(k,l)}_t(i,j)$ counts the pairs of messages such that for some $h$ distinct from $i$ and $j$, message $i \to h$ occurred in interval $I_t^{(k)}$ and message $h \to j$ occurred in interval $I_t^{(l)}$; the other covariates behave similarly.
 
-
+As with the dyadic effects, the triadic effects are designed so that their coefficients have a straightforward interpretation.  However, since triadic effects involve pairs of messages, the interpretation is a bit more involved.  We illustrate with the $\text{\textbf{2-send}}^{(k,l)}_t(i,j)$ covariate having coefficient $\beta_{k,l}$ for $k = 1, \dotsc, K$ and $l = 1, \dotsc, K$.  Take $i$ and $j$ to be two actors.  Suppose at time $t$ we observe the message $h \to j$.  At this point, we look through the history of the process for all messages of the form $i \to h$; when paired with the original $h \to j$ message, each of these defines a ``2-send event.''  The other 2-send events are defined as follows: if at time $s$ we observe the message $i \to h$, then we enumerate all observed messages $h \to j$ in the history of the process; when each of these is paired with the original $i \to h$ event it constitutes a 2-send event.  A pair $(s,t)$ can be associated with each 2-send event, where $s$ is the time of the $i \to h$ message and $t$ is the time of the $h \to j$ message.  At time $t'$ after $s$ and $t$, the existence of the 2-send event causes the sending rate $\lambda_{t'}(i,j)$ to be multiplied by the factor $e^{\beta_{k,l}}$, where $\Delta_{k-1} < t' - s \leq \Delta_{k}$ and $\Delta_{l-1} < t' - t \leq \Delta_l$.  We expect $\beta_{k,l}$ to decrease as $k$, $l$, and $|k - l|$ increase (again, we do not enforce this constraint in the fitting procedure).
 
 
 
