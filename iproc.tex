@@ -10,7 +10,9 @@
 \RequirePackage{multirow}
 \RequirePackage{amssymb}
 \RequirePackage[cmex10]{amsmath}
-%\RequirePackage{subfig}
+\RequirePackage{placeins}
+
+\RequirePackage[caption=false]{subfig}
 
 
 %\startlocaldefs
@@ -1463,74 +1465,37 @@ As with the dyadic effects, the triadic effects are designed so that their coeff
 
 \subsection{Analysis 1: Testing for homophily}
 
-Static covariates only:
+%%% Logically, this should be a 'table', not a 'figure', but I can't get it
+%%% to work with the JRSS 'statsoc.cls' file (I spent 2 hours on this and
+%%% then gave up).
+\begin{figure}
+  \centering
+  \subfloat[Static]{
+    \label{T:group:static}
+    \scriptsize
+    \makebox[\textwidth]{\input{tables/group-static.tex}}
+  }
+  \\
+  \subfloat[Static and dynamic]{
+    \label{T:group:dynamic}
+    \scriptsize
+    \makebox[\textwidth]{\input{tables/group-dynamic.tex}}
+  }
+  \caption{Group effects}
+  \label{T:group}
+\end{figure}
 
-\footnotesize
-\begin{tabular}{lrrrrrrrrrr}
-\toprule
-& \multicolumn{10}{c}{Receiver} \\
-\cmidrule(l){2-11} 
-Sender & \multicolumn{1}{c}{1} & \multicolumn{1}{c}{L} & \multicolumn{1}{c}{T} & \multicolumn{1}{c}{J} & \multicolumn{1}{c}{F} & \multicolumn{1}{c}{LJ} & \multicolumn{1}{c}{TJ} & \multicolumn{1}{c}{LF} & \multicolumn{1}{c}{TF} & \multicolumn{1}{c}{JF} \\
-\midrule
-\multirow{2}{*}{L} &-0.22 &\cellcolor{Gray}1.96 &\textcolor{LightGray}{-0.03} &-1.87 &-0.67 &0.85 &2.64 &2.02 &\textcolor{LightGray}{1.08} &0.82\\
- &\tiny{(0.05)} &\cellcolor{Gray}\tiny{(0.06)} &\textcolor{LightGray}{\tiny{(0.11)}} &\tiny{(0.22)} &\tiny{(0.09)} &\tiny{(0.21)} &\tiny{(0.30)} &\tiny{(0.13)} &\textcolor{LightGray}{\tiny{(0.41)}} &\tiny{(0.15)}\\[1ex]
-\multirow{2}{*}{T} &-1.95 &-0.59 &\cellcolor{Gray}2.58 &2.76 &-0.45 &\textcolor{LightGray}{0.20} &-1.72 &1.05 &3.19 &-1.65\\
- &\tiny{(0.06)} &\tiny{(0.09)} &\cellcolor{Gray}\tiny{(0.08)} &\tiny{(0.10)} &\tiny{(0.10)} &\textcolor{LightGray}{\tiny{(0.15)}} &\tiny{(0.18)} &\tiny{(0.16)} &\tiny{(0.32)} &\tiny{(0.13)}\\[1ex]
-\multirow{2}{*}{J} &-3.21 &-2.49 &2.56 &\cellcolor{Gray}4.26 &\textcolor{LightGray}{0.19} &-1.47 &-1.70 &1.95 &2.26 &-1.65\\
- &\tiny{(0.09)} &\tiny{(0.19)} &\tiny{(0.11)} &\cellcolor{Gray}\tiny{(0.12)} &\textcolor{LightGray}{\tiny{(0.12)}} &\tiny{(0.24)} &\tiny{(0.19)} &\tiny{(0.23)} &\tiny{(0.32)} &\tiny{(0.15)}\\[1ex]
-\multirow{2}{*}{F} &\textcolor{LightGray}{-0.09} &-0.62 &\textcolor{LightGray}{-0.16} &\textcolor{LightGray}{0.14} &\cellcolor{Gray}0.71 &0.86 &-3.85 &\textcolor{LightGray}{-0.14} &\textcolor{LightGray}{0.83} &\textcolor{LightGray}{-0.36}\\
- &\textcolor{LightGray}{\tiny{(0.05)}} &\tiny{(0.08)} &\textcolor{LightGray}{\tiny{(0.10)}} &\textcolor{LightGray}{\tiny{(0.12)}} &\cellcolor{Gray}\tiny{(0.07)} &\tiny{(0.17)} &\tiny{(0.28)} &\textcolor{LightGray}{\tiny{(0.17)}} &\textcolor{LightGray}{\tiny{(0.31)}} &\textcolor{LightGray}{\tiny{(0.14)}}\\[1ex]
-\multirow{2}{*}{LJ} &1.53 &1.18 &\textcolor{LightGray}{0.01} &-1.35 &\textcolor{LightGray}{0.15} &\cellcolor{Gray}\textcolor{LightGray}{0.76} &-3.03 &-1.68 &\textcolor{LightGray}{0.56} &0.98\\
- &\tiny{(0.16)} &\tiny{(0.22)} &\textcolor{LightGray}{\tiny{(0.21)}} &\tiny{(0.32)} &\textcolor{LightGray}{\tiny{(0.23)}} &\cellcolor{Gray}\textcolor{LightGray}{\tiny{(0.36)}} &\tiny{(0.41)} &\tiny{(0.30)} &\textcolor{LightGray}{\tiny{(0.49)}} &\tiny{(0.21)}\\[1ex]
-\multirow{2}{*}{TJ} &1.43 &4.29 &-1.65 &-2.00 &-1.53 &-2.15 &\cellcolor{Gray}\textcolor{LightGray}{0.40} &\textcolor{LightGray}{0.68} &\textcolor{LightGray}{-1.21} &1.15\\
- &\tiny{(0.18)} &\tiny{(0.26)} &\tiny{(0.20)} &\tiny{(0.20)} &\tiny{(0.24)} &\tiny{(0.32)} &\cellcolor{Gray}\textcolor{LightGray}{\tiny{(0.26)}} &\textcolor{LightGray}{\tiny{(0.32)}} &\textcolor{LightGray}{\tiny{(0.37)}} &\tiny{(0.22)}\\[1ex]
-\multirow{2}{*}{LF} &-2.82 &2.13 &\textcolor{LightGray}{0.50} &\textcolor{LightGray}{0.66} &\textcolor{LightGray}{0.70} &\textcolor{LightGray}{-0.55} &5.29 &\cellcolor{Gray}\textcolor{LightGray}{-0.04} &-2.48 &\textcolor{LightGray}{-0.59}\\
- &\tiny{(0.18)} &\tiny{(0.19)} &\textcolor{LightGray}{\tiny{(0.25)}} &\textcolor{LightGray}{\tiny{(0.34)}} &\textcolor{LightGray}{\tiny{(0.25)}} &\textcolor{LightGray}{\tiny{(0.35)}} &\tiny{(0.45)} &\cellcolor{Gray}\textcolor{LightGray}{\tiny{(0.29)}} &\tiny{(0.40)} &\textcolor{LightGray}{\tiny{(0.20)}}\\[1ex]
-\multirow{2}{*}{TF} &-2.57 &\textcolor{LightGray}{-0.09} &2.83 &2.15 &0.99 &\textcolor{LightGray}{-0.17} &1.40 &\textcolor{LightGray}{-0.94} &\cellcolor{Gray}-2.41 &\textcolor{LightGray}{-0.25}\\
- &\tiny{(0.28)} &\textcolor{LightGray}{\tiny{(0.36)}} &\tiny{(0.29)} &\tiny{(0.29)} &\tiny{(0.27)} &\textcolor{LightGray}{\tiny{(0.39)}} &\tiny{(0.36)} &\textcolor{LightGray}{\tiny{(0.29)}} &\cellcolor{Gray}\tiny{(0.33)} &\textcolor{LightGray}{\tiny{(0.26)}}\\[1ex]
-\multirow{2}{*}{JF} &1.88 &0.91 &-1.38 &-1.46 &-0.53 &\textcolor{LightGray}{0.30} &2.09 &\textcolor{LightGray}{-0.04} &\textcolor{LightGray}{0.13} &\cellcolor{Gray}\textcolor{LightGray}{0.54}\\
- &\tiny{(0.11)} &\tiny{(0.15)} &\tiny{(0.14)} &\tiny{(0.15)} &\tiny{(0.14)} &\textcolor{LightGray}{\tiny{(0.20)}} &\tiny{(0.21)} &\textcolor{LightGray}{\tiny{(0.19)}} &\textcolor{LightGray}{\tiny{(0.29)}} &\cellcolor{Gray}\textcolor{LightGray}{\tiny{(0.17)}}\\[1ex]
-\bottomrule
-\end{tabular}
-\normalsize
-
-
-Static $+$ dynamic covariates:
-
-\footnotesize
-\begin{tabular}{lrrrrrrrrrr}
-\toprule
-& \multicolumn{10}{c}{Receiver} \\
-\cmidrule(l){2-11} 
-Sender & \multicolumn{1}{c}{1} & \multicolumn{1}{c}{L} & \multicolumn{1}{c}{T} & \multicolumn{1}{c}{J} & \multicolumn{1}{c}{F} & \multicolumn{1}{c}{LJ} & \multicolumn{1}{c}{TJ} & \multicolumn{1}{c}{LF} & \multicolumn{1}{c}{TF} & \multicolumn{1}{c}{JF} \\
-\midrule
-\multirow{2}{*}{L} &-0.50 &\cellcolor{Gray}0.19 &0.19 &-0.41 &-0.03 &0.43 &0.39 &1.05 &1.05 &\textcolor{LightGray}{-0.02}\\
- &\tiny{(0.00)} &\cellcolor{Gray}\tiny{(0.00)} &\tiny{(0.04)} &\tiny{(0.03)} &\tiny{(0.00)} &\tiny{(0.03)} &\tiny{(0.05)} &\tiny{(0.02)} &\tiny{(0.04)} &\textcolor{LightGray}{\tiny{(0.04)}}\\[1ex]
-\multirow{2}{*}{T} &-0.35 &-0.23 &\cellcolor{Gray}0.72 &0.66 &-0.02 &0.38 &-0.46 &0.40 &0.99 &-0.52\\
- &\tiny{(0.00)} &\tiny{(0.00)} &\cellcolor{Gray}\tiny{(0.04)} &\tiny{(0.02)} &\tiny{(0.00)} &\tiny{(0.05)} &\tiny{(0.05)} &\tiny{(0.01)} &\tiny{(0.04)} &\tiny{(0.02)}\\[1ex]
-\multirow{2}{*}{J} &-0.40 &-1.23 &0.64 &\cellcolor{Gray}0.57 &-0.21 &\textcolor{LightGray}{0.12} &\textcolor{LightGray}{-0.03} &1.31 &0.62 &\textcolor{LightGray}{-0.02}\\
- &\tiny{(0.00)} &\tiny{(0.01)} &\tiny{(0.03)} &\cellcolor{Gray}\tiny{(0.01)} &\tiny{(0.00)} &\textcolor{LightGray}{\tiny{(0.04)}} &\textcolor{LightGray}{\tiny{(0.03)}} &\tiny{(0.01)} &\tiny{(0.03)} &\textcolor{LightGray}{\tiny{(0.01)}}\\[1ex]
-\multirow{2}{*}{F} &-0.08 &\textcolor{LightGray}{0.13} &0.22 &0.09 &\cellcolor{Gray}0.38 &\textcolor{LightGray}{-0.00} &-1.40 &\textcolor{LightGray}{-0.25} &0.20 &-0.14\\
- &\tiny{(0.00)} &\textcolor{LightGray}{\tiny{(0.08)}} &\tiny{(0.03)} &\tiny{(0.01)} &\cellcolor{Gray}\tiny{(0.00)} &\textcolor{LightGray}{\tiny{(0.08)}} &\tiny{(0.03)} &\textcolor{LightGray}{\tiny{(0.08)}} &\tiny{(0.03)} &\tiny{(0.01)}\\[1ex]
-\multirow{2}{*}{LJ} &0.99 &0.73 &-0.67 &-0.33 &-0.82 &\cellcolor{Gray}-0.67 &-1.48 &-0.31 &1.20 &0.41\\
- &\tiny{(0.00)} &\tiny{(0.04)} &\tiny{(0.01)} &\tiny{(0.00)} &\tiny{(0.00)} &\cellcolor{Gray}\tiny{(0.05)} &\tiny{(0.01)} &\tiny{(0.04)} &\tiny{(0.01)} &\tiny{(0.05)}\\[1ex]
-\multirow{2}{*}{TJ} &0.07 &1.79 &-0.51 &-0.27 &-0.95 &-1.25 &\cellcolor{Gray}\textcolor{LightGray}{0.01} &\textcolor{LightGray}{0.11} &0.22 &0.34\\
- &\tiny{(0.00)} &\tiny{(0.03)} &\tiny{(0.00)} &\tiny{(0.00)} &\tiny{(0.00)} &\tiny{(0.03)} &\cellcolor{Gray}\textcolor{LightGray}{\tiny{(0.00)}} &\textcolor{LightGray}{\tiny{(0.05)}} &\tiny{(0.00)} &\tiny{(0.03)}\\[1ex]
-\multirow{2}{*}{LF} &-1.12 &1.35 &0.63 &-0.21 &0.34 &0.28 &2.83 &\cellcolor{Gray}-0.55 &-1.77 &-0.22\\
- &\tiny{(0.02)} &\tiny{(0.03)} &\tiny{(0.02)} &\tiny{(0.02)} &\tiny{(0.02)} &\tiny{(0.03)} &\tiny{(0.02)} &\cellcolor{Gray}\tiny{(0.03)} &\tiny{(0.02)} &\tiny{(0.03)}\\[1ex]
-\multirow{2}{*}{TF} &-0.72 &0.36 &0.99 &0.58 &0.43 &-0.15 &0.61 &-0.27 &\cellcolor{Gray}-1.05 &-0.25\\
- &\tiny{(0.02)} &\tiny{(0.02)} &\tiny{(0.02)} &\tiny{(0.02)} &\tiny{(0.02)} &\tiny{(0.02)} &\tiny{(0.02)} &\tiny{(0.02)} &\cellcolor{Gray}\tiny{(0.02)} &\tiny{(0.03)}\\[1ex]
-\multirow{2}{*}{JF} &\textcolor{LightGray}{0.02} &-0.10 &\textcolor{LightGray}{-0.20} &\textcolor{LightGray}{0.01} &0.14 &0.40 &\textcolor{LightGray}{-0.18} &-0.67 &\textcolor{LightGray}{-0.09} &\cellcolor{Gray}0.17\\
- &\textcolor{LightGray}{\tiny{(0.01)}} &\tiny{(0.01)} &\textcolor{LightGray}{\tiny{(0.07)}} &\textcolor{LightGray}{\tiny{(0.02)}} &\tiny{(0.01)} &\tiny{(0.04)} &\textcolor{LightGray}{\tiny{(0.07)}} &\tiny{(0.01)} &\textcolor{LightGray}{\tiny{(0.07)}} &\cellcolor{Gray}\tiny{(0.02)}\\[1ex]
-\bottomrule
-\end{tabular}
-\normalsize
-
+\FloatBarrier
 
 Darker coefficients are significant (according to a Wald test) at level $10^{-3}$.
 
 \subsection{Analysis 2: Evaluating the importance of network effects}
 
+\begin{figure}
+  \centering
+  \makebox{\includegraphics[scale=0.6]{figures/dyad}}
+  \caption{Estimated coefficients for dyadic effects}
+\end{figure}
 
 
 
