@@ -1,4 +1,4 @@
-# figure/static-coefs.R
+# tables/static-coefs.R
 # ---------------------
 
 source("code/process.R")
@@ -63,8 +63,18 @@ print.coefs <- function(coef, se, include.se = TRUE) {
             }
             cat("\\\\[1ex]\n")
         }
-            }
+    }
     cat("\\bottomrule\n")
     cat("\\end{tabular}\n")
 }
+
+sink(file = "tables/group-static.tex")
+print.coefs(coef.s, se.coef.s, TRUE)
+sink()
+
+sink(file = "tables/group-dynamic.tex")
+print.coefs(coef, se.coef, TRUE)
+sink()
+
+
 
