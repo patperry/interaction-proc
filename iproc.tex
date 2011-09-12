@@ -1492,6 +1492,42 @@ Darker coefficients are significant (according to a Wald test) at level $10^{-3}
 \subsection{Analysis 2: Evaluating the importance of network effects}
 
 \begin{figure}
+\centering
+\footnotesize
+\begin{tabular}{lrrrrrr}
+\toprule
+Variate
+& $1\{\textbf{send}\}$
+& $1\{\textbf{receive}\}$
+& $1\{\textbf{2-send}\}$
+& $1\{\textbf{2-receive}\}$
+& $1\{\textbf{sibling}\}$
+& $1\{\textbf{cosibling}\}$
+\\
+\midrule
+Coefficient
+& 3.06
+& 0.79
+& 0.71
+& \textcolor{LightGray}{0.08}
+& 0.78
+& \textcolor{LightGray}{0.09}
+\\
+(SE)
+& \tiny{(0.03)}
+& \tiny{(0.02)}
+& \tiny{(0.04)}
+& \textcolor{LightGray}{\tiny{(0.04)}}
+& \tiny{(0.02)}
+& \textcolor{LightGray}{\tiny{(0.04)}}
+\\
+\bottomrule
+\end{tabular}
+\normalsize
+\caption{Estimated coefficients for network indicator effects}
+\end{figure}
+
+\begin{figure}
   \centering
   \makebox{\includegraphics[scale=0.6]{figures/dyad}}
   \caption{Estimated coefficients for dyadic effects}
