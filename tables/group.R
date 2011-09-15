@@ -1,5 +1,5 @@
-# tables/static-coefs.R
-# ---------------------
+# tables/group.R
+# --------------
 
 source("code/process.R")
 
@@ -17,8 +17,9 @@ coef.s <- (get.coefs(fit.s) %*% tx)[1:nrow, 1:ncol]
 coef <- (get.coefs(fit) %*% tx)[1:nrow,1:ncol]
 
 vtx <- get.transform(TRUE)
+ix0 <- rep(1:11, 12) + rep((1:12 - 1) * nrow(coef), each=11)
 cov.coef.s <- vtx %*% cov.s %*% t(vtx)
-cov.coef <- vtx %*% cov[1:132, 1:132] %*% t(vtx)
+cov.coef <- vtx %*% cov[ix0, ix0] %*% t(vtx)
 se.coef.s <- matrix(sqrt(pmax(0, diag(cov.coef.s))), 11, 12)[1:nrow, 1:ncol]
 se.coef <- matrix(sqrt(pmax(0, diag(cov.coef))), 11, 12)[1:nrow, 1:ncol]
 
