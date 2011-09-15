@@ -1462,7 +1462,30 @@ As with the dyadic effects, the triadic effects are designed so that their coeff
 \subsection{Estimation}
 
 \subsection{Goodness of fit}
-\begin{figure}
+
+\begin{figure}[h]
+\centering
+\begin{tabular}{lrrrr}
+    \toprule
+    \textbf{Term}
+        & \textbf{Df}
+        & \textbf{Deviance}
+        & \textbf{Resid. Df}
+        & \textbf{Resid. Dev} \\
+    \midrule
+    Null &  &  & 32261 & 325412 \\
+    Static & 90 & 59920 & 32171 & 265492 \\
+    Send & 8 & 100758 & 32163 & 164734 \\
+    Receive & 8 & 5396 & 32155 & 159338 \\
+    Sibling & 50 & 3532 & 32105 & 155806 \\
+    2-Send & 50 & 836 & 32055 & 154970 \\
+    Cosibling & 50 & 1387 & 32005 & 153583 \\
+    2-Receive & 50 & 299 & 31955 & 153284 \\
+    \bottomrule
+\end{tabular}
+\end{figure}
+
+\begin{figure}[h]
   \centering
   \subfloat[Observed Count]{
     \makebox{\includegraphics[scale=0.6]{figures/nobs-by-nexp}}}
