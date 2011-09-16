@@ -1248,7 +1248,7 @@ We now consider a data analysis example to demonstrate the efficacy of the model
 \begin{enumerate}
     \item To what extent is homophily predictive of communication behavior?  Is the existence of a common trait between two actors (gender, department, or seniority) predictive of their e-mail sending?
 
-    \item What network effects are useful for predicting sending behavior?  Do some network effects matter more than others?
+    \item Which network effects are useful for predicting sending behavior?  Do some network effects matter more than others?
 \end{enumerate}
 
 To answer these questions we employ the multicast proportional intensity modeling framework developed above; we include static covariates reflecting actor traits, as well as dynamic covariates capturing network effects.
@@ -1280,7 +1280,7 @@ messages having more than fifty recipients
         (ranging from 1--57).
     }\label{F:recipient-counts}
 \end{figure}
-In the subsequent analysis, we exclude messages with more than 10
+In the subsequent analysis, we exclude messages with more than 5
 recipients---a subjectively-chosen cutoff that avoids e-mails sent
 \emph{en masse} to large groups.
 
@@ -1292,38 +1292,40 @@ dynamic covariates described in the next section.
 We fit the model by first maximizing the approximate log partial
 likelihood $\log \widetilde{\mathit{PL}}_t(\beta)$ of~\eqref{E:log-pl-multiple-approx}, and then employing a
 parametric bootstrap to estimate and correct the resultant bias in
-parameter estimates.  Standard errors are calculated using the
-corresponding asymptotic theory, along with the delta method as
-appropriate.  Note that in the setting of this data analysis example,
-the covariates are bounded and the interaction count is high, and so
-assumptions A\ref{A:square-int}--A\ref{A:var-equicont} and the asymptotic
-framework developed in Sections~\ref{S:MPLE-consistency}
-and~\ref{S:multiple-receivers} are natural.
+parameter estimates.  We calculate standard errors using the
+corresponding asymptotic theory.
+In the setting of this example, the interaction count is high, so
+the asymptotic framework developed in Sections~\ref{S:MPLE-consistency}
+and~\ref{S:multiple-receivers} is natural.  The main violation of assumptions
+A\ref{A:square-int}--A\ref{A:var-equicont} is that our covariates (described in Section~\ref{S:enron-covariates}) are
+in principle unbounded.  Despite this violotion, our bootstrap calculations (described in Sec.~TODO) show that the asymptotic approximations are still
+reasonable. 
 
-\subsection{Covariates}
 
-To assess the predictiveness of an effect (trait or behavior) in the
-in the proportional intensity model~\eqref{E:cox-intensity}, we must encode it in the time-varying covariate vector $x_t(i,j)$.
+
+\subsection{Covariates}\label{S:enron-covariates}
+
+The goal of our investigation is to assess the predictive ability of actor traits and network effects.  To this end, we choose covariates that encode these traits and effects.  Each covariate is encoded as a component of the time-varying dyad-dependent vector $x_t(i,j)$, which is linked to the rate of interaction between sender $i$ and receiver $j$ via model~\eqref{E:cox-intensity}.
 
 \subsubsection{Static covariates to measure homophily and group-level effects}
 
 Consider first those actor traits that do not vary with time: the actors' genders, departments, and seniorities.  We encode the traits of actor $i$ and their second-order interactions using 9 actor-dependent binary ($0$/$1$) variables:
 
 \begin{center}
-\begin{tabular}{clc}
-\hline
-Variate & Characteristic of actor $i$ & Count \\
-\hline
-$L(i)$ & member of the Legal department & 25 \\
-$T(i)$ & member of the Trading department & 60 \\
-$J(i)$ & seniority is Junior & 82 \\
-$F(i)$ & gender is Female & 43 \\
-$LJ(i)$ & $L(i) \cdot J(i)$ & ??? \\
-$TJ(i)$ & $T(i) \cdot J(i)$ & ??? \\
-$LF(i)$ & $L(i) \cdot F(i)$ & ??? \\
-$TF(i)$ & $T(i) \cdot F(i)$ & ??? \\
-$JF(i)$ & $J(i) \cdot F(i)$ & ??? \\
-\hline
+\begin{tabular}{cl}
+\toprule
+Variate & Characteristic of actor $i$ \\
+\midrule
+$L(i)$ & member of the Legal department \\
+$T(i)$ & member of the Trading department \\
+$J(i)$ & seniority is Junior \\
+$F(i)$ & gender is Female \\
+$LJ(i)$ & $L(i) \cdot J(i)$ \\
+$TJ(i)$ & $T(i) \cdot J(i)$ \\
+$LF(i)$ & $L(i) \cdot F(i)$ \\
+$TF(i)$ & $T(i) \cdot F(i)$ \\
+$JF(i)$ & $J(i) \cdot F(i)$ \\
+\bottomrule
 \end{tabular}
 \end{center}
 
@@ -1459,9 +1461,16 @@ $\text{\textbf{2-send}}^{(k,l)}_t(i,j)$ counts the pairs of messages such that f
 As with the dyadic effects, the triadic effects are designed so that their coefficients have a straightforward interpretation.  However, since triadic effects involve pairs of messages, the interpretation is a bit more involved.  We illustrate with the $\text{\textbf{2-send}}^{(k,l)}_t(i,j)$ covariate having coefficient $\beta_{k,l}$ for $k = 1, \dotsc, K$ and $l = 1, \dotsc, K$.  Take $i$ and $j$ to be two actors.  Suppose at time $t$ we observe the message $h \to j$.  At this point, we look through the history of the process for all messages of the form $i \to h$; when paired with the original $h \to j$ message, each of these defines a ``2-send event.''  The other 2-send events are defined as follows: if at time $s$ we observe the message $i \to h$, then we enumerate all observed messages $h \to j$ in the history of the process; when each of these is paired with the original $i \to h$ event it constitutes a 2-send event.  A pair $(s,t)$ can be associated with each 2-send event, where $s$ is the time of the $i \to h$ message and $t$ is the time of the $h \to j$ message.  At time $t'$ after $s$ and $t$, the existence of the 2-send event causes the sending rate $\lambda_{t'}(i,j)$ to be multiplied by the factor $e^{\beta_{k,l}}$, where $\Delta_{k-1} < t' - s \leq \Delta_{k}$ and $\Delta_{l-1} < t' - t \leq \Delta_l$.  We expect $\beta_{k,l}$ to decrease as $k$, $l$, and $|k - l|$ increase (again, we do not enforce this constraint in the fitting procedure).
 
 
-\subsection{Estimation}
-
 \subsection{Goodness of fit}
+
+
+Figure~\ref{F:deviance} gives an ad-hoc analysis of deviance table for the
+fitted model, which shows how the approximate deviance (twice the approximate
+log partial likelihood) behaves as we add consecutive terms to the model.
+Group-level (static) effects account for 18\% of the residual deviance and
+network effects account for 34\%.  The most dramatic decrease in the residual deviance comes from introducing the ``Send'' terms into the model; with only 8 degrees of freedom, they are able to account for 31\% of the null deviance.
+
+The residual deviance for the full model is approximately $4.8$ times the residual degrees of freedom.  One could potentially adjust for this over-dispersion by multiplying the calculated standard errors by $\sqrt{4.8}$, roughly $2.2$.  Note however that this figure is not reliable as a goodness-of-fit measure, as it depends only on the estimated coefficients (Sec.~4.4.5 of \cite{mccullagh1989generalized} discusses a related problem for logistic regression with sparse data).
 
 \begin{figure}[h]
 \centering
@@ -1483,22 +1492,52 @@ As with the dyadic effects, the triadic effects are designed so that their coeff
     2-Receive & 50 & 299 & 31955 & 153284 \\
     \bottomrule
 \end{tabular}
+    \caption{
+        Ad-hoc analysis of deviance for the Enron model.  Residual deviance
+        is defined as twice the approximate negative log partial likelihood
+        from~\eqref{E:log-pl-multiple-approx}.
+        The ``Static'' term contains the group level effects, and the
+        ``Dynamic'' term contains the reciprocation effects.
+    }
+    \label{F:deviance}
 \end{figure}
+
+To shed more light on how well the model fits the data, we use a normalized version of the martingale residual from \cite{therneau1990martingale}, which we call a Pearson residual.  Specifically, given $\hat \beta$, we define
+\[
+  \hat N_{t}(i,j)
+    = \sum_{t_m \leq t}
+        \frac{w_{t_m}(\hat \beta, i, j)}{W_{t_m}(\hat \beta, i)}
+        1\{i_m = i\};
+\]
+this is the expected number of $i \to j$ events given the estimated model, with $\int \bar \lambda_t(i) \, dt$ estimated by the \cite{breslow1974covariance} estimate $\int \frac{\sum_j dN_{i,j}(t)}{W_t(\hat \beta, i)}$.  The martingale residual analogous to that of Therneau et al.\ is defined as $N_t(i,j) - \hat N_t(i,j)$; we normalize this quantity by an estimate of its standard deviation to get a ``Pearson'' residual:
+\(
+    {(N_t(i,j) - \hat N_t(i,j))}/\{\hat N_t(i,j)\}^{1/2}.
+\)
+
 
 \begin{figure}[h]
   \centering
-  \subfloat[Observed Count]{
+  \subfloat[
+    Observed count $N_{\infty}(i,j)$ plotted against
+    expected count $\hat N_{\infty}(i,j)$
+  ]{\label{F:nobs-by-nexp}
     \makebox{\includegraphics[scale=0.6]{figures/nobs-by-nexp}}}
   \\
-  \subfloat[Pearson Residual]{
-    \makebox{\includegraphics[scale=0.6]{figures/resid-by-nexp}}}
-  \caption{
-    Observed count $N_{\infty}(i,j)$ plotted as a function of
-    expected count $\hat N_{\infty}(i,j)$ for both models.;
+  \subfloat[
     Pearson residual
-    $(N_{\infty}(i,j) - \hat N_\infty(i,j)) / [\hat N_\infty(i,j)]^{1/2}$ plotted as a function of
-    expected count $\hat N_{\infty}(i,j)$ for both models.}
+    $(N_\infty(i,j) - \hat N_\infty(i,j)) / \{\hat N_\infty(i,j)\}^{1/2}$
+    plotted against expected count
+  ]{\label{F:resid-by-nexp}
+    \makebox{\includegraphics[scale=0.6]{figures/resid-by-nexp}}}
+  \caption{\label{F:goodness}
+    Goodness of fit plots for two models
+  }
 \end{figure}
+
+Fig.~\ref{F:nobs-by-nexp} shows a plot of $N_\infty(i,j)$ versus $\hat N_\infty(i,j)$ for two different models.  In the ``static'' model, we only include the static effects, while in the full (``static and dynamic'') model, we also include all six types of network effect.  The fit for the static model is poor.  For instance, the static model repeatedly predicts up to 200 $i \to j$ events where we only observed 1 or 2; likewise, the model predicts $1$ or fewer events where we observed up to $20$.  For the full model, which includes the dynamic effects, the fit is much better, with the relationship between observed and expected interaction counts being roughly linear.
+
+Fig.~\ref{F:resid-by-nexp} shows the Pearson residuals.  For the full model, more than 95\% are less than $1.15$ in absolute value, and the maximum absolute residual is $21.8$.  In contrast, the 95\% quantile for the absolute residuals in the static model is at $3.7$, and the maximum absolute residual is $125.0$.  The sum of squares if the residuals is $16498$ in the full model, over $29$ times lower than that for the static model ($480661$).
+
 
 \FloatBarrier
 
@@ -1657,48 +1696,26 @@ follows.  Table~\refTgroupeffects
 %\end{table}
 shows the estimated group-level (static) effects, and
 Fig.~\ref{F:reciprocation}
-\begin{figure}[t]
-    \centering
-    \makebox{\includegraphics[scale=0.6]{figures/reciprocation-bc}}
-    \caption{
-        \captiontitle{Reciprocation effect}
-        Estimated reciprocation effect and standard errors for the
-        model described in Section~\ref{S:enron-modeling}.  The solid
-        (orange) curve is determined from the 21 estimated coefficients
-        for the reciprocation effects at intervals of ``\,$2^l$ hours''
-        for $l$ ranging from $-6$ to $14$.  The dashed (purple) curve gives
-        one standard error around the estimate.  Read the figure as follows:
-        if employee $j$'s most recent message to employee $i$ was 30 minutes
-        ago, then $i$ sends to $j$ at about 200 times his baseline rate.
-    }\label{F:reciprocation}
-\end{figure}
+%\begin{figure}[t]
+%    \centering
+%    \makebox{\includegraphics[scale=0.6]{figures/reciprocation-bc}}
+%    \caption{
+%        \captiontitle{Reciprocation effect}
+%        Estimated reciprocation effect and standard errors for the
+%        model described in Section~\ref{S:enron-modeling}.  The solid
+%        (orange) curve is determined from the 21 estimated coefficients
+%        for the reciprocation effects at intervals of ``\,$2^l$ hours''
+%        for $l$ ranging from $-6$ to $14$.  The dashed (purple) curve gives
+%        one standard error around the estimate.  Read the figure as follows:
+%        if employee $j$'s most recent message to employee $i$ was 30 minutes
+%        ago, then $i$ sends to $j$ at about 200 times his baseline rate.
+%    }\label{F:reciprocation}
+%\end{figure}
 shows the reciprocation (dynamic) effects.  We observe that reciprocation
 is stronger by orders of magnitude, amplifying the sending rate by between
 about $10^1$ and $10^3$.  In contrast, group level effects are on the order
 of $10^{-1}$ to $10^0$.
 
-\newcommand{\refTdeviance}{3}%\ref{T:deviance}
-Finally, Table~\refTdeviance
-%\begin{table}
-%    \makebox[\textwidth]{\input{tables/deviance.tex}}
-%    \\
-%    \\
-%    \caption{
-%        Ad-hoc analysis of deviance for the Enron model.  Residual deviance
-%        is defined as twice the approximate negative log partial likelihood
-%        from~\eqref{E:log-pl-multiple-approx}.
-%        The ``Static'' term contains the group level effects, and the
-%        ``Dynamic'' term contains the reciprocation effects.
-%    }
-%    \label{T:deviance}
-%\end{table}
-gives an ad-hoc analysis of deviance for the fitted model, showing that
-group-level (static) effects account for 18\% of the residual deviance and
-reciprocation (dynamic) effects account for 24\%.  If the model fit
-perfectly, we would expect the residual deviance to be about equal to the
-residual degrees of freedom; here, the residual deviance is about $5.9$
-times what we would expect.  Scaling the reported standard errors by
-$\sqrt{5.9}$ is an ad-hoc adjustment for this overdispersion.
 
 
 \section{Discussion}\label{S:discussion}

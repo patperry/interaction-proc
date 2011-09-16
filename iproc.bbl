@@ -13,6 +13,11 @@ Andersen, P.~K. and R.~D. Gill (1982).
   study.
 \newblock {\em Ann. Statist.\/}~{\em 10}, 1100--1120.
 
+\bibitem[\protect\citeauthoryear{Breslow}{Breslow}{1974}]{breslow1974covariance}
+Breslow, N.~E. (1974).
+\newblock Covariance analysis of censored survival data.
+\newblock {\em Biometrics\/}~{\em 30}, 89--99.
+
 \bibitem[\protect\citeauthoryear{Brostr\"{o}m}{Brostr\"{o}m}{2002}]{brostrom2002cox}
 Brostr\"{o}m, G. (2002).
 \newblock {C}ox regression; ties without tears.
@@ -141,6 +146,12 @@ Martinussen, T. and T.~H. Scheike (2006).
 \newblock {\em Dynamic Regression Models for Survival Data}.
 \newblock New York: Springer.
 
+\bibitem[\protect\citeauthoryear{McCullagh and Nelder}{McCullagh and
+  Nelder}{1989}]{mccullagh1989generalized}
+McCullagh, P. and J.~A. Nelder (1989).
+\newblock {\em Generalized Linear Models}.
+\newblock Chapman \& Hall.
+
 \bibitem[\protect\citeauthoryear{Mckenzie and Rapoport}{Mckenzie and
   Rapoport}{2007}]{mckenzie2007network}
 Mckenzie, D. and H.~Rapoport (2007).
@@ -194,6 +205,12 @@ Tapia, R.~A. (1971).
 Therneau, T. and T.~Lumley (2009).
 \newblock \texttt{survival}: Survival analysis, including penalised likelihood.
 \newblock R package version 2.35-8, http://CRAN.R-project.org/package=survival.
+
+\bibitem[\protect\citeauthoryear{Therneau, Grambsch, and Fleming}{Therneau
+  et~al.}{1990}]{therneau1990martingale}
+Therneau, T.~M., P.~M. Grambsch, and T.~R. Fleming (1990).
+\newblock Martingale-based residuals for survival models.
+\newblock {\em Biometrika\/}~{\em 77}, 147--160.
 
 \bibitem[\protect\citeauthoryear{Tyler, Wilkinson, and Huberman}{Tyler
   et~al.}{2005}]{tyler2005email}
