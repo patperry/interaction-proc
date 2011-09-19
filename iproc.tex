@@ -1610,20 +1610,18 @@ executive, the odds of a Junior sending to the Junior were roughly
 $\exp(\hat \beta_{JJ}) \approx 5.1$, and the odds of a Senior 
 sending to the Junior were roughly $\exp(\hat \beta_{J}) \approx 1/4.1$.
 
+
 The first problem with this analysis is that we have marginalized over the
 other covariates (Gender and Department), potentially introducing a Simpson's
 paradox.  This is easy to fix, by introducing covariates for the sender and
-receiver covariates and considering their interactions.  The bigger issue is
+receiver covariates and considering their interactions (see
+Fig.~\ref{T:group-static} for the resulting fit).  The bigger issue is
 that our analysis implicitly assumes that each message is independent and
 identically distributed, conditional on the sender of the message.  This is
-blatantly false: if Junior $A$ sends a message to Junior $B$, then common
-sense tells us that the next time $B$ sends a message, $B$ is more likely to
+blatantly false: common sense tells us that if Junior $A$ sends a message
+to Junior $B$ then the next time $B$ sends a message, $B$ is more likely to
 choose $A$ as a recipient.  Any homophily effect will be exaggerated by
 reciprocation and other network effects.
-
-
-
-
 
 %%% Logically, this should be a 'table', not a 'figure', but I can't get it
 %%% to work with the JRSS 'statsoc.cls' file (I spent 2 hours on this and
@@ -1631,23 +1629,44 @@ reciprocation and other network effects.
 \begin{figure}[h]
   \centering
   \subfloat[Static]{
-    \label{T:group:static}
+    \label{T:group-static}
     \scriptsize
     \makebox[\textwidth]{\input{tables/group-static.tex}}
   }
   \\
   \subfloat[Static and dynamic]{
-    \label{T:group:dynamic}
+    \label{T:group-dynamic}
     \scriptsize
     \makebox[\textwidth]{\input{tables/group-dynamic.tex}}
   }
-  \caption{Group effects}
+  \caption{
+    Estimated coefficients and standard errors for group-level covariates
+    of the form $X(i) \cdot Y(j)$, where $i$ is the sender, $j$ is the
+    receiver, and $X(i)$ and $Y(j)$ are given in the row and column
+    headings; dark coefficients are significant (via Wald test) at
+    level $10^{-3}$.
+  }
   \label{T:group}
 \end{figure}
 
+Fig.~\ref{T:group-dynamic} shows the estimated group-level coefficients for
+the full proportional intensity model, which adjusts for dynamic network
+effects.  With this model, we can answer the question we set out to ask,
+assessing the role of homophily in predicting sending behavior, all else being
+equal (i.e., adjusting for network affects).  Notably, homophily appears
+present for each main effect (Department, Seniority, and Gender).  Our final
+estimate for Seniority-based homophily is that when choosing between sending
+to a Junior executive and a Senior executive, the odds of a Junior sending to
+the Junior were roughly $\exp(0.57) \approx 1.8$, and the odds of a
+Senior sending to the Junior were roughly $\exp(-0.40) \approx 1/1.5$.  If we
+had not adjusted for network effects, then our estimates would have been
+$\exp(4.26) \approx 70.8$ and $\exp(-3.21) \approx 24.8$.  Clearly, adjusting
+for network affects makes a big difference in quantifying the importance
+of homophily.
+
+
 \FloatBarrier
 
-Darker coefficients are significant (according to a Wald test) at level $10^{-3}$.
 
 \subsection{Analysis 2: Evaluating the importance of network effects}
 
