@@ -1543,7 +1543,15 @@ Fig.~\ref{F:resid-by-nexp} shows the Pearson residuals.  For the full model, mor
 
 \subsection{Analysis 1: Testing for homophily}\label{S:enron-homophily}
 
-The analyses in Section~\ref{S:enron-goodness} established that model~\eqref{E:cox-intensity} with the covariates from Section~\ref{S:enron-covariates} is reasonably accurate in describing the message recipient selection conditional on the sender and the history of the process.  Thus, we are justified in using the estimated coefficients from the model to assess the predictive ability of the corresponding covariates.  Our first task is to gauge the predictive strength of homophily.  
+The analyses in Section~\ref{S:enron-goodness} established that
+model~\eqref{E:cox-intensity} with the covariates from
+Section~\ref{S:enron-covariates} is reasonably accurate in describing the
+message recipient selection conditional on the sender and the history of the
+process.  Thus, we are justified in using the estimated coefficients from the
+model to assess the predictive ability of the corresponding covariates.  Our
+first task is to gauge the predictive strength of homophily.  This analysis
+will demonstrate that even if we are not interested in network effects, it is
+important to account for them when making inferences about other covariates.
 
 Did junior executives send more messages to other junior executives, all else
 being equal?  If so, this would provide evidence of homophily, that similar
@@ -1608,10 +1616,10 @@ paradox.  This is easy to fix, by introducing covariates for the sender and
 receiver covariates and considering their interactions.  The bigger issue is
 that our analysis implicitly assumes that each message is independent and
 identically distributed, conditional on the sender of the message.  This is
-blatantly false: if Junior $A$ sends a message to Junior $B$, then the next
-time $B$ sends a message, $B$ is more likely to choose $A$ as a recipient.
-The homophily effect will be exaggerated by reciprocation and other network
-effects.
+blatantly false: if Junior $A$ sends a message to Junior $B$, then common
+sense tells us that the next time $B$ sends a message, $B$ is more likely to
+choose $A$ as a recipient.  Any homophily effect will be exaggerated by
+reciprocation and other network effects.
 
 
 
