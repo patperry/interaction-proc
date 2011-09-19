@@ -1312,19 +1312,19 @@ The goal of our investigation is to assess the predictive ability of actor trait
 Consider first those actor traits that do not vary with time: the actors' genders, departments, and seniorities.  We encode the traits of actor $i$ and their second-order interactions using 9 actor-dependent binary ($0$/$1$) variables:
 
 \begin{center}
-\begin{tabular}{cl}
+\begin{tabular}{clc}
 \toprule
-Variate & Characteristic of actor $i$ \\
+Variate & Characteristic of actor $i$ & Count\\
 \midrule
-$L(i)$ & member of the Legal department \\
-$T(i)$ & member of the Trading department \\
-$J(i)$ & seniority is Junior \\
-$F(i)$ & gender is Female \\
-$LJ(i)$ & $L(i) \cdot J(i)$ \\
-$TJ(i)$ & $T(i) \cdot J(i)$ \\
-$LF(i)$ & $L(i) \cdot F(i)$ \\
-$TF(i)$ & $T(i) \cdot F(i)$ \\
-$JF(i)$ & $J(i) \cdot F(i)$ \\
+$L(i)$ & member of the Legal department   & 25 \\
+$T(i)$ & member of the Trading department & 60 \\
+$J(i)$ & seniority is Junior              & 82 \\
+$F(i)$ & gender is Female                 & 43 \\
+$LJ(i)$ & $L(i) \cdot J(i)$               & 12 \\
+$TJ(i)$ & $T(i) \cdot J(i)$               & 24 \\
+$LF(i)$ & $L(i) \cdot F(i)$               & 13 \\
+$TF(i)$ & $T(i) \cdot F(i)$               & 10 \\
+$JF(i)$ & $J(i) \cdot F(i)$               & 27 \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -1461,7 +1461,7 @@ $\text{\textbf{2-send}}^{(k,l)}_t(i,j)$ counts the pairs of messages such that f
 As with the dyadic effects, the triadic effects are designed so that their coefficients have a straightforward interpretation.  However, since triadic effects involve pairs of messages, the interpretation is a bit more involved.  We illustrate with the $\text{\textbf{2-send}}^{(k,l)}_t(i,j)$ covariate having coefficient $\beta_{k,l}$ for $k = 1, \dotsc, K$ and $l = 1, \dotsc, K$.  Take $i$ and $j$ to be two actors.  Suppose at time $t$ we observe the message $h \to j$.  At this point, we look through the history of the process for all messages of the form $i \to h$; when paired with the original $h \to j$ message, each of these defines a ``2-send event.''  The other 2-send events are defined as follows: if at time $s$ we observe the message $i \to h$, then we enumerate all observed messages $h \to j$ in the history of the process; when each of these is paired with the original $i \to h$ event it constitutes a 2-send event.  A pair $(s,t)$ can be associated with each 2-send event, where $s$ is the time of the $i \to h$ message and $t$ is the time of the $h \to j$ message.  At time $t'$ after $s$ and $t$, the existence of the 2-send event causes the sending rate $\lambda_{t'}(i,j)$ to be multiplied by the factor $e^{\beta_{k,l}}$, where $\Delta_{k-1} < t' - s \leq \Delta_{k}$ and $\Delta_{l-1} < t' - t \leq \Delta_l$.  We expect $\beta_{k,l}$ to decrease as $k$, $l$, and $|k - l|$ increase (again, we do not enforce this constraint in the fitting procedure).
 
 
-\subsection{Goodness of fit}
+\subsection{Goodness of fit}\label{S:enron-goodness}
 
 
 Figure~\ref{F:deviance} gives an ad-hoc analysis of deviance table for the
@@ -1541,12 +1541,86 @@ Fig.~\ref{F:resid-by-nexp} shows the Pearson residuals.  For the full model, mor
 
 \FloatBarrier
 
-\subsection{Analysis 1: Testing for homophily}
+\subsection{Analysis 1: Testing for homophily}\label{S:enron-homophily}
+
+The analyses in Section~\ref{S:enron-goodness} established that model~\eqref{E:cox-intensity} with the covariates from Section~\ref{S:enron-covariates} is reasonably accurate in describing the message recipient selection conditional on the sender and the history of the process.  Thus, we are justified in using the estimated coefficients from the model to assess the predictive ability of the corresponding covariates.  Our first task is to gauge the predictive strength of homophily.  
+
+Did junior executives send more messages to other junior executives, all else
+being equal?  If so, this would provide evidence of homophily, that similar
+actors interact more with each other.  The tricky part of answering this
+question is being faithful to the ``all else being equal'' clause.  The
+temptation is to form a $2 \times 2$ table counting the number
+of messages exchanged between seniority groups, and then to compare the
+proportions, taking account the sizes of the two groups:
+
+\begin{center}
+\begin{tabular}{lrr}
+  \toprule
+  & \multicolumn{2}{c}{Receiver} \\
+  \cmidrule(l){2-3}
+  Sender & Junior & Senior \\
+  \midrule
+  Junior &  7972  &  5833 \\
+  Senior &  3977  & 14479 \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+\noindent
+We can see that Junior executives sent messages to other Junior executives
+$57.7\%$ of the time, while Senior executives sent messages to Junior
+executives $21.5\%$ of the time.  We would be remiss in comparing these
+proportions directly, since we have not accounted for the fact that employees
+cannot send messages to themselves.
+
+Denote by $\Prob\{i\to~j\mid~i\}$ the
+probability of actor $j$ being the recipient of a message conditional on $i$
+being the sender.  If we model
+\[
+  \Prob\{ i \to j \mid i \}
+    \propto \exp\{ \beta_J J(j) + \beta_{JJ} J(i) J(j) \},
+\]
+then homophily will manifest itself in a positive value of $\beta_2$.
+Since there are $n_J = 82$ junior executives and $n_S = 74$ senior
+executives, and since the sender and receiver of a message are distinct,
+we have that
+\begin{align*}
+  \Prob\{ i \to j \mid i, J(i) = 1 \}
+    &=
+      \frac{e^{(\beta_J + \beta_{JJ}) J(j)}}
+           {(n_J - 1) e^{\beta_J + \beta_{JJ}} + n_S} \\
+  \Prob\{ i \to j \mid i, J(i) = 0 \},
+    &= 
+      \frac{e^{\beta_J J(j)}}
+           {n_J e^{\beta_J} + (n_S - 1)}. \\
+\end{align*}
+Based on this simple model the maximum likelihood estimates of the
+coefficients are $\hat \beta_{J} = -1.4$ and $\hat \beta_{JJ} = 1.6$, with
+(Wald) standard errors of about $0.02$ for both.  At this point we would
+conclude that when choosing between sending to a Junior executive and a Senior
+executive, the odds of a Junior sending to the Junior were roughly 
+$\exp(\hat \beta_{JJ}) \approx 5.1$, and the odds of a Senior 
+sending to the Junior were roughly $\exp(\hat \beta_{J}) \approx 1/4.1$.
+
+The first problem with this analysis is that we have marginalized over the
+other covariates (Gender and Department), potentially introducing a Simpson's
+paradox.  This is easy to fix, by introducing covariates for the sender and
+receiver covariates and considering their interactions.  The bigger issue is
+that our analysis implicitly assumes that each message is independent and
+identically distributed, conditional on the sender of the message.  This is
+blatantly false: if Junior $A$ sends a message to Junior $B$, then the next
+time $B$ sends a message, $B$ is more likely to choose $A$ as a recipient.
+The homophily effect will be exaggerated by reciprocation and other network
+effects.
+
+
+
+
 
 %%% Logically, this should be a 'table', not a 'figure', but I can't get it
 %%% to work with the JRSS 'statsoc.cls' file (I spent 2 hours on this and
 %%% then gave up).
-\begin{figure}
+\begin{figure}[h]
   \centering
   \subfloat[Static]{
     \label{T:group:static}
@@ -1637,6 +1711,9 @@ $\tilde \beta_0^\trans x_t(i,j) = \beta_0^\trans x_t(i,j) + \alpha_t(i)$
 gives rise to the same partial likelihood.  We identify $\beta_0$ by by
 imposing sum-to-zero constraints within each of the $12$ receiver
 classes, reducing the corresponding degrees of freedom from $144$ to $132$.
+
+\subsection{Bootstrap bias correction}
+
 
 \subsection{Results}
 
