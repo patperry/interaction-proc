@@ -11,6 +11,7 @@
 \RequirePackage{amssymb}
 \RequirePackage[cmex10]{amsmath}
 \RequirePackage{placeins}
+\RequirePackage{xtab}
 
 \RequirePackage[caption=false]{subfig}
 
@@ -1298,9 +1299,14 @@ In the setting of this example, the interaction count is high, so
 the asymptotic framework developed in Sections~\ref{S:MPLE-consistency}
 and~\ref{S:multiple-receivers} is natural.  The main violation of assumptions
 A\ref{A:square-int}--A\ref{A:var-equicont} is that our covariates (described in Section~\ref{S:enron-covariates}) are
-in principle unbounded.  Despite this violotion, our bootstrap calculations (described in Sec.~TODO) show that the asymptotic approximations are still
+in principle unbounded.  Despite this violation, our bootstrap calculations
+(described in Sec.~\ref{S:enron-bootstrap}) show that the asymptotic approximations are still
 reasonable. 
 
+We wrote custom software in to fit the model using Newton's method.  It took
+approximately 70 minutes to fit with 2.4 GHz processor and 4GB of RAM.  Each
+bootstrap replicate took approximately 20 minutes to generate and fit, using
+the original estimate as a starting point for the fitting algorithm.
 
 
 \subsection{Covariates}\label{S:enron-covariates}
@@ -1309,9 +1315,13 @@ The goal of our investigation is to assess the predictive ability of actor trait
 
 \subsubsection{Static covariates to measure homophily and group-level effects}
 
-Consider first those actor traits that do not vary with time: the actors' genders, departments, and seniorities.  We encode the traits of actor $i$ and their second-order interactions using 9 actor-dependent binary ($0$/$1$) variables:
+Consider first those actor traits that do not vary with time: the actors'
+genders, departments, and seniorities.  We encode the traits of actor $i$ and
+their second-order interactions using 9 actor-dependent binary ($0$/$1$)
+variables, described in Fig.~\ref{F:enron-actors}.
 
-\begin{center}
+\begin{figure}
+\centering
 \begin{tabular}{clc}
 \toprule
 Variate & Characteristic of actor $i$ & Count\\
@@ -1327,18 +1337,42 @@ $TF(i)$ & $T(i) \cdot F(i)$               & 10 \\
 $JF(i)$ & $J(i) \cdot F(i)$               & 27 \\
 \bottomrule
 \end{tabular}
-\end{center}
+\caption{
+  Actor-specific traits, with counds of how many actors share each trait
+}
+\label{F:enron-actors}
+\end{figure}
 
-We encode all 90 identifiable second-order interactions between the traits of sender $i$ and receiver $j$ as components of $x_t(i,j)$.  We do this by using variates of the form $Y(j)$ and $X(i)\cdot Y(j)$, where $X$ and $Y$ are chosen from the list of 9 actor-dependent variates ($L$, $T$, $J$, $F$, $LJ$, etc.).  We cannot identify the coefficients for covariates of the form $X(i)$; if a component of $x_t(i,j)$ is the same for all values of $j$, then the corresponding component of $\beta$ will not be identifiable; the product of the two can be absorbed into $\bar \lambda_t(i)$ without changing the likelihood.
+We encode all 90 identifiable second-order interactions between the traits of
+sender $i$ and receiver $j$ as components of $x_t(i,j)$.  We do this by using
+variates of the form $Y(j)$ and $X(i)\cdot Y(j)$, where $X$ and $Y$ are chosen
+from the list of 9 actor-dependent variates ($L$, $T$, $J$, $F$, $LJ$, etc.).
+We cannot identify the coefficients for covariates of the form $X(i) \cdot 1$;
+if a component of $x_t(i,j)$ is the same for all values of $j$, then the
+corresponding component of $\beta$ will not be identifiable since the product
+of the two can be absorbed into $\bar \lambda_t(i)$ without changing the
+likelihood.  Covariates of the form $1 \cdot Y(j)$ pose no identifiability
+problems.
 
-We measure homophily be the estimated coefficients for covariates of the form $X(i) \cdot X(j)$.  For example, if the coefficient of $J(i) \cdot J(j)$ is large and positive, this tells us that Junior employees exhibit homophily in their sending behaviors.
+We measure homophily be the estimated coefficients for covariates of the form
+$X(i) \cdot X(j)$.  For example, if the coefficient of $J(i) \cdot J(j)$ is
+large and positive, this tells us that Junior employees exhibit homophily in
+their sending behaviors.
 
 
 \subsubsection{Dynamic covariates to measure network effects}
 
-Static effects are useful for determining which traits are predictive of the relative rate of interaction between sender $i$ and receiver $j$, but they do not shed light on network effects.  We are interested in the predictive relevance of the following dynamic behaviors:
+Static effects are useful for determining which traits are predictive of the
+relative rate of interaction between sender $i$ and receiver $j$, but they do
+not shed light on network effects.  We are interested in the predictive
+relevance of the dynamic network behaviors described in
+Fig.~\ref{F:network-behaviors}.  The first two behaviors (\textbf{send} and
+\textbf{receive}) are ``dyadic,'' involving exactly two actors, while the last
+four (\textbf{2-send}, \textbf{2-receive}, \textbf{sibling}, and
+\textbf{cosibling}) are ``triadic,'' involving exactly three actors.
 
-\vspace{1em}
+\begin{figure}
+\centering
 \begin{tabular}{p{2cm} c p{8cm}}
   \textbf{send} &
     \vspace{1em}
@@ -1411,20 +1445,35 @@ Static effects are useful for determining which traits are predictive of the rel
     there exists an actor $h$ such that $k$ has received messages
     from $i$ and~$j$
 \end{tabular}
+\caption{
+  Network (dynamic) behaviors.
+}
+\label{F:network-behaviors}
+\end{figure}
 
-\noindent
-The first two are ``dyadic,'' involving exactly two actors, and the last four are ``triadic,'' involving exactly three actors.
-
-To measure first-order dependence on the network effects, we introduce binary indicators for all $6$ effects as components of $x_t(i,j)$.  These indicators depend on the sender $i$, the receiver, $j$, and the history of the process at the current time $t$.
+To measure first-order dependence on the network effects, we introduce binary
+indicators for all $6$ effects as components of $x_t(i,j)$.  These indicators
+depend on the sender $i$, the receiver, $j$, and the history of the process at
+the current time $t$.  By the shorthand notation $1\{\textbf{send}\}$, we denote
+the indicator variable depending on sender $i$, receiver $j$, and the current
+time, $t$,  which indicates if $i$ has sent $j$ a message before time $t$; the
+other notations ($1\{\textbf{receive}\}$, $1\{\textbf{2-receive}\}$, etc.) are
+defined similarly.
 
 To measure higher-order time dependence, we introduce further covariates.  We partition the interval $[-\infty, t)$ into $K = 7$ sub-intervals:
 \[
   [-\infty, t) = 
   [t - \Delta_K, t - \Delta_{K-1}) \cup [t - \Delta_{K-1}, t - \Delta_{K-2}) \cup \dotsb \cup [t - \Delta_1, t - \Delta_0)
 \]
-where $\infty = \Delta_K > \Delta_{K-1} > \dotsb > \Delta_1 > \Delta_0 = 0$ and ``$t - \infty$'' is defined to be $-\infty$.  Specifically, we set $\Delta_k = (7.5\text{ minutes}) \times 4^k$ for $k = 1, \dotsc, K-1$ so that for $k$ in this range $\Delta_k$ takes the values $30\text{ minutes}$, $2\text{ hours}$, $8\text{ hours}$, $32\text{ hours}$, $5.33\text{ days}$, $21.33\text{ days}$.  We define the half-open interval $I_{t}^{(k)} = [t - \Delta_k, t - \Delta_{k-1})$.
+where $\infty = \Delta_K > \Delta_{K-1} > \dotsb > \Delta_1 > \Delta_0 = 0$
+and ``$t - \infty$'' is defined to be $-\infty$.  Specifically, we set
+$\Delta_k = (7.5\text{ minutes}) \times 4^k$ for $k = 1, \dotsc, K-1$ so that
+for $k$ in this range $\Delta_k$ takes the values $30\text{ minutes}$,
+$2\text{ hours}$, $8\text{ hours}$, $32\text{ hours}$, $5.33\text{ days}$, and
+$21.33\text{ days}$.  
 
-For $k = 1, \dotsc, K$ we define the dyadic effects
+Define the half-open interval $I_{t}^{(k)} = [t - \Delta_k, t -
+\Delta_{k-1})$.  For $k = 1, \dotsc, K$ we define the dyadic~effects
 \begin{align*}
   \text{\textbf{send}}^{(k)}_t(i,j)
     &= \#\{ i \to j \text{ in } I_t^{(k)} \}, \\
@@ -1433,8 +1482,20 @@ For $k = 1, \dotsc, K$ we define the dyadic effects
 \end{align*}
 for sender $i$, these covariates measure the number of messages sent-to and received-by receiver $j$ in time interval $I_t^{(k)}$.  
 
-The dyadic effects have been defined as above to enable easy interpretation of the corresponding coefficients.  To illustrate this, for $k = 1, \dotsc, K$, suppose that $\beta_{k}$ is the coeffiecient corresponding to $\text{\textbf{send}}^{(k)}_t(i,j)$.  If we observe the message $i \to j$ at time $t$, then for future time $t'$ in the interval $(t, t + \Delta_1]$, the rate $\lambda_{t'}(i,j)$ will be multiplied be the factor $e^{\beta_{1}}$; for $t'$ in the interval $(t + \Delta_1, t + \Delta_2]$, the rate will be multiplied by $e^{\beta_{2}}$; this continues similarly, with the rate being multiplied by $e^{\beta_{k}}$ whenever $t' \in (t + \Delta_{k-1}, t + \Delta_{k}]$; equivalently, when $\Delta_{k-1} < t' - t \leq \Delta_k$.  Thus, the coefficients $\beta_{1}, \dotsc, \beta_{K}$ measure the effect of a ``send event'' and how this effect decays over time. 
-We expect that $\beta_{k}$ will decrease as $k$ increases, but we do not enforce this constraint on the estimation procedure.  
+The dyadic effects have been defined as above to enable easy interpretation of
+the corresponding coefficients.  To illustrate this, for $k = 1, \dotsc, K$,
+suppose that $\beta_{k}$ is the coeffiecient corresponding to
+$\text{\textbf{send}}^{(k)}_t(i,j)$.  If we observe the message $i \to j$ at
+time $t$, then for future time $t'$ in the interval $(t, t + \Delta_1]$, the
+rate $\lambda_{t'}(i,j)$ will be multiplied be the factor $e^{\beta_{1}}$; for
+$t'$ in the interval $(t + \Delta_1, t + \Delta_2]$, the rate will be
+multiplied by $e^{\beta_{2}}$; this continues similarly, with the rate being
+multiplied by $e^{\beta_{k}}$ whenever $t' \in (t + \Delta_{k-1}, t +
+\Delta_{k}]$; equivalently, when $\Delta_{k-1} < t' - t \leq \Delta_k$.  Thus,
+the coefficients $\beta_{1}, \dotsc, \beta_{K}$ measure the effect of a ``send
+event'' and how this effect decays over time.  We expect that $\beta_{k}$ will
+decrease as $k$ increases, but we do not enforce this constraint on the
+estimation procedure.  
 
 The triadic effects involve pairs of messages.  For $k = 1, \dotsc, K$ and $l = 1, \dotsc, K$ we define the triadic effects
 \begin{align*}
@@ -1458,7 +1519,79 @@ The triadic effects involve pairs of messages.  For $k = 1, \dotsc, K$ and $l = 
 For sender $i$ and receiver $j$, the covariate
 $\text{\textbf{2-send}}^{(k,l)}_t(i,j)$ counts the pairs of messages such that for some $h$ distinct from $i$ and $j$, message $i \to h$ occurred in interval $I_t^{(k)}$ and message $h \to j$ occurred in interval $I_t^{(l)}$; the other covariates behave similarly.
 
-As with the dyadic effects, the triadic effects are designed so that their coefficients have a straightforward interpretation.  However, since triadic effects involve pairs of messages, the interpretation is a bit more involved.  We illustrate with the $\text{\textbf{2-send}}^{(k,l)}_t(i,j)$ covariate having coefficient $\beta_{k,l}$ for $k = 1, \dotsc, K$ and $l = 1, \dotsc, K$.  Take $i$ and $j$ to be two actors.  Suppose at time $t$ we observe the message $h \to j$.  At this point, we look through the history of the process for all messages of the form $i \to h$; when paired with the original $h \to j$ message, each of these defines a ``2-send event.''  The other 2-send events are defined as follows: if at time $s$ we observe the message $i \to h$, then we enumerate all observed messages $h \to j$ in the history of the process; when each of these is paired with the original $i \to h$ event it constitutes a 2-send event.  A pair $(s,t)$ can be associated with each 2-send event, where $s$ is the time of the $i \to h$ message and $t$ is the time of the $h \to j$ message.  At time $t'$ after $s$ and $t$, the existence of the 2-send event causes the sending rate $\lambda_{t'}(i,j)$ to be multiplied by the factor $e^{\beta_{k,l}}$, where $\Delta_{k-1} < t' - s \leq \Delta_{k}$ and $\Delta_{l-1} < t' - t \leq \Delta_l$.  We expect $\beta_{k,l}$ to decrease as $k$, $l$, and $|k - l|$ increase (again, we do not enforce this constraint in the fitting procedure).
+As with the dyadic effects, the triadic effects are designed so that their
+coefficients have a straightforward interpretation.  However, since triadic
+effects involve pairs of messages, the interpretation is a bit more involved.
+We illustrate with the $\text{\textbf{2-send}}^{(k,l)}_t(i,j)$ covariate
+having coefficient $\beta_{k,l}$ for $k = 1, \dotsc, K$ and $l = 1, \dotsc,
+K$.  Take $i$ and $j$ to be two actors.  Suppose at time $t$ we observe the
+message $h \to j$.  At this point, we look through the history of the process
+for all messages of the form $i \to h$; when paired with the original $h \to
+j$ message, each of these defines a ``2-send event.''  The other 2-send events
+are defined as follows: if at time $s$ we observe the message $i \to h$, then
+we enumerate all observed messages $h \to j$ in the history of the process;
+when each of these is paired with the original $i \to h$ event it constitutes
+a 2-send event.  A pair $(s,t)$ can be associated with each 2-send event,
+where $s$ is the time of the $i \to h$ message and $t$ is the time of the $h
+\to j$ message.  At time $t'$ after $s$ and $t$, the existence of the 2-send
+event causes the sending rate $\lambda_{t'}(i,j)$ to be multiplied by the
+factor $e^{\beta_{k,l}}$, where $t' \in (s + \Delta_{k-1}, s + \Delta_{k}]$
+and $t' \in (t + \Delta_{l-1}, t + \Delta_l]$.  We expect $\beta_{k,l}$ to
+decrease as $k$, and $l$ increase (again, we do not enforce this constraint in
+the fitting procedure).
+
+
+\subsection{Bootstrap bias correction}\label{S:enron-bootstrap}
+
+Given the model specification, data, and covariates outlined above, we can
+estimate the parameter vector $\beta_0$ under the approximate
+log partial likelihood of~\eqref{E:log-pl-multiple-approx}.  Recall
+that the results of Section~\ref{S:multiple-receivers} bound the bias
+resulting from this approximate MPLE procedure as a function of the growth
+rate of the recipient set $\mathcal{J}$ over time.  Here, treating the
+set $\mathcal{J}$ of 156 Enron employees as constant, the resultant bias
+is of order $1/|\mathcal{J}|$---and, since $|\mathcal{J}| = 156$ is on the
+order of the square root of the number 21,365 of messages in the dataset,
+we can correct this bias using the parametric bootstrap outlined at the
+end of Section~\ref{S:multiple-receivers}.  
+
+\begin{figure}
+    \centering
+    \makebox{\includegraphics[scale=0.6]{figures/boot-resid}}
+    \caption{
+        \captiontitle{Enron bootstrap residuals}
+        Summary of bootstrap residuals
+        for estimated coefficients using the Enron dataset, normalized by
+        estimated standard errors.  The points (orange) show the means, and
+        the error bars (purple) show one standard deviation.  Coefficients
+        are grouped by model term.
+    }
+    \label{F:boot-resid}
+\end{figure}
+
+Fig.~\ref{F:boot-resid} summarizes the corresponding bootstrap residuals (from
+$300$ replicates) for each component of the estimated parameter vector
+$\beta_0$; we can see from this figure that treating messages with multiple
+recipients as multiple single-recipient messages bias on the order of the
+standard error for most of the coefficients.  There is a pronounced negative
+bias in coefficient estimates for the dyadic effects, which is representative
+of a more general phenomenon.  Sparsity in the components of $x_{t}(i,j)$
+(when considered as a function of $j$), when combined with high values of the
+corresponding entries $\beta$, leads to negative bias in the coefficient
+estimates when there are messages with multiple recipients.  The approximation
+in Eq.~\eqref{E:log-pl-multiple} is worst when for some $j^\ast$, weight
+$w_{t_m}(i_m,j^\ast)$ far exceeds all other values of $w_{t_m}(i_m,j)$, so
+that $w_{t_m}(i_m, j^\ast) \approx W_{t_m}(i_m)$; when $|J_m|$ is large, the
+maximum of $\widetilde{\mathrm{PL}}$ will avoid this situation by shrinking
+$\beta$ where $x_{t_m}(i_m, j)$ is sparse.  The dyadic covariates are
+particularly sparse, so the estimates for their coefficients are particularly
+vulnerable to this bias.
+
+Besides correcting for bias, the bootstrap simulations give us confidence that
+the asymptotic approximations are reasonable.  The simulated standard errors
+are very close to those predicted by the theory, despite the norm $\| x_t(i,j)
+\|_2$ being potentially unbounded, contrary to the assumptions of
+Theorem~\ref{T:score-fisher}.
 
 
 \subsection{Goodness of fit}\label{S:enron-goodness}
@@ -1468,9 +1601,12 @@ Figure~\ref{F:deviance} gives an ad-hoc analysis of deviance table for the
 fitted model, which shows how the approximate deviance (twice the approximate
 log partial likelihood) behaves as we add consecutive terms to the model.
 Group-level (static) effects account for 18\% of the residual deviance and
-network effects account for 34\%.  The most dramatic decrease in the residual deviance comes from introducing the ``Send'' terms into the model; with only 8 degrees of freedom, they are able to account for 31\% of the null deviance.
+network effects account for 34\%.  The most dramatic decrease in the residual
+deviance comes from introducing the ``Send'' terms into the model; with only 8
+degrees of freedom, they are able to account for 31\% of the null deviance.
+The full model accounts for $54\%$ of the null deviance.
 
-The residual deviance for the full model is approximately $4.8$ times the residual degrees of freedom.  One could potentially adjust for this over-dispersion by multiplying the calculated standard errors by $\sqrt{4.8}$, roughly $2.2$.  Note however that this figure is not reliable as a goodness-of-fit measure, as it depends only on the estimated coefficients (Sec.~4.4.5 of \cite{mccullagh1989generalized} discusses a related problem for logistic regression with sparse data).
+
 
 \begin{figure}[h]
 \centering
@@ -1502,14 +1638,29 @@ The residual deviance for the full model is approximately $4.8$ times the residu
     \label{F:deviance}
 \end{figure}
 
-To shed more light on how well the model fits the data, we use a normalized version of the martingale residual from \cite{therneau1990martingale}, which we call a Pearson residual.  Specifically, given $\hat \beta$, we define
+The residual deviance for the full model is approximately $4.8$ times the
+residual degrees of freedom.  An ad-hoc adjustment this over-dispersion 
+is multiplying the calculated standard errors by $\sqrt{4.8} \approx 2.2$.  
+
+The residual deviance by itself is not reliable as a goodness-of-fit measure,
+as it depends only on the estimated coefficients (Sec.~4.4.5 of
+\cite{mccullagh1989generalized} discusses a related problem for logistic
+regression with sparse data).  To shed more light on how well the model fits
+the data, we use a normalized version of the martingale residual from
+\cite{therneau1990martingale}, which we call a Pearson residual.
+Specifically, given $\hat \beta$, we define
 \[
   \hat N_{t}(i,j)
     = \sum_{t_m \leq t}
         \frac{w_{t_m}(\hat \beta, i, j)}{W_{t_m}(\hat \beta, i)}
         1\{i_m = i\};
 \]
-this is the expected number of $i \to j$ events given the estimated model, with $\int \bar \lambda_t(i) \, dt$ estimated by the \cite{breslow1974covariance} estimate $\int \frac{\sum_j dN_{i,j}(t)}{W_t(\hat \beta, i)}$.  The martingale residual analogous to that of Therneau et al.\ is defined as $N_t(i,j) - \hat N_t(i,j)$; we normalize this quantity by an estimate of its standard deviation to get a ``Pearson'' residual:
+this is the expected number of $i \to j$ events given the estimated model,
+with $\int \bar \lambda_t(i) \, dt$ estimated by the
+\cite{breslow1974covariance} estimate $\int \frac{\sum_j dN_{i,j}(t)}{W_t(\hat
+\beta, i)}$.  The martingale residual analogous to that of Therneau et al.\ is
+defined as $N_t(i,j) - \hat N_t(i,j)$; we normalize this quantity by an
+estimate of its standard deviation to get a ``Pearson'' residual:
 \(
     {(N_t(i,j) - \hat N_t(i,j))}/\{\hat N_t(i,j)\}^{1/2}.
 \)
@@ -1534,12 +1685,36 @@ this is the expected number of $i \to j$ events given the estimated model, with 
   }
 \end{figure}
 
-Fig.~\ref{F:nobs-by-nexp} shows a plot of $N_\infty(i,j)$ versus $\hat N_\infty(i,j)$ for two different models.  In the ``static'' model, we only include the static effects, while in the full (``static and dynamic'') model, we also include all six types of network effect.  The fit for the static model is poor.  For instance, the static model repeatedly predicts up to 200 $i \to j$ events where we only observed 1 or 2; likewise, the model predicts $1$ or fewer events where we observed up to $20$.  For the full model, which includes the dynamic effects, the fit is much better, with the relationship between observed and expected interaction counts being roughly linear.
+Fig.~\ref{F:nobs-by-nexp} shows a plot of $N_\infty(i,j)$ versus $\hat
+N_\infty(i,j)$ for two different models.  In the ``static'' model, we only
+include the static effects, while in the full (``static and dynamic'') model,
+we also include all six types of network effect.  The fit for the static model
+is poor.  For instance, the static model repeatedly predicts up to 200 $i \to
+j$ events where we only observed 1 or 2; likewise, the model predicts $1$ or
+fewer events where we observed up to $20$.  For the full model, which includes
+the dynamic effects, the fit is much better, with the relationship between
+observed and expected interaction counts being roughly linear.
 
-Fig.~\ref{F:resid-by-nexp} shows the Pearson residuals.  For the full model, more than 95\% are less than $1.15$ in absolute value, and the maximum absolute residual is $21.8$.  In contrast, the 95\% quantile for the absolute residuals in the static model is at $3.7$, and the maximum absolute residual is $125.0$.  The sum of squares if the residuals ($X^2$) is $16498$ in the full model, over $29$ times lower than that for the static model ($480661$).  We don't know what a ``reasonable'' value for $X^2$ is; an ad-hoc degrees of freedom calculation suggests that for the full number this should be roughly equal to $23974 = 156 \cdot 155 - (90 + 2 \cdot 8 + 2 \cdot 50)$, which suggests that the full model is too aggressive.  Interestingly, the model without triadic effects has a $X^2$ value of 23785, which is very close to $24074 = 156 \cdot 155 - (90 + 2 \cdot 8)$, the approximate $X^2$ degrees of freedom for that model.  Of course, these calculations are only ad-hoc; they are suggestive but not conclusive.
+Fig.~\ref{F:resid-by-nexp} shows the Pearson residuals.  For the full model,
+more than 95\% are less than $1.15$ in absolute value, and the maximum
+absolute residual is $21.8$.  In contrast, the 95\% quantile for the absolute
+residuals in the static model is at $3.7$, and the maximum absolute residual
+is $125.0$.  The sum of squares if the residuals ($X^2$) is $16498$ in the
+full model, over $29$ times lower than that for the static model ($480661$).
+We don't know what a ``reasonable'' value for $X^2$ is; an ad-hoc degrees of
+freedom calculation suggests that for the full number this should be roughly
+equal to $23974 = 156 \cdot 155 - (90 + 2 \cdot 8 + 2 \cdot 50)$, which
+suggests that the full model is too aggressive.  The bootstrap simulations
+confirm this, with $23974$ being $5.2$ standard deviances below the mean
+value $X^2$ for the bootstrap replicates.
 
+For a more parsimonious model, we might drop most of the triadic effects.
+Indeed, the model which only uses dyadic effects has a $X^2$ value of 23785,
+which is very close to $24074 = 156 \cdot 155 - (90 + 2 \cdot 8)$, the
+approximate $X^2$ degrees of freedom for that model.  However, at this stage
+we want a model with the lowest possible bias, and we want estimates for all
+of the network effects.
 
-\FloatBarrier
 
 \subsection{Analysis 1: Testing for homophily}\label{S:enron-homophily}
 
@@ -1549,18 +1724,72 @@ Section~\ref{S:enron-covariates} is reasonably accurate in describing the
 message recipient selection conditional on the sender and the history of the
 process.  Thus, we are justified in using the estimated coefficients from the
 model to assess the predictive ability of the corresponding covariates.  Our
-first task is to gauge the predictive strength of homophily.  This analysis
-will demonstrate that even if we are not interested in network effects, it is
-important to account for them when making inferences about other covariates.
+first task is to gauge the predictive strength of homophily.  
 
-Did junior executives send more messages to other junior executives, all else
-being equal?  If so, this would provide evidence of homophily, that similar
-actors interact more with each other.  The tricky part of answering this
-question is being faithful to the ``all else being equal'' clause.  The
-temptation is to form a $2 \times 2$ table counting the number
-of messages exchanged between seniority groups, and then to compare the
-proportions, taking account the sizes of the two groups:
 
+Fig.~\ref{T:group-dynamic} shows the estimated group-level coefficients for
+the full proportional intensity model, which adjusts for dynamic network
+effects.  With this model, we can answer the question we set out to ask,
+assessing the role of homophily in predicting sending behavior, all else being
+equal (i.e., adjusting for network affects).  Notably, homophily appears
+present for each main effect (Department, Seniority, and Gender). 
+
+%%% Logically, this should be a 'table', not a 'figure', but I can't get it
+%%% to work with the JRSS 'statsoc.cls' file (I spent 2 hours on this and
+%%% then gave up).
+\begin{figure}[h]
+  \centering
+  \makebox[\textwidth]{
+    \scriptsize
+    \input{tables/group-dynamic.tex}
+  }
+  \caption{
+    Estimated coefficients and standard errors for group-level covariates
+    of the form $X(i) \cdot Y(j)$, where $i$ is the sender, $j$ is the
+    receiver, and $X(i)$ and $Y(j)$ are given in the row and column
+    headings; dark coefficients are significant (via Wald test) at
+    level $10^{-3}$.
+  }
+  \label{T:group-dynamic}
+\end{figure}
+
+
+
+\subsection{Comparison to contingency table-based analysis}
+
+If we were only interested in homophily, we might have been tempted to forgo
+the proportional intensity model, performing a contingency-table based analysis
+instead.  As we shall soon see, doing so leads to quite different conclusion
+about the predictive strength of homophily.
+
+Suppose we are interested in testing for seniority-based homophily.  Ignoring
+network effects and other dependency, we might model $\Prob\{ i \to j \mid i
+\}$, the probability of employee $j$ being the recipient of a message given
+that employee $i$ is the sender, using a multinomial logit model:
+\[
+  \Prob\{ i \to j \mid i \}
+    \propto \exp\{ \beta_J J(j) + \beta_{JJ} J(i) J(j) \}.
+\]
+Junior-Junior homophily would manifest in a positive value of
+$\beta_{J} + \beta_{JJ}$ and Senior-Senior homophily would manifest in
+a negative value of $\beta_J$. 
+
+Since there are $n_J = 82$ Junior
+executives and $n_S = 74$ Senior executives, and since the sender and
+receiver of a message are distinct, we have that
+\begin{align*}
+  \Prob\{ i \to j \mid i, J(i) = 1 \}
+    &=
+      \frac{e^{(\beta_J + \beta_{JJ}) J(j)}}
+           {(n_J - 1) e^{\beta_J + \beta_{JJ}} + n_S} \\
+  \Prob\{ i \to j \mid i, J(i) = 0 \},
+    &= 
+      \frac{e^{\beta_J J(j)}}
+           {n_J e^{\beta_J} + (n_S - 1)}.
+\end{align*}
+We can compute the maximum likelihood estimates of the coefficients using the
+entries of the $2 \times 2$ table counting the number of messages exchanged
+between each group:
 \begin{center}
 \begin{tabular}{lrr}
   \toprule
@@ -1573,88 +1802,51 @@ proportions, taking account the sizes of the two groups:
   \bottomrule
 \end{tabular}
 \end{center}
+These estimates turn out to be $\hat \beta_{J} = -1.4$ and
+$\hat \beta_{JJ} = 1.6$, with (Wald) standard errors of about $0.02$
+for both.  Indeed, these are exactly the estimated coefficients we would
+have gotten if we had used the proportional intensity model
+$\lambda_t(i,j) = \bar \lambda_t(i) \exp\{ \beta_J J(j) + \beta_{JJ} J(i) J(j)
+\}$, a result that holds more generally for non-time-varying covariates.
 
-\noindent
-We can see that Junior executives sent messages to other Junior executives
-$57.7\%$ of the time, while Senior executives sent messages to Junior
-executives $21.5\%$ of the time.  We would be remiss in comparing these
-proportions directly, since we have not accounted for the fact that employees
-cannot send messages to themselves.
-
-Denote by $\Prob\{i\to~j\mid~i\}$ the
-probability of actor $j$ being the recipient of a message conditional on $i$
-being the sender.  If we model
-\[
-  \Prob\{ i \to j \mid i \}
-    \propto \exp\{ \beta_J J(j) + \beta_{JJ} J(i) J(j) \},
-\]
-then homophily will manifest itself in a positive value of $\beta_2$.
-Since there are $n_J = 82$ junior executives and $n_S = 74$ senior
-executives, and since the sender and receiver of a message are distinct,
-we have that
-\begin{align*}
-  \Prob\{ i \to j \mid i, J(i) = 1 \}
-    &=
-      \frac{e^{(\beta_J + \beta_{JJ}) J(j)}}
-           {(n_J - 1) e^{\beta_J + \beta_{JJ}} + n_S} \\
-  \Prob\{ i \to j \mid i, J(i) = 0 \},
-    &= 
-      \frac{e^{\beta_J J(j)}}
-           {n_J e^{\beta_J} + (n_S - 1)}. \\
-\end{align*}
-Based on this simple model the maximum likelihood estimates of the
-coefficients are $\hat \beta_{J} = -1.4$ and $\hat \beta_{JJ} = 1.6$, with
-(Wald) standard errors of about $0.02$ for both.  At this point we would
-conclude that when choosing between sending to a Junior executive and a Senior
-executive, the odds of a Junior sending to the Junior were roughly 
-$\exp(\hat \beta_{JJ}) \approx 5.1$, and the odds of a Senior 
-sending to the Junior were roughly $\exp(\hat \beta_{J}) \approx 1/4.1$.
-
-
-The first problem with this analysis is that we have marginalized over the
+One problem with this analysis is that we have marginalized over the
 other covariates (Gender and Department), potentially introducing a Simpson's
 paradox.  This is easy to fix, by introducing covariates for the sender and
-receiver covariates and considering their interactions (see
-Fig.~\ref{T:group-static} for the resulting fit).  The bigger issue is
-that our analysis implicitly assumes that each message is independent and
-identically distributed, conditional on the sender of the message.  This is
-blatantly false: common sense tells us that if Junior $A$ sends a message
+receiver covariates and considering their interactions.   We have done
+exactly this, and Fig.~\ref{T:group-static} shows the resulting estimates.  
+
+\begin{figure}[h]
+  \centering
+  \makebox[\textwidth]{
+    \scriptsize
+    \input{tables/group-static.tex}
+  }
+  \caption{
+    Estimated coefficients and standard errors for group-level covariates
+    for the contingency table-based analysis.
+  }
+  \label{T:group-static}
+\end{figure}
+
+The far more important
+problem is that our analysis implicitly assumes that each message is
+independent and identically distributed, conditional on the sender of
+the message.  This is blatantly false: common sense tells us that if Junior $A$ sends a message
 to Junior $B$ then the next time $B$ sends a message, $B$ is more likely to
 choose $A$ as a recipient.  Any homophily effect will be exaggerated by
 reciprocation and other network effects.
 
-%%% Logically, this should be a 'table', not a 'figure', but I can't get it
-%%% to work with the JRSS 'statsoc.cls' file (I spent 2 hours on this and
-%%% then gave up).
-\begin{figure}[h]
-  \centering
-  \subfloat[Static]{
-    \label{T:group-static}
-    \scriptsize
-    \makebox[\textwidth]{\input{tables/group-static.tex}}
-  }
-  \\
-  \subfloat[Static and dynamic]{
-    \label{T:group-dynamic}
-    \scriptsize
-    \makebox[\textwidth]{\input{tables/group-dynamic.tex}}
-  }
-  \caption{
-    Estimated coefficients and standard errors for group-level covariates
-    of the form $X(i) \cdot Y(j)$, where $i$ is the sender, $j$ is the
-    receiver, and $X(i)$ and $Y(j)$ are given in the row and column
-    headings; dark coefficients are significant (via Wald test) at
-    level $10^{-3}$.
-  }
-  \label{T:group}
-\end{figure}
 
-Fig.~\ref{T:group-dynamic} shows the estimated group-level coefficients for
-the full proportional intensity model, which adjusts for dynamic network
-effects.  With this model, we can answer the question we set out to ask,
-assessing the role of homophily in predicting sending behavior, all else being
-equal (i.e., adjusting for network affects).  Notably, homophily appears
-present for each main effect (Department, Seniority, and Gender).  Our final
+This analysis
+will demonstrate that even if we are not interested in network effects, it is
+important to account for them when making inferences about other covariates.
+
+
+
+
+
+
+ Our final
 estimate for Seniority-based homophily is that when choosing between sending
 to a Junior executive and a Senior executive, the odds of a Junior sending to
 the Junior were roughly $\exp(0.57) \approx 1.8$, and the odds of a
@@ -1665,12 +1857,16 @@ for network affects makes a big difference in quantifying the importance
 of homophily.
 
 
-\FloatBarrier
-
-
 \subsection{Analysis 2: Evaluating the importance of network effects}
+\label{S:enron-network}
 
-\begin{figure}
+In Section~\ref{S:enron-homophily} we established that homophily was
+predictive of sending behavior, even after accounting for network effects.  We
+now proceed to investigating the characteristics of these network effects and
+establishing which network effects are most important.
+
+
+\begin{figure}[h]
 \centering
 \footnotesize
 \begin{tabular}{lrrrrrr}
@@ -1718,109 +1914,60 @@ Coefficient
   \caption{Estimated coefficients for triadic effects}
 \end{figure}
 
+\subsection{Comparison to exponential random graph-based analysis}
 
-\clearpage
-The $21$ dynamic
-components of $x_t(i,j)$ are history-dependent and designed to capture
-reciprocation effects; they take the form
-\[
-    1\{\text{$j$'s most recent message to $i$ was sent in
-             $[t-2^k \text{ hours}, t)$\}},
-\]
-where $k$ ranges from $-6$ to $14$, yielding time intervals from
-$56.25$ seconds to $1.87$ years.  (Effects involving intervals outside
-of this range were initially included in the model but were not found
-to be significant.)
-
-Note that the components of $\beta_0$ corresponding to the static
-covariates are not identifiable, since any $\tilde \beta_0$ satisfying
-$\tilde \beta_0^\trans x_t(i,j) = \beta_0^\trans x_t(i,j) + \alpha_t(i)$
-gives rise to the same partial likelihood.  We identify $\beta_0$ by by
-imposing sum-to-zero constraints within each of the $12$ receiver
-classes, reducing the corresponding degrees of freedom from $144$ to $132$.
-
-\subsection{Bootstrap bias correction}
-
-
-\subsection{Results}
-
-Given the model specification, data, and covariates outlined above, we can
-estimate the parameter vector $\beta_0$ under the approximate
-log partial likelihood of~\eqref{E:log-pl-multiple-approx}.  Recall
-that the results of Section~\ref{S:multiple-receivers} bound the bias
-resulting from this approximate MPLE procedure as a function of the growth
-rate of the recipient set $\mathcal{J}$ over time.  Here, treating the
-set $\mathcal{J}$ of 156 Enron employees as constant, the resultant bias
-is of order $1/|\mathcal{J}|$---and, since $|\mathcal{J}| = 156$ is on the
-order of the square root of the number 21,365 of messages in the dataset,
-we can correct this bias using the parametric bootstrap outlined at the
-end of Section~\ref{S:multiple-receivers}.  Fig.~\ref{F:boot-resid}
-\begin{figure}[t]
-    \centering
-    \makebox{\includegraphics[scale=0.6]{figures/boot-resid}}
-    \caption{
-        \captiontitle{Enron bootstrap residuals}
-        Summary of bootstrap residuals
-        for estimated coefficients using the Enron dataset, normalized by
-        estimated standard errors.  The points (orange) show the means, and
-        the error bars (purple) show one standard deviation.  Coefficients
-        1--144 are the group-level (static) effects, and coefficients
-        145--165 are the reciprocation (dynamic) effects, ordered from
-        shortest time interval to longest.  The bias is on the order of
-        the standard error, and is near zero for most---but not all---of the
-        coefficients.
-    }
-    \label{F:boot-resid}
+\begin{figure}[h]
+\centering
+\subfloat[Group effects]{
+  \centering
+  \footnotesize
+  \begin{tabular}{lrrrr}
+  \toprule
+  & \multicolumn{4}{c}{Receiver} \\
+  \cmidrule(l){2-5}
+  Sender &    L  &  T    &   J   &  F \\
+  \midrule
+  1      & -2.61 & -1.49 & -0.87 & -0.55 \\
+  L      &  \cellcolor{Gray} 2.60 &  0.77 & -0.09 &  0.12 \\
+  T      &  0.63 &  \cellcolor{Gray} 0.69 & -0.60 & -0.32 \\
+  J      &  0.13 &  1.04 &  \cellcolor{Gray} 1.15 &  0.27 \\
+  F      &  0.25 &  0.49 &  0.49 &  \cellcolor{Gray} 0.79 \\
+  \bottomrule
+  \end{tabular}
+}
+\\
+\subfloat[Network effects]{
+  \centering
+  \footnotesize
+  \begin{tabular}{lrrr}
+  \toprule
+  Variate
+  & \textbf{mutual}
+  & \textbf{ctriple}
+  & \textbf{ttriple}
+  \\
+  \midrule
+  Coefficient
+  & 4.49
+  & \textcolor{LightGray}{0.15}
+  & 0.42
+  \\
+  (SE)
+  & \tiny{(0.003)}
+  & \textcolor{LightGray}{\tiny{(0.290)}}
+  & \tiny{(0.060)}
+  \\
+  \bottomrule
+  \end{tabular}
+}
+\normalsize
+\caption{Estimated coefficients for the ERGM model.  The model also included a
+term for each sender (not shown)
+}
 \end{figure}
-summarizes the corresponding bootstrap residuals (from $500$ replicates) for
-each component of the estimated parameter vector $\beta_0$; we can see from
-this figure that treating messages with multiple recipients as multiple
-single-recipient messages leads to negative bias in the coefficient
-estimates.
-
-\newcommand{\refTgroupeffects}{2} % \ref{T:group-effects}
-The bias-corrected results of inference on $\beta_0$ are summarized as
-follows.  Table~\refTgroupeffects
-%\begin{table}
-%    \tiny
-%    \makebox[\textwidth]{\input{tables/group-effects-bc}}
-%    \\
-%    \\
-%    \caption{
-%        Estimated group level effects and their standard errors for the
-%        model described in Section~\ref{S:enron-modeling}.  Gender,
-%        Department, and Seniority codes are abbreviated as F/M, L/T/O,
-%        and J/S.  Standard errors are shown in parentheses.  Read
-%        the table as follows: the group-level effect of 2.46 for sender
-%        FLJ and receiver FLS means that an FLJ executive sends e-mails to a
-%        FLS executive at 2.46 times her baseline activity rate.  The highest
-%        effect in each column is shown in boldface.
-%    }
-%    \label{T:group-effects}
-%\end{table}
-shows the estimated group-level (static) effects, and
-Fig.~\ref{F:reciprocation}
-%\begin{figure}[t]
-%    \centering
-%    \makebox{\includegraphics[scale=0.6]{figures/reciprocation-bc}}
-%    \caption{
-%        \captiontitle{Reciprocation effect}
-%        Estimated reciprocation effect and standard errors for the
-%        model described in Section~\ref{S:enron-modeling}.  The solid
-%        (orange) curve is determined from the 21 estimated coefficients
-%        for the reciprocation effects at intervals of ``\,$2^l$ hours''
-%        for $l$ ranging from $-6$ to $14$.  The dashed (purple) curve gives
-%        one standard error around the estimate.  Read the figure as follows:
-%        if employee $j$'s most recent message to employee $i$ was 30 minutes
-%        ago, then $i$ sends to $j$ at about 200 times his baseline rate.
-%    }\label{F:reciprocation}
-%\end{figure}
-shows the reciprocation (dynamic) effects.  We observe that reciprocation
-is stronger by orders of magnitude, amplifying the sending rate by between
-about $10^1$ and $10^3$.  In contrast, group level effects are on the order
-of $10^{-1}$ to $10^0$.
 
 
+\FloatBarrier
 
 \section{Discussion}\label{S:discussion}
 
