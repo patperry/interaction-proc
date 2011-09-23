@@ -1726,17 +1726,6 @@ process.  Thus, we are justified in using the estimated coefficients from the
 model to assess the predictive ability of the corresponding covariates.  Our
 first task is to gauge the predictive strength of homophily.  
 
-
-Fig.~\ref{T:group-dynamic} shows the estimated group-level coefficients for
-the full proportional intensity model, which adjusts for dynamic network
-effects.  With this model, we can answer the question we set out to ask,
-assessing the role of homophily in predicting sending behavior, all else being
-equal (i.e., adjusting for network affects).  Notably, homophily appears
-present for each main effect (Department, Seniority, and Gender). 
-
-%%% Logically, this should be a 'table', not a 'figure', but I can't get it
-%%% to work with the JRSS 'statsoc.cls' file (I spent 2 hours on this and
-%%% then gave up).
 \begin{figure}[h]
   \centering
   \makebox[\textwidth]{
@@ -1753,6 +1742,17 @@ present for each main effect (Department, Seniority, and Gender).
   \label{T:group-dynamic}
 \end{figure}
 
+Fig.~\ref{T:group-dynamic} shows the estimated group-level coefficients for
+the proportional intensity model.  Notably, homophily appears present for each
+main effect (Department, Seniority, and Gender): the estimated coefficients of
+$L(j)$, $T(j)$, $J(j)$, and $F(j)$ are all negative, while the estimated
+coefficients of $L(i) \cdot L(j)$, $T(i) \cdot T(j)$, $J(i) \cdot J(j)$, and
+$F(i) \cdot F(j)$ are all positive.  The way this homophily manifests for
+Gender, is that if $i$ is sending a message at time $t$, and person $j$ is
+identical to person $j'$ except for Gender, then $i$ is more likely to send to
+the similarly-gendered individual.  The relative probability is $\exp(-0.08 +
+0.38) \approx 1.3$ if $i$ is Female, and $\exp(0.08) \approx 1.1$ if $i$ is
+Male.  The characterization for other types of homophily is similar.
 
 
 \subsection{Comparison to contingency table-based analysis}
@@ -1836,25 +1836,13 @@ to Junior $B$ then the next time $B$ sends a message, $B$ is more likely to
 choose $A$ as a recipient.  Any homophily effect will be exaggerated by
 reciprocation and other network effects.
 
-
-This analysis
-will demonstrate that even if we are not interested in network effects, it is
-important to account for them when making inferences about other covariates.
-
-
-
-
-
-
- Our final
-estimate for Seniority-based homophily is that when choosing between sending
-to a Junior executive and a Senior executive, the odds of a Junior sending to
-the Junior were roughly $\exp(0.57) \approx 1.8$, and the odds of a
-Senior sending to the Junior were roughly $\exp(-0.40) \approx 1/1.5$.  If we
-had not adjusted for network effects, then our estimates would have been
-$\exp(4.26) \approx 70.8$ and $\exp(-3.21) \approx 24.8$.  Clearly, adjusting
-for network affects makes a big difference in quantifying the importance
-of homophily.
+Comparing the contingency table-based estimates in Fig.~\ref{T:group-static}
+with the estimates from the proportional intensity model with network effects
+in Fig.~\ref{T:group-dynamic}, we can see that the coefficient estimates are
+much higher when we don't adjust for network effects.  This agrees with the
+intuition detailed in the previous paragraph.  We can see that even if we are
+not interested in network effects, it is important to account for them when
+making inferences about other covariates.
 
 
 \subsection{Analysis 2: Evaluating the importance of network effects}
@@ -1916,9 +1904,85 @@ Coefficient
 
 \subsection{Comparison to exponential random graph-based analysis}
 
-\begin{figure}[h]
+One of the more popular modules used for estimating the importance of network
+effects is the exponential random graph model (ERGM).  The model specifies a
+probability distribution for a directed graph, represented by a binary matrix
+$G$, where entry $G(i,j) = 1$ if link $i \to j$ is present and $G(i,j) = 0$
+otherwise.  The model supposes that
+\[
+  \Prob\{ G = g \}
+    \propto
+      \exp\{ \sum_{s=1}^S T_s(g) \},
+\]
+there $T_s(g)$ is a network statistic, for example the number of transitive
+triples in the graph.  (A transitive triple is an edge sets of the form
+$\{ (h \to i), (j \to k), (h \to j) \}$.)
+
+To apply the ERGM model to the Enron data, we need to reduce the set of
+message events to a single directed graph.  We tried two different reductions,
+$G_1$ and $G_{10}$, where
+\[
+  G_m(i,j) = 1\{ N_\infty(i,j) \geq m \}.
+\]
+
+We use the \texttt{ergm} software package to fit the model, choosing
+terms in the model to mimic the covariates from
+Section~\ref{S:enron-covariates}.  In parentheses, we have indicated the
+names used in the \texttt{ergm} software.  The terms are as follows:
+\begin{enumerate}
+  \item Sender effects (\texttt{sender}).  One covariate for each sender,
+  measuring the outdegree of the sender.  The coefficient for this coefficient
+plays the role of $\bar \lambda_t(i)$ in our model.
+  
+  \item Group-level edge effects (\texttt{edgecov}).  One covariate for each
+identifiable first-order interaction of the form $X(i) Y(j)$, where $i$ is the
+sender and $j$ is the receiver; the covariate counts the number of edges $i
+\to j$ with $X(i) Y(j) = 1$.  These effects correspond to the group-level
+effects in our model.  We would have liked to include second-order
+interactions as well, but were not able to fit the ERGM with these terms.
+
+  \item Mutuality (\texttt{mutual}).  A statistic counting the number of
+mutual ties, edge sets of the form $\{ i \to j, j \to i \}$.  This corresponds to the
+$\textbf{receive}$ term in our model.
+
+  \item Cyclic triples (\texttt{ctriple}).  A statistic counting the number of
+cyclic triples, edge sets of the form $\{ h \to i, i \to j, j \to h \}$.  This
+corresponds to the $\textbf{2-receive}$ term in our model.
+
+  \item Transitive triples (\texttt{ttriple}).  A statistic counting the
+number of transitive triples, edge sets of the form $\{ h \to i, i \to j, h
+\to j \}$.  This corresponds to the $\textbf{2-send},$ $\textbf{sibling},$
+and $\textbf{cosibling}$ terms in our model.
+\end{enumerate}
+
+\noindent
+Notably, there is no term corresponding to \texttt{send}, as such a term does
+not make sense for a binary network.  Further, with a static network, it is
+impossible to separate the \texttt{2-send}, \texttt{sibling}, and
+\texttt{cosibling} effects, and it is impossibly to quantify the
+time-dependence of the dynamic effects.
+
+\begin{figure}\label{F:enron-ergm}
 \centering
-\subfloat[Group effects]{
+\subfloat[Estimated group effects for $G_1$]{
+  \centering
+  \footnotesize
+  \begin{tabular}{lrrrr}
+  \toprule
+  & \multicolumn{4}{c}{Receiver} \\
+  \cmidrule(l){2-5}
+  Sender &    L  &  T    &   J   &  F \\
+  \midrule
+  1 & -1.03 & -0.62 & -0.15 & -0.21 \\
+  L &  \cellcolor{Gray} 1.17 &  0.54 & -0.08 & -0.19 \\
+  T &  0.03 &  \cellcolor{Gray} 0.25 & -0.41 & -0.39 \\
+  J &  0.37 &  0.78 &  \cellcolor{Gray} 0.62 &  0.02 \\
+  F &  0.03 &  0.24 &  0.13 &  \cellcolor{Gray} 0.50 \\
+  \bottomrule
+  \end{tabular}
+}
+\qquad
+\subfloat[Estimated group effects for $G_{10}$]{
   \centering
   \footnotesize
   \begin{tabular}{lrrrr}
@@ -1936,7 +2000,33 @@ Coefficient
   \end{tabular}
 }
 \\
-\subfloat[Network effects]{
+\vspace{1em}
+\subfloat[Estimated network effects for $G_{1}$]{
+  \centering
+  \footnotesize
+  \begin{tabular}{lrrr}
+  \toprule
+  Variate
+  & \textbf{mutual}
+  & \textbf{ctriple}
+  & \textbf{ttriple}
+  \\
+  \midrule
+  Coefficient
+  &  3.13
+  & -0.15
+  &  0.18
+  \\
+  (SE)
+  & \tiny{(NA)}
+  & \tiny{(NA)}
+  & \tiny{(NA)}
+  \\
+  \bottomrule
+  \end{tabular}
+}
+\qquad
+\subfloat[Estimated network effects for $G_{10}$]{
   \centering
   \footnotesize
   \begin{tabular}{lrrr}
@@ -1961,10 +2051,22 @@ Coefficient
   \end{tabular}
 }
 \normalsize
-\caption{Estimated coefficients for the ERGM model.  The model also included a
-term for each sender (not shown)
+\caption{Estimated coefficients for the ERGM model using two different
+thresholded versions of the data, $G_1$ and $G_{10}$.  The model also included a
+term for each sender (not shown).
+The fit using $G_1$ was degenerate, with all of the probability mass at a
+single graph, so we were not able to get standard errors for the estimated
+coefficients.  The fit using $G_{10}$ was nondegenerate, but the reported 
+standard errors for the group-level edge effects were nonsensical, so we do
+not report them.
 }
 \end{figure}
+
+Fig.~\ref{F:enron-ergm} shows the fitted coefficients for the models based on
+$G_1$ and $G_{10}$.  The \texttt{ergm} fitting software uses an MCMC-based
+procedure for estimating the coefficients.  We used a burn-in of $10^6$ and
+an MCMC sample size of $10^5$.  Many of the standard errors reported by the
+software were nonsensical, and so we have not reported them.  
 
 
 \FloatBarrier
