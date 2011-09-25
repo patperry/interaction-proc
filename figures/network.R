@@ -11,6 +11,11 @@ palette(c(orange, purple))
 fit <- fromJSON("output/fit-dynamic.json")
 cov <- get.cov(fit)
 
+intvl <- c(fit$intervals, Inf)
+nintvl <- length(intvl)
+intvl.str <- c(0, "30m", "2h", "8h", "1.3d", "5.3d", "21.3d",
+               expression(infinity))
+
 coef.d <- get.coefs(fit)[-(1:11),1]
 cov.d <- cov[12:(nrow(cov)/12), 12:(nrow(cov)/12)]
 se.d <- sqrt(diag(cov.d))
@@ -26,10 +31,6 @@ se.ind <- se.d[ind.ix]
 
 cbind(coef.ind, se.ind)
 
-intvl <- c(fit$intervals, Inf)
-nintvl <- 7 
-intvl.str <- c(0, "30m", "2h", "8h", "1.3d", "5.3d", "21.3d",
-               expression(infinity))
 
 
 send <- coef.d[ind.ix[1] + 1:nintvl]

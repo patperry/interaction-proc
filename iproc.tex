@@ -1853,8 +1853,46 @@ predictive of sending behavior, even after accounting for network effects.  We
 now proceed to investigating the characteristics of these network effects and
 establishing which network effects are most important.
 
+Fig.~\ref{F:enron-net-indicator} shows the estimated coefficients for the
+network indicator effects, giving a crude picture of the predictive importance
+of each network effect.  The estimated coefficients are all positive,
+indicating that network effects strengthen the ties between individuals.  The
+estimated coefficient for $1\{\textbf{send}\}$ is almost four times larger
+than the other coefficients, agreeing with the notion that we are most likely
+to do today the things we did yesterday.  The next tier of indicator effects
+comprises $1\{\textbf{receive}\}$, $1\{\textbf{sibling}\}$, and
+$1\{\textbf{2-send}\}$, whose estimated coefficients hover around $0.78$.
+Two triadic effects, $1\{\textbf{2-receive}\}$ and
+$1\{\textbf{cosibling}\}$ are not significantly predictive of sending behavior.
 
-\begin{figure}[h]
+The estimated coefficients for the recency-dependent covariates in
+Figs.~\ref{F:enron-dyad}--\ref{F:enron-triad} give a more complete
+picture of the network effects.  Firstly, we can see that dyadic effects
+persist for over three weeks from the time a message is sent.  The decay of
+the estimated coefficients is roughly exponential in the time elapsed, which
+corresponds to a super-exponential decay in the relative sending rate.  For 30
+minutes after $i$ sends a message to $j$, our estimated model predicts that
+the rate at which $i$ sends to $j$ will be multiplied by $\exp(0.90) \approx
+2.45$, and the rate at which $j$ sends to $i$ will be multiplied by $\exp(1.47)
+\approx 4.35$; then, between 30 minutes and 2 hours, the rates will be
+multiplied by $\exp(0.41) \approx 1.50$ and $\exp(0.56) \approx 1.75$,
+respectively; this proceeds similarly until after 21.3 days, when the rates
+will be be multiplied by $\exp(0.002) \approx 1.002$ and $\exp(0.001) \approx
+1.001$.
+
+From Fig.~\ref{F:enron-triad}, we can see that the triadic effects less
+pronounced and are much more short-lived than the dyadic effects.  About
+two-thirds of the estimated coefficients are within $2.5$ standard errors of
+$0$; even those that are significantly nonzero mostly lie between $-0.05$ and
+$+0.05$.  The exceptions are the coefficients for
+$\textbf{2-send}_t^{(1,1)}$ ($0.23$),
+$\textbf{2-send}_t^{(2,1)}$ ($0.13$),
+$\textbf{2-send}_t^{(3,1)}$ ($-0.09$),
+and
+$\textbf{sibling}_t^{(1,1)}$ ($0.09$).
+
+
+\begin{figure}
 \centering
 \footnotesize
 \begin{tabular}{lrrrrrr}
@@ -1888,18 +1926,21 @@ Coefficient
 \end{tabular}
 \normalsize
 \caption{Estimated coefficients for network indicator effects}
+\label{F:enron-net-indicator}
 \end{figure}
 
 \begin{figure}
   \centering
   \makebox{\includegraphics[scale=0.6]{figures/dyad}}
-  \caption{Estimated coefficients for dyadic effects}
+  \caption{Estimated coefficients for dyadic effects, with standard errors}
+  \label{F:enron-dyad}
 \end{figure}
 
 \begin{figure}
   \centering
   \makebox{\includegraphics[scale=0.6]{figures/triad}}
-  \caption{Estimated coefficients for triadic effects}
+  \caption{Estimated coefficients for triadic effects, with standard errors}
+  \label{F:enron-triad}
 \end{figure}
 
 \subsection{Comparison to exponential random graph-based analysis}
