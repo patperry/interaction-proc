@@ -1303,10 +1303,18 @@ in principle unbounded.  Despite this violation, our bootstrap calculations
 (described in Sec.~\ref{S:enron-bootstrap}) show that the asymptotic approximations are still
 reasonable. 
 
-We wrote custom software in to fit the model using Newton's method.  It took
-approximately 70 minutes to fit with 2.4 GHz processor and 4GB of RAM.  Each
-bootstrap replicate took approximately 20 minutes to generate and fit, using
-the original estimate as a starting point for the fitting algorithm.
+We wrote custom software in the C programming language to fit the model using
+Newton's method.  Exploiting structure in the covariates, the fitting
+procedure has computational complexity $O(n p^2 + J p^2 + p^3)$, where $n$ is
+the number of messages, $J$ is the number of receivers, and $p$ is the number
+of covariates.  Appendix~\ref{S:implementation} describes the fitting
+procedure in more detail.  It took approximately 70 minutes to fit the full
+model with 2.4 GHz processor and 4GB of RAM.  Each bootstrap replicate took
+approximately 20 minutes to generate and fit, using the original estimate as a
+starting point for the fitting algorithm.  Most of the complexity in the
+fitting procedure comes from triadic covariates (described below); if we only
+include dyadic covariates then the model takes less than 10 seconds to fit.  
+
 
 
 \subsection{Covariates}\label{S:enron-covariates}
