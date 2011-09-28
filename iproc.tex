@@ -1888,6 +1888,15 @@ respectively; this proceeds similarly until after 21.3 days, when the rates
 will be be multiplied by $\exp(0.002) \approx 1.002$ and $\exp(0.001) \approx
 1.001$.
 
+Comparing the coefficients for $\textbf{send}_t^{(k)}$ with those of
+$\textbf{receive}_t^{(k)}$ we see that the latter are higher for $k \leq 2$,
+while the former are higher for $k > 2$.  The intuition is that if I am
+sending a message up to two hours after receiving a message from you, then I
+am likely to respond to you, but after that, I am more likely to send to a
+person who I emailed at the time I received your original message (provided
+you and the other individual are identical in all other respects).  The window
+when reciprocation is more important than past habit is less than 8 hours.
+
 From Fig.~\ref{F:enron-triad}, we can see that the triadic effects less
 pronounced and are much more short-lived than the dyadic effects.  About
 two-thirds of the estimated coefficients are within $2.5$ standard errors of
@@ -1897,7 +1906,25 @@ $\textbf{2-send}_t^{(1,1)}$ ($0.23$),
 $\textbf{2-send}_t^{(2,1)}$ ($0.13$),
 $\textbf{2-send}_t^{(3,1)}$ ($-0.09$),
 and
-$\textbf{sibling}_t^{(1,1)}$ ($0.09$).
+$\textbf{sibling}_t^{(1,1)}$ ($0.09$).  The interpretation of the
+$\textbf{2-send}$ coefficients is this: if I sent Hal a message in the last 2
+hours and Hal sent you a message in the last 30 minutes, then I will send
+messages to you at a higher rate; however, if I sent Hal a message between 2
+and 8 hours ago and Hal sent you a message in the last 30 minutes, then I will
+send messages to you at a lower rate.  Similarly, the interpretation of the
+$\textbf{sibling}$ coefficient is that if Hal sent you and me messages in the
+last 30 minutes, then we are more likely to send messages to each other.
+
+Given the emphasis on transitivity in the networks literature, it may be
+disconcerting to the reader that most of the estimated coefficients for the
+time-dependent triadic effects were insignificant.  However,
+common sense says that except for the messages sent to me directly, I have
+no knowledge of my colleagues' e-mail activities; therefore, there is no
+reason why this activity should affect my sending behavior.  Any predictive
+power the triadic effects have, then, must be due to correlation with
+exogenous factors.  In this light, it is not surprising that the triadic
+effects are small and have small time horizons.
+
 
 
 \begin{figure}
