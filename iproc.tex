@@ -1980,19 +1980,15 @@ Coefficient
 
 \subsection{Comparison to exponential random graph-based analysis}
 
-One of the more popular modules used for estimating the importance of network
-effects is the exponential random graph model (ERGM).  The model specifies a
-probability distribution for a directed graph, represented by a binary matrix
-$G$, where entry $G(i,j) = 1$ if link $i \to j$ is present and $G(i,j) = 0$
-otherwise.  The model supposes that
-\[
-  \Prob\{ G = g \}
-    \propto
-      \exp\{ \sum_{s=1}^S T_s(g) \},
-\]
-there $T_s(g)$ is a network statistic, for example the number of transitive
-triples in the graph.  (A transitive triple is an edge sets of the form
-$\{ (h \to i), (j \to k), (h \to j) \}$.)
+For a sanity check, we compare our analysis to one based on one of the more
+popular modules used for estimating the importance of network effects is the
+exponential random graph model (ERGM).  An ERGM specifies a probability
+distribution for a directed graph, represented by a binary matrix $G$, where
+entry $G(i,j) = 1$ if link $i \to j$ is present and $G(i,j) = 0$ otherwise.
+The model supposes that \[ \Prob\{ G = g \} \propto \exp\{ \sum_{s=1}^S T_s(g)
+\}, \] there $T_s(g)$ is a network statistic, for example the number of
+transitive triples in the graph.  (A transitive triple is an edge sets of the
+form $\{ (h \to i), (j \to k), (h \to j) \}$.)
 
 To apply the ERGM model to the Enron data, we need to reduce the set of
 message events to a single directed graph.  We tried two different reductions,
@@ -2141,8 +2137,10 @@ not report them.
 Fig.~\ref{F:enron-ergm} shows the fitted coefficients for the models based on
 $G_1$ and $G_{10}$.  The \texttt{ergm} fitting software uses an MCMC-based
 procedure for estimating the coefficients.  We used a burn-in of $10^6$ and
-an MCMC sample size of $10^5$.  Many of the standard errors reported by the
-software were nonsensical, and so we have not reported them.  
+an MCMC sample size of $10^5$.  The estimated network effects agree
+qualitatively with the estimates in Fig.~\ref{F:enron-net-indicator}, as
+mutuality and transitive triples have positive effects while cyclic triples
+have a negligible effect.
 
 
 \FloatBarrier
