@@ -1,0 +1,36 @@
+Estimates, standard errors and t-statistics for convergence
+
+                                      Estimate   Standard   t statistic 
+                                                   Error                
+
+Rate parameters: 
+  0.1       Rate parameter period 1   24.0306  ( 1.6340   )             
+  0.2       Rate parameter period 2   25.4120  ( 1.5658   )             
+
+Other parameters: 
+   1. eval  outdegree (density)       -1.9352  ( 0.0224   ) -0.0444     
+   2. endow outdegree (density)       -0.9391  ( 0.0112   ) -0.0444     
+   3. eval  reciprocity                2.0197  ( 0.0621   ) -0.0225     
+   4. eval  transitive triplets        0.2984  ( 0.0122   ) -0.0719     
+   5. eval  3-cycles                  -0.2648  ( 0.0254   ) -0.0636     
+   6. eval  coDyadCovar(v1 %*% t(vL)) -0.6459  ( 0.1204   ) -0.0524     
+   7. eval  coDyadCovar(vL %*% t(vL))  0.6213  ( 0.1302   ) -0.0617     
+   8. eval  coDyadCovar(vT %*% t(vL))  0.4606  ( 0.1559   )  0.0351     
+   9. eval  coDyadCovar(vJ %*% t(vL))  0.0036  ( 0.1124   ) -0.0512     
+  10. eval  coDyadCovar(vF %*% t(vL))  0.1874  ( 0.1176   ) -0.0717     
+  11. eval  coDyadCovar(v1 %*% t(vT)) -0.0988  ( 0.0676   )  0.0455     
+  12. eval  coDyadCovar(vL %*% t(vT)) -0.2816  ( 0.1025   ) -0.0190     
+  13. eval  coDyadCovar(vT %*% t(vT))  0.4540  ( 0.0621   )  0.0262     
+  14. eval  coDyadCovar(vJ %*% t(vT))  0.1482  ( 0.0594   )  0.0230     
+  15. eval  coDyadCovar(vF %*% t(vT))  0.3264  ( 0.0637   ) -0.0465     
+  16. eval  coDyadCovar(v1 %*% t(vJ))  0.1277  ( 0.0714   )  0.0181     
+  17. eval  coDyadCovar(vL %*% t(vJ)) -0.1051  ( 0.0916   ) -0.0571     
+  18. eval  coDyadCovar(vT %*% t(vJ)) -0.1531  ( 0.0666   )  0.0250     
+  19. eval  coDyadCovar(vJ %*% t(vJ))  0.0993  ( 0.0595   ) -0.0191     
+  20. eval  coDyadCovar(vF %*% t(vJ))  0.0811  ( 0.0685   ) -0.0550     
+  21. eval  coDyadCovar(v1 %*% t(vF))  0.2075  ( 0.0859   ) -0.0158     
+  22. eval  coDyadCovar(vL %*% t(vF)) -0.1582  ( 0.1124   ) -0.0637     
+  23. eval  coDyadCovar(vT %*% t(vF)) -0.4584  ( 0.1006   )  0.0524     
+  24. eval  coDyadCovar(vJ %*% t(vF)) -0.2081  ( 0.0889   )  0.0162     
+  25. eval  coDyadCovar(vF %*% t(vF))  0.1289  ( 0.0838   ) -0.0229   
+
