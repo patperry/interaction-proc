@@ -1996,13 +1996,15 @@ Coefficient
 
 For a sanity check, we compare our analysis to one based on one of the more
 popular modules used for estimating the importance of network effects is the
-exponential random graph model (ERGM).  An ERGM specifies a probability
+exponential random graph model (ERGM), sometimes called a $p^\ast$ model.
+An ERGM specifies a probability
 distribution for a directed graph, represented by a binary matrix $G$, where
 entry $G(i,j) = 1$ if link $i \to j$ is present and $G(i,j) = 0$ otherwise.
 The model supposes that \[ \Prob\{ G = g \} \propto \exp\{ \sum_{s=1}^S T_s(g)
 \}, \] there $T_s(g)$ is a network statistic, for example the number of
 transitive triples in the graph.  (A transitive triple is an edge sets of the
 form $\{ (h \to i), (j \to k), (h \to j) \}$.)
+See \cite{anderson1999pstar} for a more detailed survey of ERGMs.
 
 To apply the ERGM model to the Enron data, we need to reduce the set of
 message events to a single directed graph.  We tried two different reductions,
