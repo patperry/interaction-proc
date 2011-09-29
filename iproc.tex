@@ -219,18 +219,20 @@ strength, though, is that $x_t(i,j)$ is allowed to be \emph{any}
 predictable process, in particular $x_t(i,j)$ can depend on the history
 of interactions.  To model reciprocation and transitivity in the
 interactions  (with $\mathcal{I} = \mathcal{J}$), choose appropriate
-values for $\delta_l$ and include relevant covariates in $x_t(i,j)$:
+values for $\Delta_k$ and include relevant covariates in $x_t(i,j)$:
 \[
-    1\{\text{interaction $j \to i$ occurred in $[t - \delta_l,t)$}\}
+    1\{\text{interaction $j \to i$ occurred in $[t - \Delta_k,t)$}\}
 \]
 and
 \[
-    1\{\text{for some $k$, interactions $i\to k$ and $k \to j$ occurred in
-             $[t - \delta_l, t)$}\}.
+    1\{\text{for some $h$, interactions $i\to h$ and $h \to j$ occurred in
+             $[t - \Delta_k, t)$}\}.
 \]
 Any process measurable with respect to the predictable $\sigma$-algebra is
 a valid covariate; this excludes only covariates depending on the future
-or the immediate present.
+or the immediate present.  The data analysis example in
+Section~\ref{S:enron-covariates} describes specific covariates for
+measuring homophily and network effects.
 
 Also note that despite presuming $\mathcal{I}$ and $\mathcal{J}$ to be fixed,
 our analysis
