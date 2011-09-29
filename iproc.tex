@@ -49,8 +49,7 @@ submitted for publication November 2010.]}}
 
 \begin{abstract}
 Network data often take the form of repeated interactions between senders
-and receivers tabulated over time.  Rather than reducing these data to
-binary ties, a model is introduced for treating directed interactions as a
+and receivers tabulated over time.  Here a model is introduced for treating such directed interactions as a
 multivariate point process: a Cox multiplicative intensity model using
 covariates that depend on the history of the process.
 Consistency and asymptotic normality are proved for the resulting
@@ -58,8 +57,7 @@ partial-likelihood-based estimators under suitable regularity
 conditions, and an efficient fitting procedure is described.
 Multicast interactions---those involving a single sender
 but multiple receivers---are treated explicitly.   A motivating data
-example shows the effects of reciprocation and group-level preferences
-on message sending behavior in a corporate e-mail network.
+example shows how network effects and group-level preferences can be incorporated when modeling message sending behavior in a corporate e-mail network.
 
 \keywords{Cox proportional hazards model; Network data analysis;
 Partial likelihood inference; Point processes}
@@ -71,8 +69,7 @@ Partial likelihood inference; Point processes}
 
 Much effort has been devoted to the statistical analysis of network data;
 see \citet{jackson2008social}, \citet{goldenberg2009survey}, and \citet{kolaczyk2009statistical}
-for recent overviews.  While such data are typically reduced to ``ties''
-between entities, often network observables comprise counts of interactions
+for recent overviews.  Often network observables comprise counts of interactions
 between individuals or groups tabulated over time.  Communications networks
 give rise to \emph{directed} interactions: phone calls, text messages, or
 e-mails exchanged amongst a given set of individuals over a specific time
@@ -102,7 +99,7 @@ the past.
 The interaction data we consider comprise a set of triples, with triple
 $(t,i,j)$ indicating that at time $t$, directed interaction
 $i\rightarrow j$ took place---for instance, individual $i$ sent a message
-to individual $j$.  Given such a set of triples, a primary modeling goal is
+to individual $j$.  Given such a set of triples, a primary modeling goal lies in
 determining which characteristics and behaviors of the senders and
 receivers are predictive of interaction.  In this vein, three important
 questions stand out:
@@ -115,10 +112,9 @@ questions stand out:
     interaction among similar individuals)?  To what degree is a shared
     attribute predictive of heightened interaction?
 
-    \item[Network effects] How are past interactions predictive the present?
+    \item[Network Effects] To what extent are past interactions predictive of future ones?
     If we observe interactions $i \to h$ and $h \to j$, are we more likely
-    to see the interaction $i \to j$?  What about other forms of transitivity?
-    What are the important network effects and how do they manifest.
+    to see the interaction $i \to j$?
 
     \item[Multiplicity] How should multiple-receiver interactions of the
     type $i \rightarrow \{j_1,j_2,\ldots, j_L\}$ be modeled?  What are the
@@ -126,14 +122,12 @@ questions stand out:
 \end{description}
 
 The issues of homophily, network effects, and their interactions are quite
-common in the networks literature.  See, for example
-\cite{mcpherson2001birds}, \cite{butts2008relational},
-\cite{aral2009distinguishing}, \cite{snijders2010introduction}, and the
+common in the networks literature.  See for example
+\citet{mcpherson2001birds, butts2008relational, aral2009distinguishing, snijders2010introduction}, and
 references contained therein.  Multiplicity has largely been ignored in the
-networks literature, with notable exceptions including work due to
-\cite{lunagomez2009geometric} in the context of graphical models, and
-\cite{shafiei2010mixed} for network modeling.  For a discussion of how our
-work relates to this previous work, see Section.~\ref{S:discussion}.
+networks literature, with notable exceptions including
+\citet{lunagomez2009geometric} in the context of graphical models, and
+\citet{shafiei2010mixed} for network modeling.
 
 In the remainder of this article, we provide a modeling framework and
 computationally efficient partial likelihood inference procedures to
@@ -147,7 +141,7 @@ and asymptotic normality of the corresponding maximum partial likelihood
 estimator, and Section~\ref{S:multiple-receivers} extends our framework to
 the case of multiple-receiver interactions.  Section~\ref{S:enron-modeling}
 presents a data analysis example, and Section~\ref{S:discussion} concludes
-with a brief discussion.  Appendices~\ref{S:implementation}--%
+with a brief discussion placing our modeling framework and results in the context of previous work.  Appendices~\ref{S:implementation}--%
 \ref{S:multiple-recipient-proofs} contain implementation details and
 technical lemmas.
 
@@ -192,7 +186,7 @@ of $N$.  Heuristically,
 We will model $N$ through $\lambda$ using a version of the \citet{cox1972regression}
 proportional intensity model.
 
-Let $\mathcal{I}$ be a set of senders and $\mathcal{J}$ be a set of receivers.
+Let $\mathcal{I}$ be a set of senders and $\mathcal{J}$ be a (not necessarily disjoint) set of receivers.
 For each sender $i$, let $\bar \lambda_t(i)$ be a non-negative predictable
 process called the baseline intensity of sender $i$; let $\mathcal{J}_t(i)$ be
 a predictable subset of $\mathcal{J}$ called the receiver set of sender $i$.
@@ -221,7 +215,7 @@ $\exp\{ \beta_0^\trans x_t(i,j) \}$ is not central to the theoretical
 analysis, but this choice is amenable to computation and gives
 the parameter vector $\beta_0$ a straightforward interpretation.
 \citet{butts2008relational} used a variant of this model to analyze
-repeated interaction data.
+repeated directed actions within social settings.
 
 The form of \eqref{E:cox-intensity} is deceptively simple but remains
 flexible enough to be useful in practice.  The model allows for
@@ -287,7 +281,7 @@ the full likelihood, $L$, as
                 L(j_1 | t_1, i_1)
                 \, L(j_2 | t_2, i_2, t_1, i_1, j_1)
                 \cdots
-                L(j_n | t_{n-1}, i_{n-1} \ldots t_1, i_1, j_1)
+                L(j_n | t_n, i_n, t_{n-1}, i_{n-1} \ldots t_1, i_1, j_1)
             \Big];
     \end{split}
 \end{align*}
@@ -371,7 +365,7 @@ $\log \mathit{PL}_t(\cdot)$ are
 \end{gather}
 \end{subequations}
 We call $U_t(\beta_0)$ the unnormalized score and $I_t(\beta_0)$
-the Fisher information matrix.
+the observed information matrix.
 
 Note the dependence of these terms on time-varying covariates,
 which precludes using sufficient statistics and introduces
@@ -395,7 +389,7 @@ We now give conditions under which these
 estimators are consistent.
 
 In the sampling regime where observation time $t$ is fixed and the number of
-senders $|\mathcal{I}|$ increases, Anderson and Gill's \citeyearpar{andersen1982cox} consistency proof for
+senders $|\mathcal{I}|$ increases, \citefullauthor{andersen1982cox}'s \citeyearpar{andersen1982cox} consistency proof for
 the Cox proportional hazards model in survival analysis extends
 to cover model~\eqref{E:cox-intensity}.  This setting is natural in the
 context of clinical trial data, where $\mathcal{I}$ corresponds to the set of
@@ -439,7 +433,7 @@ its spectral norm (largest eigenvalue).  We require the following assumptions:
 
     \item \label{A:integrated-cov-limit}
     \textbf{The integrated covariance function is well-behaved.}
-    When $\beta \in \mathcal{B}$ and $\alpha \in [0,1]$, as $ n \to \infty$,
+    When $\beta \in \mathcal{B}$ and $\alpha \in [0,1]$, as $ n \to \infty$, then with respect to the covariance function $\Sigma_\alpha(\beta)$ we have that
     \[
         \frac{1}{n}
         \sum_{i \in \mathcal{I}}
@@ -1318,7 +1312,7 @@ and~\ref{S:multiple-receivers} is natural.  The main violation of assumptions
 A\ref{A:square-int}--A\ref{A:var-equicont} is that our covariates (described in Section~\ref{S:enron-covariates}) are
 in principle unbounded.  Despite this violation, our bootstrap calculations
 (described in Sec.~\ref{S:enron-bootstrap}) show that the asymptotic approximations are still
-reasonable. 
+reasonable.
 
 We wrote custom software in the C programming language to fit the model using
 Newton's method.  Exploiting structure in the covariates, the fitting
@@ -1330,7 +1324,7 @@ model with 2.4 GHz processor and 4GB of RAM.  Each bootstrap replicate took
 approximately 20 minutes to generate and fit, using the original estimate as a
 starting point for the fitting algorithm.  Most of the complexity in the
 fitting procedure comes from triadic covariates (described below); if we only
-include dyadic covariates then the model takes less than 10 seconds to fit.  
+include dyadic covariates then the model takes less than 10 seconds to fit.
 
 
 
@@ -1442,7 +1436,7 @@ four (\textbf{2-send}, \textbf{2-receive}, \textbf{sibling}, and
       \put(7.75,0.25){\vector(-1,0){2.5}}
       \put(8.25,0){$j$}
     \end{picture} &
-    there exists an actor $h$ such that $i$ has received a message 
+    there exists an actor $h$ such that $i$ has received a message
     from $h$, and $h$ has received a message from~$j$
     \\
   \textbf{sibling} &
@@ -1487,7 +1481,7 @@ defined similarly.
 
 To measure higher-order time dependence, we introduce further covariates.  We partition the interval $[-\infty, t)$ into $K = 7$ sub-intervals:
 \[
-  [-\infty, t) = 
+  [-\infty, t) =
   [t - \Delta_K, t - \Delta_{K-1}) \cup [t - \Delta_{K-1}, t - \Delta_{K-2}) \cup \dotsb \cup [t - \Delta_1, t - \Delta_0)
 \]
 where $\infty = \Delta_K > \Delta_{K-1} > \dotsb > \Delta_1 > \Delta_0 = 0$
@@ -1495,7 +1489,7 @@ and ``$t - \infty$'' is defined to be $-\infty$.  Specifically, we set
 $\Delta_k = (7.5\text{ minutes}) \times 4^k$ for $k = 1, \dotsc, K-1$ so that
 for $k$ in this range $\Delta_k$ takes the values $30\text{ minutes}$,
 $2\text{ hours}$, $8\text{ hours}$, $32\text{ hours}$, $5.33\text{ days}$, and
-$21.33\text{ days}$.  
+$21.33\text{ days}$.
 
 Define the half-open interval $I_{t}^{(k)} = [t - \Delta_k, t -
 \Delta_{k-1})$.  For $k = 1, \dotsc, K$ we define the dyadic~effects
@@ -1505,7 +1499,7 @@ Define the half-open interval $I_{t}^{(k)} = [t - \Delta_k, t -
   \text{\textbf{receive}}^{(k)}_t(i,j)
     &= \#\{ j \to i \text{ in } I_t^{(k)} \};
 \end{align*}
-for sender $i$, these covariates measure the number of messages sent-to and received-by receiver $j$ in time interval $I_t^{(k)}$.  
+for sender $i$, these covariates measure the number of messages sent-to and received-by receiver $j$ in time interval $I_t^{(k)}$.
 
 The dyadic effects have been defined as above to enable easy interpretation of
 the corresponding coefficients.  To illustrate this, for $k = 1, \dotsc, K$,
@@ -1520,24 +1514,24 @@ multiplied by $e^{\beta_{k}}$ whenever $t' \in (t + \Delta_{k-1}, t +
 the coefficients $\beta_{1}, \dotsc, \beta_{K}$ measure the effect of a ``send
 event'' and how this effect decays over time.  We expect that $\beta_{k}$ will
 decrease as $k$ increases, but we do not enforce this constraint on the
-estimation procedure.  
+estimation procedure.
 
 The triadic effects involve pairs of messages.  For $k = 1, \dotsc, K$ and $l = 1, \dotsc, K$ we define the triadic effects
 \begin{align*}
   \text{\textbf{2-send}}^{(k,l)}_t(i,j)
-    &= \sum_{h \neq i,j} 
+    &= \sum_{h \neq i,j}
       \#\{ i \to h \text{ in } I_t^{(k)} \}
       \cdot \#\{ h \to j \text{ in } I_t^{(l)} \}, \\
   \text{\textbf{2-receive}}^{(k,l)}_t(i,j)
-    &= \sum_{h \neq i,j} 
+    &= \sum_{h \neq i,j}
       \#\{ h \to i \text{ in } I_t^{(k)} \}
       \cdot \#\{ j \to h \text{ in } I_t^{(l)} \}, \\
   \text{\textbf{sibling}}^{(k,l)}_t(i,j)
-    &= \sum_{h \neq i,j} 
+    &= \sum_{h \neq i,j}
       \#\{ h \to i \text{ in } I_t^{(k)} \}
       \cdot \#\{ h \to j \text{ in } I_t^{(l)} \}, \\
   \text{\textbf{cosibling}}^{(k,l)}_t(i,j)
-    &= \sum_{h \neq i,j} 
+    &= \sum_{h \neq i,j}
       \#\{ i \to h \text{ in } I_t^{(k)} \}
       \cdot \#\{ j \to h \text{ in } I_t^{(l)} \}.
 \end{align*}
@@ -1578,7 +1572,7 @@ set $\mathcal{J}$ of 156 Enron employees as constant, the resultant bias
 is of order $1/|\mathcal{J}|$---and, since $|\mathcal{J}| = 156$ is on the
 order of the square root of the number 21,365 of messages in the dataset,
 we can correct this bias using the parametric bootstrap outlined at the
-end of Section~\ref{S:multiple-receivers}.  
+end of Section~\ref{S:multiple-receivers}.
 
 \begin{figure}
     \centering
@@ -1664,8 +1658,8 @@ The full model accounts for $54\%$ of the null deviance.
 \end{figure}
 
 The residual deviance for the full model is approximately $4.8$ times the
-residual degrees of freedom.  An ad-hoc adjustment this over-dispersion 
-is multiplying the calculated standard errors by $\sqrt{4.8} \approx 2.2$.  
+residual degrees of freedom.  An ad-hoc adjustment this over-dispersion
+is multiplying the calculated standard errors by $\sqrt{4.8} \approx 2.2$.
 
 The residual deviance by itself is not reliable as a goodness-of-fit measure,
 as it depends only on the estimated coefficients (Sec.~4.4.5 of
@@ -1749,7 +1743,7 @@ Section~\ref{S:enron-covariates} is reasonably accurate in describing the
 message recipient selection conditional on the sender and the history of the
 process.  Thus, we are justified in using the estimated coefficients from the
 model to assess the predictive ability of the corresponding covariates.  Our
-first task is to gauge the predictive strength of homophily.  
+first task is to gauge the predictive strength of homophily.
 
 \begin{figure}[h]
   \centering
@@ -1797,7 +1791,7 @@ that employee $i$ is the sender, using a multinomial logit model:
 \]
 Junior-Junior homophily would manifest in a positive value of
 $\beta_{J} + \beta_{JJ}$ and Senior-Senior homophily would manifest in
-a negative value of $\beta_J$. 
+a negative value of $\beta_J$.
 
 Since there are $n_J = 82$ Junior
 executives and $n_S = 74$ Senior executives, and since the sender and
@@ -1808,7 +1802,7 @@ receiver of a message are distinct, we have that
       \frac{e^{(\beta_J + \beta_{JJ}) J(j)}}
            {(n_J - 1) e^{\beta_J + \beta_{JJ}} + n_S} \\
   \Prob\{ i \to j \mid i, J(i) = 0 \},
-    &= 
+    &=
       \frac{e^{\beta_J J(j)}}
            {n_J e^{\beta_J} + (n_S - 1)}.
 \end{align*}
@@ -1838,7 +1832,7 @@ One problem with this analysis is that we have marginalized over the
 other covariates (Gender and Department), potentially introducing a Simpson's
 paradox.  This is easy to fix, by introducing covariates for the sender and
 receiver covariates and considering their interactions.   We have done
-exactly this, and Fig.~\ref{T:group-static} shows the resulting estimates.  
+exactly this, and Fig.~\ref{T:group-static} shows the resulting estimates.
 
 \begin{figure}[h]
   \centering
@@ -2024,7 +2018,7 @@ names used in the \texttt{ergm} software.  The terms are as follows:
   \item Sender effects (\texttt{sender}).  One covariate for each sender,
   measuring the outdegree of the sender.  The coefficient for this coefficient
 plays the role of $\bar \lambda_t(i)$ in our model.
-  
+
   \item Group-level edge effects (\texttt{edgecov}).  One covariate for each
 identifiable first-order interaction of the form $X(i) Y(j)$, where $i$ is the
 sender and $j$ is the receiver; the covariate counts the number of edges $i
@@ -2147,7 +2141,7 @@ thresholded versions of the data, $G_1$ and $G_{10}$.  The model also included a
 term for each sender (not shown).
 The fit using $G_1$ was degenerate, with all of the probability mass at a
 single graph, so we were not able to get standard errors for the estimated
-coefficients.  The fit using $G_{10}$ was nondegenerate, but the reported 
+coefficients.  The fit using $G_{10}$ was nondegenerate, but the reported
 standard errors for the group-level edge effects were nonsensical, so we do
 not report them.
 }
