@@ -26,6 +26,12 @@ Aral, S., L.~Muchnik, and A.~Sundararajan (2009).
   diffusion in dynamic networks.
 \newblock {\em P. Nat. Acad. Sci. USA\/}~{\em 106}, 21544--21549.
 
+\bibitem[\protect\citeauthoryear{Boyd and Vandenberghe}{Boyd and
+  Vandenberghe}{2004}]{boyd2004convex}
+Boyd, S. and L.~Vandenberghe (2004).
+\newblock {\em Convex Optimization}.
+\newblock Cambridge University Press.
+
 \bibitem[\protect\citeauthoryear{Breslow}{Breslow}{1974}]{breslow1974covariance}
 Breslow, N.~E. (1974).
 \newblock Covariance analysis of censored survival data.

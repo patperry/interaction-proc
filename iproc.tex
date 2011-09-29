@@ -2233,13 +2233,12 @@ Research under MURI Award 58153-MA-MUR.
 
 \section{Implementation}\label{S:implementation}
 
-To compute the maximum partial likelihood estimator, we use the
-Broyden-Fletcher-Goldfarb-Shanno (BFGS) algorithm, a gradient-based
-optimization method described by
-\citet{nocedal2006numerical}.  This requires an efficient algorithm for
-computing the gradient of the log partial likelihood.  For simplicity, we
-describe the case of strictly pairwise interactions with no ties in the
-interaction times.  We use the notation from
+To compute the maximum partial likelihood estimator, we use Newton's
+method as described in \citet{boyd2004convex}.
+This requires an efficient algorithm for
+computing the gradient and Hessian of the log partial likelihood.  For
+simplicity, we describe the case of strictly pairwise interactions with no
+ties in the interaction times.  We use the notation from
 Section~\ref{S:point-process-model}, with
 the model from~\eqref{E:cox-intensity} and the partial likelihood
 from~\eqref{E:log-pl}.  Recall that $x_t(i,j)$ is in $\reals^p$.
@@ -2268,54 +2267,70 @@ This factorization allows us to compute $\log \mathit{PL}_t(\beta)$ and
 its derivatives by computing the sender-specific terms in parallel and
 then adding them together.
 
-The sender-specific log partial likelihood and its gradient are
+The gradient and Hessian of the sender-specific log partial likelihood
+are
 \begin{gather*}
-    \log \mathit{PL}_t(\beta, i)
-        =
-        \sum_{\substack{t_m \leq t, \\ i_m = i}}
-            \beta^\trans
-            x_{t_m}\!(i, j_m)
-            -
-            \,
-            \log W_{t_m}\!(\beta, i), \\
     \nabla [ \log \mathit{PL}_t(\beta, i) ]
         =
         \sum_{\substack{t_m \leq t, \\ i_m = i}}
             x_{t_m}\!(i,j_m)
             -\!\!
-            \sum_{j \in \mathcal{J}_{t_m}\!(i)}\!\!
-                \frac{w_{t_m}\!(\beta,i,j)}{W_{t_m}\!(\beta,i)}
-                \,
-                x_{t_m}\!(i,j).
+            \sum_{\substack{t_m \leq t, \\ i_m = i}}
+                E_{t_m}(\beta, i) \\
+    -\nabla^2 [ \log \mathit{PL}_t(\beta, i) ]
+        =
+        \sum_{\substack{t_m \leq t, \\ i_m = i}}
+          V_{t_m}(\beta, i),
 \end{gather*}
+where $E_{t}(\beta,i)$ and $V_{t}(\beta, i)$ are as defined in 
+\eqref{E:log-pl-gradient} and \eqref{E:log-pl-neg-hessian}.
 When $x_t(i,j)$ is constant over time,
 there are sufficient statistics for $\beta$ and these formulas reduce.
-Otherwise, computing
-$\log \mathit{PL}_{t_n}(\beta)$ and its gradient
+Otherwise, computing the first two derivates of
+$\log \mathit{PL}_{t_n}(\beta)$
 necessitates iterating over all messages, potentially requiring time
-$\Oh(p \, n \, J)$.  For small- to medium-sized datasets, this is manageable,
+$\Oh(n \, J \, p^2)$.  For small- to medium-sized datasets, this is manageable,
 but for large network datasets it can become
 prohibitive.  In the sequel we show how to exploit sparsity
 in the data, reducing the computation time to
-$\Oh\big(p \, (n + I \, J)\big)$ or in some cases
-$\Oh\big(p \, (n + J)\big)$.
+$\Oh\big(n \, p^2 + I \, J \, p^2\big)$ or in some cases
+$\Oh\big(n \, p^2 + J \, p^2\big)$.  The significance of this latter
+expression is that complexity is \emph{linear} in the number of messages and
+the number of employees, which means that the algorithm scales is feasible for
+large datasets.
+
+\subsection{Initial values}
+
+We will need to compute $W_0(\beta, i)$, $w_0(\beta, i, j)$, $E_0(\beta,
+i)$, and $V_0(\beta, i)$ for all values of $i$ and $j$.  In the worst case,
+doing so will take $\mathcal{O}(I \, J \, p^2)$.  However, often the senders
+belong to a small number, $\bar I \ll I$ of groups such that if $i$ and $i'$
+are in the same group, then the corresponding values of $W_0$, $\pi_0$, $E_0$,
+and $V_0$ are the same, reducing the total complexity to $\mathcal{O}(\bar I
+\, J \, p^2)$.  The remaining complexity estimates assume that the
+initial values have all been precomputed.
+
+
+\subsection{Exploiting sparsity}
 
 Decompose $x$ into its static (non-time-varying) and dynamic parts:
 \begin{equation}\label{E:x-static-dynamic}
     x_t(i,j)
-        = x_0(i,j) + d_t(i,j).
+        = x_0(i,j) + \Delta x_t(i,j).
 \end{equation}
-Typically, the dynamic part, $d_t(i,j)$, is sparse, with at most $\bar p$
-nonzero components.  Moreover $d_t(i,j)$ is zero for most $(i,j)$
-pairs---often $d_t(i,j)$ is zero unless $i$ and $j$ have interacted in
-the past.  Let
+Typically, the we can compute the dynamic part, $\Delta x_t(i,j)$ quickly at
+each observed message time by incrementally updating it.  Further, $\Delta
+x_t(i,j)$, is zero for most $(i,j)$ pairs---often $\Delta x_t(i,j)$ is zero
+unless $i$ and $j$ have a common acquaintance or they have interacted in the
+past.
+For convenience, set $\mathcal{J}_0(i) = \mathcal{J}$.  Let
 \begin{equation*}
     \mathcal{\bar J}(i)
         =
             \{
                 j \in \mathcal{J} :
                 \text{
-                    $j \in \mathcal{J}_t(i)$ and $d_t(i,j) \neq 0$
+                    $j \in \mathcal{J}_t(i)$ and $\Delta x_t(i,j) \neq 0$
                     for some $t$
                 }
             \}
@@ -2328,10 +2343,8 @@ the past.  Let
                 }
             \}.
 \end{equation*}
-Assume that $|\mathcal{\bar J}(i)| \le \bar J \ll J$ and that
-computing $d_t(i,j)$ takes amortized time $\Oh(\bar p)$ for each
-$(t,i,j)$ triple.  Also, for convenience, set
-$\mathcal{J}_0(i) = \mathcal{J}$.
+For fixed $t$ and $i$, assume that computing 
+$\Delta x_t(i,j)$ for all values of $j$ takes amortized time $\Oh(d \bar J)$.
 
 Since $\mathcal{J}_0(i) = \mathcal{J}$,
 \begin{subequations}\label{E:weight-update}
@@ -2340,9 +2353,10 @@ Since $\mathcal{J}_0(i) = \mathcal{J}$,
         &=
             w_{0}(\beta,i,j)
             \cdot
-            \exp\{ \beta^\trans d_t(i,j) \}
+            \exp\{ \beta^\trans \Delta x_t(i,j) \}
             \cdot
-            1\{j \in \mathcal{J}_t(i)\},
+            1\{j \in \mathcal{J}_t(i)\} \nonumber \\
+        &= w_0(\beta, i, j) + \Delta w_t(i, j); 
     \label{E:weight-update-pair}
     \\
     W_{t}(\beta,i)
@@ -2350,26 +2364,96 @@ Since $\mathcal{J}_0(i) = \mathcal{J}$,
             W_{0}(\beta,i)
             +
             \sum_{j \in \mathcal{\bar J}(i)}
-                w_{t}(\beta,i,j) - w_{0}(\beta,i,j)
+                \Delta w_t(i,j);
     \label{E:weight-sum-update}
+\intertext{where}
+  \Delta w_t(i,j)
+    &= w_0(\beta, i, j)
+      [\exp\{ \beta^\trans \Delta x_t(i,j)\}
+          1 \{ j \in \mathcal{J}_t(i)\}
+       - 1];
 \end{align}
 \end{subequations}
-It takes time $\Oh(p \, J)$ to compute the values of
-$W_{0}(\beta,i)$ and $w_{0}(\beta,i,j)$ for any $i$ and all
-$j$ in $\mathcal{J}(i)$; using~\eqref{E:weight-update} once these values are
-known, computing  $W_{t}(\beta,i)$ and $w_{t}(\beta,i,j)$ takes time
-\(
-    \Oh(\bar p \, \bar J).
-\)
-
-We pre-compute the initial weights and expected covariates.  Set
+we have used that $\Delta w_t(i,j)$ is zero unless
+$j \in \mathcal{\bar J}(i)$.
+Write
 \[
-    E_0(\beta, i)
-        =
-        \sum_{j \in \mathcal{J}}
-            \frac{w_{0}(\beta, i,j)}{W_{0}(\beta, i)}
-            x_0(i,j).
+  \pi_t(\beta, i, j) = \frac{w_t(\beta, i, j)}{W_t(\beta, i)}.
 \]
+Defining
+\[
+  \gamma_t(i) = \frac{W_0(\beta, i)}{W_t(\beta, i)},
+  \qquad\qquad
+  \Delta \pi_t(\beta, i, j) = \frac{\Delta w_t(\beta, i, j)}{W_t(\beta, i)},
+\]
+we can express
+\[
+  \pi_t(\beta, i, j)
+    = \gamma_t(i) \pi_0(\beta, i, j) + \Delta \pi_t(\beta, i, j).
+\]
+Moreover, given the initial values $W_0(\beta, i)$ and $w_0(\beta, i, j)$,
+we can efficiently keep track of $\gamma_t(i)$ and
+$\Delta \pi_t(\beta, i, j)$: for any $i$ and $t$, it takes amortized time
+$\Oh(\bar J d p)$ to evaluate $\gamma_t(i)$ and all values of
+$\Delta \pi_t(i,j)$ as $j$ varies.
+
+
+\subsection{Computing the gradient}
+
+The sum $\sum_m x_{t_m}(i_m j_m)$ can be computed in time $\Oh(n \, p)$.
+In evaluating the gradient of the log partial likelihood, the computationally
+expensive term is the sum
+\(
+   \sum_{m} E_{t_m}(\beta, i_m).
+\)
+We show how to exploit sparsity in $x$ to reduce the computational overhead.
+
+To simplify the notation, we suppress the dependence of all quantities on $\beta$ and $i$.
+Consider $\pi_t$ and $\Delta \pi_t$ to be vectors of length $J$.  Write
+\[
+    \pi_t = \gamma_t \pi_0 + \Delta \pi_t \in \reals^J,
+\]
+Also, let $X_t = X_t(i)$ and $\Delta X_t = \Delta X_t(i)$ be the matrices
+whose $j$th rows are $x_t(i,j)$ and $\Delta x_t(i,j)$, respectively, so
+that
+\[
+  X_t = X_0 + \Delta X_t \in \reals^{J \times p}.
+\]
+Using these expressions we have
+\[
+  E_t = X_t^\trans \pi_t
+      = \gamma_t E_0
+      + X_0^\trans \Delta \pi_t
+      + \Delta X_t^\trans \pi_t.
+\]
+Thus,
+\[
+  \sum_{\substack{m  \\ i_m = i}} E_{t_m} = 
+    \Big(\sum_m \gamma_{t_m}\Big) E_0
+    +
+    X_0^\trans \Big(\sum_{\substack m \\ i_m = i } \Delta \pi_{t_m}\Big)
+    +
+    \sum_{\substack{m \\ i_m = i}} \Delta X_{t_m}^\trans \pi_{t_m}
+\]
+Taking advantage of the sparsity in $\Delta X_t$ and $\Delta \pi_t$, computing
+the three sums on the right hand side takes time $\Oh\big(n(i) \,
+\bar J \, d \, p\big)$.  Once the sums are known, the multiplication
+$\Big(\sum \gamma_{t_m}\Big) E_0$ takes time $\Oh(p)$, and the
+multiplication $X_0^\trans \big( \sum \Delta \pi_{t_m}\big)$ takes time
+$\Oh(\bar J \, p)$.  Thus, we can compute $\sum_{\substack{m \\ i_m = i}} E_{t_m}$ in time
+$\Oh\big(n(i) \, \bar J \, d \, p\big)$.  Computing these terms separately for
+each $i$ and then summing over all $i$ to get the total gradient takes $\Oh(n
+\, \bar J \, d \, p + I \, p)$.
+
+
+\subsection{Computing the Hessian}
+
+The computation for the Hessian proceeds similarly to the computation for
+gradient.  Again suppressing the dependence on $\beta$ and $i$, we have
+\[
+  V_t = X_t^\trans \diag(\pi_t) X_t - X_t^\trans \pi_t \pi_t^\trans X_t
+\]
+
 Without structure in the covariates, it takes time
 $\Oh(p \, I \, J)$ to compute all values of $w_0(\beta, i,j)$,
 $W_0(\beta, i)$, and $E_0(\beta, i)$
