@@ -220,6 +220,8 @@ down according to the pair's covariate vector, $x_t(i,j)$.  As
 $\exp\{ \beta_0^\trans x_t(i,j) \}$ is not central to the theoretical
 analysis, but this choice is amenable to computation and gives
 the parameter vector $\beta_0$ a straightforward interpretation.
+\citet{butts2008relational} used a variant of this model to analyze
+repeated interaction data.
 
 The form of \eqref{E:cox-intensity} is deceptively simple but remains
 flexible enough to be useful in practice.  The model allows for
@@ -381,6 +383,7 @@ package for R \citep{therneau2009survival}) will not suffice.  In
 Appendix~\ref{S:implementation}, we describe a customized method for
 maximizing $\log \mathit{PL}_t(\cdot)$ that exploits sparsity in
 $x_t(i,j)$.
+
 
 \section{Consistency of maximum partial likelihood inference}
 \label{S:MPLE-consistency}
@@ -2172,11 +2175,13 @@ the choice of cutoff \citep{dechoudhury2010}.  We have avoided such arbitrary
 outcomes by working directly with the observed data.
 
 We are not the first to move beyond static tie-based representations of
-network data.  There are at least two recent treatments involving point processes,
-neither of which includes reciprocation effects or other covariate
+network data.  In addition to the work of \cite{butts2008relational} cited
+above, there are at least two other recent treatments involving point
+processes, both of which exlude network effects and other covariate
 information: \citet{malmgen2009characterizing} model activity at the level of
 the individual using a hidden Markov model, while \citet{heard2010bayesian} work
 at the level of the dyad, assuming a piecewise-constant interaction rate.
+
 Others have considered dynamic tie-based models: see the
 agent based models from social network as surveyed by
 \citet{snijders2010introduction}, along with
