@@ -105,9 +105,10 @@ $i\rightarrow j$ took place---for instance, individual $i$ sent a message
 to individual $j$.  Given such a set of triples, a primary modeling goal is
 determining which characteristics and behaviors of the senders and
 receivers are predictive of interaction.  In this vein, three important
-questions stand out; the first is prevalent in studies of human
-behavior \citep{mcpherson2001birds}, whereas the latter two have
-yet to receive due attention:
+questions stand out:
+%the first is prevalent in studies of human
+%behavior \citep{mcpherson2001birds}, whereas the latter two have
+%yet to receive due attention:
 
 \begin{description}
     \item[Homophily] Is there evidence of homophily (an increased rate of
@@ -123,6 +124,16 @@ yet to receive due attention:
     type $i \rightarrow \{j_1,j_2,\ldots, j_L\}$ be modeled?  What are the
     implications of treating these as $L$ separate pairwise interactions?
 \end{description}
+
+The issues of homophily, network effects, and their interactions are quite
+common in the networks literature.  See, for example
+\cite{mcpherson2001birds}, \cite{butts2008relational},
+\cite{aral2009distinguishing}, \cite{snijders2010introduction}, and the
+references contained therein.  Multiplicity has largely been ignored in the
+networks literature, with notable exceptions including work due to
+\cite{lunagomez2009geometric} in the context of graphical models, and
+\cite{shafiei2010mixed} for network modeling.  For a discussion of how our
+work relates to this previous work, see Section.~\ref{S:discussion}.
 
 In the remainder of this article, we provide a modeling framework and
 computationally efficient partial likelihood inference procedures to

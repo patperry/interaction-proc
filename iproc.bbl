@@ -13,6 +13,13 @@ Andersen, P.~K. and R.~D. Gill (1982).
   study.
 \newblock {\em Ann. Statist.\/}~{\em 10}, 1100--1120.
 
+\bibitem[\protect\citeauthoryear{Aral, Muchnik, and Sundararajan}{Aral
+  et~al.}{2009}]{aral2009distinguishing}
+Aral, S., L.~Muchnik, and A.~Sundararajan (2009).
+\newblock Distinguishing influence-based contagion from homophily-driven
+  diffusion in dynamic networks.
+\newblock {\em P. Nat. Acad. Sci. USA\/}~{\em 106}, 21544--21549.
+
 \bibitem[\protect\citeauthoryear{Breslow}{Breslow}{1974}]{breslow1974covariance}
 Breslow, N.~E. (1974).
 \newblock Covariance analysis of censored survival data.
@@ -22,6 +29,11 @@ Breslow, N.~E. (1974).
 Brostr\"{o}m, G. (2002).
 \newblock {C}ox regression; ties without tears.
 \newblock {\em Commun. Stat. Theory Meth.\/}~{\em 31}, 285--297.
+
+\bibitem[\protect\citeauthoryear{Butts}{Butts}{2008}]{butts2008relational}
+Butts, C.~T. (2008).
+\newblock A relational event framework for social action.
+\newblock {\em Sociol. Methodol.\/}~{\em 38}, 155--200.
 
 \bibitem[\protect\citeauthoryear{Cohen}{Cohen}{2009}]{cohen2009enron}
 Cohen, W.~W. (2009).
@@ -181,6 +193,12 @@ Papachristos, A.~V. (2009).
 Rebolledo, R. (1980).
 \newblock Central limit theorems for local martingales.
 \newblock {\em Probab. Theory Rel. Fields\/}~{\em 51}, 269--286.
+
+\bibitem[\protect\citeauthoryear{Shafiei and Chipman}{Shafiei and
+  Chipman}{2010}]{shafiei2010mixed}
+Shafiei, M. and H.~Chipman (2010).
+\newblock Mixed-membership stochastic block-models for transactional networks.
+\newblock arXiv:1010.1437v1 [stat.ML].
 
 \bibitem[\protect\citeauthoryear{Snijders, Van~de Bunt, and Steglich}{Snijders
   et~al.}{2010}]{snijders2010introduction}
