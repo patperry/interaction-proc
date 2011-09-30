@@ -2385,13 +2385,8 @@ $\log \mathit{PL}_{t_n}(\beta)$
 necessitates iterating over all messages, potentially requiring time
 $\Oh(n \, J \, p^2)$.  For small- to medium-sized datasets, this is manageable,
 but for large network datasets it can become
-prohibitive.  In the sequel we show how to exploit sparsity
-in the data, reducing the computation time to
-$\Oh\big(n \, p^2 + I \, J \, p^2\big)$ or in some cases
-$\Oh\big(n \, p^2 + J \, p^2\big)$.  The significance of this latter
-expression is that complexity is \emph{linear} in the number of messages and
-the number of employees, which means that the algorithm scales is feasible for
-large datasets.
+prohibitive.  In the sequel we show how to exploit sparsity to drastically
+reduce the computation time.
 
 \subsection{Initial values}
 
@@ -2523,9 +2518,9 @@ Using these expressions we have
 Thus,
 \[
   \sum_{\substack{m  \\ i_m = i}} E_{t_m} =
-    \Big(\sum_m \gamma_{t_m}\Big) E_0
+    \Big(\sum_{\substack{ m \\ i_m = i}} \gamma_{t_m}\Big) E_0
     +
-    X_0^\trans \Big(\sum_{\substack m \\ i_m = i } \Delta \pi_{t_m}\Big)
+    X_0^\trans \Big(\sum_{\substack{ m \\ i_m = i }} \Delta \pi_{t_m}\Big)
     +
     \sum_{\substack{m \\ i_m = i}} \Delta X_{t_m}^\trans \pi_{t_m}
 \]
@@ -2567,102 +2562,66 @@ The first term reduces to
   X_0^\trans [ \Pi_t - \pi_t \pi_t^\trans] X_0 
     &= \gamma_t V_0 
     \;+\; \gamma_t (1 - \gamma_t) E_0 E_0^\trans
-    \;-\; E_0 (\gamma_t X_0 \Delta \pi_t)^\trans  \\
-    &\quad-\; (\gamma_t X_0 \Delta \pi_t) E_0^\trans 
+    \;-\; E_0 (\gamma_t \Delta \pi_t)^\trans X_0^\trans  \\
+    &\quad-\; X_0 (\gamma_t \Delta \pi_t) E_0^\trans 
     \;+\; X_0^\trans [ \Delta \Pi_t - \Delta \pi_t \Delta \pi_t^\trans ] X_0
 \end{align*}
-
-Without structure in the covariates, it takes time
-$\Oh(p \, I \, J)$ to compute all values of $w_0(\beta, i,j)$,
-$W_0(\beta, i)$, and $E_0(\beta, i)$
-as $i$ and $j$ range over all values in $\mathcal{I}$ and $\mathcal{J}$.
-In many cases, though, initial structure in the covariates allows us
-to reduce the computation time.  Often, senders belong to a small number of
-classes, say $\bar I$, such that $x_{0}(i,j) = x_{0}(i',j)$ whenever $i$ and
-$i'$ are in the same class; in this case the total computation time
-reduces to $\Oh(p \, \bar I \, J)$.
-
-For the remaining complexity estimates we assume that $w_0(\beta, i,j)$,
-$W_0(\beta, i)$, and $E_0(\beta, i)$ have been cached and can be recalled
-in constant time.
-
-The sender-specific log partial likelihood and the first term in the gradient
-involve a sum of covariates.  Using~\eqref{E:x-static-dynamic}, this sum can
-be decomposed as
-\[
-    \sum_{\substack{t_m \leq t_n, \\ i_m = i}}
-        x_{t_m}\!(i,j_m)
-        =
-            \sum_{j \in \mathcal{J}}
-                N_{t_n}\!(i,j) \, x_0(i,j)
-            \,\,\,
-            +
-            \sum_{\substack{t_m \leq t_n, \\ i_m = i}}
-                d_{t_m}\!(i,j);
-\]
-computing the first term takes time $\Oh(p \, \bar J)$ and computing the second
-term takes time $\Oh(\bar p \, n(i) \, \bar J)$.  Since it takes time
-$\Oh(\bar p \, n(i) \bar J)$
-to compute
-\(
-    \sum_{\substack{t_m \leq t_n, \\ i_m = i}}
-        \log W_{t_m}\!(\beta, i)
-\)
-once the static weights are known, computing $\log \mathit{PL}_{t_n}(\beta)$
-as the sum of sender-specific terms takes time
-\(
-    \Oh(p \, I \, \bar J + \bar p \, n \, \bar J).
-\)
-
-The second term in the gradient of the sender-specific log partial likelihood
-can be decomposed as
+The second term can be expressed as
 \begin{align*}
-    \sum_{\substack{t_m \leq t, \\ i_m = i}}
-    \sum_{j \in \mathcal{J}_{t_m}\!(i)}\!\!
-        \frac{w_{t_m}\!(\beta,i,j)}{W_{t_m}\!(\beta,i)}
-        \,
-        x_{t_m}\!(i,j)
-    &=
-        \bigg[
-        \sum_{\substack{t_m \leq t, \\ i_m = i}}
-            \frac{
-                W_{0}(\beta,i)
-            }{
-                W_{t_m}\!(\beta,i)
-            }
-        \bigg]
-        \cdot
-        E_0(i) \\
-    &\quad+
-        \sum_{j \in \mathcal{\bar J}(i)}
-            \bigg[
-                \sum_{\substack{t_m \leq t, \\ i_m = i}}
-                    \frac{
-                        w_{t_m}\!(\beta,i,j)
-                        -
-                        w_{0}(\beta,i,j)
-                    }{
-                        W_{t_m}\!(\beta,i)
-                    }
-            \bigg]
-            x_0(i,j) \\
-    &\quad+
-        \sum_{\substack{t_m \leq t, \\ i_m = i}}
-            \sum_{j \in \mathcal{\bar J}(i)}
-                \frac{w_{t_m}\!(\beta,i,j)}{W_{t_m}\!(\beta,i)}
-                \,
-                d_{t_m}\!(i,j).
+  \Delta X_t^\trans [ \Pi_t - \pi_t \pi_t^\trans] X_0
+    &= (\gamma_t \Delta X_t \pi_t) E_0^\trans
+    \;+\; \Delta X_t^\trans [\Pi_t + \pi_t \Delta \pi_t^\trans] X_0.
 \end{align*}
-The computation time for each of these terms is
-$\Oh(\bar p \, n(i) \, \bar J)$.  Thus, once the initial weights and
-expectations are known, the time for computing
-$\nabla [ \log \mathit{PL}_{t_n}\!(\beta) ]$ is
-$\Oh(p I \bar J + \bar p \, n \, \bar J)$.
+The third term is the transpose of the second.  The fourth term does not
+simplify.
 
-To summarize, the time complexity for computing the initial weights and
-expectations, the log partial likelihood, and the gradient of the log partial
-likelihood is
-$\Oh(p \, \bar I \, J + p \, I \, \bar J + \bar p \, n \, \bar J)$.
+To compute the sum $\sum_{\substack{m \\ i_m = i}} V_{t_m}$, we only
+accumulate sums of terms that change with time:
+$\gamma_t$,
+$\gamma_t(1 - \gamma_t)$,
+$\gamma_t \Delta \pi_t$,
+$X_0^\trans[\Delta \Pi_t - \Delta \pi_t \Delta \pi_t^\trans]$,
+$\gamma_t \Delta X_t \pi_t$, 
+$[\Pi_t + \pi_t \Delta \pi_t^\trans] X_0$,
+and
+$\Delta X_t^\trans [\Pi_t - \pi_t \pi_t^\trans] \Delta X_t$.
+Doing so takes time $\Oh(\bar J \, d \, p^2)$ for each time point.  As with
+the gradient computation, we compute the sums separately for each $i$ and then
+sum over all $i$, so that the total computation time is
+$\Oh(n \, \bar J \, d \, p^2 + I \, p^2)$.
+
+\subsection{Total computation time}
+
+To compute one Netwon step, we must compute the gradient and Hessian of the
+log partial likelihood at the current value of $\beta$, then compute the
+inverse of the Hessian and its product with the gradient.  Once we have the
+Hessian, computing its inverse takes time $\Oh(p^3)$.  Typically, it takes
+$\Oh(1)$ Newton steps to compute the maximum of a convex function (the
+constant is often below $30$).  The key factors in determining the
+computation time using the factors laid out above are $\bar I$, $\bar J$, and
+$d$.
+
+The value of $\bar I$ depends on structure in $x_0(i,j)$.  Specifically, 
+$\bar I$ is equal to the number of
+distinct values of the matrix $X_0(i)$ as $i$
+varies.  For the Enron data, we have that $\bar I = 12$: each sender
+belongs to one of $12$ groups determined by group (L/T/O), seniority (J/S),
+and gender (F/M); the matrix $X_0(i)$ depends only on the group of $i$.
+
+The value of $\bar J$ depends on the sparsity in $x_t(i,j)$.  If
+$x_t(i,j)$ only includes dyadic network effects, then $\bar J$ will typically
+be of size $\Oh(1)$ or $\Oh(J^\alpha)$ for a fractional value $\alpha$; when we add triadic effects, the size will typically
+grow to at most $\Oh(J^{2 \alpha})$.
+
+The value of $d$ depends on further structure in $x_t(i,j)$.  In our
+implementation, $d = \Oh(1)$ for dyadic effects and $d = \Oh(\bar J)$ for
+triadic effects.
+
+The total computational cost per Newton step is 
+$\Oh(\bar I \, J \, p^2  + n \, \bar J \, d \, p^2 + I \, p^2 + p^3)$.
+The significance of this expression is that it is nearly \emph{linear}
+in in $I$, $J$, and $n$.  Thus, the algorithm scales naturally to large
+datasets.
 
 
 \newcommand{\MPLEconsistencysection}{\ref{S:MPLE-consistency}}
