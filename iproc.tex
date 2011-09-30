@@ -112,7 +112,7 @@ questions stand out:
     interaction among similar individuals)?  To what degree is a shared
     attribute predictive of heightened interaction?
 
-    \item[Network Effects] To what extent are past interactions predictive of future ones?
+    \item[Network Effects] To what extent are past interaction behaviors predictive of future ones?
     If we observe interactions $i \to h$ and $h \to j$, are we more likely
     to see the interaction $i \to j$?
 
@@ -265,7 +265,7 @@ the full likelihood, $L$, as
             \, L(j_2 | t_2, i_2, t_1, i_1, j_1) \\
         &\quad \cdots
             L(t_n, i_n | t_{n-1}, i_{n-1}, j_{n-1}, \ldots t_1, i_1, j_1)
-            \, L(j_n | t_{n-1}, i_{n-1} \ldots t_1, i_1, j_1)
+            \, L(j_n | t_n, i_n, t_{n-1}, i_{n-1} \ldots t_1, i_1, j_1)
     \end{split} \\
     \begin{split}
         &=
@@ -1253,17 +1253,17 @@ We adjust for estimator bias by replacing $\tilde \beta_n$ with
 $\tilde \beta_n - \widehat{\mathrm{bias}}$.
 
 
-\section{Analysis of a corporate e-mail network}\label{S:enron-modeling}
+\section{Fitting the model to a corporate e-mail network}\label{S:enron-modeling}
 
-We now consider a data analysis example to demonstrate the efficacy of the models and inference methods introduced above, and to show how they enable us to address the three key concerns of interaction data analysis (homophily, reciprocation, and multiplicity) raised in Section~\ref{S:introduction}.  We study a corporate e-mail network consisting of a large subset of the e-mail messages sent within the Enron corporation between 1998 and 2002.  Our goal is to answer the following two questions:
+The modeling and inference framework introduced above enables us to directly address several of the key concerns of interaction data analysis, as raised in Section~\ref{S:introduction}.  To illustrate this point, we investigate a corporate e-mail network consisting of a large subset of the e-mail messages sent within the Enron corporation between 1998 and 2002.  Our goal is to answer the questions of which traits and behaviors are predictive of interactions in these data:
 
-\begin{enumerate}
-    \item To what extent is homophily predictive of communication behavior?  Is the existence of a common trait between two actors (gender, department, or seniority) predictive of their e-mail sending?
+\begin{description}
+    \item[Homophily] To what extent are shared traits predictive of communication behavior?  Is the existence of a common trait between two actors (gender, department, or seniority) predictive of their e-mail interactions?
 
-    \item Which network effects are useful for predicting sending behavior?  Do some network effects matter more than others?
-\end{enumerate}
+    \item[Network Effects] Are network effects, as characterized by past interaction behaviors, useful for predicting future interaction behaviors?  And if so, which effects dominate?
+\end{description}
 
-To answer these questions we employ the multicast proportional intensity modeling framework developed above; we include static covariates reflecting actor traits, as well as dynamic covariates capturing network effects.
+In order to address these questions, we apply the multicast proportional intensity modeling framework developed above to our e-mail message data.  Below we provide details of this data analysis, which is undertaken using static covariates reflecting actor traits, as well as dynamic covariates capturing network effects.  We then detail the application of our bootstrap bias reduction method for the multicast message exchange setting, and use it to demonstrate that our asymptotic approximations are reasonable in this data modeling regime.
 
 \subsection{Data and methods}
 
@@ -1338,7 +1338,6 @@ Consider first those actor traits that do not vary with time: the actors'
 genders, departments, and seniorities.  We encode the traits of actor $i$ and
 their second-order interactions using 9 actor-dependent binary ($0$/$1$)
 variables, described in Fig.~\ref{F:enron-actors}.
-
 \begin{figure}
 \centering
 \begin{tabular}{clc}
@@ -1389,7 +1388,6 @@ Fig.~\ref{F:network-behaviors}.  The first two behaviors (\textbf{send} and
 \textbf{receive}) are ``dyadic,'' involving exactly two actors, while the last
 four (\textbf{2-send}, \textbf{2-receive}, \textbf{sibling}, and
 \textbf{cosibling}) are ``triadic,'' involving exactly three actors.
-
 \begin{figure}
 \centering
 \begin{tabular}{p{2cm} c p{8cm}}
@@ -1574,20 +1572,6 @@ order of the square root of the number 21,365 of messages in the dataset,
 we can correct this bias using the parametric bootstrap outlined at the
 end of Section~\ref{S:multiple-receivers}.
 
-\begin{figure}
-    \centering
-    \makebox{\includegraphics[scale=0.6]{figures/boot-resid}}
-    \caption{
-        \captiontitle{Enron bootstrap residuals}
-        Summary of bootstrap residuals
-        for estimated coefficients using the Enron dataset, normalized by
-        estimated standard errors.  The points (orange) show the means, and
-        the error bars (purple) show one standard deviation.  Coefficients
-        are grouped by model term.
-    }
-    \label{F:boot-resid}
-\end{figure}
-
 Fig.~\ref{F:boot-resid} summarizes the corresponding bootstrap residuals (from
 $300$ replicates) for each component of the estimated parameter vector
 $\beta_0$; we can see from this figure that treating messages with multiple
@@ -1605,6 +1589,21 @@ maximum of $\widetilde{\mathrm{PL}}$ will avoid this situation by shrinking
 $\beta$ where $x_{t_m}(i_m, j)$ is sparse.  The dyadic covariates are
 particularly sparse, so the estimates for their coefficients are particularly
 vulnerable to this bias.
+
+
+\begin{figure}
+    \centering
+    \makebox{\includegraphics[scale=0.6]{figures/boot-resid}}
+    \caption{
+        \captiontitle{Enron bootstrap residuals}
+        Summary of bootstrap residuals
+        for estimated coefficients using the Enron dataset, normalized by
+        estimated standard errors.  The points (orange) show the means, and
+        the error bars (purple) show one standard deviation.  Coefficients
+        are grouped by model term.
+    }
+    \label{F:boot-resid}
+\end{figure}
 
 Besides correcting for bias, the bootstrap simulations give us confidence that
 the asymptotic approximations are reasonable.  The simulated standard errors
@@ -1624,8 +1623,6 @@ network effects account for 34\%.  The most dramatic decrease in the residual
 deviance comes from introducing the ``Send'' terms into the model; with only 8
 degrees of freedom, they are able to account for 31\% of the null deviance.
 The full model accounts for $54\%$ of the null deviance.
-
-
 
 \begin{figure}[h]
 \centering
@@ -1684,26 +1681,6 @@ estimate of its standard deviation to get a ``Pearson'' residual:
     {(N_t(i,j) - \hat N_t(i,j))}/\{\hat N_t(i,j)\}^{1/2}.
 \)
 
-
-\begin{figure}[h]
-  \centering
-  \subfloat[
-    Observed count $N_{\infty}(i,j)$ plotted against
-    expected count $\hat N_{\infty}(i,j)$
-  ]{\label{F:nobs-by-nexp}
-    \makebox{\includegraphics[scale=0.6]{figures/nobs-by-nexp}}}
-  \\
-  \subfloat[
-    Pearson residual
-    $(N_\infty(i,j) - \hat N_\infty(i,j)) / \{\hat N_\infty(i,j)\}^{1/2}$
-    plotted against expected count
-  ]{\label{F:resid-by-nexp}
-    \makebox{\includegraphics[scale=0.6]{figures/resid-by-nexp}}}
-  \caption{\label{F:goodness}
-    Goodness of fit plots for two models
-  }
-\end{figure}
-
 Fig.~\ref{F:nobs-by-nexp} shows a plot of $N_\infty(i,j)$ versus $\hat
 N_\infty(i,j)$ for two different models.  In the ``static'' model, we only
 include the static effects, while in the full (``static and dynamic'') model,
@@ -1734,6 +1711,28 @@ approximate $X^2$ degrees of freedom for that model.  However, at this stage
 we want a model with the lowest possible bias, and we want estimates for all
 of the network effects.
 
+\begin{figure}
+  \centering
+  \subfloat[
+    Observed count $N_{\infty}(i,j)$ plotted against
+    expected count $\hat N_{\infty}(i,j)$
+  ]{\label{F:nobs-by-nexp}
+    \makebox{\includegraphics[scale=0.6]{figures/nobs-by-nexp}}}
+  \\
+  \subfloat[
+    Pearson residual
+    $(N_\infty(i,j) - \hat N_\infty(i,j)) / \{\hat N_\infty(i,j)\}^{1/2}$
+    plotted against expected count
+  ]{\label{F:resid-by-nexp}
+    \makebox{\includegraphics[scale=0.6]{figures/resid-by-nexp}}}
+  \caption{\label{F:goodness}
+    Goodness of fit plots for two models
+  }
+\end{figure}
+
+\section{Evaluating the strength of homophily and network effects}
+
+[explain what we are going to do in this section]
 
 \subsection{Analysis 1: Testing for homophily}\label{S:enron-homophily}
 
@@ -1745,7 +1744,19 @@ process.  Thus, we are justified in using the estimated coefficients from the
 model to assess the predictive ability of the corresponding covariates.  Our
 first task is to gauge the predictive strength of homophily.
 
-\begin{figure}[h]
+Fig.~\ref{T:group-dynamic} shows the estimated group-level coefficients for
+the proportional intensity model.  Notably, homophily appears present for each
+main effect (Department, Seniority, and Gender): the estimated coefficients of
+$L(j)$, $T(j)$, $J(j)$, and $F(j)$ are all negative, while the estimated
+coefficients of $L(i) \cdot L(j)$, $T(i) \cdot T(j)$, $J(i) \cdot J(j)$, and
+$F(i) \cdot F(j)$ are all positive.  The way this homophily manifests for
+Gender, is that if $i$ is sending a message at time $t$, and person $j$ is
+identical to person $j'$ except for Gender, then $i$ is more likely to send to
+the similarly-gendered individual.  The relative probability is $\exp(-0.08 +
+0.38) \approx 1.3$ if $i$ is Female, and $\exp(0.08) \approx 1.1$ if $i$ is
+Male.  The characterization for other types of homophily is similar.
+
+\begin{figure}
   \centering
   \makebox[\textwidth]{
     \scriptsize
@@ -1760,18 +1771,6 @@ first task is to gauge the predictive strength of homophily.
   }
   \label{T:group-dynamic}
 \end{figure}
-
-Fig.~\ref{T:group-dynamic} shows the estimated group-level coefficients for
-the proportional intensity model.  Notably, homophily appears present for each
-main effect (Department, Seniority, and Gender): the estimated coefficients of
-$L(j)$, $T(j)$, $J(j)$, and $F(j)$ are all negative, while the estimated
-coefficients of $L(i) \cdot L(j)$, $T(i) \cdot T(j)$, $J(i) \cdot J(j)$, and
-$F(i) \cdot F(j)$ are all positive.  The way this homophily manifests for
-Gender, is that if $i$ is sending a message at time $t$, and person $j$ is
-identical to person $j'$ except for Gender, then $i$ is more likely to send to
-the similarly-gendered individual.  The relative probability is $\exp(-0.08 +
-0.38) \approx 1.3$ if $i$ is Female, and $\exp(0.08) \approx 1.1$ if $i$ is
-Male.  The characterization for other types of homophily is similar.
 
 
 \subsection{Comparison to contingency table-based analysis}
@@ -1834,7 +1833,7 @@ paradox.  This is easy to fix, by introducing covariates for the sender and
 receiver covariates and considering their interactions.   We have done
 exactly this, and Fig.~\ref{T:group-static} shows the resulting estimates.
 
-\begin{figure}[h]
+\begin{figure}
   \centering
   \makebox[\textwidth]{
     \scriptsize
@@ -1863,7 +1862,6 @@ intuition detailed in the previous paragraph.  We can see that even if we are
 not interested in network effects, it is important to account for them when
 making inferences about other covariates.
 
-
 \subsection{Analysis 2: Evaluating the importance of network effects}
 \label{S:enron-network}
 
@@ -1872,7 +1870,7 @@ predictive of sending behavior, even after accounting for network effects.  We
 now proceed to investigating the characteristics of these network effects and
 establishing which network effects are most important.
 
-Fig.~\ref{F:enron-net-indicator} shows the estimated coefficients for the
+Figure~\ref{F:enron-net-indicator} shows the estimated coefficients for the
 network indicator effects, giving a crude picture of the predictive importance
 of each network effect.  The estimated coefficients are all positive,
 indicating that network effects strengthen the ties between individuals.  The
@@ -1883,60 +1881,6 @@ comprises $1\{\textbf{receive}\}$, $1\{\textbf{sibling}\}$, and
 $1\{\textbf{2-send}\}$, whose estimated coefficients hover around $0.78$.
 Two triadic effects, $1\{\textbf{2-receive}\}$ and
 $1\{\textbf{cosibling}\}$ are not significantly predictive of sending behavior.
-
-The estimated coefficients for the recency-dependent covariates in
-Figs.~\ref{F:enron-dyad}--\ref{F:enron-triad} give a more complete
-picture of the network effects.  Firstly, we can see that dyadic effects
-persist for over three weeks from the time a message is sent.  The decay of
-the estimated coefficients is roughly exponential in the time elapsed, which
-corresponds to a super-exponential decay in the relative sending rate.  For 30
-minutes after $i$ sends a message to $j$, our estimated model predicts that
-the rate at which $i$ sends to $j$ will be multiplied by $\exp(0.90) \approx
-2.45$, and the rate at which $j$ sends to $i$ will be multiplied by $\exp(1.47)
-\approx 4.35$; then, between 30 minutes and 2 hours, the rates will be
-multiplied by $\exp(0.41) \approx 1.50$ and $\exp(0.56) \approx 1.75$,
-respectively; this proceeds similarly until after 21.3 days, when the rates
-will be be multiplied by $\exp(0.002) \approx 1.002$ and $\exp(0.001) \approx
-1.001$.
-
-Comparing the coefficients for $\textbf{send}_t^{(k)}$ with those of
-$\textbf{receive}_t^{(k)}$ we see that the latter are higher for $k \leq 2$,
-while the former are higher for $k > 2$.  The intuition is that if I am
-sending a message up to two hours after receiving a message from you, then I
-am likely to respond to you, but after that, I am more likely to send to a
-person who I emailed at the time I received your original message (provided
-you and the other individual are identical in all other respects).  The window
-when reciprocation is more important than past habit is less than 8 hours.
-
-From Fig.~\ref{F:enron-triad}, we can see that the triadic effects less
-pronounced and are much more short-lived than the dyadic effects.  About
-two-thirds of the estimated coefficients are within $2.5$ standard errors of
-$0$; even those that are significantly nonzero mostly lie between $-0.05$ and
-$+0.05$.  The exceptions are the coefficients for
-$\textbf{2-send}_t^{(1,1)}$ ($0.23$),
-$\textbf{2-send}_t^{(2,1)}$ ($0.13$),
-$\textbf{2-send}_t^{(3,1)}$ ($-0.09$),
-and
-$\textbf{sibling}_t^{(1,1)}$ ($0.09$).  The interpretation of the
-$\textbf{2-send}$ coefficients is this: if I sent Hal a message in the last 2
-hours and Hal sent you a message in the last 30 minutes, then I will send
-messages to you at a higher rate; however, if I sent Hal a message between 2
-and 8 hours ago and Hal sent you a message in the last 30 minutes, then I will
-send messages to you at a lower rate.  Similarly, the interpretation of the
-$\textbf{sibling}$ coefficient is that if Hal sent you and me messages in the
-last 30 minutes, then we are more likely to send messages to each other.
-
-Given the emphasis on transitivity in the networks literature, it may be
-disconcerting to the reader that most of the estimated coefficients for the
-time-dependent triadic effects were insignificant.  However,
-common sense says that except for the messages sent to me directly, I have
-no knowledge of my colleagues' e-mail activities; therefore, there is no
-reason why this activity should affect my sending behavior.  Any predictive
-power the triadic effects have, then, must be due to correlation with
-exogenous factors.  In this light, it is not surprising that the triadic
-effects are small and have small time horizons.
-
-
 
 \begin{figure}
 \centering
@@ -1975,6 +1919,20 @@ Coefficient
 \label{F:enron-net-indicator}
 \end{figure}
 
+The estimated coefficients for the recency-dependent covariates in
+Figs.~\ref{F:enron-dyad}--\ref{F:enron-triad} give a more complete
+picture of the network effects.  Firstly, we can see that dyadic effects
+persist for over three weeks from the time a message is sent.  The decay of
+the estimated coefficients is roughly exponential in the time elapsed, which
+corresponds to a super-exponential decay in the relative sending rate.  For 30
+minutes after $i$ sends a message to $j$, our estimated model predicts that
+the rate at which $i$ sends to $j$ will be multiplied by $\exp(0.90) \approx
+2.45$, and the rate at which $j$ sends to $i$ will be multiplied by $\exp(1.47)
+\approx 4.35$; then, between 30 minutes and 2 hours, the rates will be
+multiplied by $\exp(0.41) \approx 1.50$ and $\exp(0.56) \approx 1.75$,
+respectively; this proceeds similarly until after 21.3 days, when the rates
+will be be multiplied by $\exp(0.002) \approx 1.002$ and $\exp(0.001) \approx
+1.001$.
 \begin{figure}
   \centering
   \makebox{\includegraphics[scale=0.6]{figures/dyad}}
@@ -1988,6 +1946,44 @@ Coefficient
   \caption{Estimated coefficients for triadic effects, with standard errors}
   \label{F:enron-triad}
 \end{figure}
+
+
+Comparing the coefficients for $\textbf{send}_t^{(k)}$ with those of
+$\textbf{receive}_t^{(k)}$ we see that the latter are higher for $k \leq 2$,
+while the former are higher for $k > 2$.  The intuition is that if I am
+sending a message up to two hours after receiving a message from you, then I
+am likely to respond to you, but after that, I am more likely to send to a
+person who I e-mailed at the time I received your original message (provided
+you and the other individual are identical in all other respects).  The window
+when reciprocation is more important than past habit is less than 8 hours.
+
+From Fig.~\ref{F:enron-triad}, we can see that the triadic effects less
+pronounced and are much more short-lived than the dyadic effects.  About
+two-thirds of the estimated coefficients are within $2.5$ standard errors of
+$0$; even those that are significantly nonzero mostly lie between $-0.05$ and
+$+0.05$.  The exceptions are the coefficients for
+$\textbf{2-send}_t^{(1,1)}$ ($0.23$),
+$\textbf{2-send}_t^{(2,1)}$ ($0.13$),
+$\textbf{2-send}_t^{(3,1)}$ ($-0.09$),
+and
+$\textbf{sibling}_t^{(1,1)}$ ($0.09$).  The interpretation of the
+$\textbf{2-send}$ coefficients is this: if I sent Hal a message in the last 2
+hours and Hal sent you a message in the last 30 minutes, then I will send
+messages to you at a higher rate; however, if I sent Hal a message between 2
+and 8 hours ago and Hal sent you a message in the last 30 minutes, then I will
+send messages to you at a lower rate.  Similarly, the interpretation of the
+$\textbf{sibling}$ coefficient is that if Hal sent you and me messages in the
+last 30 minutes, then we are more likely to send messages to each other.
+
+Given the emphasis on transitivity in the networks literature, it may be
+disconcerting to the reader that most of the estimated coefficients for the
+time-dependent triadic effects were insignificant.  However,
+common sense says that except for the messages sent to me directly, I have
+no knowledge of my colleagues' e-mail activities; therefore, there is no
+reason why this activity should affect my sending behavior.  Any predictive
+power the triadic effects have, then, must be due to correlation with
+exogenous factors.  In this light, it is not surprising that the triadic
+effects are small and have small time horizons.
 
 \subsection{Comparison to exponential random graph-based analysis}
 
@@ -2046,6 +2042,14 @@ not make sense for a binary network.  Further, with a static network, it is
 impossible to separate the \texttt{2-send}, \texttt{sibling}, and
 \texttt{cosibling} effects, and it is impossibly to quantify the
 time-dependence of the dynamic effects.
+
+Figure~\ref{F:enron-ergm} shows the fitted coefficients for the models based on
+$G_1$ and $G_{10}$.  The \texttt{ergm} fitting software uses an MCMC-based
+procedure for estimating the coefficients.  We used a burn-in of $10^6$ and
+an MCMC sample size of $10^5$.  The estimated network effects agree
+qualitatively with the estimates in Fig.~\ref{F:enron-net-indicator}, as
+mutuality and transitive triples have positive effects while cyclic triples
+have a negligible effect.
 
 \begin{figure}\label{F:enron-ergm}
 \centering
@@ -2147,15 +2151,6 @@ not report them.
 }
 \end{figure}
 
-Fig.~\ref{F:enron-ergm} shows the fitted coefficients for the models based on
-$G_1$ and $G_{10}$.  The \texttt{ergm} fitting software uses an MCMC-based
-procedure for estimating the coefficients.  We used a burn-in of $10^6$ and
-an MCMC sample size of $10^5$.  The estimated network effects agree
-qualitatively with the estimates in Fig.~\ref{F:enron-net-indicator}, as
-mutuality and transitive triples have positive effects while cyclic triples
-have a negligible effect.
-
-
 \subsection{Comparison with actor-oriented model-based analysis}
 
 Finally, we compare our estimated effects with those from the dynamic
@@ -2209,7 +2204,7 @@ covariates:
 
 \begin{enumerate}
   \item Out-degree (density). Counts the number of outgoing ties for the actor.
-Analogous to our $\bar \lambda_t(i)$.  
+Analogous to our $\bar \lambda_t(i)$.
   \item Constant dyad covariates.  Weights tie $i \to j$ according to
 the value of $X(i) Y(j)$ for static traits $i$ and $j$ .  Analogous to our
 static covariates.
@@ -2389,7 +2384,7 @@ are
         \sum_{\substack{t_m \leq t, \\ i_m = i}}
           V_{t_m}(\beta, i),
 \end{gather*}
-where $E_{t}(\beta,i)$ and $V_{t}(\beta, i)$ are as defined in 
+where $E_{t}(\beta,i)$ and $V_{t}(\beta, i)$ are as defined in
 \eqref{E:log-pl-gradient} and \eqref{E:log-pl-neg-hessian}.
 When $x_t(i,j)$ is constant over time,
 there are sufficient statistics for $\beta$ and these formulas reduce.
@@ -2450,7 +2445,7 @@ For convenience, set $\mathcal{J}_0(i) = \mathcal{J}$.  Let
                 }
             \}.
 \end{equation*}
-For fixed $t$ and $i$, assume that computing 
+For fixed $t$ and $i$, assume that computing
 $\Delta x_t(i,j)$ for all values of $j$ takes amortized time $\Oh(d \bar J)$.
 
 Since $\mathcal{J}_0(i) = \mathcal{J}$,
@@ -2463,7 +2458,7 @@ Since $\mathcal{J}_0(i) = \mathcal{J}$,
             \exp\{ \beta^\trans \Delta x_t(i,j) \}
             \cdot
             1\{j \in \mathcal{J}_t(i)\} \nonumber \\
-        &= w_0(\beta, i, j) + \Delta w_t(i, j); 
+        &= w_0(\beta, i, j) + \Delta w_t(i, j);
     \label{E:weight-update-pair}
     \\
     W_{t}(\beta,i)
@@ -2535,7 +2530,7 @@ Using these expressions we have
 \]
 Thus,
 \[
-  \sum_{\substack{m  \\ i_m = i}} E_{t_m} = 
+  \sum_{\substack{m  \\ i_m = i}} E_{t_m} =
     \Big(\sum_m \gamma_{t_m}\Big) E_0
     +
     X_0^\trans \Big(\sum_{\substack m \\ i_m = i } \Delta \pi_{t_m}\Big)
