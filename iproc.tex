@@ -1977,6 +1977,168 @@ power the triadic effects have, then, must be due to correlation with
 exogenous factors.  In this light, it is not surprising that the triadic
 effects are small and have small time horizons.
 
+
+\subsection{Comparison to actor-oriented model-based analysis}
+
+To bolster our confidence in the results of Section~\ref{S:enron-network},
+we compare our estimates to those gotten from different network model.
+There are a number of dynamic network models in the literature, including
+\citefullauthor{hanneke2010discrete}'s~(\citeyear{hanneke2010discrete})
+exponential random graph model with time-varying coefficients  and
+\citefullauthor{kolar2010estimating}'s~(\citeyear{kolar2010estimating})
+time-varying stochastic block model.  There are at least two alternative point
+process-based approaches, both of which exclude network effects and other
+covariate information: \citet{malmgen2009characterizing} model activity at the
+level of the individual using a hidden Markov model, while
+\citet{heard2010bayesian} work at the level of the dyad, assuming a
+piecewise-constant interaction rate.  The closet match to the proportional
+intensity model is the actor-oriented model of
+\citet{snijders2001statistical,snijders2005models}.
+
+The actor-oriented model is designed for a sequence of snapshots of network
+activity, $G_1$, $G_2,\dotsc,$ where $G_t$ is an $n \times n$ binary matrix
+representing connectivity between actors at time~$t$.  The actor-oriented
+model considers the sequence of networks to be a Markov chain, with the
+distribution of $G_t$ determined by $G_{t-1}$.  The model is constructed by
+assuming that ties persist in time rather than being instantaneous events;
+actors change their ties between times $t-1$ and $t$ to maximize a stochastic
+utility function which depends on the network characteristics.  Roughly, given
+that the network is in state $G$, and given that actor $i$ is allowed to make
+a change, he will change his link to actor $j$ with probability $p(j | i, G)$,
+where
+\[
+  p(j | i, G) \propto
+    \exp\Big\{ \sum_{s=1}^S \beta_s T_s\big(G(i \leadsto j)\big)
+      +
+        \sum_{s=1}^{S'} \beta'_s T'_s(G \setminus \{ i \to j\})
+    \Big\}.
+\]
+Here, $T_s$ and $T'_s$ are network statistics;
+$\beta_s$ and $\beta_s'$ are unknown coefficients;
+$G(i \leadsto j)$ denotes the network gotten by adding link $i \to j$
+if it is absent or removing link $i \to j$ if it is present;
+$G \setminus \{ i \to j \}$ denotes the network gotten by removing $i \to j$
+if it is present.  Between the observation times $t-1$ and $t$, actor
+$i$ is allowed to make changes at rate $\lambda(i)$, specified via another
+parametric model.  \citet{snijders2010introduction} for a more thorough
+introduction.
+
+The actor-oriented change probability function $p(j | i, G)$ is analogous to
+the partial likelihood in the Cox proportional intensity model, while the
+actor rate function $\lambda(i)$ is analogous to the nonparametric baseline
+intensity in the Cox model.  For purposes of comparison, our focus is on the
+estimated coefficients for the change probability function.
+
+The actor-oriented model is designed for network snapshots, not instantaneous
+events.  To apply the model to the Enron data, we must first construct network
+snapshots, by binning the message data at regular intervals.  For
+computational reasons, we restrict our attention to a one-year window
+comprised of the messages sent between between January 1, 2001
+and December 31, 2001.  We create three network
+snaphots, $G_1$, $G_2$, and $G_3$, by dividing the year into $3$ consecutive
+four-month periods, denoted periods 1--3.  We set $G_t(i,j) = 1$ if
+message $i \to j$ was observed in period $t$ and set $G_t(i,j) = 0$ otherwise.
+
+We use the \texttt{RSiena} package to specify and fit the actor-oriented model,
+choosing terms to mimic the covariates from Section~\ref{S:enron-covariates}.
+The terms are as follows (short names are listed in parentheses):
+
+\begin{enumerate}
+  \item Out-degree/density (\texttt{out}). A statistic counting the number
+of outgoing ties.  This is analogous to our $\bar \lambda_t(i)$, except that
+the rate is the same for each sender.
+
+  \item Group-level edge effects (\texttt{traits}).  One covariate for each
+identifiable first-order interaction of the form $X(i) Y(j)$, where $i$ is the
+sender and $j$ is the receiver; the covariate counts the number of edges $i
+\to j$ with $X(i) Y(j) = 1$.  These effects correspond to the group-level
+effects in our model.  We would have liked to include second-order
+interactions as well, but were not able to fit the model with higher-order
+effects.
+
+  \item Out-degree/density endowment (\texttt{outendow}).  A statistic
+counting the number of deleted outgoing ties.  This corresponds to the
+negative of the $\textbf{send}$ term in our model.
+
+  \item Reciprocity (\texttt{recip}).  A statistic counting the number of
+    reciprocal ties, edge sets of the form $\{ i \to j, j \to i \}$.  This
+corresponds to the $\textbf{receive}$ term in our model.
+
+  \item 3-cycles (\texttt{3cycle}).  A statistic counting the number of cyclic
+triples, edge sets of the form $\{ h \to i, i \to j, j \to h\}$.  This
+corresponds to the $\textbf{2-receive}$ term in our model.
+
+  \item Transitive triplets (\texttt{ttriple}).  A statistic counting the
+number of transitive triples, edge sets of the form $\{ h \to i, i \to h, h
+\to j \}$.  This corresponds to the $\textbf{2-send}$, $\textbf{sibling},$
+and $\textbf{cosibling}$ terms in our model
+
+\end{enumerate}
+
+\noindent
+Note that with network snapshots, it is impossible to separate the
+$\textbf{2-send}$, $\textbf{sibling}$, and $\textbf{cosibling}$ effects.
+Further, with first-order Markov model, it is impossible to quantify the time
+decay of the dynamic effects. 
+
+Fig.~\ref{F:enron-actor} shows the fitted coefficients for the 
+actor-oriented model, which took approximately two hours to fit.
+The estimated network effects agree
+qualitatively with the estimates in Fig.~\ref{F:enron-net-indicator}, as
+out-degree/density endowment has a negative coefficient while reciprocity and
+transitive triplets have positive coefficients.  Further, the dyadic
+coefficients are larger than the triadic coefficients.  One discrepancy
+between the two models is that $\textbf{2-receive}$ had a negligible effect in
+the proportional intensity model, while it had a small negative effect in the
+actor-oriented model.
+
+[Add some discussion of group-level/trait effects?? ]
+
+
+\begin{figure}
+\centering
+\subfloat[Trait effects]{\label{F:actor-trait}
+\begin{tabular}{rrrrr}
+\toprule
+&\multicolumn{4}{c}{Receiver} \\
+\cmidrule(l){2-5}
+Sender & L & T & J & F \\
+\midrule
+\multirow{2}{*}{1}
+& -0.65  & -0.10  &  0.13  &  0.21  \\
+& \tiny{(0.12)} & \tiny{(0.07)} & \tiny{(0.07)} & \tiny{(0.09)} \\
+\multirow{2}{*}{L}
+&  \cellcolor{Gray} 0.62  & -0.28  & -0.11  & -0.16  \\
+& \cellcolor{Gray} \tiny{(0.13)} & \tiny{(0.10)} & \tiny{(0.09)} & \tiny{(0.11)} \\
+\multirow{2}{*}{T}
+&  0.46  &  \cellcolor{Gray} 0.45  & -0.15  & -0.46  \\
+& \tiny{(0.16)} & \cellcolor{Gray} \tiny{(0.06)} & \tiny{(0.07)} & \tiny{(0.10)} \\
+\multirow{2}{*}{J}
+&  0.00  &  0.15  &  \cellcolor{Gray} 0.10  & -0.21  \\
+& \tiny{(0.11)} & \tiny{(0.06)} & \cellcolor{Gray} \tiny{(0.06)} & \tiny{(0.09)} \\
+\multirow{2}{*}{F}
+&  0.19  &  0.33  &  0.08  &  \cellcolor{Gray} 0.13  \\
+& \tiny{(0.12)} & \tiny{(0.06)} & \tiny{(0.07)} & \cellcolor{Gray} \tiny{(0.08)} \\
+\bottomrule
+\end{tabular}
+}
+\qquad
+\subfloat[Network effects]{\label{F:actor-network}
+\begin{tabular}{lrrrrr}
+\toprule
+Variate & out & outendow & recip & 3cycle & ttriple \\
+\midrule
+Coefficient & -1.94 & -0.94 &  2.02 & -0.26 & 0.30 \\
+(SE) & \tiny{(0.02)} & \tiny{(0.01)} & \tiny{(0.06)} & \tiny{(0.03)} & \tiny{(0.01)} \\
+\bottomrule
+\end{tabular}
+}
+\caption{
+  Estimated effects for actor-oriented model.
+}
+\label{F:enron-actor}
+\end{figure}
+
 \subsection{Comparison to exponential random graph-based analysis}
 
 For a sanity check, we compare our analysis to one based on one of the more
@@ -2140,119 +2302,6 @@ single graph, so we were not able to get standard errors for the estimated
 coefficients.  The fit using $G_{10}$ was nondegenerate, but the reported
 standard errors for the group-level edge effects were nonsensical, so we do
 not report them.
-}
-\end{figure}
-
-\subsection{Comparison with actor-oriented model-based analysis}
-
-Finally, we compare our estimated effects with those from the dynamic
-actor-oriented model of \citet{snijders2001statistical,snijders2005models}.
-The model is designed for a sequence of snapshots of network activity, $G_1,
-G_2, \dotsc,$ where $G_t$ is an $n \times n$ binary matrix representing
-connectivity between actors at time $t$.  The actor-oriented model considers
-the sequence of networks to be a Markov chain, with the distribution of $G_t$
-determined by $G_{t-1}$.  The model is constructed by assuming that ties
-persist in time rather than being instantaneous events; actors change their
-ties between times $t-1$ and $t$ to maximize a stochastic utility function
-which depends on the network characteristics.  Roughly, given that the network
-is in state $G$, and given that actor $i$ is allowed to make a change, he
-will change his link to actor $j$ with probability $p(j | i, G)$, where
-\[
-  p(j | i, G) \propto
-    \exp\Big\{ \sum_{s=1}^S \beta_s T_s\big(G(i \leadsto j)\big)
-      +
-        \sum_{s=1}^{S'} \beta'_s T'_s(G \setminus \{ i \to j\})
-    \Big\}.
-\]
-Here, $T_s$ and $T'_s$ are network statistics;
-$\beta_s$ and $\beta_s'$ are unknown coefficients;
-$G(i \leadsto j)$ denotes the network gotten by adding link $i \to j$
-if it is absent or removing link $i \to j$ if it is present;
-$G \setminus \{ i \to j \}$ denotes the network gotten by removing $i \to j$
-if it is present.  Between the observation times $t-1$ and $t$, actor
-$i$ is allowed to make changes at rate $\lambda(i)$, specified via another
-parametric model.  \citet{snijders2010introduction} for a more thorough
-introduction.
-
-The actor-oriented change probability function $p(j | i, G)$ is analogous to
-the partial likelihood in the Cox proportional intensity model, while the
-actor rate function $\lambda(i)$ is analogous to the nonparametric baseline
-intensity in the Cox model.  For purposes of comparison, our focus is on the
-estimated coefficients for the change probability function.
-
-The actor-oriented model is designed for network snapshots, not instantaneous
-events.  To apply the model to the Enron data, we must first construct network
-snapshots, by binning the message data at regular intervals.  For
-computational reasons, we restrict our attention to a one-year window
-comprised of the messages sent between between January 1, 2001
-and December 31, 2001.  We create three network
-snaphots, $G_1$, $G_2$, and $G_3$, by dividing the year into $3$ consecutive
-four-month periods, denoted periods 1--3.  We set $G_t(i,j) = 1$ if
-message $i \to j$ was observed in period $t$ and set $G_t(i,j) = 0$ otherwise.
-
-We use the \texttt{RSiena} package to specify and fit an actor-oriented model,
-including the following terms in the actor utility function to mimic our
-covariates:
-
-\begin{enumerate}
-  \item Out-degree (density). Counts the number of outgoing ties for the actor.
-Analogous to our $\bar \lambda_t(i)$.
-  \item Constant dyad covariates.  Weights tie $i \to j$ according to
-the value of $X(i) Y(j)$ for static traits $i$ and $j$ .  Analogous to our
-static covariates.
-  \item Out-degree (density) endowment.  Counts the number of deleted outgoing
-ties.  Analogous to the negative of our $\textbf{send}$ term.
-  \item Reciprocity.  Counts the number of reciprocal ties.  Analogous to our $\textbf{recv}$
-  \item 3-cycles.  Counts the number of cycles of the form $i \to h \to j$, $j
-\to i$.  Analogous to our $\textbf{2-receive}$ term.
-  \item Transitive triplets.  Counts the number of transative triplets of the
-form $i \to h \to j$, $i \to j$.  Analogous to our $\textbf{2-send},$
-    $\textbf{sibling},$ and $\textbf{cosibling}$ terms.
-\end{enumerate}
-
-\noindent
-It took approximately two hours to fit the model.
-
-\begin{figure}
-\centering
-\subfloat[Trait effects]{\label{F:actor-trait}
-\begin{tabular}{rrrrr}
-\toprule
-&\multicolumn{4}{c}{Receiver} \\
-\cmidrule(l){2-5}
-Sender & L & T & J & F \\
-\midrule
-\multirow{2}{*}{1}
-& -0.65  & -0.10  &  0.13  &  0.21  \\
-& \tiny{(0.12)} & \tiny{(0.07)} & \tiny{(0.07)} & \tiny{(0.09)} \\
-\multirow{2}{*}{L}
-&  \cellcolor{Gray} 0.62  & -0.28  & -0.11  & -0.16  \\
-& \cellcolor{Gray} \tiny{(0.13)} & \tiny{(0.10)} & \tiny{(0.09)} & \tiny{(0.11)} \\
-\multirow{2}{*}{T}
-&  0.46  &  \cellcolor{Gray} 0.45  & -0.15  & -0.46  \\
-& \tiny{(0.16)} & \cellcolor{Gray} \tiny{(0.06)} & \tiny{(0.07)} & \tiny{(0.10)} \\
-\multirow{2}{*}{J}
-&  0.00  &  0.15  &  \cellcolor{Gray} 0.10  & -0.21  \\
-& \tiny{(0.11)} & \tiny{(0.06)} & \cellcolor{Gray} \tiny{(0.06)} & \tiny{(0.09)} \\
-\multirow{2}{*}{F}
-&  0.19  &  0.33  &  0.08  &  \cellcolor{Gray} 0.13  \\
-& \tiny{(0.12)} & \tiny{(0.06)} & \tiny{(0.07)} & \cellcolor{Gray} \tiny{(0.08)} \\
-\bottomrule
-\end{tabular}
-}
-\qquad
-\subfloat[Network effects]{\label{F:actor-network}
-\begin{tabular}{lrrrrr}
-\toprule
-Variate & out & outendow & recip & ctriple & ttriple \\
-\midrule
-Coefficient & -1.94 & -0.94 &  2.02 & -0.26 & 0.30 \\
-(SE) & \tiny{(0.02)} & \tiny{(0.01)} & \tiny{(0.06)} & \tiny{(0.03)} & \tiny{(0.01)} \\
-\bottomrule
-\end{tabular}
-}
-\caption{
-  Estimated effects for actor-oriented model.
 }
 \end{figure}
 
