@@ -51,13 +51,15 @@ submitted for publication November 2010.]}}
 Network data often take the form of repeated interactions between senders
 and receivers tabulated over time.  Here a model is introduced for treating such directed interactions as a
 multivariate point process: a Cox multiplicative intensity model using
-covariates that depend on the history of the process.
+covariates that may depend on the history of the process.
 Consistency and asymptotic normality are proved for the resulting
 partial-likelihood-based estimators under suitable regularity
 conditions, and an efficient fitting procedure is described.
 Multicast interactions---those involving a single sender
-but multiple receivers---are treated explicitly.   A motivating data
-example shows how network effects and group-level preferences can be incorporated when modeling message sending behavior in a corporate e-mail network.
+but multiple receivers---are treated explicitly.   
+The resulting inferential framework is then employed to model message sending behavior in a corporate e-mail network, with covariates introduced to account for both static shared traits and dynamic network effects, in order to determine which characteristics and behaviors of the senders and receivers in these data are predictive of interaction.
+
+%A motivating data example shows how network effects and group-level preferences can be incorporated when modeling message sending behavior in a corporate e-mail network.
 
 \keywords{Cox proportional hazards model; Network data analysis;
 Partial likelihood inference; Point processes}
@@ -121,11 +123,8 @@ questions stand out:
     implications of treating these as $L$ separate pairwise interactions?
 \end{description}
 
-The issues of homophily, network effects, and their interactions are quite
-common in the networks literature.  See for example
-\citet{mcpherson2001birds, butts2008relational, aral2009distinguishing, snijders2010introduction}, and
-references contained therein.  Multiplicity has largely been ignored in the
-networks literature, with notable exceptions including
+The issues of homophily, network effects, and their interactions arise frequently in the networks literature; see, e.g., \citet{mcpherson2001birds, butts2008relational, aral2009distinguishing, snijders2010introduction}, and
+references contained therein.  Multiplicity has largely been ignored in this literature, however, with notable exceptions including
 \citet{lunagomez2009geometric} in the context of graphical models, and
 \citet{shafiei2010mixed} for network modeling.
 
@@ -225,7 +224,7 @@ some observable trait like ethnicity, gender, or age group.  Its real
 strength, though, is that $x_t(i,j)$ is allowed to be \emph{any}
 predictable process, in particular $x_t(i,j)$ can depend on the history
 of interactions.  To model reciprocation and transitivity in the
-interactions  (with $\mathcal{I} = \mathcal{J}$), choose appropriate
+interactions  (with $\mathcal{I} = \mathcal{J}$), for example, choose appropriate
 values for $\Delta_k$ and include relevant covariates in $x_t(i,j)$:
 \[
     1\{\text{interaction $j \to i$ occurred in $[t - \Delta_k,t)$}\}
@@ -237,8 +236,8 @@ and
 \]
 Any process measurable with respect to the predictable $\sigma$-algebra is
 a valid covariate; this excludes only covariates depending on the future
-or the immediate present.  The data analysis example in
-Section~\ref{S:enron-covariates} describes specific covariates for
+or the immediate present.  In
+Section~\ref{S:enron-covariates} we detail specific covariates suitable for
 measuring homophily and network effects.
 
 Also note that despite presuming $\mathcal{I}$ and $\mathcal{J}$ to be fixed,
@@ -1255,15 +1254,15 @@ $\tilde \beta_n - \widehat{\mathrm{bias}}$.
 
 \section{Fitting the model to a corporate e-mail network}\label{S:enron-modeling}
 
-The modeling and inference framework introduced above enables us to directly address several of the key concerns of interaction data analysis raised in Section~\ref{S:introduction}.  To demonstrate the utility of our framework, we investigate a corporate e-mail network consisting of a large subset of the e-mail messages sent within the Enron corporation between 1998 and 2002.  Our goal is to determine which (if any) traits and behaviors are predictive of interactions in these data as follows.
+Recall from Section~\ref{S:introduction} that, given a set of interaction data triples $(t,i,j)$, a primary modeling goal lies in determining which characteristics and behaviors of the senders and receivers are predictive of interaction.  The modeling and inference framework introduced above enables us to directly address these concerns, as we now demonstrate through the analysis corporate e-mail network consisting of a large subset of the e-mail messages sent within the Enron corporation between 1998 and 2002.  These e-mail interaction data give rise to the following questions:
 
 \begin{description}
-    \item[Homophily] To what extent are shared traits predictive of interactions behaviors?  Is the existence of a common trait between two actors (gender, department, or seniority) predictive of their e-mail interactions?
+    \item[Homophily] To what extent are traits shared between individuals (gender, department, or seniority) predictive of interaction behaviors?
 
-    \item[Network Effects] Are network effects, as characterized by past interaction behaviors (dyadic or triadic), valuable in predicting future interaction behaviors?  And if so, which effects dominate?
+    \item[Network Effects] To what extent are dyadic or or even triadic network effects, as characterized by past interaction behaviors, relevant to predicting future interaction behaviors?
 \end{description}
 
-This analysis is accomplished using the multicast proportional intensity modeling framework developed above.   We employ both static covariates reflecting actor traits, as well as dynamic covariates capturing network effects.  The bootstrap technique introduced in Section~\ref{S:approximation-bias} for multicast interactions is then used to reduce bias in the estimated effects, as well as to demonstrate that our asymptotic approximations are reasonable in this data modeling regime.  We conclude this section with a discussion of the goodness of fit of our model in this setting.
+We undertake our analysis using the multicast proportional intensity modeling framework developed in Sections~\ref{S:point-process-model} and~\ref{S:MPLE-consistency} above, employing both static covariates reflecting actor traits, as well as dynamic covariates capturing network effects.  The bootstrap technique introduced in Section~\ref{S:multiple-receivers} for multicast interactions is then used to reduce bias in the estimated effects, as well as to demonstrate that our asymptotic approximations are reasonable in this data modeling regime.  We conclude this section with a discussion of the goodness of fit of our model in this setting, before turning our attention in Section~\ref{S:strength-of-effects} to an evaluation of the strength of homophily and network effects in explaining these data.
 
 \subsection{Data and methods}
 
@@ -1309,10 +1308,9 @@ corresponding asymptotic theory.
 In the setting of this example, the interaction count is high, so
 the asymptotic framework developed in Sections~\ref{S:MPLE-consistency}
 and~\ref{S:multiple-receivers} is natural.  The main violation of assumptions
-A\ref{A:square-int}--A\ref{A:var-equicont} is that our covariates (described in Section~\ref{S:enron-covariates}) are
-in principle unbounded.  Despite this violation, our bootstrap calculations
-(described in Sec.~\ref{S:enron-bootstrap}) show that the asymptotic approximations are still
-reasonable.
+A\ref{A:square-int}--A\ref{A:var-equicont} is that our covariates (described in Section~\ref{S:enron-covariates}) may
+in principle be unbounded; nevertheless, bootstrap calculations
+(described in Section~\ref{S:enron-bootstrap}) show that the asymptotic approximations we employ remain reasonable in this regime.
 
 We wrote custom software in the C programming language to fit the model using
 Newton's method.  Exploiting structure in the covariates, the fitting
@@ -1320,24 +1318,21 @@ procedure has computational complexity $O(n p^2 + J p^2 + p^3)$, where $n$ is
 the number of messages, $J$ is the number of receivers, and $p$ is the number
 of covariates.  Appendix~\ref{S:implementation} describes the fitting
 procedure in more detail.  It took approximately 70 minutes to fit the full
-model with 2.4 GHz processor and 4GB of RAM.  Each bootstrap replicate took
+model using a standard desktop computer with a 2.4 GHz processor and 4GB of RAM.  Each bootstrap replicate took
 approximately 20 minutes to generate and fit, using the original estimate as a
 starting point for the fitting algorithm.  Most of the complexity in the
-fitting procedure comes from triadic covariates (described below); if we only
-include dyadic covariates then the model takes less than 10 seconds to fit.
-
-
+fitting procedure is due to the inclusion of triadic covariates as described below; including only dyadic covariates reduces the fitting time to less than 10 seconds.
 
 \subsection{Covariates}\label{S:enron-covariates}
 
-The goal of our investigation is to assess the predictive ability of actor traits and network effects.  To this end, we choose covariates that encode these traits and effects.  Each covariate is encoded as a component of the time-varying dyad-dependent vector $x_t(i,j)$, which is linked to the rate of interaction between sender $i$ and receiver $j$ via model~\eqref{E:cox-intensity}.
+The goal of our investigation is to assess the predictive ability of actor traits and network effects.  To this end, we choose covariates that encode these traits and effects.  Each covariate is encoded as a component of the time-varying dyad-dependent vector $x_t(i,j)$, which is linked to the rate of interaction between sender $i$ and receiver $j$ via the multicast proportional intensity model of~\eqref{E:cox-intensity}.
 
 \subsubsection{Static covariates to measure homophily and group-level effects}
 
 Consider first those actor traits that do not vary with time: the actors'
 genders, departments, and seniorities.  We encode the traits of actor $i$ and
 their second-order interactions using 9 actor-dependent binary ($0$/$1$)
-variables, described in Fig.~\ref{F:enron-actors}.
+variables, as described in Fig.~\ref{F:enron-actors}.
 \begin{figure}
 \centering
 \begin{tabular}{clc}
@@ -1356,7 +1351,7 @@ $JF(i)$ & $J(i) \cdot F(i)$               & 27 \\
 \bottomrule
 \end{tabular}
 \caption{
-  Actor-specific traits, with counds of how many actors share each trait
+  Actor-specific traits, with counts of how many actors share each trait
 }
 \label{F:enron-actors}
 \end{figure}
@@ -1372,7 +1367,7 @@ of the two can be absorbed into $\bar \lambda_t(i)$ without changing the
 likelihood.  Covariates of the form $1 \cdot Y(j)$ pose no identifiability
 problems.
 
-We measure homophily be the estimated coefficients for covariates of the form
+We measure homophily by way of the estimated coefficients for covariates of the form
 $X(i) \cdot X(j)$.  For example, if the coefficient of $J(i) \cdot J(j)$ is
 large and positive, this tells us that Junior employees exhibit homophily in
 their sending behaviors.
@@ -1382,7 +1377,7 @@ their sending behaviors.
 
 Static effects are useful for determining which traits are predictive of the
 relative rate of interaction between sender $i$ and receiver $j$, but they do
-not shed light on network effects.  We are interested in the predictive
+not shed light on network effects.  Therefore, we are also interested in the predictive
 relevance of the dynamic network behaviors described in
 Fig.~\ref{F:network-behaviors}.  The first two behaviors (\textbf{send} and
 \textbf{receive}) are ``dyadic,'' involving exactly two actors, while the last
@@ -1463,21 +1458,20 @@ four (\textbf{2-send}, \textbf{2-receive}, \textbf{sibling}, and
     from $i$ and~$j$
 \end{tabular}
 \caption{
-  Network (dynamic) behaviors.
+  Dynamic covariates to measure network effects
 }
 \label{F:network-behaviors}
 \end{figure}
 
-To measure first-order dependence on the network effects, we introduce binary
+To measure first-order dependence of message exchange behavior on these network effects, we introduce binary
 indicators for all $6$ effects as components of $x_t(i,j)$.  These indicators
 depend on the sender $i$, the receiver, $j$, and the history of the process at
 the current time $t$.  By the shorthand notation $1\{\textbf{send}\}$, we denote
 the indicator variable depending on sender $i$, receiver $j$, and the current
-time, $t$,  which indicates if $i$ has sent $j$ a message before time $t$; the
-other notations ($1\{\textbf{receive}\}$, $1\{\textbf{2-receive}\}$, etc.) are
+time, $t$,  which indicates if $i$ has sent $j$ a message before time $t$, with the remaining notations ($1\{\textbf{receive}\}$, $1\{\textbf{2-receive}\}$, etc.)
 defined similarly.
 
-To measure higher-order time dependence, we introduce further covariates.  We partition the interval $[-\infty, t)$ into $K = 7$ sub-intervals:
+To measure higher-order time dependence, we introduce additional covariates of the following form.  We partition the interval $[-\infty, t)$ into $K = 7$ sub-intervals:
 \[
   [-\infty, t) =
   [t - \Delta_K, t - \Delta_{K-1}) \cup [t - \Delta_{K-1}, t - \Delta_{K-2}) \cup \dotsb \cup [t - \Delta_1, t - \Delta_0)
@@ -1497,9 +1491,9 @@ Define the half-open interval $I_{t}^{(k)} = [t - \Delta_k, t -
   \text{\textbf{receive}}^{(k)}_t(i,j)
     &= \#\{ j \to i \text{ in } I_t^{(k)} \};
 \end{align*}
-for sender $i$, these covariates measure the number of messages sent-to and received-by receiver $j$ in time interval $I_t^{(k)}$.
+for sender $i$, such that these covariates measure the number of messages sent to, and respectively received by, receiver $j$ in time interval $I_t^{(k)}$.
 
-The dyadic effects have been defined as above to enable easy interpretation of
+The dyadic effects have been defined in the manner above to enable easy interpretation of
 the corresponding coefficients.  To illustrate this, for $k = 1, \dotsc, K$,
 suppose that $\beta_{k}$ is the coeffiecient corresponding to
 $\text{\textbf{send}}^{(k)}_t(i,j)$.  If we observe the message $i \to j$ at
@@ -1554,8 +1548,8 @@ where $s$ is the time of the $i \to h$ message and $t$ is the time of the $h
 event causes the sending rate $\lambda_{t'}(i,j)$ to be multiplied by the
 factor $e^{\beta_{k,l}}$, where $t' \in (s + \Delta_{k-1}, s + \Delta_{k}]$
 and $t' \in (t + \Delta_{l-1}, t + \Delta_l]$.  We expect $\beta_{k,l}$ to
-decrease as $k$, and $l$ increase (again, we do not enforce this constraint in
-the fitting procedure).
+decrease as $k$ and $l$ increase, though again we do not enforce this constraint in
+the fitting procedure.
 
 
 \subsection{Bootstrap bias correction}\label{S:enron-bootstrap}
@@ -1575,7 +1569,7 @@ end of Section~\ref{S:multiple-receivers}.
 Fig.~\ref{F:boot-resid} summarizes the corresponding bootstrap residuals (from
 $300$ replicates) for each component of the estimated parameter vector
 $\beta_0$; we can see from this figure that treating messages with multiple
-recipients as multiple single-recipient messages bias on the order of the
+recipients as multiple single-recipient messages introduces bias on the order of the
 standard error for most of the coefficients.  There is a pronounced negative
 bias in coefficient estimates for the dyadic effects, which is representative
 of a more general phenomenon.  Sparsity in the components of $x_{t}(i,j)$
@@ -1614,9 +1608,8 @@ Theorem~\ref{T:score-fisher}.
 
 \subsection{Goodness of fit}\label{S:enron-goodness}
 
-
-Figure~\ref{F:deviance} gives an ad-hoc analysis of deviance table for the
-fitted model, which shows how the approximate deviance (twice the approximate
+Figure~\ref{F:deviance} details an ad-hoc analysis of deviance for the
+fitted model, showing how the approximate deviance (twice the approximate
 log partial likelihood) behaves as we add consecutive terms to the model.
 Group-level (static) effects account for 18\% of the residual deviance and
 network effects account for 34\%.  The most dramatic decrease in the residual
@@ -1624,7 +1617,7 @@ deviance comes from introducing the ``Send'' terms into the model; with only 8
 degrees of freedom, they are able to account for 31\% of the null deviance.
 The full model accounts for $54\%$ of the null deviance.
 
-\begin{figure}[h]
+\begin{figure}
 \centering
 \begin{tabular}{lrrrr}
     \toprule
@@ -1655,26 +1648,25 @@ The full model accounts for $54\%$ of the null deviance.
 \end{figure}
 
 The residual deviance for the full model is approximately $4.8$ times the
-residual degrees of freedom.  An ad-hoc adjustment this over-dispersion
-is multiplying the calculated standard errors by $\sqrt{4.8} \approx 2.2$.
+residual degrees of freedom, and so an ad-hoc adjustment for this over-dispersion
+is to multiply the calculated standard errors by $\sqrt{4.8} \approx 2.2$.
 
-The residual deviance by itself is not reliable as a goodness-of-fit measure,
-as it depends only on the estimated coefficients (Sec.~4.4.5 of
-\cite{mccullagh1989generalized} discusses a related problem for logistic
+Note, however, that the residual deviance by itself is not adequate as a goodness-of-fit measure,
+as it depends only on the estimated coefficients (see Section~4.4.5 of
+\cite{mccullagh1989generalized} for discussion of a related problem for logistic
 regression with sparse data).  To shed more light on how well the model fits
-the data, we use a normalized version of the martingale residual from
+these data, we use a normalized version of the martingale residual from
 \cite{therneau1990martingale}, which we call a Pearson residual.
 Specifically, given $\hat \beta$, we define
 \[
   \hat N_{t}(i,j)
     = \sum_{t_m \leq t}
         \frac{w_{t_m}(\hat \beta, i, j)}{W_{t_m}(\hat \beta, i)}
-        1\{i_m = i\};
+        1\{i_m = i\},
 \]
-this is the expected number of $i \to j$ events given the estimated model,
+which is the expected number of $i \to j$ events given the estimated model,
 with $\int \bar \lambda_t(i) \, dt$ estimated by the
-\cite{breslow1974covariance} estimate $\int \frac{\sum_j dN_{i,j}(t)}{W_t(\hat
-\beta, i)}$.  The martingale residual analogous to that of Therneau et al.\ is
+\cite{breslow1974covariance} estimate $\int W_t(\hat \beta, i)^{-1} \sum_j dN_{i,j}(t)$.  The martingale residual analogous to that of \cite{therneau1990martingale} is then
 defined as $N_t(i,j) - \hat N_t(i,j)$; we normalize this quantity by an
 estimate of its standard deviation to get a ``Pearson'' residual:
 \(
@@ -1683,33 +1675,13 @@ estimate of its standard deviation to get a ``Pearson'' residual:
 
 Fig.~\ref{F:nobs-by-nexp} shows a plot of $N_\infty(i,j)$ versus $\hat
 N_\infty(i,j)$ for two different models.  In the ``static'' model, we only
-include the static effects, while in the full (``static and dynamic'') model,
-we also include all six types of network effect.  The fit for the static model
-is poor.  For instance, the static model repeatedly predicts up to 200 $i \to
+include the static covariates, while in the full (``static and dynamic'') model,
+we also include all six types of network covariates.  The fit for the static model
+is poor.  For instance, it repeatedly predicts up to 200 $i \to
 j$ events where we only observed 1 or 2; likewise, the model predicts $1$ or
 fewer events where we observed up to $20$.  For the full model, which includes
-the dynamic effects, the fit is much better, with the relationship between
+the dynamic covariates to account for network effects, the fit is much better, with the relationship between
 observed and expected interaction counts being roughly linear.
-
-Fig.~\ref{F:resid-by-nexp} shows the Pearson residuals.  For the full model,
-more than 95\% are less than $1.15$ in absolute value, and the maximum
-absolute residual is $21.8$.  In contrast, the 95\% quantile for the absolute
-residuals in the static model is at $3.7$, and the maximum absolute residual
-is $125.0$.  The sum of squares if the residuals ($X^2$) is $16498$ in the
-full model, over $29$ times lower than that for the static model ($480661$).
-We don't know what a ``reasonable'' value for $X^2$ is; an ad-hoc degrees of
-freedom calculation suggests that for the full number this should be roughly
-equal to $23974 = 156 \cdot 155 - (90 + 2 \cdot 8 + 2 \cdot 50)$, which
-suggests that the full model is too aggressive.  The bootstrap simulations
-confirm this, with $23974$ being $5.2$ standard deviances below the mean
-value $X^2$ for the bootstrap replicates.
-
-For a more parsimonious model, we might drop most of the triadic effects.
-Indeed, the model which only uses dyadic effects has a $X^2$ value of 23785,
-which is very close to $24074 = 156 \cdot 155 - (90 + 2 \cdot 8)$, the
-approximate $X^2$ degrees of freedom for that model.  However, at this stage
-we want a model with the lowest possible bias, and we want estimates for all
-of the network effects.
 
 \begin{figure}
   \centering
@@ -1730,9 +1702,29 @@ of the network effects.
   }
 \end{figure}
 
-\section{Evaluating the strength of homophily and network effects}
+Fig.~\ref{F:resid-by-nexp} shows the Pearson residuals.  For the full model,
+more than 95\% are less than $1.15$ in absolute value, and the maximum
+absolute residual is $21.8$.  In contrast, the 95\% quantile for the absolute
+residuals in the static model is at $3.7$, and the maximum absolute residual
+is $125.0$.  The sum of squares if the residuals ($X^2$) is $16498$ in the
+full model, over $29$ times lower than that for the static model ($480661$).
+We don't know what a ``reasonable'' value for $X^2$ is; an ad-hoc degrees of
+freedom calculation suggests that for the full number this should be roughly
+equal to $23974 = 156 \cdot 155 - (90 + 2 \cdot 8 + 2 \cdot 50)$, which
+suggests that the full model is too aggressive.  The bootstrap simulations
+confirm this, with $23974$ being $5.2$ standard deviances below the mean
+value $X^2$ for the bootstrap replicates.
 
-[explain what we are going to do in this section]
+For a more parsimonious model, we might drop most of the triadic effects.
+Indeed, the model which only uses dyadic effects has a $X^2$ value of $23785$,
+which is very close to $24074 = 156 \cdot 155 - (90 + 2 \cdot 8)$, the
+approximate $X^2$ degrees of freedom for that model.  However, at this stage
+we desire a model with the lowest possible bias, and also with to acquire estimates for all
+of the network effects.
+
+\section{Evaluating the strength of homophily and network effects}\label{S:strength-of-effects}
+
+Given the model fitting procedure and results described above, we may now evaluate the strength of homophily and network effects in predicting the interaction behavior observed in our data.
 
 \subsection{Analysis 1: Testing for homophily}\label{S:enron-homophily}
 
