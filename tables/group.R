@@ -8,6 +8,7 @@ nsend <- 10
 
 fit.s <- fromJSON("output/fit-static.json")
 fit <- fromJSON("output/fit-dynamic.json")
+load("output/boot.rda")
 
 cov.s <- get.cov(fit.s)
 cov <- get.cov(fit)
@@ -76,7 +77,7 @@ print.coefs(coef.s, se.coef.s, TRUE)
 sink()
 
 sink(file = "tables/group-dynamic.tex")
-print.coefs(coef, se.coef, TRUE)
+print.coefs(coef + bias.mean[1:(nsend*nrecv)], se.coef, TRUE)
 sink()
 
 
