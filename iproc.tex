@@ -56,7 +56,7 @@ Consistency and asymptotic normality are proved for the resulting
 partial-likelihood-based estimators under suitable regularity
 conditions, and an efficient fitting procedure is described.
 Multicast interactions---those involving a single sender
-but multiple receivers---are treated explicitly.   
+but multiple receivers---are treated explicitly.
 The resulting inferential framework is then employed to model message sending behavior in a corporate e-mail network, with covariates introduced to account for both static shared traits and dynamic network effects, in order to determine which characteristics and behaviors of the senders and receivers in these data are predictive of interaction.
 
 %A motivating data example shows how network effects and group-level preferences can be incorporated when modeling message sending behavior in a corporate e-mail network.
@@ -2309,7 +2309,7 @@ not report them.
 
 \section{Discussion}\label{S:discussion}
 
-Our analysis of the Enron corpus in Sections~\ref{} and~\ref{} above
+Our analysis of the Enron corpus in Sections~\ref{S:enron-modeling} and~\ref{S:strength-of-effects} above
 has demonstrated the ways in which static and dynamic effects manifest
 themselves in e-mail communication networks, and we expect similar
 conclusions to hold broadly for other types of directed interaction
@@ -2595,11 +2595,11 @@ Suppressing the dependence on $\beta$ and $i$, we have
 \end{align*}
 The first term reduces to
 \begin{align*}
-  X_0^\trans [ \Pi_t - \pi_t \pi_t^\trans] X_0 
-    &= \gamma_t V_0 
+  X_0^\trans [ \Pi_t - \pi_t \pi_t^\trans] X_0
+    &= \gamma_t V_0
     \;+\; \gamma_t (1 - \gamma_t) E_0 E_0^\trans
     \;-\; E_0 (\gamma_t \Delta \pi_t)^\trans X_0^\trans  \\
-    &\quad-\; X_0 (\gamma_t \Delta \pi_t) E_0^\trans 
+    &\quad-\; X_0 (\gamma_t \Delta \pi_t) E_0^\trans
     \;+\; X_0^\trans [ \Delta \Pi_t - \Delta \pi_t \Delta \pi_t^\trans ] X_0
 \end{align*}
 The second term can be expressed as
@@ -2618,7 +2618,7 @@ $\Delta \pi_t$,
 $\gamma_t(1 - \gamma_t)$,
 $\gamma_t \Delta \pi_t$,
 $\Delta \pi_t \Delta \pi_t^\trans$,
-$\gamma_t \Delta X_t \pi_t$, 
+$\gamma_t \Delta X_t \pi_t$,
 $\Delta X_t^\trans [\Pi_t + \pi_t \Delta \pi_t^\trans]$,
 and
 $\Delta X_t^\trans [\Pi_t - \pi_t \pi_t^\trans] \Delta X_t$.
@@ -2638,7 +2638,7 @@ constant is often below $30$).  The key factors in determining the
 computation time using the factors laid out above are $\bar I$, $\bar J$, and
 $d$.
 
-The value of $\bar I$ depends on structure in $x_0(i,j)$.  Specifically, 
+The value of $\bar I$ depends on structure in $x_0(i,j)$.  Specifically,
 $\bar I$ is equal to the number of
 distinct values of the matrix $X_0(i)$ as $i$
 varies.  For the Enron data, we have that $\bar I = 12$: each sender
@@ -2654,7 +2654,7 @@ The value of $d$ depends on further structure in $x_t(i,j)$.  In our
 implementation, $d = \Oh(1)$ for dyadic effects and $d = \Oh(\bar J)$ for
 triadic effects.
 
-The total computational cost per Newton step is 
+The total computational cost per Newton step is
 $\Oh(\bar I \, J \, p^2  + n \, \bar J \, d \, p^2 + I \, p^2 + p^3)$.
 The significance of this expression is that it is nearly \emph{linear}
 in in $I$, $J$, and $n$.  Thus, the algorithm scales naturally to large
