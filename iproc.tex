@@ -2156,6 +2156,119 @@ mutuality and transitive triples have positive effects while cyclic triples
 have a negligible effect.
 
 
+\subsection{Comparison with actor-oriented model-based analysis}
+
+Finally, we compare our estimated effects with those from the dynamic
+actor-oriented model of \citet{snijders2001statistical,snijders2005models}.
+The model is designed for a sequence of snapshots of network activity, $G_1,
+G_2, \dotsc,$ where $G_t$ is an $n \times n$ binary matrix representing
+connectivity between actors at time $t$.  The actor-oriented model considers
+the sequence of networks to be a Markov chain, with the distribution of $G_t$
+determined by $G_{t-1}$.  The model is constructed by assuming that ties
+persist in time rather than being instantaneous events; actors change their
+ties between times $t-1$ and $t$ to maximize a stochastic utility function
+which depends on the network characteristics.  Roughly, given that the network
+is in state $G$, and given that actor $i$ is allowed to make a change, he
+will change his link to actor $j$ with probability $p(j | i, G)$, where
+\[
+  p(j | i, G) \propto
+    \exp\Big\{ \sum_{s=1}^S \beta_s T_s\big(G(i \leadsto j)\big)
+      +
+        \sum_{s=1}^{S'} \beta'_s T'_s(G \setminus \{ i \to j\})
+    \Big\}.
+\]
+Here, $T_s$ and $T'_s$ are network statistics;
+$\beta_s$ and $\beta_s'$ are unknown coefficients;
+$G(i \leadsto j)$ denotes the network gotten by adding link $i \to j$
+if it is absent or removing link $i \to j$ if it is present;
+$G \setminus \{ i \to j \}$ denotes the network gotten by removing $i \to j$
+if it is present.  Between the observation times $t-1$ and $t$, actor
+$i$ is allowed to make changes at rate $\lambda(i)$, specified via another
+parametric model.  \citet{snijders2010introduction} for a more thorough
+introduction.
+
+The actor-oriented change probability function $p(j | i, G)$ is analogous to
+the partial likelihood in the Cox proportional intensity model, while the
+actor rate function $\lambda(i)$ is analogous to the nonparametric baseline
+intensity in the Cox model.  For purposes of comparison, our focus is on the
+estimated coefficients for the change probability function.
+
+The actor-oriented model is designed for network snapshots, not instantaneous
+events.  To apply the model to the Enron data, we must first construct network
+snapshots, by binning the message data at regular intervals.  For
+computational reasons, we restrict our attention to a one-year window
+comprised of the messages sent between between January 1, 2001
+and December 31, 2001.  We create three network
+snaphots, $G_1$, $G_2$, and $G_3$, by dividing the year into $3$ consecutive
+four-month periods, denoted periods 1--3.  We set $G_t(i,j) = 1$ if
+message $i \to j$ was observed in period $t$ and set $G_t(i,j) = 0$ otherwise.
+
+We use the \texttt{RSiena} package to specify and fit an actor-oriented model,
+including the following terms in the actor utility function to mimic our
+covariates:
+
+\begin{enumerate}
+  \item Out-degree (density). Counts the number of outgoing ties for the actor.
+Analogous to our $\bar \lambda_t(i)$.  
+  \item Constant dyad covariates.  Weights tie $i \to j$ according to
+the value of $X(i) Y(j)$ for static traits $i$ and $j$ .  Analogous to our
+static covariates.
+  \item Out-degree (density) endowment.  Counts the number of deleted outgoing
+ties.  Analogous to the negative of our $\textbf{send}$ term.
+  \item Reciprocity.  Counts the number of reciprocal ties.  Analogous to our $\textbf{recv}$
+  \item 3-cycles.  Counts the number of cycles of the form $i \to h \to j$, $j
+\to i$.  Analogous to our $\textbf{2-receive}$ term.
+  \item Transitive triplets.  Counts the number of transative triplets of the
+form $i \to h \to j$, $i \to j$.  Analogous to our $\textbf{2-send},$
+    $\textbf{sibling},$ and $\textbf{cosibling}$ terms.
+\end{enumerate}
+
+\noindent
+It took approximately two hours to fit the model.
+
+\begin{figure}
+\centering
+\subfloat[Trait effects]{\label{F:actor-trait}
+\begin{tabular}{rrrrr}
+\toprule
+&\multicolumn{4}{c}{Receiver} \\
+\cmidrule(l){2-5}
+Sender & L & T & J & F \\
+\midrule
+\multirow{2}{*}{1}
+& -0.65  & -0.10  &  0.13  &  0.21  \\
+& \tiny{(0.12)} & \tiny{(0.07)} & \tiny{(0.07)} & \tiny{(0.09)} \\
+\multirow{2}{*}{L}
+&  \cellcolor{Gray} 0.62  & -0.28  & -0.11  & -0.16  \\
+& \cellcolor{Gray} \tiny{(0.13)} & \tiny{(0.10)} & \tiny{(0.09)} & \tiny{(0.11)} \\
+\multirow{2}{*}{T}
+&  0.46  &  \cellcolor{Gray} 0.45  & -0.15  & -0.46  \\
+& \tiny{(0.16)} & \cellcolor{Gray} \tiny{(0.06)} & \tiny{(0.07)} & \tiny{(0.10)} \\
+\multirow{2}{*}{J}
+&  0.00  &  0.15  &  \cellcolor{Gray} 0.10  & -0.21  \\
+& \tiny{(0.11)} & \tiny{(0.06)} & \cellcolor{Gray} \tiny{(0.06)} & \tiny{(0.09)} \\
+\multirow{2}{*}{F}
+&  0.19  &  0.33  &  0.08  &  \cellcolor{Gray} 0.13  \\
+& \tiny{(0.12)} & \tiny{(0.06)} & \tiny{(0.07)} & \cellcolor{Gray} \tiny{(0.08)} \\
+\bottomrule
+\end{tabular}
+}
+\qquad
+\subfloat[Network effects]{\label{F:actor-network}
+\begin{tabular}{lrrrrr}
+\toprule
+Variate & out & outendow & recip & ctriple & ttriple \\
+\midrule
+Coefficient & -1.94 & -0.94 &  2.02 & -0.26 & 0.30 \\
+(SE) & \tiny{(0.02)} & \tiny{(0.01)} & \tiny{(0.06)} & \tiny{(0.03)} & \tiny{(0.01)} \\
+\bottomrule
+\end{tabular}
+}
+\caption{
+  Estimated effects for actor-oriented model.
+}
+\end{figure}
+
 \FloatBarrier
 
 \section{Discussion}\label{S:discussion}

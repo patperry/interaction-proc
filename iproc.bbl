@@ -212,6 +212,18 @@ Shafiei, M. and H.~Chipman (2010).
 \newblock Mixed-membership stochastic block-models for transactional networks.
 \newblock arXiv:1010.1437v1 [stat.ML].
 
+\bibitem[\protect\citeauthoryear{Snijders}{Snijders}{2001}]{snijders2001statistical}
+Snijders, T. A.~B. (2001).
+\newblock The statistical evaluation of social network dynamics.
+\newblock In M.~E. Sobel and M.~P. Becker (Eds.), {\em Sociological Methodology
+  -- 2001, Volume 31}, pp.\  361--395. Boston and London: Basil Blackwell.
+
+\bibitem[\protect\citeauthoryear{Snijders}{Snijders}{2005}]{snijders2005models}
+Snijders, T. A.~B. (2005).
+\newblock {\em Models for Longitudinal Network Data}, Chapter~11.
+\newblock Models and Methods in Social Network Analysis. New York: Cambridge
+  University Press.
+
 \bibitem[\protect\citeauthoryear{Snijders, Van~de Bunt, and Steglich}{Snijders
   et~al.}{2010}]{snijders2010introduction}
 Snijders, T. A.~B., G.~V. Van~de Bunt, and C.~E.~G. Steglich (2010).
