@@ -1255,15 +1255,15 @@ $\tilde \beta_n - \widehat{\mathrm{bias}}$.
 
 \section{Fitting the model to a corporate e-mail network}\label{S:enron-modeling}
 
-The modeling and inference framework introduced above enables us to directly address several of the key concerns of interaction data analysis, as raised in Section~\ref{S:introduction}.  To illustrate this point, we investigate a corporate e-mail network consisting of a large subset of the e-mail messages sent within the Enron corporation between 1998 and 2002.  Our goal is to answer the questions of which traits and behaviors are predictive of interactions in these data:
+The modeling and inference framework introduced above enables us to directly address several of the key concerns of interaction data analysis raised in Section~\ref{S:introduction}.  To demonstrate the utility of our framework, we investigate a corporate e-mail network consisting of a large subset of the e-mail messages sent within the Enron corporation between 1998 and 2002.  Our goal is to determine which (if any) traits and behaviors are predictive of interactions in these data as follows.
 
 \begin{description}
-    \item[Homophily] To what extent are shared traits predictive of communication behavior?  Is the existence of a common trait between two actors (gender, department, or seniority) predictive of their e-mail interactions?
+    \item[Homophily] To what extent are shared traits predictive of interactions behaviors?  Is the existence of a common trait between two actors (gender, department, or seniority) predictive of their e-mail interactions?
 
-    \item[Network Effects] Are network effects, as characterized by past interaction behaviors, useful for predicting future interaction behaviors?  And if so, which effects dominate?
+    \item[Network Effects] Are network effects, as characterized by past interaction behaviors (dyadic or triadic), valuable in predicting future interaction behaviors?  And if so, which effects dominate?
 \end{description}
 
-In order to address these questions, we apply the multicast proportional intensity modeling framework developed above to our e-mail message data.  Below we provide details of this data analysis, which is undertaken using static covariates reflecting actor traits, as well as dynamic covariates capturing network effects.  We then detail the application of our bootstrap bias reduction method for the multicast message exchange setting, and use it to demonstrate that our asymptotic approximations are reasonable in this data modeling regime.
+This analysis is accomplished using the multicast proportional intensity modeling framework developed above.   We employ both static covariates reflecting actor traits, as well as dynamic covariates capturing network effects.  The bootstrap technique introduced in Section~\ref{S:approximation-bias} for multicast interactions is then used to reduce bias in the estimated effects, as well as to demonstrate that our asymptotic approximations are reasonable in this data modeling regime.  We conclude this section with a discussion of the goodness of fit of our model in this setting.
 
 \subsection{Data and methods}
 
