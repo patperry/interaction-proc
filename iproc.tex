@@ -2551,10 +2551,34 @@ each $i$ and then summing over all $i$ to get the total gradient takes $\Oh(n
 \subsection{Computing the Hessian}
 
 The computation for the Hessian proceeds similarly to the computation for
-gradient.  Again suppressing the dependence on $\beta$ and $i$, we have
-\[
-  V_t = X_t^\trans \diag(\pi_t) X_t - X_t^\trans \pi_t \pi_t^\trans X_t
-\]
+gradient.  We need to efficiently compute the sum $\sum_m V_{t_m}(\beta,
+i_m)$.  The naive computation takes $\Oh(n \, J \, p^2)$, but we can do much
+better by exploiting the sparsity in $x_t(i,j)$.
+
+Define $\Pi_t(\beta, i)$ to be the $J \times J$ diagonal matrix with
+$[\Pi_t(\beta, i)]_{jj} = \pi_t(\beta, i, j)$.  Set
+$\Delta \Pi_t(\beta, i) = \Pi_t(\beta, i) - \Pi_0(\beta, i)$.
+
+Suppressing the dependence on $\beta$ and $i$, we have
+\begin{align*}
+  V_t
+    &= X_t^\trans [\Pi_t - \pi_t \pi_t^\trans] X_t \\
+\begin{split}
+    &= X_0^\trans [\Pi_t - \pi_t \pi_t^\trans] X_0
+      \;+\; \Delta X_t^\trans [\Pi_t - \pi_t \pi_t^\trans] X_0 \\
+      &\quad+\; X_0^\trans [\Pi_t - \pi_t \pi_t^\trans] \Delta X_t
+      \;+\; \Delta X_t^\trans [\Pi_t - \pi_t \pi_t^\trans] \Delta X_t.
+\end{split}
+\end{align*}
+The first term reduces to
+\begin{align*}
+  X_0^\trans [ \Pi_t - \pi_t \pi_t^\trans] X_0 
+    &= \gamma_t V_0 
+    \;+\; \gamma_t (1 - \gamma_t) E_0 E_0^\trans
+    \;-\; E_0 (\gamma_t X_0 \Delta \pi_t)^\trans  \\
+    &\quad-\; (\gamma_t X_0 \Delta \pi_t) E_0^\trans 
+    \;+\; X_0^\trans [ \Delta \Pi_t - \Delta \pi_t \Delta \pi_t^\trans ] X_0
+\end{align*}
 
 Without structure in the covariates, it takes time
 $\Oh(p \, I \, J)$ to compute all values of $w_0(\beta, i,j)$,
