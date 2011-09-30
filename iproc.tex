@@ -2260,58 +2260,45 @@ Coefficient & -1.94 & -0.94 &  2.02 & -0.26 & 0.30 \\
 
 \section{Discussion}\label{S:discussion}
 
-With the increasing popularity of network science, there is an unfortunate
-tendency to preprocess data into binary ties between entities.
-The observables in many modeling scenarios are repeated directed interactions,
-not binary ties.  Thresholding the interaction counts to obtain binary ties
-gives dramatically different networks and subsequent conclusions, depending on
-the choice of cutoff \citep{dechoudhury2010}.  We have avoided such arbitrary
-outcomes by working directly with the observed data.
+Our analysis of the Enron corpus in Sections~\ref{} and~\ref{} above
+has demonstrated the ways in which static and dynamic effects manifest
+themselves in e-mail communication networks, and we expect similar
+conclusions to hold broadly for other types of directed interaction
+data.  Relative to alternatives such as contingency table analyses,
+exponential random graph models, and agent-based network models, an
+advantage of our approach lies in its ability to treat directed
+interaction data in its given form, rather than as static ties or
+temporal snapshots thereof.  Other recent treatments involving point
+processes include the aforementioned work of
+\cite{butts2008relational}; \citet{malmgen2009characterizing} model
+activity at the level of the individual using a hidden Markov model,
+while \citet{heard2010bayesian} work at the level of the dyad,
+assuming a piecewise-constant interaction rate, though neither of
+these two approaches include network effects or other covariate
+information.  Furthermore, aside from
+\citefullauthor{lunagomez2009geometric}'s
+\citeyearpar{lunagomez2009geometric} recent work in the context of
+graphical models, interactions involving more than two entities have
+largely been ignored.
 
-We are not the first to move beyond static tie-based representations of
-network data.  In addition to the work of \cite{butts2008relational} cited
-above, there are at least two other recent treatments involving point
-processes, both of which exlude network effects and other covariate
-information: \citet{malmgen2009characterizing} model activity at the level of
-the individual using a hidden Markov model, while \citet{heard2010bayesian} work
-at the level of the dyad, assuming a piecewise-constant interaction rate.
-
-Others have considered dynamic tie-based models: see the
-agent based models from social network as surveyed by
-\citet{snijders2010introduction}, along with
-\citefullauthor{hanneke2010discrete}'s \citeyearpar{hanneke2010discrete}
-exponential random graph model with time-varying coefficients and
-\citefullauthor{kolar2010estimating}'s \citeyearpar{kolar2010estimating}
-time-varying stochastic block model.  Dynamic tie-based models are able
-to capture some forms of reciprocation, but they are not universally
-applicable since they model ties persisting in time (e.g., friendship)
-instead of instantaneous events.
-Aside from \citefullauthor{lunagomez2009geometric}'s \citeyearpar{lunagomez2009geometric} recent
-work in the context of graphical models, interactions involving more than two
-entities have largely been ignored.
 
 The foundation of our work is Cox's \citeyearpar{cox1972regression}
-proportional intensity model and
-partial likelihood theory, tools which he first introduced almost
-forty years ago and which have been significantly developed since
-then \citep{cox1975partial, fleming1991counting, andersen1993statistical, martinussen2006dynamic, cook2007statistical}.
-These tools are used extensively in the context of survival analysis, but
-require further development for use in modeling interaction data.
-In this vein, we have extended the associated theory in
-two directions: first, we have provided results that are asymptotic in time
-rather than in the size of the population under study; and second, we
-have shown that treating multicast interactions via duplication leads to
-bias in the parameter estimates (which can in turn be corrected in
-certain regimes).  As far as we are aware, this is the first time
-such a model has been brought directly to bear on relational data in
-the form of a network of directed interactions.
-
-Our analysis of the Enron corpus has demonstrated that static and
-dynamic effects are both evident in e-mail communication, and we expect this
-to hold broadly for other types of interactions.  The proportional intensity
-model with time-varying covariates is a simple, flexible, and
-well-established model for incorporating these effects into the analysis
-of interaction data.
+proportional intensity model and partial likelihood theory, tools
+which he first introduced almost forty years ago and which have been
+significantly developed since then \citep{cox1975partial,
+fleming1991counting, andersen1993statistical, martinussen2006dynamic,
+cook2007statistical}. These tools are used extensively in the context
+of survival analysis, but require further development for use in
+modeling interaction data. In this vein, we have extended the
+associated theory in two directions: first, we have provided results
+that are asymptotic in time rather than in the size of the population
+under study; and second, we have shown that treating multicast
+interactions via duplication leads to bias in the parameter estimates
+(which can in turn be corrected in certain regimes).  We find the
+proportional intensity model with time-varying covariates to be a
+simple, flexible, and well-established model for incorporating
+group-level preferences and network effects into the analysis of
+interaction data.
 
 
 \section*{Acknowledgement}
