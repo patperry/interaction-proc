@@ -2578,11 +2578,12 @@ simplify.
 To compute the sum $\sum_{\substack{m \\ i_m = i}} V_{t_m}$, we only
 accumulate sums of terms that change with time:
 $\gamma_t$,
+$\Delta \pi_t$,
 $\gamma_t(1 - \gamma_t)$,
 $\gamma_t \Delta \pi_t$,
-$X_0^\trans[\Delta \Pi_t - \Delta \pi_t \Delta \pi_t^\trans]$,
+$\Delta \pi_t \Delta \pi_t^\trans$,
 $\gamma_t \Delta X_t \pi_t$, 
-$[\Pi_t + \pi_t \Delta \pi_t^\trans] X_0$,
+$\Delta X_t^\trans [\Pi_t + \pi_t \Delta \pi_t^\trans]$,
 and
 $\Delta X_t^\trans [\Pi_t - \pi_t \pi_t^\trans] \Delta X_t$.
 Doing so takes time $\Oh(\bar J \, d \, p^2)$ for each time point.  As with
