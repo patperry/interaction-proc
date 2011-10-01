@@ -77,7 +77,7 @@ print.coefs(coef.s, se.coef.s, TRUE)
 sink()
 
 sink(file = "tables/group-dynamic.tex")
-print.coefs(coef + bias.mean[1:(nsend*nrecv)], se.coef, TRUE)
+print.coefs(coef - bias.mean[1:(nsend*nrecv)], se.coef, TRUE)
 sink()
 
 
