@@ -3,12 +3,14 @@
 
 
 source("code/process.R")
+require(grid)
 
 orange <- rgb(253, 141,  60, max = 255)
 purple <- rgb(158, 154, 200, max = 255)
 palette(c(orange, purple))
 
 fit <- fromJSON("output/fit-dynamic.json")
+load("output/boot.rda")
 cov <- get.cov(fit)
 
 intvl <- c(fit$intervals, Inf)
@@ -19,6 +21,7 @@ intvl.str <- c(0, "30m", "2h", "8h", "1.3d", "5.3d", "21.3d",
 coef.d <- get.coefs(fit)[-(1:11),1]
 cov.d <- cov[12:(nrow(cov)/12), 12:(nrow(cov)/12)]
 se.d <- sqrt(diag(cov.d))
+bias.d <- bias.mean[-(1:90)]
 
 ind.ix <- match(c("ISend", "IRecv", "ISend2", "IRecv2", "ISib", "ICosib"),
                 names(coef.d))
@@ -35,16 +38,22 @@ cbind(coef.ind, se.ind)
 
 send <- coef.d[ind.ix[1] + 1:nintvl]
 send.se <- se.d[ind.ix[1] + 1:nintvl]
+send.bias <- bias.d[ind.ix[1] + 1:nintvl]
 recv <- coef.d[ind.ix[2] + 1:nintvl]
 recv.se <- se.d[ind.ix[2] + 1:nintvl]
+recv.bias <- bias.d[ind.ix[2] + 1:nintvl]
 send2 <- matrix(coef.d[ind.ix[3] + 1:(nintvl^2)], nintvl)
 send2.se <- matrix(se.d[ind.ix[3] + 1:(nintvl^2)], nintvl)
+send2.bias <- matrix(bias.d[ind.ix[3] + 1:(nintvl^2)], nintvl)
 recv2 <- matrix(coef.d[ind.ix[4] + 1:(nintvl^2)], nintvl)
 recv2.se <- matrix(se.d[ind.ix[4] + 1:(nintvl^2)], nintvl)
+recv2.bias <- matrix(bias.d[ind.ix[4] + 1:(nintvl^2)], nintvl)
 sib <- matrix(coef.d[ind.ix[5] + 1:(nintvl^2)], nintvl)
 sib.se <- matrix(se.d[ind.ix[5] + 1:(nintvl^2)], nintvl)
+sib.bias <- matrix(bias.d[ind.ix[5] + 1:(nintvl^2)], nintvl)
 cosib <- matrix(coef.d[ind.ix[6] + 1:(nintvl^2)], nintvl)
 cosib.se <- matrix(se.d[ind.ix[6] + 1:(nintvl^2)], nintvl)
+cosib.bias <- matrix(bias.d[ind.ix[6] + 1:(nintvl^2)], nintvl)
 
 beta <- send
 se <- send.se
@@ -70,8 +79,8 @@ plot.dyad1 <- function(beta, se, name=NULL) {
 
 plot.dyad <- function() {
     dv <- dataViewport(xscale=extendrange(c(0, nintvl)),
-                       yscale=extendrange(c(min((coef.d - se.d)[dyad.ix]),
-                                            max((coef.d + se.d)[dyad.ix]))))
+                       yscale=extendrange(c(min((coef.d - bias.d - se.d)[dyad.ix]),
+                                            max((coef.d - bias.d + se.d)[dyad.ix]))))
 
     pushViewport(viewport(layout=grid.layout(1, 2)))
     pushViewport(viewport(layout.pos.col=1, layout.pos.row=1))
@@ -79,7 +88,7 @@ plot.dyad <- function() {
     pushViewport(plotViewport(c(4, 4, 4, 1)))
     pushViewport(dv)
 
-    plot.dyad1(send, send.se, name="Send")
+    plot.dyad1(send - send.bias, send.se, name="Send")
     grid.rect()
     grid.xaxis(at=0:nintvl, label=intvl.str)
     grid.yaxis()
@@ -90,7 +99,7 @@ plot.dyad <- function() {
     pushViewport(viewport(layout.pos.col=2, layout.pos.row=1))
     pushViewport(plotViewport(c(4, 1, 4, 4)))
     pushViewport(dv)
-    plot.dyad1(recv, recv.se, name="Receive")
+    plot.dyad1(recv - recv.bias, recv.se, name="Receive")
     grid.rect()
     grid.xaxis(at=0:nintvl, label=intvl.str)
     grid.xaxis(at=0:nintvl, label=FALSE, main=FALSE)
@@ -108,7 +117,7 @@ dev.off()
 
 
 plot.triad1 <- function(beta, se, name="") {
-    scale <- max((abs(coef.d) + se.d)[triad.ix]) * 2
+    scale <- max((abs(coef.d - bias.d) + se.d)[triad.ix]) * 2
 
     for (j in 1:ncol(beta)) {
         for (i in 1:nrow(beta)) {
@@ -145,7 +154,7 @@ plot.triad <- function() {
     pushViewport(viewport(layout.pos.col=1, layout.pos.row=1))
     pushViewport(plotViewport(c(1,4,4,1)))
     pushViewport(dv)
-    plot.triad1(send2, send2.se, "2-Send")
+    plot.triad1(send2 - send2.bias, send2.se, "2-Send")
     grid.rect()
     grid.xaxis(at=1:nintvl, label=intvl.str[-1], main=FALSE) 
     grid.yaxis(at=nintvl:1, label=intvl.str[-1]) 
@@ -154,7 +163,7 @@ plot.triad <- function() {
     pushViewport(viewport(layout.pos.col=2, layout.pos.row=1))
     pushViewport(plotViewport(c(1,1,4,4)))
     pushViewport(dv)
-    plot.triad1(recv2, recv2.se, "2-Receive")
+    plot.triad1(recv2 - recv2.bias, recv2.se, "2-Receive")
     grid.rect()
     grid.xaxis(at=1:nintvl, label=intvl.str[-1], main=FALSE) 
     grid.yaxis(at=nintvl:1, label=FALSE, main=FALSE)
@@ -163,14 +172,14 @@ plot.triad <- function() {
     pushViewport(viewport(layout.pos.col=1, layout.pos.row=2))
     pushViewport(plotViewport(c(4,4,1,1)))
     pushViewport(dv)
-    plot.triad1(sib, sib.se, "Sibling")
+    plot.triad1(sib - sib.bias, sib.se, "Sibling")
     grid.rect()
     grid.xaxis(at=1:nintvl, label=FALSE)
     grid.yaxis(at=nintvl:1, label=intvl.str[-1]) 
 
     just <- c("center", "bottom")
     gp <- gpar(col=1, fill=1)
-    scale <- max((abs(coef.d) + se.d)[triad.ix]) * 2
+    scale <- max((abs(coef.d - bias.d) + se.d)[triad.ix]) * 2
     y <- -3
     w <- 0.5
     dx <- 0.265
@@ -202,7 +211,7 @@ plot.triad <- function() {
     pushViewport(viewport(layout.pos.col=2, layout.pos.row=2))
     pushViewport(plotViewport(c(4,1,1,4)))
     pushViewport(dv)
-    plot.triad1(cosib, cosib.se, "Cosibling")
+    plot.triad1(cosib - cosib.bias, cosib.se, "Cosibling")
     grid.rect()
     grid.xaxis(at=1:nintvl, label=FALSE)
     grid.yaxis(at=nintvl:1, label=FALSE, main=FALSE)
