@@ -216,7 +216,7 @@ the parameter vector $\beta_0$ a straightforward interpretation.
 \citet{butts2008relational} used a variant of this model to analyze
 repeated directed actions within social settings.
 
-The form of \eqref{E:cox-intensity} is deceptively simple but remains
+The form of~\eqref{E:cox-intensity} is deceptively simple but remains
 flexible enough to be useful in practice.  The model allows for
 homophily and group level effects via inclusion of covariates of the form
 ``$1\{\text{$i$ and $j$ belong to the same group}\}$,'' where ``group'' is
@@ -480,7 +480,7 @@ Gaussian, as shown by the following two theorems.
     and set $U_t(\beta)$ and $I_t(\beta)$ to
     be the gradient and negative Hessian of the log partial likelihood
     function
-    as given in~(\ref{E:log-pl-gradient}--\ref{E:log-pl-neg-hessian}).  If
+    as given respectively in~\eqref{E:log-pl-gradient} and~\eqref{E:log-pl-neg-hessian}.  If
     assumptions A\ref{A:square-int}--A\ref{A:integrated-cov-limit} hold, then
     as $n \to \infty$:
     \begin{enumerate}
@@ -520,7 +520,7 @@ and is proved in Appendix~\ref{S:MPLE-consistency-proofs}.
     Let $N$ be a multivariate counting process with stochastic
     intensity as given in~\eqref{E:cox-intensity}, with true parameter
     vector $\beta_0$.  Let the log partial likelihood,
-    $\log \mathit{PL}_t(\cdot)$, be as defined in \eqref{E:log-pl}.
+    $\log \mathit{PL}_t(\cdot)$, be as defined in~\eqref{E:log-pl}.
     Let $t_n$ be the sequence of interaction times.
 
     Assume that for $\beta$ in a
@@ -560,7 +560,7 @@ also define
         =
         x_t(i,j) - E_t(\beta_0,i),
 \]
-where $E_t(\beta,i)$ is as defined in \eqref{E:wt-expectation}.
+where $E_t(\beta,i)$ is as defined in~\eqref{E:wt-expectation}.
 
 As observed by \citet{andersen1982cox}, the score function
 $U_t(\cdot)$ evaluated at $\beta_0$ has
@@ -927,7 +927,7 @@ the approximation error in terms of $G_n$.
     If $\log \mathit{PL}$ and $\log \widetilde{\mathit{PL}}$ are as
     defined in
     \textnormal{(}\ref{E:log-pl-multiple}--\ref{E:log-pl-multiple-approx}\textnormal{)},
-    and $G_n$ is as defined in \eqref{E:growth-constant},
+    and $G_n$ is as defined in~\eqref{E:growth-constant},
     then for $\beta$ in a neighborhood of $\beta_0$,
     \[
         \Big\|
@@ -1314,7 +1314,7 @@ in principle be unbounded; nevertheless, bootstrap calculations
 
 We wrote custom software in the C programming language to fit the model using
 Newton's method.  Exploiting structure in the covariates, the fitting
-procedure has computational complexity $O(n p^2 + J p^2 + p^3)$, where $n$ is
+procedure has computational complexity $\Oh(n p^2 + J p^2 + p^3)$, where $n$ is
 the number of messages, $J$ is the number of receivers, and $p$ is the number
 of covariates.  Appendix~\ref{S:implementation} describes the fitting
 procedure in more detail.  It took approximately 70 minutes to fit the full
@@ -1726,23 +1726,21 @@ of the network effects.
 
 Given the model fitting procedure and results described above, we may now evaluate the strength of homophily and network effects in predicting the interaction behavior observed in our data.
 
-\subsection{Analysis 1: Testing for homophily}\label{S:enron-homophily}
+\subsection{Assessing evidence for homophily in the Enron data}\label{S:enron-homophily}
 
-The analyses in Section~\ref{S:enron-goodness} established that
-model~\eqref{E:cox-intensity} with the covariates from
-Section~\ref{S:enron-covariates} is reasonably accurate in describing the
-message recipient selection conditional on the sender and the history of the
+The analyses of Section~\ref{S:enron-modeling} above have established that our multicast proportional intensity model with chosen covariates is reasonably accurate in describing
+message recipient selection, conditional on the sender and the history of the
 process.  Thus, we are justified in using the estimated coefficients from the
-model to assess the predictive ability of the corresponding covariates.  Our
-first task is to gauge the predictive strength of homophily.
+model to assess the predictive ability of the corresponding covariates.  
 
+Our first task is to gauge the predictive strength of homophily.  To this end, 
 Fig.~\ref{T:group-dynamic} shows the estimated group-level coefficients for
-the proportional intensity model.  Notably, homophily appears present for each
+our model.  Notably, homophily appears present for each
 main effect (Department, Seniority, and Gender): the estimated coefficients of
 $L(j)$, $T(j)$, $J(j)$, and $F(j)$ are all negative, while the estimated
 coefficients of $L(i) \cdot L(j)$, $T(i) \cdot T(j)$, $J(i) \cdot J(j)$, and
-$F(i) \cdot F(j)$ are all positive.  The way this homophily manifests for
-Gender, is that if $i$ is sending a message at time $t$, and person $j$ is
+$F(i) \cdot F(j)$ are all positive.  Taking Gender as an example, the way this homophily 
+effect manifests is as follows: if $i$ is sending a message at time $t$, and person $j$ is
 identical to person $j'$ except for Gender, then $i$ is more likely to send to
 the similarly-gendered individual.  The relative probability is $\exp(-0.08 +
 0.38) \approx 1.3$ if $i$ is Female, and $\exp(0.08) \approx 1.1$ if $i$ is
@@ -1765,21 +1763,23 @@ Male.  The characterization for other types of homophily is similar.
 \end{figure}
 
 
-\subsection{Comparison to contingency table-based analysis}
+\subsection{A comparative analysis based on contingency tables}
 
-If we were only interested in homophily, we might have been tempted to forgo
-the proportional intensity model, performing a contingency-table based analysis
-instead.  As we shall soon see, doing so leads to quite different conclusion
-about the predictive strength of homophily.
+Were we to be interested only in homophily, we might be tempted to forgo
+the proportional intensity model of~\eqref{E:cox-intensity}, and instead 
+perform a contingency table analysis.  However, as we now describe, 
+such an analysis leads to very different conclusions
+about the predictive strength of homophily in our data.
 
-Suppose we are interested in testing for seniority-based homophily.  Ignoring
+For example, suppose that we are interested in testing for seniority-based homophily.  Ignoring
 network effects and other dependency, we might model $\Prob\{ i \to j \mid i
 \}$, the probability of employee $j$ being the recipient of a message given
-that employee $i$ is the sender, using a multinomial logit model:
+that employee $i$ is the sender, by way of a multinomial logit model:
 \[
   \Prob\{ i \to j \mid i \}
     \propto \exp\{ \beta_J J(j) + \beta_{JJ} J(i) J(j) \}.
 \]
+In this setting, 
 Junior-Junior homophily would manifest in a positive value of
 $\beta_{J} + \beta_{JJ}$ and Senior-Senior homophily would manifest in
 a negative value of $\beta_J$.
@@ -1797,8 +1797,8 @@ receiver of a message are distinct, we have that
       \frac{e^{\beta_J J(j)}}
            {n_J e^{\beta_J} + (n_S - 1)}.
 \end{align*}
-We can compute the maximum likelihood estimates of the coefficients using the
-entries of the $2 \times 2$ table counting the number of messages exchanged
+In turn, we compute the corresponding maximum likelihood coefficient estimates using the
+entries of a $2 \times 2$ table that counts the number of messages exchanged
 between each group:
 \begin{center}
 \begin{tabular}{lrr}
@@ -1812,18 +1812,18 @@ between each group:
   \bottomrule
 \end{tabular}
 \end{center}
-These estimates turn out to be $\hat \beta_{J} = -1.4$ and
+The resultant estimates are $\hat \beta_{J} = -1.4$ and
 $\hat \beta_{JJ} = 1.6$, with (Wald) standard errors of about $0.02$
-for both.  Indeed, these are exactly the estimated coefficients we would
-have gotten if we had used the proportional intensity model
+for each.  Indeed, these are exactly the estimated coefficients we would
+obtain if we were to use the proportional intensity model
 $\lambda_t(i,j) = \bar \lambda_t(i) \exp\{ \beta_J J(j) + \beta_{JJ} J(i) J(j)
 \}$, a result that holds more generally for non-time-varying covariates.
 
 One problem with this analysis is that we have marginalized over the
 other covariates (Gender and Department), potentially introducing a Simpson's
-paradox.  This is easy to fix, by introducing covariates for the sender and
-receiver covariates and considering their interactions.   We have done
-exactly this, and Fig.~\ref{T:group-static} shows the resulting estimates.
+paradox.  This issue is easily rectified, however, by introducing covariates for senders and
+receivers, along with the corresponding second-order covariate interactions; 
+Fig.~\ref{T:group-static} shows the resulting coefficient estimates.
 
 \begin{figure}
   \centering
@@ -1839,20 +1839,18 @@ exactly this, and Fig.~\ref{T:group-static} shows the resulting estimates.
 \end{figure}
 
 The far more important
-problem is that our analysis implicitly assumes that each message is
+problem is that this analysis implicitly assumes that each message is
 independent and identically distributed, conditional on the sender of
 the message.  This is blatantly false: common sense tells us that if Junior $A$ sends a message
 to Junior $B$ then the next time $B$ sends a message, $B$ is more likely to
-choose $A$ as a recipient.  Any homophily effect will be exaggerated by
-reciprocation and other network effects.
-
-Comparing the contingency table-based estimates in Fig.~\ref{T:group-static}
+choose $A$ as a recipient.  Any homophily effect present in these interaction 
+data is thus likely to be exaggerated by reciprocation and other network effects.  Indeed, 
+comparing the contingency table-based estimates in Fig.~\ref{T:group-static}
 with the estimates from the proportional intensity model with network effects
 in Fig.~\ref{T:group-dynamic}, we can see that the coefficient estimates are
-much higher when we don't adjust for network effects.  This agrees with the
-intuition detailed in the previous paragraph.  We can see that even if we are
-not interested in network effects, it is important to account for them when
-making inferences about other covariates.
+much higher when we don't adjust for network effects.  Thus even in cases where network effects themselves
+are not the object of primary interest, it is important to account for them when
+making inferences about the predictive strength of other covariates.
 
 \subsection{Analysis 2: Evaluating the importance of network effects}
 \label{S:enron-network}
@@ -2079,9 +2077,9 @@ and $\textbf{cosibling}$ terms in our model
 Note that with network snapshots, it is impossible to separate the
 $\textbf{2-send}$, $\textbf{sibling}$, and $\textbf{cosibling}$ effects.
 Further, with first-order Markov model, it is impossible to quantify the time
-decay of the dynamic effects. 
+decay of the dynamic effects.
 
-Fig.~\ref{F:enron-actor} shows the fitted coefficients for the 
+Fig.~\ref{F:enron-actor} shows the fitted coefficients for the
 actor-oriented model, which took approximately two hours to fit.
 The estimated network effects agree
 qualitatively with the estimates in Fig.~\ref{F:enron-net-indicator}, as
@@ -2398,25 +2396,26 @@ its derivatives by computing the sender-specific terms in parallel and
 then adding them together.
 
 The gradient and Hessian of the sender-specific log partial likelihood
-are
-\begin{gather*}
+are respectively
+\begin{subequations}
+\begin{align}\label{eq:grad-MPLE}
     \nabla [ \log \mathit{PL}_t(\beta, i) ]
-        =
+        & =
         \sum_{\substack{t_m \leq t, \\ i_m = i}}
             x_{t_m}\!(i,j_m)
             -\!\!
             \sum_{\substack{t_m \leq t, \\ i_m = i}}
                 E_{t_m}(\beta, i) \\
     -\nabla^2 [ \log \mathit{PL}_t(\beta, i) ]
-        =
+        & =
         \sum_{\substack{t_m \leq t, \\ i_m = i}}
-          V_{t_m}(\beta, i),
-\end{gather*}
+          V_{t_m}(\beta, i),\label{eq:hess-MPLE}
+\end{align}
+\end{subequations}
 where $E_{t}(\beta,i)$ and $V_{t}(\beta, i)$ are as defined in
-\eqref{E:log-pl-gradient} and \eqref{E:log-pl-neg-hessian}.
-When $x_t(i,j)$ is constant over time,
-there are sufficient statistics for $\beta$ and these formulas reduce.
-Otherwise, computing the first two derivates of
+~\eqref{E:log-pl-gradient} and~\eqref{E:log-pl-neg-hessian}.
+When $x_t(i,j)$ is constant over time, sufficient statistics for $\beta$ imply that these formulae simplify.
+Otherwise, computing the first two derivatives of
 $\log \mathit{PL}_{t_n}(\beta)$
 necessitates iterating over all messages, potentially requiring time
 $\Oh(n \, J \, p^2)$.  For small- to medium-sized datasets, this is manageable,
@@ -2438,12 +2437,12 @@ initial values have all been precomputed.
 
 \subsection{Exploiting sparsity}
 
-Decompose $x$ into its static (non-time-varying) and dynamic parts:
+We first decompose $x$ into its static (non-time-varying) and dynamic parts as follows:
 \begin{equation}\label{E:x-static-dynamic}
     x_t(i,j)
         = x_0(i,j) + \Delta x_t(i,j).
 \end{equation}
-Typically, the we can compute the dynamic part, $\Delta x_t(i,j)$ quickly at
+Typically, we can quickly compute the dynamic part $\Delta x_t(i,j)$ at
 each observed message time by incrementally updating it.  Further, $\Delta
 x_t(i,j)$, is zero for most $(i,j)$ pairs---often $\Delta x_t(i,j)$ is zero
 unless $i$ and $j$ have a common acquaintance or they have interacted in the
@@ -2471,9 +2470,9 @@ For convenience, set $\mathcal{J}_0(i) = \mathcal{J}$.  Let
 For fixed $t$ and $i$, assume that computing
 $\Delta x_t(i,j)$ for all values of $j$ takes amortized time $\Oh(d \bar J)$.
 
-Since $\mathcal{J}_0(i) = \mathcal{J}$,
-\begin{subequations}\label{E:weight-update}
-\begin{align}
+Since $\mathcal{J}_0(i) = \mathcal{J}$, we have that
+%\begin{subequations}\label{E:weight-update}
+\begin{align*}
     w_{t}(\beta,i,j)
         &=
             w_{0}(\beta,i,j)
@@ -2482,7 +2481,7 @@ Since $\mathcal{J}_0(i) = \mathcal{J}$,
             \cdot
             1\{j \in \mathcal{J}_t(i)\} \nonumber \\
         &= w_0(\beta, i, j) + \Delta w_t(i, j);
-    \label{E:weight-update-pair}
+    %\label{E:weight-update-pair}
     \\
     W_{t}(\beta,i)
         &=
@@ -2490,28 +2489,28 @@ Since $\mathcal{J}_0(i) = \mathcal{J}$,
             +
             \sum_{j \in \mathcal{\bar J}(i)}
                 \Delta w_t(i,j);
-    \label{E:weight-sum-update}
+    %\label{E:weight-sum-update}
 \intertext{where}
   \Delta w_t(i,j)
     &= w_0(\beta, i, j)
       [\exp\{ \beta^\trans \Delta x_t(i,j)\}
           1 \{ j \in \mathcal{J}_t(i)\}
        - 1];
-\end{align}
-\end{subequations}
-we have used that $\Delta w_t(i,j)$ is zero unless
+\end{align*}
+%\end{subequations}
+here we have used that $\Delta w_t(i,j)$ is zero unless
 $j \in \mathcal{\bar J}(i)$.
 Write
 \[
-  \pi_t(\beta, i, j) = \frac{w_t(\beta, i, j)}{W_t(\beta, i)}.
+  \pi_t(\beta, i, j) = \frac{w_t(\beta, i, j)}{W_t(\beta, i)};
 \]
-Defining
+then, defining
 \[
   \gamma_t(i) = \frac{W_0(\beta, i)}{W_t(\beta, i)},
   \qquad\qquad
   \Delta \pi_t(\beta, i, j) = \frac{\Delta w_t(\beta, i, j)}{W_t(\beta, i)},
 \]
-we can express
+we can express $\pi_t(\beta, i, j)$ as follows:
 \[
   \pi_t(\beta, i, j)
     = \gamma_t(i) \pi_0(\beta, i, j) + \Delta \pi_t(\beta, i, j).
@@ -2525,40 +2524,39 @@ $\Delta \pi_t(i,j)$ as $j$ varies.
 
 \subsection{Computing the gradient}
 
-The sum $\sum_m x_{t_m}(i_m j_m)$ can be computed in time $\Oh(n \, p)$.
-In evaluating the gradient of the log partial likelihood, the computationally
-expensive term is the sum
+In evaluating the gradient of the log partial likelihood as given by~\eqref{eq:grad-MPLE}, the sum $\sum_m x_{t_m}(i, j_m)$ can be computed in time $\Oh(n \, p)$, while the computationally
+expensive term is
 \(
    \sum_{m} E_{t_m}(\beta, i_m).
 \)
-We show how to exploit sparsity in $x$ to reduce the computational overhead.
+In the sequel we show how to exploit sparsity in $x$ to reduce the associated computational overhead.
 
 To simplify the notation, we suppress the dependence of all quantities on $\beta$ and $i$.
-Consider $\pi_t$ and $\Delta \pi_t$ to be vectors of length $J$.  Write
+Consider $\pi_t$ and $\Delta \pi_t$ to be vectors of length $J$, and write
 \[
-    \pi_t = \gamma_t \pi_0 + \Delta \pi_t \in \reals^J,
+    \pi_t = \gamma_t \pi_0 + \Delta \pi_t.
 \]
-Also, let $X_t = X_t(i)$ and $\Delta X_t = \Delta X_t(i)$ be the matrices
+Also, let $X_t = X_t(i)$ and $\Delta X_t = \Delta X_t(i)$ be the $J \times p$ matrices
 whose $j$th rows are $x_t(i,j)$ and $\Delta x_t(i,j)$, respectively, so
 that
 \[
-  X_t = X_0 + \Delta X_t \in \reals^{J \times p}.
+  X_t = X_0 + \Delta X_t.
 \]
-Using these expressions we have
+Using these expressions, we obtain
 \[
   E_t = X_t^\trans \pi_t
       = \gamma_t E_0
       + X_0^\trans \Delta \pi_t
-      + \Delta X_t^\trans \pi_t.
+      + \Delta X_t^\trans \pi_t,
 \]
-Thus,
+and thus,
 \[
   \sum_{\substack{m  \\ i_m = i}} E_{t_m} =
     \Big(\sum_{\substack{ m \\ i_m = i}} \gamma_{t_m}\Big) E_0
     +
     X_0^\trans \Big(\sum_{\substack{ m \\ i_m = i }} \Delta \pi_{t_m}\Big)
     +
-    \sum_{\substack{m \\ i_m = i}} \Delta X_{t_m}^\trans \pi_{t_m}
+    \sum_{\substack{m \\ i_m = i}} \Delta X_{t_m}^\trans \pi_{t_m}.
 \]
 Taking advantage of the sparsity in $\Delta X_t$ and $\Delta \pi_t$, computing
 the three sums on the right hand side takes time $\Oh\big(n(i) \,
@@ -2567,48 +2565,46 @@ $\Big(\sum \gamma_{t_m}\Big) E_0$ takes time $\Oh(p)$, and the
 multiplication $X_0^\trans \big( \sum \Delta \pi_{t_m}\big)$ takes time
 $\Oh(\bar J \, p)$.  Thus, we can compute $\sum_{\substack{m \\ i_m = i}} E_{t_m}$ in time
 $\Oh\big(n(i) \, \bar J \, d \, p\big)$.  Computing these terms separately for
-each $i$ and then summing over all $i$ to get the total gradient takes $\Oh(n
+each $i$ and then summing over all $i$ to get the total gradient requires time $\Oh(n
 \, \bar J \, d \, p + I \, p)$.
 
 
 \subsection{Computing the Hessian}
 
-The computation for the Hessian proceeds similarly to the computation for
+Computing the Hessian according to~\eqref{eq:hess-MPLE} proceeds similarly to the case of the
 gradient.  We need to efficiently compute the sum $\sum_m V_{t_m}(\beta,
-i_m)$.  The naive computation takes $\Oh(n \, J \, p^2)$, but we can do much
-better by exploiting the sparsity in $x_t(i,j)$.
+i_m)$; while a naive computation requires time $\Oh(n \, J \, p^2)$, this can be significantly improved by exploiting sparsity in $x_t(i,j)$.
 
-Define $\Pi_t(\beta, i)$ to be the $J \times J$ diagonal matrix with
-$[\Pi_t(\beta, i)]_{jj} = \pi_t(\beta, i, j)$.  Set
+To this end, define $\Pi_t(\beta, i)$ to be the $J \times J$ diagonal matrix with
+$[\Pi_t(\beta, i)]_{jj} = \pi_t(\beta, i, j)$, and set
 $\Delta \Pi_t(\beta, i) = \Pi_t(\beta, i) - \Pi_0(\beta, i)$.
-
 Suppressing the dependence on $\beta$ and $i$, we have
 \begin{align*}
   V_t
     &= X_t^\trans [\Pi_t - \pi_t \pi_t^\trans] X_t \\
 \begin{split}
     &= X_0^\trans [\Pi_t - \pi_t \pi_t^\trans] X_0
-      \;+\; \Delta X_t^\trans [\Pi_t - \pi_t \pi_t^\trans] X_0 \\
+      \;+\; \Delta X_t^\trans [\Pi_t - \pi_t \pi_t^\trans] X_0\\
       &\quad+\; X_0^\trans [\Pi_t - \pi_t \pi_t^\trans] \Delta X_t
       \;+\; \Delta X_t^\trans [\Pi_t - \pi_t \pi_t^\trans] \Delta X_t.
 \end{split}
 \end{align*}
-The first term reduces to
+The first of these terms reduces to
 \begin{align*}
   X_0^\trans [ \Pi_t - \pi_t \pi_t^\trans] X_0
     &= \gamma_t V_0
     \;+\; \gamma_t (1 - \gamma_t) E_0 E_0^\trans
     \;-\; E_0 (\gamma_t \Delta \pi_t)^\trans X_0^\trans  \\
     &\quad-\; X_0 (\gamma_t \Delta \pi_t) E_0^\trans
-    \;+\; X_0^\trans [ \Delta \Pi_t - \Delta \pi_t \Delta \pi_t^\trans ] X_0
+    \;+\; X_0^\trans [ \Delta \Pi_t - \Delta \pi_t \Delta \pi_t^\trans ] X_0,
 \end{align*}
-The second term can be expressed as
+and the second can be expressed as
 \begin{align*}
   \Delta X_t^\trans [ \Pi_t - \pi_t \pi_t^\trans] X_0
     &= (\gamma_t \Delta X_t \pi_t) E_0^\trans
     \;+\; \Delta X_t^\trans [\Pi_t + \pi_t \Delta \pi_t^\trans] X_0.
 \end{align*}
-The third term is the transpose of the second.  The fourth term does not
+The third term is the transpose of the second; the fourth does not
 simplify.
 
 To compute the sum $\sum_{\substack{m \\ i_m = i}} V_{t_m}$, we only
@@ -2622,41 +2618,45 @@ $\gamma_t \Delta X_t \pi_t$,
 $\Delta X_t^\trans [\Pi_t + \pi_t \Delta \pi_t^\trans]$,
 and
 $\Delta X_t^\trans [\Pi_t - \pi_t \pi_t^\trans] \Delta X_t$.
-Doing so takes time $\Oh(\bar J \, d \, p^2)$ for each time point.  As with
+Doing so takes time $\Oh(\bar J \, d \, p^2)$ for each time increment.  As with
 the gradient computation, we compute the sums separately for each $i$ and then
 sum over all $i$, so that the total computation time is
 $\Oh(n \, \bar J \, d \, p^2 + I \, p^2)$.
 
 \subsection{Total computation time}
 
-To compute one Netwon step, we must compute the gradient and Hessian of the
-log partial likelihood at the current value of $\beta$, then compute the
+To perform one Newton step in maximization of the log partial likelihood of~\eqref{E:log-pl}, we must first compute the gradient and Hessian of the
+log partial likelihood at the current value of $\beta$, and then compute the
 inverse of the Hessian and its product with the gradient.  Once we have the
 Hessian, computing its inverse takes time $\Oh(p^3)$.  Typically, it takes
 $\Oh(1)$ Newton steps to compute the maximum of a convex function (the
 constant is often below $30$).  The key factors in determining the
 computation time using the factors laid out above are $\bar I$, $\bar J$, and
-$d$.
+$d$:
 
-The value of $\bar I$ depends on structure in $x_0(i,j)$.  Specifically,
+\begin{itemize}
+
+\item The value of $\bar I$ depends on the structure of $x_0(i,j)$.  Specifically,
 $\bar I$ is equal to the number of
 distinct values of the matrix $X_0(i)$ as $i$
 varies.  For the Enron data, we have that $\bar I = 12$: each sender
 belongs to one of $12$ groups determined by group (L/T/O), seniority (J/S),
-and gender (F/M); the matrix $X_0(i)$ depends only on the group of $i$.
+and gender (F/M), and so the matrix $X_0(i)$ depends only on the group of $i$.
 
-The value of $\bar J$ depends on the sparsity in $x_t(i,j)$.  If
-$x_t(i,j)$ only includes dyadic network effects, then $\bar J$ will typically
-be of size $\Oh(1)$ or $\Oh(J^\alpha)$ for a fractional value $\alpha$; when we add triadic effects, the size will typically
+\item The value of $\bar J$ depends on the sparsity of $x_t(i,j)$.  If
+$x_t(i,j)$ includes only dyadic network effects, then $\bar J$ will typically
+be of size $\Oh(1)$ or $\Oh(J^\alpha)$ for a fractional value $\alpha$; when we add triadic effects, this size will typically
 grow to at most $\Oh(J^{2 \alpha})$.
 
-The value of $d$ depends on further structure in $x_t(i,j)$.  In our
+\item The value of $d$ depends on further structure in $x_t(i,j)$.  In our
 implementation, $d = \Oh(1)$ for dyadic effects and $d = \Oh(\bar J)$ for
 triadic effects.
 
-The total computational cost per Newton step is
-$\Oh(\bar I \, J \, p^2  + n \, \bar J \, d \, p^2 + I \, p^2 + p^3)$.
-The significance of this expression is that it is nearly \emph{linear}
+\end{itemize}
+
+The total computational cost per Newton step is thus
+$\Oh(\bar I \, J \, p^2  + n \, \bar J \, d \, p^2 + I \, p^2 + p^3)$, with 
+the significance of this expression being that it is nearly linear
 in in $I$, $J$, and $n$.  Thus, the algorithm scales naturally to large
 datasets.
 
