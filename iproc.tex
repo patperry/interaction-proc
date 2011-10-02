@@ -1572,20 +1572,16 @@ decrease as $k$ and $l$ increase, though again we do not enforce this
 constraint in the fitting procedure.
 
 As previously noted, \cite{butts2008relational} used a variant of the proportional
-intensity model to capture interaction behavior in social settings.  If we set
-$K = 1$, then our $\textbf{send}_t$ covariate becomes an unnormalized version
-of Butts' persistance covariate, and the sum $(\textbf{send}_t +
+intensity model to capture interaction behavior in social settings.  As such, a correspondence can be drawn between certain of the covariates in \cite{butts2008relational} and those outlined above.  If we set
+$K = 1$, then the $\textbf{send}_t$ covariate is equivalent to an unnormalized version
+of Butts' persistence covariate, and the sum $(\textbf{send}_t +
 \textbf{receive}_t)$ becomes an unnormalized version of Butts' preferential
 attachment covariate.  For the triadic effects, Butts' OTP, ITP, ISP, and OSP
-covariates are anaogous to our $\textbf{2-send}$, $\textbf{2-receive}$,
-$\textbf{sibling}$, and $\textbf{cosibling}$ covariates, although his
-definitions are slightly different.
-For example, $\textrm{OTP}_t(i,j)$ is
-defined as $\sum_{h} \min\big( \#\{ i \to h \text{ in } (-\infty, t) \}, \,
-\#\{ h \to j \text{ in } (-\infty, t) \} \big)$.  We prefer our versions of
-these covariates, as they quantify more precisely the time-dependence of 
-network effects, and the coefficients of our covariates have a more
-straightforward interpretation.
+covariates are analogous to the $\textbf{2-send}$, $\textbf{2-receive}$,
+$\textbf{sibling}$, and $\textbf{cosibling}$ covariates, although the exact definitions differ slightly.
+(For example, $\textrm{OTP}_t(i,j)$ is
+defined as $\sum_{h} \min[ \#\{ i \to h \text{ in } (-\infty, t) \}, \,
+\#\{ h \to j \text{ in } (-\infty, t) \} ]$.)  The versions of these covariates that we have introduced above, however, are designed to enable a more precise quantification of the time-dependence of network effects, as well as a more straightforward interpretation of the corresponding coefficients.
 
 
 \subsection{Bootstrap bias correction}\label{S:enron-bootstrap}
@@ -2000,7 +1996,7 @@ $\textbf{sibling}_t^{(2,3)}$ ($0.14$).  We may interpret these coefficients as f
 \item[2-send] If $A$ sent $B$ a message in the last 2 hours and $B$ sent $C$ a message in the last 30 minutes, then $A$ will send messages to $C$ at a higher rate; however, if $A$ sent $B$ a message between 2 and 8 hours ago and $B$ sent $C$ a message in the last 30 minutes, then $A$ will send messages to $C$ at a lower rate.
 
 \item[2-receive] If $C$ sent $B$ a message between 30 minutes and 2 hours ago, and if $B$ sent $A$ a message between 1.3 days and 5.3 days ago, then $A$ will send messages to $C$ at a higher rate.
-    
+
 \item[sibling] If $B$ sent $A$ and $C$ messages in the last 30 minutes, then $A$ and $C$ are more likely to send messages to each other; if $B$ sent $A$ a message between 30 minutes and 2 hours ago, and if $B$ sent $C$ a message between 2 hours and 8 hours ago, then $A$ is more likely to send $C$ a message.
 
 \end{description}
@@ -2021,14 +2017,12 @@ piecewise-constant interaction rate.  The closest match to our approach is given
 \citet{snijders2001statistical,snijders2005models}, which we now detail.
 
 The actor-oriented model is designed for a sequence of snapshots $G_1$, $G_2,\dotsc,$ of network
-activity, where $G_t$ is an $n \times n$ binary matrix
+activity, where each $G_t$ is an $n \times n$ binary matrix
 representing pairwise connectivity between actors at time~$t$.  The model is constructed by
 assuming that ties persist in time rather than being instantaneous events; the sequence of networks is considered to be a Markov chain, with the distribution of $G_t$ determined by $G_{t-1}$, and
 actors are assumed to change their ties between times $t-1$ and $t$ to maximize a stochastic
-utility function that depends on characteristics of the network.  
-
-Essentially, given
-that the network is in state $G$, and that actor $i$ is allowed to make
+utility function that depends on characteristics of the overall network.
+Essentially, given that the network is in state $G$, and that actor $i$ is allowed to make
 a change, $i$ will change its link to actor $j$ according to
 \[
   p(j | i, G) \propto
@@ -2049,7 +2043,7 @@ introduction.)
 
 For purposes of comparison, we estimated coefficient sets $\beta$ and $\beta'$ in the actor-oriented change probability function $p(j | i, G)$; this function is analogous to the partial likelihood in the Cox proportional intensity model, while the actor rate function $\lambda(i)$ is analogous to the nonparametric baseline
 intensity in the Cox model.   We used the \texttt{RSiena} package
-\citep{rsiena2011} to specify and fit the actor-oriented model, after binning our e-mail interaction data at regular intervals to obtain network snapshots $G_1$, $G_2$, and $G_3$---with $G_t(i,j) = 1$ if message $i \to j$ was observed in period $t$, and $G_t(i,j) = 0$ otherwise---corresponding to $3$ consecutive four-month periods covering the calendar year 2001.  Approximately 2 hours' time was required to fit the model, and we were unable (for computational reasons) to fit a model to a larger subset of our data.
+\citep{rsiena2011} to specify and fit the actor-oriented model, after binning our e-mail interaction data at regular intervals to obtain network snapshots $G_1$, $G_2$, and $G_3$---with $G_t(i,j) = 1$ if message $i \to j$ was observed in period $t$, and $G_t(i,j) = 0$ otherwise---corresponding to $3$ consecutive four-month periods covering the calendar year 2001.  Approximately 2 hours' time was required to fit the model; we were unable (for computational reasons) to fit a model to a larger subset of our data.
 
 We included the following terms, chosen to mimic the covariates detailed in Section~\ref{S:enron-covariates}:
 
@@ -2147,11 +2141,11 @@ Coefficient & -1.94 & -0.94 &  2.02 & -0.26 & 0.30 \\
 As a final comparison, we also fitted an exponential random graph, or $p^\ast$, model to our data.  This class of models, one of the more popular for estimating the importance of network effects, specifies a probability distribution for a single directed graph represented by a binary matrix $G$.  Such a model supposes that
 $
 \Prob\{ G = g \} \propto \exp\{ \sum_{s=1}^S T_s(g)
-\}, 
+\},
 $
-where $T_s(g)$ is a network statistic, for example the number of transitive triples in the graph; i.e., edge sets of the form $\{ (h \to i), (j \to k), (h \to j) \}$.
+where $T_s(g)$ is a network statistic, for example the number of transitive triples in the graph.
 
-\cite{anderson1999pstar} provides a detailed survey of exponential random graph models; for our purposes it suffices to note two points:  First, we employed two different reductions of our data to a single directed graph: $G^{(1)}$ and $G^{(10)}$, where
+\cite{anderson1999pstar} provides a detailed survey of exponential random graph models; for our purposes it suffices to note two points:  First, we employed two different reductions of our data to obtain single directed graphs: $G^{(1)}$ and $G^{(10)}$, where
 \[
   G^{(m)}(i,j) = 1\{ N_\infty(i,j) \geq m \}.
 \]
@@ -2159,32 +2153,30 @@ Second, we again chose terms in the model to mimic the covariates from
 Section~\ref{S:enron-covariates}, as in our comparison to the actor-oriented
 model.  We used the \texttt{ergm} software package to fit the
 model~\citep{ergm2011}, based on a Markov chain Monte Carlo sample size of
-$10^5$ following a burn-in period of $10^6$ iterates; an explanation of the
-covariates employed follows:
+$10^5$ following a burn-in period of $10^6$ iterates, and employed the following covariates:
 
 \begin{enumerate}
-  \item Sender effects (\texttt{sender}).  One covariate for each sender,
-  measuring the outdegree of the sender.  The coefficient for this coefficient
-plays the role of $\bar \lambda_t(i)$ in our model.
+  \item Sender effects (\texttt{sender}).  One covariate is included for each sender,
+  measuring the outdegree of the sender.  The corresponding coefficient plays the role of $\bar \lambda_t(i)$ in our model.
 
-  \item Group-level edge effects (\texttt{edgecov}).  One covariate for each
+  \item Group-level edge effects (\texttt{edgecov}).  One covariate is included for each
 identifiable first-order interaction of the form $X(i) Y(j)$, where $i$ is the
 sender and $j$ is the receiver; the covariate counts the number of edges $i
 \to j$ with $X(i) Y(j) = 1$.  These effects correspond to the group-level
-effects in our model.  We would have liked to include second-order
-interactions as well, but were not able to fit the ERGM with these terms.
+effects in our model.  We attempted to include second-order
+interactions as well, but were unable (for computational reasons) to fit the model with these terms.
 
-  \item Mutuality (\texttt{mutual}).  A statistic counting the number of
-mutual ties, edge sets of the form $\{ i \to j, j \to i \}$.  This corresponds to the
+  \item Mutuality (\texttt{mutual}).  This statistic counts the number of
+mutual ties; i.e., edge sets of the form $\{ i \to j, j \to i \}$, and corresponds to the
 $\textbf{receive}$ term in our model.
 
-  \item Cyclic triples (\texttt{ctriple}).  A statistic counting the number of
-cyclic triples, edge sets of the form $\{ h \to i, i \to j, j \to h \}$.  This
+  \item Cyclic triples (\texttt{ctriple}).  This statistic counts the number of
+cyclic triples; i.e., edge sets of the form $\{ h \to i, i \to j, j \to h \}$, and
 corresponds to the $\textbf{2-receive}$ term in our model.
 
-  \item Transitive triples (\texttt{ttriple}).  A statistic counting the
-number of transitive triples, edge sets of the form $\{ h \to i, i \to j, h
-\to j \}$.  This corresponds to the $\textbf{2-send},$ $\textbf{sibling},$
+  \item Transitive triples (\texttt{ttriple}).  This statistic counts the
+number of transitive triples; i.e., edge sets of the form $\{ h \to i, i \to j, h
+\to j \}$.  It corresponds to the $\textbf{2-send},$ $\textbf{sibling},$
 and $\textbf{cosibling}$ terms in our model.
 \end{enumerate}
 
@@ -2306,7 +2298,7 @@ actor-oriented network models, and
 exponential random graph models, an
 advantage of our approach lies in its ability to treat directed
 interaction data in its given form, rather than as static ties or
-temporal snapshots thereof.  
+temporal snapshots thereof.
 
 The foundation of our work is Cox's \citeyearpar{cox1972regression}
 proportional intensity model and partial likelihood theory, tools
