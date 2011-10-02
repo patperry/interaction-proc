@@ -33,7 +33,7 @@
     Patrick O.\ Perry
 }
 
-\address{Stern School Of Business, New York University, USA}
+\address{Stern School of Business, New York University, USA}
 
 \author[P.\ J.\ Wolfe]{%
     Patrick J.\ Wolfe
@@ -2030,7 +2030,8 @@ parametric model.  (See \citet{snijders2010introduction} for a more thorough
 introduction.)
 
 For purposes of comparison, we estimated coefficient sets $\beta$ and $\beta'$ in the actor-oriented change probability function $p(j | i, G)$; this function is analogous to the partial likelihood in the Cox proportional intensity model, while the actor rate function $\lambda(i)$ is analogous to the nonparametric baseline
-intensity in the Cox model.   We used the \texttt{RSiena} package to specify and fit the actor-oriented model, after binning our e-mail interaction data at regular intervals to obtain network snapshots $G_1$, $G_2$, and $G_3$---with $G_t(i,j) = 1$ if message $i \to j$ was observed in period $t$, and $G_t(i,j) = 0$ otherwise---corresponding to $3$ consecutive four-month periods covering the calendar year 2001.  Approximately 2 hours' time was required to fit the model, and we were unable (for computational reasons) to fit a model to a larger subset of our data.
+intensity in the Cox model.   We used the \texttt{RSiena} package
+\citep{rsiena2011} to specify and fit the actor-oriented model, after binning our e-mail interaction data at regular intervals to obtain network snapshots $G_1$, $G_2$, and $G_3$---with $G_t(i,j) = 1$ if message $i \to j$ was observed in period $t$, and $G_t(i,j) = 0$ otherwise---corresponding to $3$ consecutive four-month periods covering the calendar year 2001.  Approximately 2 hours' time was required to fit the model, and we were unable (for computational reasons) to fit a model to a larger subset of our data.
 
 We included the following terms, chosen to mimic the covariates detailed in Section~\ref{S:enron-covariates}:
 
@@ -2137,7 +2138,12 @@ where $T_s(g)$ is a network statistic, for example the number of transitive trip
   G^{(m)}(i,j) = 1\{ N_\infty(i,j) \geq m \}.
 \]
 Second, we again chose terms in the model to mimic the covariates from
-Section~\ref{S:enron-covariates}, as in our comparison to the actor-oriented model.  We used the \texttt{ergm} software package we used to fit the model, based on a Markov chain Monte Carlo sample size of $10^5$ following a burn-in period of $10^6$ iterates; an explanation of the covariates employed follows:
+Section~\ref{S:enron-covariates}, as in our comparison to the actor-oriented
+model.  We used the \texttt{ergm} software package to fit the
+model~\citep{ergm2011}, based on a Markov chain Monte Carlo sample size of
+$10^5$ following a burn-in period of $10^6$ iterates; an explanation of the
+covariates employed follows:
+
 \begin{enumerate}
   \item Sender effects (\texttt{sender}).  One covariate for each sender,
   measuring the outdegree of the sender.  The coefficient for this coefficient
@@ -2278,22 +2284,11 @@ has demonstrated the ways in which static and dynamic effects manifest
 themselves in e-mail communication networks, and we expect similar
 conclusions to hold broadly for other types of directed interaction
 data.  Relative to alternatives such as contingency table analyses,
-exponential random graph models, and agent-based network models, an
+actor-oriented network models, and
+exponential random graph models, an
 advantage of our approach lies in its ability to treat directed
 interaction data in its given form, rather than as static ties or
-temporal snapshots thereof.  Other recent treatments involving point
-processes include the aforementioned work of
-\cite{butts2008relational}; \citet{malmgen2009characterizing} model
-activity at the level of the individual using a hidden Markov model,
-while \citet{heard2010bayesian} work at the level of the dyad,
-assuming a piecewise-constant interaction rate, though neither of
-these two approaches include network effects or other covariate
-information.  Furthermore, aside from
-\citefullauthor{lunagomez2009geometric}'s
-\citeyearpar{lunagomez2009geometric} recent work in the context of
-graphical models, interactions involving more than two entities have
-largely been ignored.
-
+temporal snapshots thereof.  
 
 The foundation of our work is Cox's \citeyearpar{cox1972regression}
 proportional intensity model and partial likelihood theory, tools

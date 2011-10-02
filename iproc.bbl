@@ -69,13 +69,6 @@ Cox, D.~R. (1975).
 \newblock Partial likelihood.
 \newblock {\em Biometrika\/}~{\em 62}, 269--276.
 
-\bibitem[\protect\citeauthoryear{De~Choudhury, Mason, Hofman, and
-  Watts}{De~Choudhury et~al.}{2010}]{dechoudhury2010}
-De~Choudhury, M., W.~A. Mason, J.~M. Hofman, and D.~J. Watts (2010).
-\newblock Inferring relevant social networks from interpersonal communication.
-\newblock In {\em Proc. 19th Intl Conf. World Wide Web}, pp.\  301--310. New
-  York: Association for Computing Machinery.
-
 \bibitem[\protect\citeauthoryear{Eagle and Pentland}{Eagle and
   Pentland}{2006}]{eagle2006reality}
 Eagle, N. and A.~S. Pentland (2006).
@@ -108,6 +101,14 @@ Goldenberg, A., A.~X. Zheng, S.~E. Fienberg, and E.~M. Airoldi (2009).
 Haberman, S.~J. (1977).
 \newblock Maximum likelihood estimates in exponential response models.
 \newblock {\em Ann. Statist.\/}~{\em 5}, 815--841.
+
+\bibitem[\protect\citeauthoryear{Handcock, Hunter, Butts, Goodreau, Krivitsky,
+  and Morris}{Handcock et~al.}{2011}]{ergm2011}
+Handcock, M.~S., D.~R. Hunter, C.~T. Butts, S.~M. Goodreau, P.~N. Krivitsky,
+  and M.~Morris (2011).
+\newblock \texttt{ergm}: A package to fit, simulate and diagnose
+  exponential-family models for networks.
+\newblock Version 2.4-2. Project home page at http://statnetproject.org.
 
 \bibitem[\protect\citeauthoryear{Hanneke, Fu, and Xing}{Hanneke
   et~al.}{2010}]{hanneke2010discrete}
@@ -205,6 +206,14 @@ Papachristos, A.~V. (2009).
 Rebolledo, R. (1980).
 \newblock Central limit theorems for local martingales.
 \newblock {\em Probab. Theory Rel. Fields\/}~{\em 51}, 269--286.
+
+\bibitem[\protect\citeauthoryear{Ripley and Snijders}{Ripley and
+  Snijders}{2011}]{rsiena2011}
+Ripley, R.~M. and T.~A.~B. Snijders (2011).
+\newblock \texttt{RSiena}: Simulation investigation for empirical network
+  analysis.
+\newblock R package version 1.0.12.167,
+  http://CRAN.R-project.org/package=RSiena.
 
 \bibitem[\protect\citeauthoryear{Shafiei and Chipman}{Shafiei and
   Chipman}{2010}]{shafiei2010mixed}
