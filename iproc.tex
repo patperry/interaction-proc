@@ -1566,8 +1566,24 @@ where $s$ is the time of the $i \to h$ message and $t$ is the time of the $h
 event causes the sending rate $\lambda_{t'}(i,j)$ to be multiplied by the
 factor $e^{\beta_{k,l}}$, where $t' \in (s + \Delta_{k-1}, s + \Delta_{k}]$
 and $t' \in (t + \Delta_{l-1}, t + \Delta_l]$.  We expect $\beta_{k,l}$ to
-decrease as $k$ and $l$ increase, though again we do not enforce this constraint in
-the fitting procedure.
+decrease as $k$ and $l$ increase, though again we do not enforce this
+constraint in the fitting procedure.
+
+As previously noted, \cite{butts2008relational} used a variant of the proportional
+intensity model to capture interaction behavior in social settings.  If we set
+$K = 1$, then our $\textbf{send}_t$ covariate becomes an unnormalized version
+of Butts' persistance covariate, and the sum $(\textbf{send}_t +
+\textbf{receive}_t)$ becomes an unnormalized version of Butts' preferential
+attachment covariate.  For the triadic effects, Butts' OTP, ITP, ISP, and OSP
+covariates are anaogous to our $\textbf{2-send}$, $\textbf{2-receive}$,
+$\textbf{sibling}$, and $\textbf{cosibling}$ covariates, although his
+definitions are slightly different.
+For example, $\textrm{OTP}_t(i,j)$ is
+defined as $\sum_{h} \min\big( \#\{ i \to h \text{ in } (-\infty, t) \}, \,
+\#\{ h \to j \text{ in } (-\infty, t) \} \big)$.  We prefer our versions of
+these covariates, as they quantify more precisely the time-dependence of 
+network effects, and the coefficients of our covariates have a more
+straightforward interpretation.
 
 
 \subsection{Bootstrap bias correction}\label{S:enron-bootstrap}
