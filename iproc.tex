@@ -1760,23 +1760,34 @@ Given the model fitting procedure and results described above, we may now evalua
 
 \subsection{Assessing evidence for homophily in the Enron data}\label{S:enron-homophily}
 
-The analyses of Section~\ref{S:enron-modeling} above have established that our multicast proportional intensity model with chosen covariates is reasonably accurate in describing
-message recipient selection, conditional on the sender and the history of the
-process.  Thus, we are justified in using the estimated coefficients from the
-model to assess the predictive ability of the corresponding covariates.
+The analyses of Section~\ref{S:enron-modeling} above have established that our
+multicast proportional intensity model with chosen covariates is reasonably
+accurate in describing message recipient selection, conditional on the sender
+and the history of the process.  Thus, we are justified in using the estimated
+coefficients from the model to assess the predictive ability of the
+corresponding covariates.
 
 Our first task is to gauge the predictive strength of homophily.  To this end,
 Fig.~\ref{T:group-dynamic} shows the estimated group-level coefficients for
-our model.  Notably, homophily appears present for each
-main effect (Department, Seniority, and Gender): the estimated coefficients of
-$L(j)$, $T(j)$, $J(j)$, and $F(j)$ are all negative, while the estimated
-coefficients of $L(i) \cdot L(j)$, $T(i) \cdot T(j)$, $J(i) \cdot J(j)$, and
-$F(i) \cdot F(j)$ are all positive.  Taking Gender as an example, the way this homophily
-effect manifests is as follows: if $i$ is sending a message at time $t$, and person $j$ is
-identical to person $j'$ except for Gender, then $i$ is more likely to send to
-the similarly-gendered individual.  The relative probability is $\exp(-0.08 +
-0.41) \approx 1.4$ if $i$ is Female, and $\exp(0.08) \approx 1.1$ if $i$ is
-Male.  The characterization for other types of homophily is similar.
+our model.  Notably, homophily appears present for almost all main effects
+(Department, Seniority, and Gender): the estimated coefficients of $L(j)$,
+$T(j)$, $J(j)$, and $F(j)$ are all negative, while the sums of the estimated
+coefficients of the following pairs are all positive:
+$T(j)$ and $T(i) \cdot T(j)$; 
+$J(j)$ and $J(i) \cdot J(j)$; 
+$F(j)$ and $F(i) \cdot F(j)$.
+Taking Gender as an example, the way this homophily
+effect manifests is as follows: if $i$ is sending a message at time $t$, and
+person $j$ is identical to person $j'$ except for Gender, then $i$ is more
+likely to send to the similarly-gendered individual.  The relative rate 
+is $\exp(-0.08 + 0.41) \approx 1.4$ if $i$ is Female, and $\exp(0.08) \approx
+1.1$ if $i$ is Male.  The characterization for other types of homophily is
+similar.
+
+Conspicuously, the only trait for which first-order homophily was
+absent was for the Legal group: the sum of the estimated coefficients of
+$L(j)$ and $L(i) \cdot L(j)$ was negative ($-0.30)$, indicating that 
+employees in the Legal group exhibited anti-homophilic behavior.
 
 \begin{figure}
   \centering
@@ -2181,22 +2192,31 @@ Coefficient & -1.94 & -0.94 &  2.02 & -0.26 & 0.30 \\
 
 \subsubsection{Exponential random graph model analysis}
 
-As a final comparison, we also fitted an exponential random graph, or $p^\ast$, model to our data.  This class of models, one of the more popular for estimating the importance of network effects, specifies a probability distribution for a single directed graph represented by a binary matrix $G$.  Such a model supposes that
-$
-\Prob\{ G = g \} \propto \exp\{ \sum_{s=1}^S T_s(g)
-\},
-$
-where $T_s(g)$ is a network statistic, for example the number of transitive triples in the graph.
+As a final comparison, we fit an exponential random graph model (ERGM) to the
+Enron data.  This class of models---one of the more popular
+for estimating the importance of network effects---specifies a probability
+distribution for a single directed graph represented by a binary matrix $G$.
+Such a model supposes that
+\(
+  \Prob\{ G = g \} \propto \exp\{ \sum_{s=1}^S T_s(g) \},
+\)
+where $T_s(g)$ is a network statistic, for example the number of transitive
+triples in the graph.  See
+\cite{anderson1999pstar} for a detailed survey.
 
-\cite{anderson1999pstar} provides a detailed survey of exponential random graph models; for our purposes it suffices to note two points:  First, we employed two different reductions of our data to obtain single directed graphs: $G^{(1)}$ and $G^{(10)}$, where
+To apply the ERGM to the Enron data, we employed a reduction to obtain
+a single directed graph, $G$, defined by
 \[
-  G^{(m)}(i,j) = 1\{ N_\infty(i,j) \geq m \}.
+  G(i,j) = 1\{ N_\infty(i,j) \geq 10 \}.
 \]
-Second, we again chose terms in the model to mimic the covariates from
-Section~\ref{S:enron-covariates}, as in our comparison to the actor-oriented
-model.  We used the \texttt{ergm} software package to fit the
+The cutoff value $10$ was chosen by looking for an elbow in the histogram of
+$N_\infty(i,j)$ for varying $i$ and $j$.
+Next, as in our comparison to the actor-oriented model, we chose terms in the
+model to mimic the covariates from Section~\ref{S:enron-covariates}.
+We used the \texttt{ergm} software package to fit the
 model~\citep{ergm2011}, based on a Markov chain Monte Carlo sample size of
-$10^5$ following a burn-in period of $10^6$ iterates, and employed the following covariates:
+$10^5$ following a burn-in period of $10^6$ iterates.  The covariates were as
+follows:
 
 \begin{enumerate}
   \item Sender effects (\texttt{sender}).  One covariate is included for each sender,
@@ -2223,33 +2243,44 @@ number of transitive triples; i.e., edge sets of the form $\{ h \to i, i \to j, 
 and $\textbf{cosibling}$ terms in our model.
 \end{enumerate}
 
-Figure~\ref{F:enron-ergm} shows the fitted coefficients for the models based on
-$G^{(1)}$ and $G^{(10)}$.  Again it may be observed that the estimated network effects agree
-qualitatively with those of Fig.~\ref{F:enron-net-indicator}, as
-mutuality and transitive triples have positive effects while cyclic triples
-have a negligible effect.  Note, however, than reducing interaction data to a single directed graph has important modeling consequences.  Indeed, there is no possibility of including a term corresponding to \texttt{send} in this setting, as such a term does not make sense for a binary network.  Further, as with the case of a snapshot-based analysis such as the actor-model detailed above, it is impossible to separate the \texttt{2-send}, \texttt{sibling}, and \texttt{cosibling} effects, and it is impossibly to quantify the time-dependence of dynamic network effects.
+\noindent
+Note that reducing the interaction data to a single directed graph has
+important modeling consequences.  As with the case of the snapshot-based
+actor-oriented model detailed above, it is impossible to separate the
+$\textbf{2-send}$, $\textbf{sibling}$, and $\textbf{cosibling}$ effects.
+Further, for a single directed graph, there is no possibility of including a
+term corresponding to $\textbf{send}$, and it is impossible to quantify the
+time-dependence of the network effects.
+
+
+
+Figure~\ref{F:enron-ergm} shows the fitted coefficients for the model.  Again
+it may be observed that the estimated network effects agree qualitatively with
+those of Fig.~\ref{F:enron-net-indicator}, as mutuality and transitive triples
+have positive effects while cyclic triples have a negligible effect. 
+
 
 \begin{figure}\label{F:enron-ergm}
 \centering
-\subfloat[Estimated group effects for $G^{(1)}$]{
-  \centering
-  \footnotesize
-  \begin{tabular}{lrrrr}
-  \toprule
-  & \multicolumn{4}{c}{Receiver} \\
-  \cmidrule(l){2-5}
-  Sender &    L  &  T    &   J   &  F \\
-  \midrule
-  1 & -1.03 & -0.62 & -0.15 & -0.21 \\
-  L &  \cellcolor{Gray} 1.17 &  0.54 & -0.08 & -0.19 \\
-  T &  0.03 &  \cellcolor{Gray} 0.25 & -0.41 & -0.39 \\
-  J &  0.37 &  0.78 &  \cellcolor{Gray} 0.62 &  0.02 \\
-  F &  0.03 &  0.24 &  0.13 &  \cellcolor{Gray} 0.50 \\
-  \bottomrule
-  \end{tabular}
-}
-\qquad
-\subfloat[Estimated group effects for $G^{(10)}$]{
+%\subfloat[Estimated group effects for $G^{(1)}$]{
+%  \centering
+%  \footnotesize
+%  \begin{tabular}{lrrrr}
+%  \toprule
+%  & \multicolumn{4}{c}{Receiver} \\
+%  \cmidrule(l){2-5}
+%  Sender &    L  &  T    &   J   &  F \\
+%  \midrule
+%  1 & -1.03 & -0.62 & -0.15 & -0.21 \\
+%  L &  \cellcolor{Gray} 1.17 &  0.54 & -0.08 & -0.19 \\
+%  T &  0.03 &  \cellcolor{Gray} 0.25 & -0.41 & -0.39 \\
+%  J &  0.37 &  0.78 &  \cellcolor{Gray} 0.62 &  0.02 \\
+%  F &  0.03 &  0.24 &  0.13 &  \cellcolor{Gray} 0.50 \\
+%  \bottomrule
+%  \end{tabular}
+%}
+%\qquad
+\subfloat[Estimated group effects]{ % for $G^{(10)}$]{
   \centering
   \footnotesize
   \begin{tabular}{lrrrr}
@@ -2266,34 +2297,34 @@ have a negligible effect.  Note, however, than reducing interaction data to a si
   \bottomrule
   \end{tabular}
 }
-\\
-\vspace{1em}
-\subfloat[Estimated network effects for $G^{(1)}$]{
-  \centering
-  \footnotesize
-  \begin{tabular}{lrrr}
-  \toprule
-  Variate
-  & \textbf{mutual}
-  & \textbf{ctriple}
-  & \textbf{ttriple}
-  \\
-  \midrule
-  Coefficient
-  &  3.13
-  & -0.15
-  &  0.18
-  \\
-  (SE)
-  & \tiny{(NA)}
-  & \tiny{(NA)}
-  & \tiny{(NA)}
-  \\
-  \bottomrule
-  \end{tabular}
-}
+%\\
+%\vspace{1em}
+%\subfloat[Estimated network effects for $G^{(1)}$]{
+%  \centering
+%  \footnotesize
+%  \begin{tabular}{lrrr}
+%  \toprule
+%  Variate
+%  & \textbf{mutual}
+%  & \textbf{ctriple}
+%  & \textbf{ttriple}
+%  \\
+%  \midrule
+%  Coefficient
+%  &  3.13
+%  & -0.15
+%  &  0.18
+%  \\
+%  (SE)
+%  & \tiny{(NA)}
+%  & \tiny{(NA)}
+%  & \tiny{(NA)}
+%  \\
+%  \bottomrule
+%  \end{tabular}
+%}
 \qquad
-\subfloat[Estimated network effects for $G^{(10)}$]{
+\subfloat[Estimated network effects]{ % for $G^{(10)}$]{
   \centering
   \footnotesize
   \begin{tabular}{lrrr}
