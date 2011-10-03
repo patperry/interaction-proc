@@ -64,18 +64,21 @@ New York, NY 10012,~USA
 %\maketitle
 
 \begin{abstract}
-Network data often take the form of repeated interactions between senders
-and receivers tabulated over time.  Here a model is introduced for treating such directed interactions as a
-multivariate point process: a Cox multiplicative intensity model using
-covariates that may depend on the history of the process.
-Consistency and asymptotic normality are proved for the resulting
-partial-likelihood-based estimators under suitable regularity
-conditions, and an efficient fitting procedure is described.
-Multicast interactions---those involving a single sender
-but multiple receivers---are treated explicitly.
-The resulting inferential framework is then employed to model message sending behavior in a corporate e-mail network, with covariates introduced to account for both static shared traits and dynamic network effects, in order to determine which characteristics and behaviors of the senders and receivers in these data are predictive of interaction.
 
-%A motivating data example shows how network effects and group-level preferences can be incorporated when modeling message sending behavior in a corporate e-mail network.
+Network data often take the form of repeated interactions between senders and
+receivers tabulated over time.  A primary question is to ask which traits and
+behaviors are predictive of interaction.  To answer this question, a model is
+introduced for treating directed interactions as a multivariate point process:
+a Cox multiplicative intensity model using covariates that depend on the
+history of the process.  Consistency and asymptotic normality are proved for
+the resulting partial-likelihood-based estimators under suitable regularity
+conditions, and an efficient fitting procedure is described.  Multicast
+interactions---those involving a single sender but multiple receivers---are
+treated explicitly.  The resulting inferential framework is then employed to
+model message sending behavior in a corporate e-mail network, with covariates
+introduced to account for both static shared traits and dynamic network
+effects.  By modeling the data directly instead of in an aggregated form, the
+method avoids systematic biases inherent in the aggregation procedure.
 
 \keywords{Cox proportional hazards model; Network data analysis;
 Partial likelihood inference; Point processes}
