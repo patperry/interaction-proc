@@ -1984,7 +1984,7 @@ Comparing the coefficients for $\textbf{send}_t^{(k)}$ with those of
 $\textbf{receive}_t^{(k)}$ we see that the latter are higher for $k \leq 2$,
 while the former are higher for $k > 2$.  The corresponding intuition is that if $A$ is
 sending a message up to two hours after receiving a message from $B$, then $A$
-is likely to respond to $B$, but after that, $A$ am more likely to send to an individual
+is likely to respond to $B$, but after that, $A$ is more likely to send to an individual
 whom $A$ e-mailed at the time of receiving $B$'s original message (provided
 $B$ and this other individual are identical in all other respects).  The time window
 during which reciprocation is more important than past habit is less than 8 hours.
@@ -2140,9 +2140,13 @@ coefficients are larger than the triadic coefficients.  A discrepancy between
 the two models is that $\textbf{2-receive}$ had a negligible effect in the
 proportional intensity model, while its analogue (\texttt{3cycle}) had a small
 negative effect in the actor-oriented model.  One possible explanation for
-this discrepancy is that using binary snapshots instead of interaction counts
-puts more emphasis on infrequent interactions; [TODO: FILL IN THE BLANK]
-
+this discrepancy is that treating ties as binary forces a negative bias in
+otherwise-unimportant network effects.  With the limitation that ties are
+binary, when actor $i$ tries to maximize his stochastic utility, he is
+forbidden from reinforcing an existing $i \to j$ link; he is more
+likely to link to an actor $j'$ for which link $i \to j'$ is absent.
+To counteract this tendency, the coefficient of $\texttt{3cycle}$ is
+forced to be negative.
 
 
 \begin{figure}
