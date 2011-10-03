@@ -1755,7 +1755,7 @@ For a more parsimonious model, we might drop most of the triadic effects.
 Indeed, the model which only uses dyadic effects has a $X^2$ value of $23785$,
 which is very close to $24074 = 156 \cdot 155 - (90 + 2 \cdot 8)$, the
 approximate $X^2$ degrees of freedom for that model.  However, at this stage
-we desire a model with the lowest possible bias, and also with to acquire estimates for all
+we desire a model with the lowest possible bias, and also wish to acquire estimates for all
 of the network effects.
 
 \section{Evaluating the strength of homophily and network effects}\label{S:strength-of-effects}
@@ -1777,20 +1777,20 @@ our model.  Notably, homophily appears present for almost all main effects
 (Department, Seniority, and Gender): the estimated coefficients of $L(j)$,
 $T(j)$, $J(j)$, and $F(j)$ are all negative, while the sums of the estimated
 coefficients of the following pairs are all positive:
-$T(j)$ and $T(i) \cdot T(j)$; 
-$J(j)$ and $J(i) \cdot J(j)$; 
+$T(j)$ and $T(i) \cdot T(j)$;
+$J(j)$ and $J(i) \cdot J(j)$;
 $F(j)$ and $F(i) \cdot F(j)$.
 Taking Gender as an example, the way this homophily
 effect manifests is as follows: if $i$ is sending a message at time $t$, and
 person $j$ is identical to person $j'$ except for Gender, then $i$ is more
-likely to send to the similarly-gendered individual.  The relative rate 
+likely to send to the similarly-gendered individual.  The relative rate
 is $\exp(-0.08 + 0.41) \approx 1.4$ if $i$ is Female, and $\exp(0.08) \approx
 1.1$ if $i$ is Male.  The characterization for other types of homophily is
 similar.
 
 Conspicuously, the only trait for which first-order homophily was
 absent was for the Legal group: the sum of the estimated coefficients of
-$L(j)$ and $L(i) \cdot L(j)$ was negative ($-0.30)$, indicating that 
+$L(j)$ and $L(i) \cdot L(j)$ was negative ($-0.30)$, indicating that
 employees in the Legal group exhibited anti-homophilic behavior.
 
 \begin{figure}
@@ -1959,8 +1959,8 @@ The estimated coefficients for the recency-dependent covariates, shown in
 Figs.~\ref{F:enron-dyad} and~\ref{F:enron-triad}, give a more complete
 picture of network effects.  Firstly, we can see that dyadic effects
 persist for over three weeks from the time a message is sent.  The decay of
-the estimated coefficients is roughly exponential in the time elapsed, which
-corresponds to a super-exponential decay in the relative sending rate.  For 30
+the estimated coefficients is roughly exponential in the time elapsed,
+corresponding to a super-exponential decay in the relative sending rate.  For 30
 minutes after $i$ sends a message to $j$, our estimated model predicts that
 the rate at which $i$ sends to $j$ will be multiplied by $\exp(1.10) \approx
 3.01$, and the rate at which $j$ sends to $i$ will be multiplied by $\exp(1.73)
@@ -2038,7 +2038,7 @@ piecewise-constant interaction rate.  The closest match to our approach is
 given by the actor-oriented model of
 \citet{snijders2001statistical,snijders2005models}, which we now detail.  We
 also compare to static network analysis based on an exponential random graph
-model (ERGM).
+model.
 
 \subsubsection{Actor-oriented model analysis}
 
@@ -2074,7 +2074,7 @@ plays a similar role to the baseline intensity $\bar \lambda_t(i)$.
 For purposes of comparison, we specified a change probability model $p(j | i,
 G)$ with network statistics analogous to those used in
 Section~\ref{S:enron-covariates}, and then we estimated coefficient sets
-$\beta$ and $\beta'$ analogous the coefficients in the proportional intensity
+$\beta$ and $\beta'$ analogous to the coefficients in the proportional intensity
 model.  We used the \texttt{RSiena} package \citep{rsiena2011} to specify and
 fit the actor-oriented model after binning the Enron e-mail interaction data
 at regular intervals to obtain network snapshots $G_1$, $G_2$, and $G_3$.
@@ -2123,14 +2123,14 @@ and $\textbf{cosibling}$ terms in our model.
 
 \noindent
 Note that after binning the interaction counts to form network snapshots as
-required by the actor-oriented model, it is impossible ot separate the
+required by the actor-oriented model, it is impossible to separate the
 $\textbf{2-send}$, $\textbf{sibling}$, and $\textbf{cosibling}$ effects.
 Further, the first-order Markov nature of the model restricts
 our ability to quantify the time decay of the dynamic network effects.
 
 As we were unable to include second-order interactions
 between the group-level effects, we cannot compare the estimated coefficients
-for the first-order interactions with those gotten from the proportional
+for the first-order interactions with those obtained from the proportional
 intensity model.  However, including these effects mediates the confounding
 role of homophily in estimating the network effects, our primary focus for
 this comparison.
@@ -2265,7 +2265,7 @@ time-dependence of the network effects.
 Figure~\ref{F:enron-ergm} shows the fitted coefficients for the model.  Again
 it may be observed that the estimated network effects agree qualitatively with
 those of Fig.~\ref{F:enron-net-indicator}, as mutuality and transitive triples
-have positive effects while cyclic triples have a negligible effect. 
+have positive effects while cyclic triples have a negligible effect.
 
 
 \begin{figure}\label{F:enron-ergm}
