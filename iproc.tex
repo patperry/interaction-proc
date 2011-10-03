@@ -2367,16 +2367,15 @@ standard errors for the group-level edge effects were nonsensical, and so are no
 
 \section{Discussion}\label{S:discussion}
 
-Our analysis of the Enron corpus in Sections~\ref{S:enron-modeling} and~\ref{S:strength-of-effects} above
-has demonstrated the ways in which static and dynamic effects manifest
-themselves in e-mail communication networks, and we expect similar
-conclusions to hold broadly for other types of directed interaction
-data.  Relative to alternatives such as contingency table analyses,
-actor-oriented network models, and
-exponential random graph models, an
-advantage of our approach lies in its ability to treat directed
-interaction data in its given form, rather than as static ties or
-temporal snapshots thereof.
+Our analysis of the Enron corpus in Sections~\ref{S:enron-modeling}
+and~\ref{S:strength-of-effects} above has demonstrated the ways in which
+static and dynamic effects manifest themselves in e-mail communication
+networks, and we expect similar conclusions to hold broadly for other types of
+directed interaction data.  Relative to alternatives such as contingency table
+analyses, actor-oriented network models, and exponential random graph models,
+an advantage of our approach lies in its ability to model the raw data
+directly instead of in an aggregated form.  By dealing with the raw data,
+we have avoided biases inherent in the aggregation process.
 
 The foundation of our work is Cox's \citeyearpar{cox1972regression}
 proportional intensity model and partial likelihood theory, tools
@@ -2391,10 +2390,10 @@ that are asymptotic in time rather than in the size of the population
 under study; and second, we have shown that treating multicast
 interactions via duplication leads to bias in the parameter estimates
 (which can in turn be corrected in certain regimes).  We find the
-proportional intensity model with time-varying covariates to be a
-simple, flexible, and well-established model for incorporating
-group-level preferences and network effects into the analysis of
-interaction data.
+proportional intensity model with time-varying covariates to be particularly
+useful for modeling repeated directed interactions.  The model is
+simple, flexible, and well-established, and it facilitates investigation
+into which traits and behaviors are predictive of interaction.
 
 
 \section*{Acknowledgement}
