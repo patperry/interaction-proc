@@ -75,10 +75,10 @@ the resulting partial-likelihood-based estimators under suitable regularity
 conditions, and an efficient fitting procedure is described.  Multicast
 interactions---those involving a single sender but multiple receivers---are
 treated explicitly.  The resulting inferential framework is then employed to
-model message sending behavior in a corporate e-mail network, with covariates
-introduced to account for both static shared traits and dynamic network
-effects.  As demonstrated through three comparative analyses, the model
-avoids systematic biases that can result when using alternative network models that fail to take into account the specific features of directed interaction data.
+model message sending behavior in a corporate e-mail network.  The analysis
+gives a precise quantification of which static shared traits and dynamic
+network effects are predictive of message recipient selection.
+
 %A salient feature of the model is that it treats the data directly as given, and thus avoids systematic biases introduced by preprocessing and aggregation.
 
 \keywords{Cox proportional hazards model; Network data analysis;
@@ -1758,7 +1758,10 @@ of the network effects.
 
 \section{Evaluating the strength of homophily and network effects}\label{S:strength-of-effects}
 
-Given the model fitting procedure and results described above, we may now evaluate the strength of homophily and network effects in predicting the interaction behavior observed in our data.  We also consider comparative analyses based on contingency tables, actor-oriented network models \citep{snijders2010introduction}, and exponential random graph models \citep{anderson1999pstar}.  Each of these methods has seen success in the literature, but none is directly applicable to directed interactions without some form of initial data aggregation.  Ignoring interaction timings, aggregating the data to yield snapshots of static graphs, or thresholding the interaction counts to produce a single directed network can all lead to systematic biases in the analysis.
+Given the model fitting procedure and results described above, we may now
+evaluate the strength of homophily and network effects in predicting the
+interaction behavior observed in our data.  Along the way, we compare the
+results to those gotten from alternative data analysis methods.
 
 \subsection{Assessing evidence for homophily in the Enron data}\label{S:enron-homophily}
 
@@ -2020,9 +2023,11 @@ exogenous factors.  In this light, it is not surprising that the triadic effects
 \subsection{Comparative analyses using actor-oriented and exponential random graph models}
 
 The results of Section~\ref{S:enron-network} provide a detailed view of the
-ways in which network effects can manifest themselves in data.  As with our earlier comparison to a contingency table-based analysis, here we compare our corresponding
-parameter estimates to those obtained using related network models.  A number
-of dynamic network models exist in the literature, including
+ways in which network effects can manifest themselves in data.  To further
+bolster our confidence in these results, we compare our corresponding
+parameter estimates to those obtained using related network models.
+
+A number of dynamic network models exist in the literature, including
 \citefullauthor{hanneke2010discrete}'s~(\citeyear{hanneke2010discrete})
 exponential random graph model with time-varying coefficients,  and
 \citefullauthor{kolar2010estimating}'s~(\citeyear{kolar2010estimating})
@@ -2033,14 +2038,15 @@ activity at the level of the individual using a hidden Markov model, and of
 \citet{heard2010bayesian}, who work at the level of the dyad, assuming a
 piecewise-constant interaction rate.  The closest match to our approach is
 given by the actor-oriented model of
-\citet{snijders2001statistical,snijders2005models}, which we now detail.  We
-also compare to a static network analysis based on an exponential random graph
-model.
+\citet{snijders2001statistical,snijders2005models}, which we now detail in 
+Section~\ref{sec:actor-oriented}.
+Then, in Section~\ref{S:ERGM}, we provide a comparison to a static network
+analysis based on an exponential random graph model.
 
 \subsubsection{Actor-oriented model analysis}\label{sec:actor-oriented}
 
 The actor-oriented model is designed for a sequence of snapshots $G_1$,
-$G_2,\dotsc,$ of network activity, where each $G_t$ is an $n \times n$ binary
+$G_2,\dotsc,$ of network activity, where each $G_t$ is an $I \times J$ binary
 matrix representing pairwise connectivity between actors at time~$t$.  The
 model is best suited for ties that persist in time, not instantaneous events;
 it treats the sequence of networks as a first-order Markov chain, with the
@@ -2249,7 +2255,14 @@ Further, for a single directed graph, there is no possibility of including a
 term corresponding to $\textbf{send}$, and it is impossible to quantify the
 time-dependence of the network effects.
 
-Figure~\ref{F:enron-ergm} shows the fitted coefficients for the exponential random graph model.  As with the case of the actor-oriented model considered in Section~\ref{sec:actor-oriented} above,  it may again be observed that the estimated network effects agree qualitatively with those of Fig.~\ref{F:enron-net-indicator}.  Specifically, mutuality and transitive triples have positive effects, while cyclic triples have a negligible effect (in contrast to the case of Fig.~\ref{F:enron-actor} from Section~\ref{sec:actor-oriented}).
+Figure~\ref{F:enron-ergm} shows the fitted coefficients for the exponential
+random graph model.  As with the case of the actor-oriented model considered
+in Section~\ref{sec:actor-oriented} above, the
+estimated network effects agree qualitatively with those of
+Fig.~\ref{F:enron-net-indicator}.  Specifically, mutuality and transitive
+triples have positive effects, while cyclic triples have a negligible effect
+(in contrast to the case of Fig.~\ref{F:enron-actor} from
+Section~\ref{sec:actor-oriented}).
 
 
 \begin{figure}\label{F:enron-ergm}
@@ -2323,9 +2336,9 @@ Figure~\ref{F:enron-ergm} shows the fitted coefficients for the exponential rand
   \begin{tabular}{lrrr}
   \toprule
   Variate
-  & \textbf{mutual}
-  & \textbf{ctriple}
-  & \textbf{ttriple}
+  & \texttt{mutual}
+  & \texttt{ctriple}
+  & \texttt{ttriple}
   \\
   \midrule
   Coefficient
@@ -2357,7 +2370,10 @@ networks, and we expect similar conclusions to hold broadly for other types of
 directed interaction data.  Relative to alternatives such as contingency table
 analyses, actor-oriented network models, and exponential random graph models,
 an advantage of our approach lies in its ability to model the given data
-directly, rather than in an aggregated form.  By specifying a model for directed interaction data, we have avoided biases inherent in the aggregation process.
+directly, rather than in an aggregated form.  We are able to adjust for
+network effects to get more reliable estimates of homophily, and by using
+continuous time information we get precise quantification on the
+time-dependent behavior of the network effects.
 
 The foundation of our work is Cox's \citeyearpar{cox1972regression}
 proportional intensity model and partial likelihood theory, tools
@@ -2373,7 +2389,7 @@ under study; and second, we have shown that treating multicast
 interactions via duplication leads to bias in the parameter estimates
 (which can in turn be corrected in certain regimes).  
 
-In conclusion, we find the
+We find the
 proportional intensity model with time-varying covariates to be particularly
 useful for modeling repeated directed interactions.  The model is
 simple, flexible, and well-established, and it facilitates investigation
