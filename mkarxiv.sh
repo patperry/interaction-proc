@@ -9,12 +9,14 @@ FILES=( \
     iproc.bbl \
     iproc-macros.sty \
     statsoc.cls \
-    figures/boot-resid.pdf \
     figures/recipient-counts.png \
-    figures/reciprocation-bc.pdf \
-    tables/deviance.tex \
-    tables/employee-summary.tex \
-    tables/group-effects-bc.tex
+    figures/boot-resid.pdf \
+    figures/nobs-by-nexp.png \
+    figures/resid-by-nexp.png \
+    figures/dyad.pdf \
+    figures/triad.pdf \
+    tables/group-dynamic.tex \
+    tables/group-static.tex
 )
 
 DISTDIR=${ARXIV}/${TITLE}
