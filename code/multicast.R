@@ -2,24 +2,24 @@
 #
 
 sample.set <- function(n, size, prob=NULL, maxit=1e5, warn=TRUE) {
+	if (size == 1)
+		return(sample.int(n, 1, prob=prob))
+
 	i <- c()
 	done <- FALSE
 	it <- 0
 	while (!done && it < maxit) {
 		it <- it + 1
 		i <- sample.int(n, size, replace=TRUE, prob)
-        if (size == 1) {
-            done <- TRUE
-        } else {
-    		i <- unique(i)
-    		done <- length(i) == size
-        }
+                i <- unique(i)
+                done <- length(i) == size
 	}
 
-
 	if (it == maxit) {
-		if (warn)
+		if (warn) {
+			browser()
 			warning("Failed to sample after ", maxit, " tries.")
+		}
 		return(NA)
 	}
 
@@ -57,65 +57,100 @@ bias.sim <- function(n, x, beta, size, nreps) {
 
 set.seed(0, "Mersenne-Twister")
 
-nrecv <- 1000
 
 
 
 
 
 
+nreps <- 100
 
-nreps <- 30
-
-n <- round(10^(1.25 + .25 * 1:9))
-nrecv <- round(10^(1.25 + .25 * 1:8))[4]
+n <- round(10^(1.25 + .25 * 1:15))
+nrecv <- round(10^(1.25 + .25 * 1:7))
 dim <- 5
-prob.size <- .75
+prob.size <- prob.size <- 0.4 # 10^(-.2 * 2:0)
 
 nmax <- max(n)
 nrecvmax <- max(nrecv)
 
 xmax <- matrix(rbinom(nrecvmax * dim, 1, .5), nrecvmax, dim)
-beta <- c(0.8, -0.4, 0.3, 0.1, 0.2)
-
-sizemax <- pmin(rgeom(nmax, prob.size) + 1, 15)
-#sizemax <- rep(1, nmax)
+beta <- rnorm(dim) # c(0.8, -0.4, 0.3, 0.1, 0.2)
 
 
-for (j in seq_along(nrecv)) {
-	nrecvj <- nrecv[j]
-	x <- xmax[1:nrecvj, , drop=FALSE]
-    eta <- x %*% beta
-    eta1 <- eta - max(eta)
-    w <- exp(eta1)
-    prob <- w / sum(w)
+biastot.mean <- array(NA, c(length(n), length(nrecv), length(prob.size)))
+biastot.se <- array(NA, c(length(n), length(nrecv), length(prob.size)))
 
-    beta.est <- array(NA, c(dim, length(n), nreps))
+for (k in seq_along(prob.size)) {
+    set.seed(2012)
+    sizemax <- rgeom(nmax, prob.size[k]) + 1
+    sizemax <- pmin(sizemax, floor(min(n) / 2))
+    #sizemax <- rep(1, nmax)
 
-    set.seed(0)
-    for (r in seq_len(nreps)) {
-        ymax <- matrix(0, nmax, nrecvj)
-        for (i in seq_len(nmax)) {
-            j <- sample.set(nrecv, sizemax[i], prob)
-            ymax[i,j] <- 1
+    for (j in seq_along(nrecv)) {
+        nrecvj <- nrecv[j]
+        x <- xmax[1:nrecvj, , drop=FALSE]
+        eta <- x %*% beta
+        eta1 <- eta - max(eta)
+        w <- exp(eta1)
+        prob <- w / sum(w)
+
+        beta.est <- array(NA, c(dim, length(n), nreps))
+
+	set.seed(1337)
+        for (r in seq_len(nreps)) {
+            ymax <- matrix(0, nmax, nrecvj)
+            for (i in seq_len(nmax)) {
+                recv <- sample.set(nrecvj, sizemax[i], prob)
+                ymax[i,recv] <- 1
+            }
+
+            for (i in seq_along(n)) {
+                ni <- n[i]
+                y <- ymax[seq_len(ni),]
+
+                fit <- glm(colSums(y) ~ x, family=poisson)
+                beta.est[,i,r] <- fit$coef[-1]
+            }
+	    cat(".")
         }
 
-        for (i in seq_along(n)) {
-    		ni <- n[i]
-            y <- ymax[seq_len(ni),]
-            offset <- rep(log(ni), nrecvj)
-
-            fit <- glm(colSums(y) ~ x, family=poisson)
-		    beta.est[,i,r] <- fit$coef[-1]
-        }
-        cat(".")
+        biastot <- apply((beta.est - beta)^2, c(2,3), sum)
+        biastot.mean[,j,k] <- apply(biastot, 1, mean)
+        biastot.se[,j,k] <- apply(biastot, 1, sd) / sqrt(nreps)
     }
-
-    biastot <- apply((beta.est - beta)^2, c(2,3), sum)
-    biastot.mean <- apply(biastot, 1, mean)
-    biastot.se <- apply(biastot, 1, sd) / sqrt(nreps)
+    cat("|")
 }
+cat("\n")
 
+
+#par(mfrow=c(3,2))
+
+
+
+#plot(range(log10(n)), range((sqrt(n) * biastot.mean[,,k])), t="n")
+save(n, nrecv, biastot.mean, biastot.se, prob.size, beta, nmax, nrecvmax, dim, file = "output/multicast.rda")
+
+
+require(RColorBrewer)
+
+pdf("figures/multicast-error.pdf", 6, 6)
+palette(brewer.pal(9, "YlGn")[9:3])
+par(mfrow=c(1,1))
+for (k in seq_along(prob.size)[1]) {
+    plot(range(log10(n)), range(log10(biastot.mean[,,k])), t="n", asp=1,
+	 main="Multicast Coefficient Estimation",
+	 xlab=expression(Log[10]~"Sample Size"),
+	 ylab=expression(Log[10]~"Mean Squared Error"))
+    for (j in seq_along(nrecv)) {
+	    points(log10(n), log10(biastot.mean[,j,k]), col=j)
+	    lines(log10(n), log10(biastot.mean[,j,k]), col=j, lty=j)
+    }
+}
+legend("bottomleft", inset=.05,
+       lty=seq_along(nrecv), col=seq_along(nrecv),
+       legend=format(log10(nrecv - .4), digits=3),
+       title=expression(Log[10]~"Receiver Count"))
+dev.off()
 
 
 
