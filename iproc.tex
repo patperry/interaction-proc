@@ -1272,6 +1272,57 @@ We adjust for estimator bias by replacing $\tilde \beta_n$ with
 $\tilde \beta_n - \widehat{\mathrm{bias}}$.
 
 
+\subsection{Simulation}
+
+We used a simulation study to empirically verify the result of
+Theorem~\ref{T:mple-approx-error}.  In the study, we have one sender,
+and a receiver count $|\mathcal{J}|$ ranging from $32$ to $1000$.  Each
+receiver was assigned a constant coefficient vector $x(j)$ whose elements were
+independent Bernouli random variables with success probability $\tfrac{1}{2}$.
+The components of the true coefficient vector $\beta$ were drawn independently
+from the standard normal distribution.
+
+We chose sample sizes $n$ ranging from 32 to 100,000.  For each receiver count
+$|\mathcal{J}|$, we drew $n$ multicast messages, with the receiver set $J_m$ for
+message $m$ determined as follows:
+we determined the size, $|J_m|$ by drawing from a geometric distribution
+with success probability $p = 0.4$, so that $\mathbb{P}\{|J_m| = L\} = (1 - p)^{L -
+1} \, p$ for $L \geq 1$; once $|J_m|$ was determined, we chose among
+all receiver sets with cardinality $|J_m|$, with
+$\mathbb{P}\{ J_m = J \} \propto \exp\{ \sum_{j \in J} \beta^\trans x(j)\}$.
+Once we generated the message data, we computed $\tilde \beta$ by maximizing
+the approximate log partial likelihood analogous
+to~\eqref{E:log-pl-multiple-approx}.  Finally, we computed $\|\beta - \tilde
+\beta\|$.
+
+We repeated this procedure for 100 random replicates at each
+receiver count and sample size, and computed the mean squared error of
+$\tilde \beta$ by averaging the value of $\|\beta - \tilde \beta\|^2$ over all
+replicates.  Fig.~\ref{F:multicast-error} displays the results.  From the
+figure, we can see that if $|\mathcal{J}|$ does not grow with $n$, then
+the error $\|\beta - \tilde \beta\|^2$ is roughly $\Oh(|\mathcal{J}|^{-2})$
+for large $n$; strictly speaking, the assumptions of
+Theorem~\ref{T:mple-approx-error} do not hold in this scenario since $G_n =
+\OhP(n / |\mathcal{J}|)$, but
+nevertheless the theorem predicts an error rate of $\Oh(|\mathcal{J}|^{-2})$.
+For the Theorem~\ref{T:mple-approx-error}
+to apply, we require that $|\mathcal{J}|$ grow with $n$.  From
+Fig.~\ref{F:multicast-error}, we can see that if $|\mathcal{J}| = \sqrt{n}$,
+then $\|\beta - \tilde \beta\|^2$ is roughly $\OhP(n^{-1})$; this
+agrees with the theorem, since $G_n = \sqrt{n}$ in this scenario.
+
+
+
+\begin{figure}
+  \centering
+  \makebox{\includegraphics[scale=0.6]{figures/multicast-error}}
+  \caption{
+	\captiontitle{Multicast coefficient estimation error with approximate MPLE}
+  }\label{F:multicast-error}
+\end{figure}
+
+
+
 \section{Fitting the model to a corporate e-mail network}\label{S:enron-modeling}
 
 Recall from Section~\ref{S:introduction} that, given a set of interaction data triples $(t,i,j)$, a primary modeling goal lies in determining which characteristics and behaviors of the senders and receivers are predictive of interaction.  The modeling and inference framework introduced above enables us to directly address these concerns, as we now demonstrate through the analysis corporate e-mail network consisting of a large subset of the e-mail messages sent within the Enron corporation between 1998 and 2002.  These e-mail interaction data give rise to the following questions:

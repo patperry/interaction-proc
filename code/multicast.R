@@ -138,7 +138,7 @@ palette(brewer.pal(9, "YlGn")[9:3])
 par(mfrow=c(1,1))
 for (k in seq_along(prob.size)[1]) {
     plot(range(log10(n)), range(log10(biastot.mean[,,k])), t="n", asp=1,
-	 main="Multicast Coefficient Estimation",
+	 main="", # "Multicast Coefficient Estimation",
 	 xlab=expression(Log[10]~"Sample Size"),
 	 ylab=expression(Log[10]~"Mean Squared Error"))
     for (j in seq_along(nrecv)) {

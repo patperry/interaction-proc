@@ -2,8 +2,8 @@
 %Å‚Å„ÅœÅ”\r
 1 0 obj
 <<
-/CreationDate (D:20120517184203)
-/ModDate (D:20120517184203)
+/CreationDate (D:20120517185535)
+/ModDate (D:20120517185535)
 /Title (R Graphics Output)
 /Producer (R 2.13.0)
 /Creator (R)
@@ -96,9 +96,6 @@ S
 Q q
 BT
 /sRGB cs 0.000 0.000 0.000 scn
-/F3 1 Tf 14.00 0.00 -0.00 14.00 124.22 397.45 Tm (Multicast Coefficient Estimation) Tj
-ET
-BT
 /F2 1 Tf 12.00 0.00 -0.00 12.00 180.86 18.48 Tm (L) Tj
 ET
 BT
@@ -666,7 +663,7 @@ Q
 endstream
 endobj
 9 0 obj
-12608
+12515
 endobj
 3 0 obj
 <<
@@ -681,7 +678,7 @@ endobj
 4 0 obj
 <<
 /ProcSet [/PDF /Text]
-/Font << /F1 11 0 R /F2 12 0 R /F3 13 0 R /F6 14 0 R >>
+/Font << /F1 11 0 R /F2 12 0 R /F6 13 0 R >>
 /ExtGState << >>
 /ColorSpace << /sRGB 5 0 R >>
 >>
@@ -918,39 +915,31 @@ endobj
 13 0 obj <<
 /Type /Font
 /Subtype /Type1
-/Name /F3
-/BaseFont /Helvetica-Bold
-/Encoding 10 0 R
->> endobj
-14 0 obj <<
-/Type /Font
-/Subtype /Type1
 /Name /F6
 /BaseFont /Symbol
 >> endobj
 xref
-0 15
+0 14
 0000000000 65535 f 
 0000000021 00000 n 
 0000000164 00000 n 
-0000012975 00000 n 
-0000013058 00000 n 
-0000013204 00000 n 
-0000013237 00000 n 
+0000012882 00000 n 
+0000012965 00000 n 
+0000013100 00000 n 
+0000013133 00000 n 
 0000000213 00000 n 
 0000000293 00000 n 
-0000012954 00000 n 
-0000022773 00000 n 
-0000023031 00000 n 
-0000023115 00000 n 
-0000023213 00000 n 
-0000023316 00000 n 
+0000012861 00000 n 
+0000022669 00000 n 
+0000022927 00000 n 
+0000023011 00000 n 
+0000023109 00000 n 
 trailer
 <<
-/Size 15
+/Size 14
 /Info 1 0 R
 /Root 2 0 R
 >>
 startxref
-23394
+23187
 %%EOF
