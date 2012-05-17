@@ -7,9 +7,13 @@ sample.set <- function(n, size, prob=NULL, maxit=1e5, warn=TRUE) {
 	it <- 0
 	while (!done && it < maxit) {
 		it <- it + 1
-		i0 <- sample.int(n, size, replace=TRUE, prob)
-		i <- unique(i0)
-		done <- length(i) == size
+		i <- sample.int(n, size, replace=TRUE, prob)
+        if (size == 1) {
+            done <- TRUE
+        } else {
+    		i <- unique(i)
+    		done <- length(i) == size
+        }
 	}
 
 
@@ -61,37 +65,55 @@ nrecv <- 1000
 
 
 
-nreps <- 1000
+nreps <- 30
 
 n <- round(10^(1.25 + .25 * 1:9))
-nrecv <- round(10^(1.25 + .25 * 1:8))
+nrecv <- round(10^(1.25 + .25 * 1:8))[4]
 dim <- 5
-prob.size <- .5
+prob.size <- .75
 
 nmax <- max(n)
 nrecvmax <- max(nrecv)
 
-xmax <- matrix(2 * rbinom(nrecvmax * dim, 1, .5) - 1, nrecvmax, dim)
-beta <- runif(dim, -1, 1)
+xmax <- matrix(rbinom(nrecvmax * dim, 1, .5), nrecvmax, dim)
+beta <- c(0.8, -0.4, 0.3, 0.1, 0.2)
+
 sizemax <- pmin(rgeom(nmax, prob.size) + 1, 15)
+#sizemax <- rep(1, nmax)
+
 
 for (j in seq_along(nrecv)) {
 	nrecvj <- nrecv[j]
-	xj <- xmax[1:nrecvj, , drop=FALSE]
-	for (i in seq_along(n)) {
-		ni <- n[i]
-		sizei <- sizemax[1:ni]
+	x <- xmax[1:nrecvj, , drop=FALSE]
+    eta <- x %*% beta
+    eta1 <- eta - max(eta)
+    w <- exp(eta1)
+    prob <- w / sum(w)
 
-		set.seed(i)
-		beta.est <- bias.sim(ni, xj, beta, sizei, nreps)
-		bias <- t(t(beta.est) - beta)
-		bias <- sqrt(rowSums(bias^2))
-		bias.mean <- mean(bias)
-		bias.se <- sd(bias) / sqrt(nreps)
+    beta.est <- array(NA, c(dim, length(n), nreps))
 
-		cat("\n nrecv = ", nrecvj, "; n = ", ni, "; bias = ",
-		    bias.mean, "(", bias.se, ")\n")
-	}
+    set.seed(0)
+    for (r in seq_len(nreps)) {
+        ymax <- matrix(0, nmax, nrecvj)
+        for (i in seq_len(nmax)) {
+            j <- sample.set(nrecv, sizemax[i], prob)
+            ymax[i,j] <- 1
+        }
+
+        for (i in seq_along(n)) {
+    		ni <- n[i]
+            y <- ymax[seq_len(ni),]
+            offset <- rep(log(ni), nrecvj)
+
+            fit <- glm(colSums(y) ~ x, family=poisson)
+		    beta.est[,i,r] <- fit$coef[-1]
+        }
+        cat(".")
+    }
+
+    biastot <- apply((beta.est - beta)^2, c(2,3), sum)
+    biastot.mean <- apply(biastot, 1, mean)
+    biastot.se <- apply(biastot, 1, sd) / sqrt(nreps)
 }
 
 
