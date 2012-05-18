@@ -134,6 +134,9 @@ save(n, nrecv, biastot.mean, biastot.se, prob.size, beta, nmax, nrecvmax, dim, f
 require(RColorBrewer)
 
 pdf("figures/multicast-error.pdf", 6, 6)
+
+
+
 palette(brewer.pal(9, "YlGn")[9:3])
 par(mfrow=c(1,1))
 for (k in seq_along(prob.size)[1]) {
@@ -141,16 +144,31 @@ for (k in seq_along(prob.size)[1]) {
 	 main="", # "Multicast Coefficient Estimation",
 	 xlab=expression(Log[10]~"Sample Size"),
 	 ylab=expression(Log[10]~"Mean Squared Error"))
+    axis(3, labels=FALSE)
+    axis(4, labels=FALSE)
+
     for (j in seq_along(nrecv)) {
 	    points(log10(n), log10(biastot.mean[,j,k]), col=j)
-	    lines(log10(n), log10(biastot.mean[,j,k]), col=j, lty=j)
+	    lines(log10(n), log10(biastot.mean[,j,k]), col=j, lty=1)
     }
 }
 legend("bottomleft", inset=.05,
-       lty=seq_along(nrecv), col=seq_along(nrecv),
+       lty=rep(1, length(nrecv)), col=seq_along(nrecv),
        legend=format(log10(nrecv - .4), digits=3),
        title=expression(Log[10]~"Receiver Count"))
+
+
+m <- sum(nrecv < sqrt(max(n)))
+ix <- rep(NA, m)
+b <- rep(NA, m)
+k <- 1
+for (j in seq_len(m)) {
+	ix[j] <- which(round(sqrt(n)) == nrecv[j])
+	b[j] <- biastot.mean[ix[j],j,k]
+}
+
+points(log10(n[ix]), log10(b), pch=18, cex=1.5)
+lines(log10(n[ix]), log10(b), lty=2)
+
+
 dev.off()
-
-
-

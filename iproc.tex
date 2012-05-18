@@ -1295,21 +1295,21 @@ the approximate log partial likelihood analogous
 to~\eqref{E:log-pl-multiple-approx}.  Finally, we computed $\|\beta - \tilde
 \beta\|$.
 
-We repeated this procedure for 100 random replicates at each
-receiver count and sample size, and computed the mean squared error of
-$\tilde \beta$ by averaging the value of $\|\beta - \tilde \beta\|^2$ over all
-replicates.  Fig.~\ref{F:multicast-error} displays the results.  From the
-figure, we can see that if $|\mathcal{J}|$ does not grow with $n$, then
-the error $\|\beta - \tilde \beta\|^2$ is roughly $\Oh(|\mathcal{J}|^{-2})$
-for large $n$; strictly speaking, the assumptions of
-Theorem~\ref{T:mple-approx-error} do not hold in this scenario since $G_n =
-\OhP(n / |\mathcal{J}|)$, but
-nevertheless the theorem predicts an error rate of $\Oh(|\mathcal{J}|^{-2})$.
-For the Theorem~\ref{T:mple-approx-error}
-to apply, we require that $|\mathcal{J}|$ grow with $n$.  From
+We repeated this procedure for 100 random replicates at each receiver count
+and sample size, and computed the mean squared error of $\tilde \beta$ by
+averaging the value of $\|\beta - \tilde \beta\|^2$ over all replicates.
+Fig.~\ref{F:multicast-error} displays the results.  From the spacings of the
+asymptotes of the solid lines in the figure, we can see that if
+$|\mathcal{J}|$ does not grow with $n$, then the error $\|\beta - \tilde
+\beta\|^2$ is roughly $\Oh(|\mathcal{J}|^{-2})$ for large $n$; strictly
+speaking, the assumptions of Theorem~\ref{T:mple-approx-error} do not hold in
+this scenario since $G_n = \OhP(n / |\mathcal{J}|)$, but nevertheless the
+theorem predicts an error rate of $\Oh(|\mathcal{J}|^{-2})$.  For the
+Theorem~\ref{T:mple-approx-error} to apply, we require that $|\mathcal{J}|$
+grow with $n$.  From the slope of the dashed line in
 Fig.~\ref{F:multicast-error}, we can see that if $|\mathcal{J}| = \sqrt{n}$,
-then $\|\beta - \tilde \beta\|^2$ is roughly $\OhP(n^{-1})$; this
-agrees with the theorem, since $G_n = \sqrt{n}$ in this scenario.
+then $\|\beta - \tilde \beta\|^2$ is roughly $\OhP(n^{-1})$; this agrees with
+the theorem, since $G_n = \sqrt{n}$ in this situation.
 
 
 
@@ -1318,6 +1318,8 @@ agrees with the theorem, since $G_n = \sqrt{n}$ in this scenario.
   \makebox{\includegraphics[scale=0.6]{figures/multicast-error}}
   \caption{
 	\captiontitle{Multicast coefficient estimation error with approximate MPLE}
+	Receiver count~$|\mathcal{J}|$ is equal to the square root of sample size~$n$
+	along the dashed line.
   }\label{F:multicast-error}
 \end{figure}
 
