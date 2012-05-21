@@ -562,220 +562,6 @@ and is proved in Appendix~\ref{S:MPLE-consistency-proofs}.
     \end{enumerate}
 \end{theorem}
 
-\begin{proof}[Theorem~\ref{T:score-fisher}]
-Observe that the process $N_t(i,j)$ has compensator
-\(
-    \Lambda_t(i,j)
-        =
-            \int_0^t \lambda_s(i,j) \, ds;
-\)
-similarly, processes $N_t(i)$ and $N_t$ have compensators
-$\Lambda_t(i) = \sum_{j \in \mathcal{J}} \Lambda_t(i,j)$
-and $\Lambda_t = \sum_{i \in \mathcal{I}} \Lambda_t(i)$.  Correspondingly,
-define local martingales $M_t(i,j) = N_t(i,j) - \Lambda_t(i,j)$,
-$M_t(i) = N_t(i) - \Lambda_t(i)$, and $M_t = N_t - \Lambda_t$;
-also define
-\[
-    H_t(i,j)
-        =
-        x_t(i,j) - E_t(\beta_0,i),
-\]
-where $E_t(\beta,i)$ is as defined in~\eqref{E:wt-expectation}.
-
-As observed by \citet{andersen1982cox}, the score function
-$U_t(\cdot)$ evaluated at $\beta_0$ has
-a simple representation in terms of these processes:
-\begin{align*}
-    U_t(\beta_0)
-        &=
-        \sum_{i \in \mathcal{I}}
-        \sum_{j \in \mathcal{J}}
-        \int_0^t
-            H_s(i,j) \, dN_s(i,j) \\
-        &=
-        \sum_{i \in \mathcal{I}}
-        \sum_{j \in \mathcal{J}}
-        \int_0^t
-            H_s(i,j) \, dM_s(i,j),
-\end{align*}
-since
-\(
-    \sum_{j \in \mathcal{J}}
-    \int_0^t
-        H_s(i,j) \,
-        d\Lambda_s(i,j)
-    =
-    0.
-\)
-Since by Assumption A\ref{A:square-int}, $x$ is uniformly bounded, $H$
-is as well.  Each term in the sum above is thus locally square integrable,
-with predictable covariation
-\begin{align*}
-    \begin{split}
-        \bigg\langle
-            \int
-                H_s(i,j) \, dM_s(i,j)
-        &, \, \,
-            \int
-                H_s(i',j') \, dM_s(i',j')
-        \bigg\rangle_t \\
-        &=
-            \int_0^t
-                H_s(i,j) \otimes H_s(i',j') \,
-                d\big\langle M(i,j), M(i',j')\big\rangle_s
-    \end{split} \\
-        &=
-            \int_0^t
-                \big[ H_s(i,j) \big]^{\otimes 2} \,
-                d\Lambda_s(i,j)
-            \cdot
-            1\{ i = i', j = j' \}
-\end{align*}
-\citep[Thm.~2.4.3]{fleming1991counting}.  There exists a sequence
-of stopping times localizing all $M(i,j)$ simultaneously, so $U(\beta_0)$ is
-locally square integrable with predictable variation
-\begin{align}
-\begin{split}\label{E:score-compensator}
-    \big\langle U(\beta_0) \big\rangle_t
-        &=
-            \sum_{i \in \mathcal{I}}
-            \sum_{j \in \mathcal{J}}
-            \int_0^t
-                \big[ H_s(i,j) \big]^{\otimes 2} \,
-                d\Lambda_s(i,j) \\
-        &=
-            \sum_{i \in \mathcal{I}}
-            \int_0^t
-                V_s(\beta_0, i) \,
-                d\Lambda_s(i).
-\end{split}
-\end{align}
-
-Now we rescale time.  For each positive $n$ define a discretized time-scaled
-version of the score that is right-continuous with limits from the left.
-The process is defined for times $\alpha$ in $[0,1]$; between times in
-$[\tfrac{k}{n}, \tfrac{k+1}{n})$, it takes the value $U_{t_k}$; i.e.,
-\begin{equation}\label{E:score-time-scaled}
-    \tilde U_{\alpha}^{(n)}(\beta)
-        = U_{t_{\lfloor \alpha n \rfloor}}(\beta).
-\end{equation}
-
-Part~\textit{(\ref{I:score-part})}:
-Lemma~\ref{L:adapted-martingale} shows that $\tilde U_\alpha^{(n)}(\beta_0)$
-is a square-integrable martingale adapted to
-\(
-    \mathcal{\tilde F}^{(n)}_\alpha
-        =
-        \mathcal{F}_{t_{\lfloor \alpha n \rfloor}},
-\)
-the $\sigma$-algebra of events prior to
-$t_{\lfloor \alpha n \rfloor}$.
-Since it only depends on values at jump times, the
-quadratic variation of $\tilde U^{(n)}(\beta_0)$ at time $\alpha$ is
-equal to the quadratic variation of $U(\beta_0)$ at time
-$t_{\lfloor \alpha n \rfloor}$.  Therefore, since quadratic and
-predictable variation have the same limit when it exists
-\citep[Prop.~1]{rebolledo1980central}, assumption
-A\ref{A:integrated-cov-limit} implies that
-\(
-    \langle \frac{1}{\sqrt{n}} \tilde U^{(n)}(\beta_0) \rangle_\alpha
-        \toP
-            \Sigma_\alpha(\beta_0).
-\)
-Lemma~\ref{L:Lindeberg-condition} in turn verifies that
-$\frac{1}{\sqrt{n}} \tilde U^{(n)}(\beta_0)$ satisfies a Lindeberg
-condition necessary for the application of Rebolledo's \citeyearpar{rebolledo1980central} Martingale Central
-Limit Theorem.  Thus the process converges in
-distribution to a Gaussian process with covariance function
-$\Sigma_\alpha(\beta_0)$ as claimed.
-
-Part~\textit{(\ref{I:fisher-part})}:
-Recalling $M_t(i) = N_t(i) - \Lambda_t(i)$,
-combine~\eqref{E:log-pl-neg-hessian} and~\eqref{E:score-compensator}
-to obtain the relation
-\begin{equation}\label{E:var-estimate-relation}
-            \sum_i
-            \int_0^{t_{\lfloor \alpha n \rfloor}}
-                V_s(\beta_0, i) \, dM_s(i)
-        =
-            I_{t_{\lfloor \alpha n \rfloor}}(\beta_0)
-        -
-            \big\langle \tilde U^{(n)}(\beta_0) \big\rangle_\alpha.
-\end{equation}
-
-When $\alpha \in [0, 1]$, a repeated application of the triangle
-inequality to
-\[
-    \left\|
-        \tfrac{1}{n} I_{t_{\lfloor \alpha n \rfloor}}(\hat \beta_n)
-        -
-        \tfrac{1}{n} \big(
-            I_{t_{\lfloor \alpha n \rfloor}}(\beta_0)
-            -
-            I_{t_{\lfloor \alpha n \rfloor}}(\beta_0)
-        \big)
-        -
-        \Sigma_{\alpha} (\beta_0)
-    \right\|
-\]
-using the relation of~\eqref{E:var-estimate-relation} yields
-\begin{align*}
-    \left\|
-        \tfrac{1}{n} I_{t_{\lfloor \alpha n \rfloor}}(\hat \beta_n)
-        -
-        \Sigma_{\alpha} (\beta_0)
-    \right\|
-        &\leq
-        \left\|
-            \frac{1}{n}
-            \sum_i
-            \int_0^{t_{\lfloor \alpha n \rfloor}}
-                \{
-                    V_s(\hat \beta_n, i)
-                    -
-                    V_s(\beta_0, i)
-                \} \, dN_s(i)
-        \right\| \\
-        &\quad+
-        \left\|
-            \frac{1}{n}
-            \sum_i
-            \int_0^{t_{\lfloor \alpha n \rfloor}}
-                V_s(\beta_0, i) \, dM_s(i)
-        \right\| \\
-        &\quad+
-        \left\|
-            \frac{1}{n}
-            \sum_i
-            \int_0^{t_{\lfloor \alpha n \rfloor}}
-                V_s(\beta_0,i)
-                \, d\Lambda_s(i)
-            -
-            \Sigma_{\alpha}(\beta_0)
-        \right\|.
-\end{align*}
-We show that all three terms converge to zero in probability.
-The first term above is uniformly bounded by
-\(
-    \sup_{n',i}
-        \|
-            V_{t_{n'}}(\hat \beta_n, i)
-            -
-            V_{t_{n'}}(\beta_0, i)
-        \|,
-\)
-which converges to zero since $\hat \beta_n \toP \beta_0$ by
-hypothesis of the theorem and $\{ V_{t_{n'}}(\cdot, i) \}$ is an
-equicontinuous family by assumption~A\ref{A:var-equicont}.
-Lemma~\ref{L:Lenglart} proves, as a consequence of
-assumption~A\ref{A:message-times-finite} and Lenglart's \citeyearpar{lenglart1977relation}
-Inequality, that the second term converges
-to zero uniformly in $\alpha$.
-The third term converges to zero by
-assumption~A\ref{A:integrated-cov-limit}, thereby concluding the proof.
-
-\end{proof}
-
 
 \section{Multicast interactions}\label{S:multiple-receivers}
 
@@ -1352,18 +1138,18 @@ these employees.
 
 Approximately 30\% of these messages have more than one recipient across
 their \texttt{To}, \texttt{CC}, and \texttt{BCC} fields, with a few
-messages having more than fifty recipients
-(see Fig.~\ref{F:recipient-counts}).
-\begin{figure}
-    \centering
-    \makebox{\includegraphics[scale=0.6]{figures/recipient-counts}}
-    \caption{
-        \captiontitle{Message recipient counts}
-        Each of the 21,635 points corresponds to a message, with
-        $y$-value showing the base-2 logarithm of its number of recipients
-        (ranging from 1--57).
-    }\label{F:recipient-counts}
-\end{figure}
+messages having more than fifty recipients.
+%(see Fig.~\ref{F:recipient-counts}).
+%\begin{figure}
+%    \centering
+%    \makebox{\includegraphics[scale=0.6]{figures/recipient-counts}}
+%    \caption{
+%        \captiontitle{Message recipient counts}
+%        Each of the 21,635 points corresponds to a message, with
+%        $y$-value showing the base-2 logarithm of its number of recipients
+%        (ranging from 1--57).
+%    }\label{F:recipient-counts}
+%\end{figure}
 In the subsequent analysis, we exclude messages with more than 5
 recipients---a subjectively-chosen cutoff that avoids e-mails sent
 \emph{en masse} to large groups.
@@ -1864,94 +1650,6 @@ employees in the Legal group exhibited anti-homophilic behavior.
 \end{figure}
 
 
-\subsection{A comparative analysis based on contingency tables}\label{sec:contin-analysis}
-
-Were we interested only in homophily, we might be tempted to forgo
-the proportional intensity model of~\eqref{E:cox-intensity}, and instead
-perform a contingency table analysis.  However, as we now describe,
-such an analysis leads to very different conclusions
-about the predictive strength of homophily in our data.
-
-For example, suppose that we are interested in testing for seniority-based homophily.  Ignoring
-network effects and other dependency, we might model $\Prob\{ i \to j \mid i
-\}$, the probability of employee $j$ being the recipient of a message given
-that employee $i$ is the sender, by way of a multinomial logit model:
-\[
-  \Prob\{ i \to j \mid i \}
-    \propto \exp\{ \beta_J J(j) + \beta_{JJ} J(i) J(j) \}.
-\]
-In this setting,
-Junior-Junior homophily would manifest in a positive value of
-$\beta_{J} + \beta_{JJ}$ and Senior-Senior homophily would manifest in
-a negative value of $\beta_J$.
-
-Since there are $n_J = 82$ Junior
-executives and $n_S = 74$ Senior executives, and since the sender and
-receiver of a message are distinct, we have that
-\begin{align*}
-  \Prob\{ i \to j \mid i, J(i) = 1 \}
-    &=
-      \frac{e^{(\beta_J + \beta_{JJ}) J(j)}}
-           {(n_J - 1) e^{\beta_J + \beta_{JJ}} + n_S} \\
-  \Prob\{ i \to j \mid i, J(i) = 0 \},
-    &=
-      \frac{e^{\beta_J J(j)}}
-           {n_J e^{\beta_J} + (n_S - 1)}.
-\end{align*}
-In turn, we compute the corresponding maximum likelihood coefficient estimates using the
-entries of a $2 \times 2$ table that counts the number of messages exchanged
-between each group:
-\begin{center}
-\begin{tabular}{lrr}
-  \toprule
-  & \multicolumn{2}{c}{Receiver} \\
-  \cmidrule(l){2-3}
-  Sender & Junior & Senior \\
-  \midrule
-  Junior &  7972  &  5833 \\
-  Senior &  3977  & 14479 \\
-  \bottomrule
-\end{tabular}
-\end{center}
-The resultant estimates are $\hat \beta_{J} = -1.4$ and
-$\hat \beta_{JJ} = 1.6$, with (Wald) standard errors of about $0.02$
-for each.  Indeed, these are exactly the estimated coefficients we would
-obtain if we were to use the proportional intensity model
-$\lambda_t(i,j) = \bar \lambda_t(i) \exp\{ \beta_J J(j) + \beta_{JJ} J(i) J(j)
-\}$, a result that holds more generally for non-time-varying covariates.
-
-One problem with this analysis is that we have marginalized over the
-other covariates (Gender and Department), potentially introducing a Simpson's
-paradox.  This issue is easily rectified, however, by introducing covariates for senders and
-receivers, along with the corresponding second-order covariate interactions;
-Fig.~\ref{T:group-static} shows the resulting coefficient estimates.
-
-\begin{figure}
-  \centering
-  \makebox[\textwidth]{
-    \scriptsize
-    \input{tables/group-static.tex}
-  }
-  \caption{
-    Estimated coefficients and standard errors for the contingency table-based analysis of Section~\ref{sec:contin-analysis}
-  }
-  \label{T:group-static}
-\end{figure}
-
-The far more important
-problem is that this analysis implicitly assumes each message to be
-independent and identically distributed, conditional on the sender of
-the message.  This assumption is blatantly false: common sense tells us that if Junior $A$ sends a message
-to Junior $B$, then the next time $B$ sends a message, $B$ is more likely to
-choose $A$ as a recipient.  Any homophily effect present in these interaction
-data is thus likely to be exaggerated by reciprocation and other network effects.  Indeed,
-comparing the contingency table-based estimates in Fig.~\ref{T:group-static}
-with the estimates from the proportional intensity model with network effects
-in Fig.~\ref{T:group-dynamic}, we can see that the coefficient estimates are
-much higher when we don't adjust for network effects.  Thus even in cases where network effects themselves
-are not the object of primary interest, it is important to account for them when
-making inferences about the predictive strength of other covariates.
-
 \subsection{Evaluating the importance of network effects}
 \label{S:enron-network}
 
@@ -2072,345 +1770,6 @@ $\textbf{sibling}_t^{(2,3)}$ ($0.14$).  We may interpret these coefficients as f
 
 Given the emphasis on transitivity in the networks literature, it may at first seem disconcerting that most of the estimated coefficients for the time-dependent triadic effects are found to be insignificant in this analysis.  However, one must bear in mind that, except for  messages sent to them directly, individuals likely have no knowledge of their colleagues' e-mail activities, and therefore there is no reason why this activity should directly affect sending behaviors.  Any predictive power the triadic effects have, then, must be due to correlation with
 exogenous factors.  In this light, it is not surprising that the triadic effects are small and have small time horizons.
-
-\subsection{Comparative analyses using actor-oriented and exponential random graph models}
-
-The results of Section~\ref{S:enron-network} provide a detailed view of the
-ways in which network effects can manifest themselves in data.  To further
-bolster our confidence in these results, we compare our corresponding
-parameter estimates to those obtained using related network models.
-
-A number of dynamic network models exist in the literature, including
-\citefullauthor{hanneke2010discrete}'s~(\citeyear{hanneke2010discrete})
-exponential random graph model with time-varying coefficients,  and
-\citefullauthor{kolar2010estimating}'s~(\citeyear{kolar2010estimating})
-time-varying stochastic block model.  Alternative approaches explicitly based
-on point processes, but excluding network effects and other covariate
-information, include that of \citet{malmgen2009characterizing}, who model
-activity at the level of the individual using a hidden Markov model, and of
-\citet{heard2010bayesian}, who work at the level of the dyad, assuming a
-piecewise-constant interaction rate.  The closest match to our approach is
-given by the actor-oriented model of
-\citet{snijders2001statistical,snijders2005models}, which we now detail in 
-Section~\ref{sec:actor-oriented}.
-Then, in Section~\ref{S:ERGM}, we provide a comparison to a static network
-analysis based on an exponential random graph model.
-
-\subsubsection{Actor-oriented model analysis}\label{sec:actor-oriented}
-
-The actor-oriented model is designed for a sequence of snapshots $G_1$,
-$G_2,\dotsc,$ of network activity, where each $G_t$ is an $I \times J$ binary
-matrix representing pairwise connectivity between actors at time~$t$.  The
-model is best suited for ties that persist in time, not instantaneous events;
-it treats the sequence of networks as a first-order Markov chain, with the
-distribution of $G_t$ determined by $G_{t-1}$.  Actors are assumed to change
-their ties between times $t-1$ and $t$ to maximize a stochastic utility
-function that depends on characteristics of the overall network.  Essentially,
-given that the network is in state $G$, and that actor $i$ is allowed to make
-a change, he will change his link to actor $j$ according to
-\[
-  p(j | i, G) \propto
-    \exp\Big\{ \sum_{s=1}^S \beta_s T_s\big(G(i \leadsto j)\big)
-      +
-        \sum_{s=1}^{S'} \beta'_s T'_s(G \setminus \{ i \to j\})
-    \Big\},
-\]
-where $T_s$ and $T'_s$ are network statistics; $\beta_s$ and $\beta_s'$ are
-unknown coefficients; $G(i \leadsto j)$ denotes the network obtained either by
-adding link $i \to j$ if it is absent or removing link $i \to j$ if it is
-present; $G \setminus \{ i \to j \}$ denotes the network obtained by removing
-$i \to j$ if it is present.  Additionally, the rate at which actor $i$ changes
-ties between observation times $t-1$ and $t$ is given by $\lambda(i)$,
-specified via another parametric model.  (See \citet{snijders2010introduction}
-for a more thorough introduction.)  The change probability function $p(j | i,
-G)$ plays a similar role to the multiplier $\exp\{ x_t(i,j)^\trans \beta \}$
-in the proportional intensity model, and the change rate function $\lambda(i)$
-plays a similar role to the baseline intensity $\bar \lambda_t(i)$.
-
-For purposes of comparison, we specified a change probability model $p(j | i,
-G)$ with network statistics analogous to those used in
-Section~\ref{S:enron-covariates}, and then we estimated coefficient sets
-$\beta$ and $\beta'$ analogous to the coefficients in the proportional intensity
-model.  We used the \texttt{RSiena} package \citep{rsiena2011} to specify and
-fit the actor-oriented model after binning the Enron e-mail interaction data
-at regular intervals to obtain network snapshots $G_1$, $G_2$, and $G_3$.
-Here, $G_t(i,j) = 1$ if message $i \to j$ was observed in period $t$, and
-$G_t(i,j) = 0$ otherwise; periods 1--3 correspond to consecutive four-month
-periods in the year 2001.   The subset we looked at contains 60\% of the
-messages in the Enron corpus.  We chose this particular subset and temporal
-resolution partially for computational reasons, but also to make the network
-change statistics (Jaccard coefficients) within the range recommended by
-\texttt{RSiena} (near $0.3$).  Approximately 2 hours' time was required to fit
-the model.
-
-We included the following terms, chosen to mimic the covariates detailed in Section~\ref{S:enron-covariates}:
-
-\begin{enumerate}
-  \item Outdegree/density (\texttt{out}). This statistic counts the number
-of outgoing ties; it is analogous to our $\bar \lambda_t(i)$, except that
-the rate is the same for each sender.
-
-  \item Group-level edge effects (\texttt{traits}).  One covariate is included for each
-identifiable first-order interaction of the form $X(i) Y(j)$, where $i$ is the
-sender and $j$ is the receiver; the covariate counts the number of edges $i
-\to j$ with $X(i) Y(j) = 1$.  These effects correspond to the group-level
-effects in our model.  We would have liked to include second-order
-interactions as well, but (for computational reasons) were unable to fit the model with higher-order
-effects.
-
-  \item Outdegree/density endowment (\texttt{outendow}).  This statistic counts the number of deleted outgoing ties; it corresponds to the
-negative of the $\textbf{send}$ term in our model.
-
-  \item Reciprocity (\texttt{recip}).  This statistic counts the number of
-    reciprocal ties; i.e., edge sets of the form $\{ i \to j, j \to i \}$.  It
-corresponds to the $\textbf{receive}$ term in our model.
-
-  \item 3-cycles (\texttt{3cycle}).  This statistic counts the number of cyclic
-triples; i.e., edge sets of the form $\{ h \to i, i \to j, j \to h\}$.  It
-corresponds to the $\textbf{2-receive}$ term in our model.
-
-  \item Transitive triplets (\texttt{ttriple}).  This statistic counts the
-number of transitive triples; i.e., edge sets of the form $\{ h \to i, i \to h, h
-\to j \}$.  It corresponds to the $\textbf{2-send}$, $\textbf{sibling},$
-and $\textbf{cosibling}$ terms in our model.
-
-\end{enumerate}
-
-\noindent
-Note that after binning the interaction counts to form network snapshots as
-required by the actor-oriented model, it is impossible to separate the
-$\textbf{2-send}$, $\textbf{sibling}$, and $\textbf{cosibling}$ effects.
-Further, the first-order Markov nature of the model restricts
-our ability to quantify the time decay of the dynamic network effects.  Additionally, as we were unable to include second-order interactions
-between the group-level effects in this setting, we cannot compare the estimated coefficients
-for the first-order interactions with those obtained from the proportional
-intensity model.  However, including these first-order interactions in the model mediates the confounding
-role of homophily in estimating the network effects, our primary focus for
-this comparison.
-
-Figure~\ref{F:enron-actor} shows the fitted coefficients for the
-actor-oriented model.  We can see that the estimated network effects agree
-qualitatively with those in Fig.~\ref{F:enron-net-indicator}, as
-outdegree/density endowment has a negative coefficient while reciprocity and
-transitive triplets have positive coefficients.  Further, the dyadic
-coefficients are larger than the triadic coefficients.  A discrepancy between
-the two models is that $\textbf{2-receive}$ had a negligible effect in the
-proportional intensity model, while its analogue (\texttt{3cycle}) had a small
-negative effect in the actor-oriented model.  One possible explanation for
-this discrepancy is that treating all ties as binary forces a negative bias in
-otherwise-unimportant network effects.  With the limitation that ties are
-binary, when actor $i$ tries to maximize his stochastic utility, he is
-forbidden from reinforcing an existing $i \to j$ link; he is more
-likely to link to an actor $j'$ for which link $i \to j'$ is absent.
-To counteract this tendency, the coefficient of $\texttt{3cycle}$ is
-forced to be negative.
-
-
-\begin{figure}
-\centering
-\subfloat[Trait effects (\texttt{traits})]{\label{F:actor-trait}
-\begin{tabular}{rrrrr}
-\toprule
-&\multicolumn{4}{c}{Receiver} \\
-\cmidrule(l){2-5}
-Sender & L & T & J & F \\
-\midrule
-\multirow{2}{*}{1}
-& -0.65  & -0.10  &  0.13  &  0.21  \\
-& \tiny{(0.12)} & \tiny{(0.07)} & \tiny{(0.07)} & \tiny{(0.09)} \\
-\multirow{2}{*}{L}
-&  \cellcolor{Gray} 0.62  & -0.28  & -0.11  & -0.16  \\
-& \cellcolor{Gray} \tiny{(0.13)} & \tiny{(0.10)} & \tiny{(0.09)} & \tiny{(0.11)} \\
-\multirow{2}{*}{T}
-&  0.46  &  \cellcolor{Gray} 0.45  & -0.15  & -0.46  \\
-& \tiny{(0.16)} & \cellcolor{Gray} \tiny{(0.06)} & \tiny{(0.07)} & \tiny{(0.10)} \\
-\multirow{2}{*}{J}
-&  0.00  &  0.15  &  \cellcolor{Gray} 0.10  & -0.21  \\
-& \tiny{(0.11)} & \tiny{(0.06)} & \cellcolor{Gray} \tiny{(0.06)} & \tiny{(0.09)} \\
-\multirow{2}{*}{F}
-&  0.19  &  0.33  &  0.08  &  \cellcolor{Gray} 0.13  \\
-& \tiny{(0.12)} & \tiny{(0.06)} & \tiny{(0.07)} & \cellcolor{Gray} \tiny{(0.08)} \\
-\bottomrule
-\end{tabular}
-}
-\qquad
-\subfloat[Network effects]{\label{F:actor-network}
-\begin{tabular}{lrrrrr}
-\toprule
-Variate & \texttt{out} & \texttt{outendow} & \texttt{recip} & \texttt{3cycle} & \texttt{ttriple} \\
-\midrule
-Coefficient & -1.94 & -0.94 &  2.02 & -0.26 & 0.30 \\
-(SE) & \tiny{(0.02)} & \tiny{(0.01)} & \tiny{(0.06)} & \tiny{(0.03)} & \tiny{(0.01)} \\
-\bottomrule
-\end{tabular}
-}
-\caption{
-  Estimated effects for the actor-oriented model of Section~\ref{sec:actor-oriented}
-}
-\label{F:enron-actor}
-\end{figure}
-
-
-\subsubsection{Exponential random graph model analysis}\label{S:ERGM}
-
-As a final comparison, we fit an exponential random graph model to our data.  This class of models---one of the more popular for estimating the importance of network effects---specifies a probability
-distribution for a single directed graph represented by a binary matrix $G$.
-It supposes that
-\(
-  \Prob\{ G = g \} \propto \exp\{ \sum_{s=1}^S T_s(g) \},
-\)
-where $T_s(g)$ is a network statistic, for example the number of transitive
-triples in the graph.  (See \cite{anderson1999pstar} for a detailed survey.)
-
-To apply this form of model, we employed a reduction of our data to obtain
-a single directed graph $G$ as follows.  Based on an ``elbow'' in the empirical cumulative distribution function of message counts $N_\infty(i,j)$ in our data, we chose a threshold of $10$ sent messages and defined $G$  by
-\[
-  G(i,j) = 1\{ N_\infty(i,j) \geq 10 \}.
-\]
-Next, as in our comparison to the actor-oriented model, we chose terms in the
-model to mimic the covariates from Section~\ref{S:enron-covariates}.
-We used the \texttt{ergm} software package to fit the
-model~\citep{ergm2011}, based on a Markov chain Monte Carlo sample size of
-$10^5$ following a burn-in period of $10^6$ iterates.  The covariates were as
-follows:
-
-\begin{enumerate}
-  \item Sender effects (\texttt{sender}).  One covariate is included for each sender,
-  measuring the outdegree of the sender.  The corresponding coefficient plays the role of $\bar \lambda_t(i)$ in our model.
-
-  \item Group-level edge effects (\texttt{edgecov}).  One covariate is included for each
-identifiable first-order interaction of the form $X(i) Y(j)$, where $i$ is the
-sender and $j$ is the receiver; the covariate counts the number of edges $i
-\to j$ with $X(i) Y(j) = 1$.  These effects correspond to the group-level
-effects in our model.  We attempted to include second-order
-interactions as well, but were unable (for computational reasons) to fit the model with these terms.
-
-  \item Mutuality (\texttt{mutual}).  This statistic counts the number of
-mutual ties; i.e., edge sets of the form $\{ i \to j, j \to i \}$, and corresponds to the
-$\textbf{receive}$ term in our model.
-
-  \item Cyclic triples (\texttt{ctriple}).  This statistic counts the number of
-cyclic triples; i.e., edge sets of the form $\{ h \to i, i \to j, j \to h \}$, and
-corresponds to the $\textbf{2-receive}$ term in our model.
-
-  \item Transitive triples (\texttt{ttriple}).  This statistic counts the
-number of transitive triples; i.e., edge sets of the form $\{ h \to i, i \to j, h
-\to j \}$.  It corresponds to the $\textbf{2-send},$ $\textbf{sibling},$
-and $\textbf{cosibling}$ terms in our model.
-\end{enumerate}
-
-\noindent
-Note that reducing the interaction data to a single directed graph has
-important modeling consequences.  As with the case of the snapshot-based
-actor-oriented model detailed above, it is impossible to separate the
-$\textbf{2-send}$, $\textbf{sibling}$, and $\textbf{cosibling}$ effects, and the inability to include second-order interactions between group-level effects precludes a direct comparison with the estimated group-level effects from the proportional intensity model.
-Further, for a single directed graph, there is no possibility of including a
-term corresponding to $\textbf{send}$, and it is impossible to quantify the
-time-dependence of the network effects.
-
-Figure~\ref{F:enron-ergm} shows the fitted coefficients for the exponential
-random graph model.  As with the case of the actor-oriented model considered
-in Section~\ref{sec:actor-oriented} above, the
-estimated network effects agree qualitatively with those of
-Fig.~\ref{F:enron-net-indicator}.  Specifically, mutuality and transitive
-triples have positive effects, while cyclic triples have a negligible effect
-(in contrast to the case of Fig.~\ref{F:enron-actor} from
-Section~\ref{sec:actor-oriented}).
-
-
-\begin{figure}\label{F:enron-ergm}
-\centering
-%\subfloat[Estimated group effects for $G^{(1)}$]{
-%  \centering
-%  \footnotesize
-%  \begin{tabular}{lrrrr}
-%  \toprule
-%  & \multicolumn{4}{c}{Receiver} \\
-%  \cmidrule(l){2-5}
-%  Sender &    L  &  T    &   J   &  F \\
-%  \midrule
-%  1 & -1.03 & -0.62 & -0.15 & -0.21 \\
-%  L &  \cellcolor{Gray} 1.17 &  0.54 & -0.08 & -0.19 \\
-%  T &  0.03 &  \cellcolor{Gray} 0.25 & -0.41 & -0.39 \\
-%  J &  0.37 &  0.78 &  \cellcolor{Gray} 0.62 &  0.02 \\
-%  F &  0.03 &  0.24 &  0.13 &  \cellcolor{Gray} 0.50 \\
-%  \bottomrule
-%  \end{tabular}
-%}
-%\qquad
-\subfloat[Trait effects]{ % for $G^{(10)}$]{
-  \centering
-%  \footnotesize
-  \begin{tabular}{lrrrr}
-  \toprule
-  & \multicolumn{4}{c}{Receiver} \\
-  \cmidrule(l){2-5}
-  Sender &    L  &  T    &   J   &  F \\
-  \midrule
-  1      & -2.61 & -1.49 & -0.87 & -0.55 \\
-  L      &  \cellcolor{Gray} 2.60 &  0.77 & -0.09 &  0.12 \\
-  T      &  0.63 &  \cellcolor{Gray} 0.69 & -0.60 & -0.32 \\
-  J      &  0.13 &  1.04 &  \cellcolor{Gray} 1.15 &  0.27 \\
-  F      &  0.25 &  0.49 &  0.49 &  \cellcolor{Gray} 0.79 \\
-  \bottomrule
-  \end{tabular}
-}
-%\\
-%\vspace{1em}
-%\subfloat[Estimated network effects for $G^{(1)}$]{
-%  \centering
-%  \footnotesize
-%  \begin{tabular}{lrrr}
-%  \toprule
-%  Variate
-%  & \textbf{mutual}
-%  & \textbf{ctriple}
-%  & \textbf{ttriple}
-%  \\
-%  \midrule
-%  Coefficient
-%  &  3.13
-%  & -0.15
-%  &  0.18
-%  \\
-%  (SE)
-%  & \tiny{(NA)}
-%  & \tiny{(NA)}
-%  & \tiny{(NA)}
-%  \\
-%  \bottomrule
-%  \end{tabular}
-%}
-%\qquad
-\\
-\subfloat[Network effects]{ % for $G^{(10)}$]{
-  \centering
-%  \footnotesize
-  \begin{tabular}{lrrr}
-  \toprule
-  Variate
-  & \texttt{mutual}
-  & \texttt{ctriple}
-  & \texttt{ttriple}
-  \\
-  \midrule
-  Coefficient
-  & 4.49
-  & \textcolor{LightGray}{0.15}
-  & 0.42
-  \\
-  (SE)
-  & \tiny{(0.003)}
-  & \textcolor{LightGray}{\tiny{(0.290)}}
-  & \tiny{(0.060)}
-  \\
-  \bottomrule
-  \end{tabular}
-}
-%\normalsize
-\caption{Estimated coefficients for the exponential random graph model of Section~\ref{S:ERGM}.  The model also included a term for each sender (not shown); furthermore, standard errors returned for the group-level edge effects were nonsensical, and so are not reported.
-}
-\end{figure}
 
 \FloatBarrier
 
@@ -2767,7 +2126,223 @@ datasets.
 \section{Results from Section~\protect\MPLEconsistencysection{}}
 \label{S:MPLE-consistency-proofs}
 
-\subsection{Lemmas from the proof of Theorem~\ref{T:score-fisher}}
+\subsection{Proof of Theorem~\ref{T:score-fisher}}
+
+%\begin{proof}[Theorem~\ref{T:score-fisher}]
+Observe that the process $N_t(i,j)$ has compensator
+\(
+    \Lambda_t(i,j)
+        =
+            \int_0^t \lambda_s(i,j) \, ds;
+\)
+similarly, processes $N_t(i)$ and $N_t$ have compensators
+$\Lambda_t(i) = \sum_{j \in \mathcal{J}} \Lambda_t(i,j)$
+and $\Lambda_t = \sum_{i \in \mathcal{I}} \Lambda_t(i)$.  Correspondingly,
+define local martingales $M_t(i,j) = N_t(i,j) - \Lambda_t(i,j)$,
+$M_t(i) = N_t(i) - \Lambda_t(i)$, and $M_t = N_t - \Lambda_t$;
+also define
+\[
+    H_t(i,j)
+        =
+        x_t(i,j) - E_t(\beta_0,i),
+\]
+where $E_t(\beta,i)$ is as defined in~\eqref{E:wt-expectation}.
+
+As observed by \citet{andersen1982cox}, the score function
+$U_t(\cdot)$ evaluated at $\beta_0$ has
+a simple representation in terms of these processes:
+\begin{align*}
+    U_t(\beta_0)
+        &=
+        \sum_{i \in \mathcal{I}}
+        \sum_{j \in \mathcal{J}}
+        \int_0^t
+            H_s(i,j) \, dN_s(i,j) \\
+        &=
+        \sum_{i \in \mathcal{I}}
+        \sum_{j \in \mathcal{J}}
+        \int_0^t
+            H_s(i,j) \, dM_s(i,j),
+\end{align*}
+since
+\(
+    \sum_{j \in \mathcal{J}}
+    \int_0^t
+        H_s(i,j) \,
+        d\Lambda_s(i,j)
+    =
+    0.
+\)
+Since by Assumption A\ref{A:square-int}, $x$ is uniformly bounded, $H$
+is as well.  Each term in the sum above is thus locally square integrable,
+with predictable covariation
+\begin{align*}
+    \begin{split}
+        \bigg\langle
+            \int
+                H_s(i,j) \, dM_s(i,j)
+        &, \, \,
+            \int
+                H_s(i',j') \, dM_s(i',j')
+        \bigg\rangle_t \\
+        &=
+            \int_0^t
+                H_s(i,j) \otimes H_s(i',j') \,
+                d\big\langle M(i,j), M(i',j')\big\rangle_s
+    \end{split} \\
+        &=
+            \int_0^t
+                \big[ H_s(i,j) \big]^{\otimes 2} \,
+                d\Lambda_s(i,j)
+            \cdot
+            1\{ i = i', j = j' \}
+\end{align*}
+\citep[Thm.~2.4.3]{fleming1991counting}.  There exists a sequence
+of stopping times localizing all $M(i,j)$ simultaneously, so $U(\beta_0)$ is
+locally square integrable with predictable variation
+\begin{align}
+\begin{split}\label{E:score-compensator}
+    \big\langle U(\beta_0) \big\rangle_t
+        &=
+            \sum_{i \in \mathcal{I}}
+            \sum_{j \in \mathcal{J}}
+            \int_0^t
+                \big[ H_s(i,j) \big]^{\otimes 2} \,
+                d\Lambda_s(i,j) \\
+        &=
+            \sum_{i \in \mathcal{I}}
+            \int_0^t
+                V_s(\beta_0, i) \,
+                d\Lambda_s(i).
+\end{split}
+\end{align}
+
+Now we rescale time.  For each positive $n$ define a discretized time-scaled
+version of the score that is right-continuous with limits from the left.
+The process is defined for times $\alpha$ in $[0,1]$; between times in
+$[\tfrac{k}{n}, \tfrac{k+1}{n})$, it takes the value $U_{t_k}$; i.e.,
+\begin{equation}\label{E:score-time-scaled}
+    \tilde U_{\alpha}^{(n)}(\beta)
+        = U_{t_{\lfloor \alpha n \rfloor}}(\beta).
+\end{equation}
+
+Part~\textit{(\ref{I:score-part})}:
+Lemma~\ref{L:adapted-martingale} shows that $\tilde U_\alpha^{(n)}(\beta_0)$
+is a square-integrable martingale adapted to
+\(
+    \mathcal{\tilde F}^{(n)}_\alpha
+        =
+        \mathcal{F}_{t_{\lfloor \alpha n \rfloor}},
+\)
+the $\sigma$-algebra of events prior to
+$t_{\lfloor \alpha n \rfloor}$.
+Since it only depends on values at jump times, the
+quadratic variation of $\tilde U^{(n)}(\beta_0)$ at time $\alpha$ is
+equal to the quadratic variation of $U(\beta_0)$ at time
+$t_{\lfloor \alpha n \rfloor}$.  Therefore, since quadratic and
+predictable variation have the same limit when it exists
+\citep[Prop.~1]{rebolledo1980central}, assumption
+A\ref{A:integrated-cov-limit} implies that
+\(
+    \langle \frac{1}{\sqrt{n}} \tilde U^{(n)}(\beta_0) \rangle_\alpha
+        \toP
+            \Sigma_\alpha(\beta_0).
+\)
+Lemma~\ref{L:Lindeberg-condition} in turn verifies that
+$\frac{1}{\sqrt{n}} \tilde U^{(n)}(\beta_0)$ satisfies a Lindeberg
+condition necessary for the application of Rebolledo's \citeyearpar{rebolledo1980central} Martingale Central
+Limit Theorem.  Thus the process converges in
+distribution to a Gaussian process with covariance function
+$\Sigma_\alpha(\beta_0)$ as claimed.
+
+Part~\textit{(\ref{I:fisher-part})}:
+Recalling $M_t(i) = N_t(i) - \Lambda_t(i)$,
+combine~\eqref{E:log-pl-neg-hessian} and~\eqref{E:score-compensator}
+to obtain the relation
+\begin{equation}\label{E:var-estimate-relation}
+            \sum_i
+            \int_0^{t_{\lfloor \alpha n \rfloor}}
+                V_s(\beta_0, i) \, dM_s(i)
+        =
+            I_{t_{\lfloor \alpha n \rfloor}}(\beta_0)
+        -
+            \big\langle \tilde U^{(n)}(\beta_0) \big\rangle_\alpha.
+\end{equation}
+
+When $\alpha \in [0, 1]$, a repeated application of the triangle
+inequality to
+\[
+    \left\|
+        \tfrac{1}{n} I_{t_{\lfloor \alpha n \rfloor}}(\hat \beta_n)
+        -
+        \tfrac{1}{n} \big(
+            I_{t_{\lfloor \alpha n \rfloor}}(\beta_0)
+            -
+            I_{t_{\lfloor \alpha n \rfloor}}(\beta_0)
+        \big)
+        -
+        \Sigma_{\alpha} (\beta_0)
+    \right\|
+\]
+using the relation of~\eqref{E:var-estimate-relation} yields
+\begin{align*}
+    \left\|
+        \tfrac{1}{n} I_{t_{\lfloor \alpha n \rfloor}}(\hat \beta_n)
+        -
+        \Sigma_{\alpha} (\beta_0)
+    \right\|
+        &\leq
+        \left\|
+            \frac{1}{n}
+            \sum_i
+            \int_0^{t_{\lfloor \alpha n \rfloor}}
+                \{
+                    V_s(\hat \beta_n, i)
+                    -
+                    V_s(\beta_0, i)
+                \} \, dN_s(i)
+        \right\| \\
+        &\quad+
+        \left\|
+            \frac{1}{n}
+            \sum_i
+            \int_0^{t_{\lfloor \alpha n \rfloor}}
+                V_s(\beta_0, i) \, dM_s(i)
+        \right\| \\
+        &\quad+
+        \left\|
+            \frac{1}{n}
+            \sum_i
+            \int_0^{t_{\lfloor \alpha n \rfloor}}
+                V_s(\beta_0,i)
+                \, d\Lambda_s(i)
+            -
+            \Sigma_{\alpha}(\beta_0)
+        \right\|.
+\end{align*}
+We show that all three terms converge to zero in probability.
+The first term above is uniformly bounded by
+\(
+    \sup_{n',i}
+        \|
+            V_{t_{n'}}(\hat \beta_n, i)
+            -
+            V_{t_{n'}}(\beta_0, i)
+        \|,
+\)
+which converges to zero since $\hat \beta_n \toP \beta_0$ by
+hypothesis of the theorem and $\{ V_{t_{n'}}(\cdot, i) \}$ is an
+equicontinuous family by assumption~A\ref{A:var-equicont}.
+Lemma~\ref{L:Lenglart} proves, as a consequence of
+assumption~A\ref{A:message-times-finite} and Lenglart's \citeyearpar{lenglart1977relation}
+Inequality, that the second term converges
+to zero uniformly in $\alpha$.
+The third term converges to zero by
+assumption~A\ref{A:integrated-cov-limit}, thereby concluding the proof.
+
+%\end{proof}
+
+\subsection{Supporting Lemmas for Theorem~\ref{T:score-fisher}}
 
 \begin{lemma}\label{L:adapted-martingale}
 Using the notation of Theorem~\ref{T:score-fisher}, under assumption
@@ -3200,6 +2775,434 @@ large enough,
     \qedhere
 \]
 \end{proof}
+
+\section{A comparative analysis based on contingency tables}\label{sec:contin-analysis}
+
+Were we interested only in homophily, we might be tempted to forgo
+the proportional intensity model of~\eqref{E:cox-intensity}, and instead
+perform a contingency table analysis.  However, as we now describe,
+such an analysis leads to very different conclusions
+about the predictive strength of homophily in our data.
+
+For example, suppose that we are interested in testing for seniority-based homophily.  Ignoring
+network effects and other dependency, we might model $\Prob\{ i \to j \mid i
+\}$, the probability of employee $j$ being the recipient of a message given
+that employee $i$ is the sender, by way of a multinomial logit model:
+\[
+  \Prob\{ i \to j \mid i \}
+    \propto \exp\{ \beta_J J(j) + \beta_{JJ} J(i) J(j) \}.
+\]
+In this setting,
+Junior-Junior homophily would manifest in a positive value of
+$\beta_{J} + \beta_{JJ}$ and Senior-Senior homophily would manifest in
+a negative value of $\beta_J$.
+
+Since there are $n_J = 82$ Junior
+executives and $n_S = 74$ Senior executives, and since the sender and
+receiver of a message are distinct, we have that
+\begin{align*}
+  \Prob\{ i \to j \mid i, J(i) = 1 \}
+    &=
+      \frac{e^{(\beta_J + \beta_{JJ}) J(j)}}
+           {(n_J - 1) e^{\beta_J + \beta_{JJ}} + n_S} \\
+  \Prob\{ i \to j \mid i, J(i) = 0 \},
+    &=
+      \frac{e^{\beta_J J(j)}}
+           {n_J e^{\beta_J} + (n_S - 1)}.
+\end{align*}
+In turn, we compute the corresponding maximum likelihood coefficient estimates using the
+entries of a $2 \times 2$ table that counts the number of messages exchanged
+between each group:
+\begin{center}
+\begin{tabular}{lrr}
+  \toprule
+  & \multicolumn{2}{c}{Receiver} \\
+  \cmidrule(l){2-3}
+  Sender & Junior & Senior \\
+  \midrule
+  Junior &  7972  &  5833 \\
+  Senior &  3977  & 14479 \\
+  \bottomrule
+\end{tabular}
+\end{center}
+The resultant estimates are $\hat \beta_{J} = -1.4$ and
+$\hat \beta_{JJ} = 1.6$, with (Wald) standard errors of about $0.02$
+for each.  Indeed, these are exactly the estimated coefficients we would
+obtain if we were to use the proportional intensity model
+$\lambda_t(i,j) = \bar \lambda_t(i) \exp\{ \beta_J J(j) + \beta_{JJ} J(i) J(j)
+\}$, a result that holds more generally for non-time-varying covariates.
+
+One problem with this analysis is that we have marginalized over the
+other covariates (Gender and Department), potentially introducing a Simpson's
+paradox.  This issue is easily rectified, however, by introducing covariates for senders and
+receivers, along with the corresponding second-order covariate interactions;
+Fig.~\ref{T:group-static} shows the resulting coefficient estimates.
+
+\begin{figure}
+  \centering
+  \makebox[\textwidth]{
+    \scriptsize
+    \input{tables/group-static.tex}
+  }
+  \caption{
+    Estimated coefficients and standard errors for the contingency table-based analysis of Section~\ref{sec:contin-analysis}
+  }
+  \label{T:group-static}
+\end{figure}
+
+The far more important
+problem is that this analysis implicitly assumes each message to be
+independent and identically distributed, conditional on the sender of
+the message.  This assumption is blatantly false: common sense tells us that if Junior $A$ sends a message
+to Junior $B$, then the next time $B$ sends a message, $B$ is more likely to
+choose $A$ as a recipient.  Any homophily effect present in these interaction
+data is thus likely to be exaggerated by reciprocation and other network effects.  Indeed,
+comparing the contingency table-based estimates in Fig.~\ref{T:group-static}
+with the estimates from the proportional intensity model with network effects
+in Fig.~\ref{T:group-dynamic}, we can see that the coefficient estimates are
+much higher when we don't adjust for network effects.  Thus even in cases where network effects themselves
+are not the object of primary interest, it is important to account for them when
+making inferences about the predictive strength of other covariates.
+
+
+\section{Comparative analyses using actor-oriented and exponential random graph models}
+
+The results of Section~\ref{S:enron-network} provide a detailed view of the
+ways in which network effects can manifest themselves in data.  To further
+bolster our confidence in these results, we compare our corresponding
+parameter estimates to those obtained using related network models.
+
+A number of dynamic network models exist in the literature, including
+\citefullauthor{hanneke2010discrete}'s~(\citeyear{hanneke2010discrete})
+exponential random graph model with time-varying coefficients,  and
+\citefullauthor{kolar2010estimating}'s~(\citeyear{kolar2010estimating})
+time-varying stochastic block model.  Alternative approaches explicitly based
+on point processes, but excluding network effects and other covariate
+information, include that of \citet{malmgen2009characterizing}, who model
+activity at the level of the individual using a hidden Markov model, and of
+\citet{heard2010bayesian}, who work at the level of the dyad, assuming a
+piecewise-constant interaction rate.  The closest match to our approach is
+given by the actor-oriented model of
+\citet{snijders2001statistical,snijders2005models}, which we now detail in 
+Section~\ref{sec:actor-oriented}.
+Then, in Section~\ref{S:ERGM}, we provide a comparison to a static network
+analysis based on an exponential random graph model.
+
+\subsection{Actor-oriented model analysis}\label{sec:actor-oriented}
+
+The actor-oriented model is designed for a sequence of snapshots $G_1$,
+$G_2,\dotsc,$ of network activity, where each $G_t$ is an $I \times J$ binary
+matrix representing pairwise connectivity between actors at time~$t$.  The
+model is best suited for ties that persist in time, not instantaneous events;
+it treats the sequence of networks as a first-order Markov chain, with the
+distribution of $G_t$ determined by $G_{t-1}$.  Actors are assumed to change
+their ties between times $t-1$ and $t$ to maximize a stochastic utility
+function that depends on characteristics of the overall network.  Essentially,
+given that the network is in state $G$, and that actor $i$ is allowed to make
+a change, he will change his link to actor $j$ according to
+\[
+  p(j | i, G) \propto
+    \exp\Big\{ \sum_{s=1}^S \beta_s T_s\big(G(i \leadsto j)\big)
+      +
+        \sum_{s=1}^{S'} \beta'_s T'_s(G \setminus \{ i \to j\})
+    \Big\},
+\]
+where $T_s$ and $T'_s$ are network statistics; $\beta_s$ and $\beta_s'$ are
+unknown coefficients; $G(i \leadsto j)$ denotes the network obtained either by
+adding link $i \to j$ if it is absent or removing link $i \to j$ if it is
+present; $G \setminus \{ i \to j \}$ denotes the network obtained by removing
+$i \to j$ if it is present.  Additionally, the rate at which actor $i$ changes
+ties between observation times $t-1$ and $t$ is given by $\lambda(i)$,
+specified via another parametric model.  (See \citet{snijders2010introduction}
+for a more thorough introduction.)  The change probability function $p(j | i,
+G)$ plays a similar role to the multiplier $\exp\{ x_t(i,j)^\trans \beta \}$
+in the proportional intensity model, and the change rate function $\lambda(i)$
+plays a similar role to the baseline intensity $\bar \lambda_t(i)$.
+
+For purposes of comparison, we specified a change probability model $p(j | i,
+G)$ with network statistics analogous to those used in
+Section~\ref{S:enron-covariates}, and then we estimated coefficient sets
+$\beta$ and $\beta'$ analogous to the coefficients in the proportional intensity
+model.  We used the \texttt{RSiena} package \citep{rsiena2011} to specify and
+fit the actor-oriented model after binning the Enron e-mail interaction data
+at regular intervals to obtain network snapshots $G_1$, $G_2$, and $G_3$.
+Here, $G_t(i,j) = 1$ if message $i \to j$ was observed in period $t$, and
+$G_t(i,j) = 0$ otherwise; periods 1--3 correspond to consecutive four-month
+periods in the year 2001.   The subset we looked at contains 60\% of the
+messages in the Enron corpus.  We chose this particular subset and temporal
+resolution partially for computational reasons, but also to make the network
+change statistics (Jaccard coefficients) within the range recommended by
+\texttt{RSiena} (near $0.3$).  Approximately 2 hours' time was required to fit
+the model.
+
+We included the following terms, chosen to mimic the covariates detailed in Section~\ref{S:enron-covariates}:
+
+\begin{enumerate}
+  \item Outdegree/density (\texttt{out}). This statistic counts the number
+of outgoing ties; it is analogous to our $\bar \lambda_t(i)$, except that
+the rate is the same for each sender.
+
+  \item Group-level edge effects (\texttt{traits}).  One covariate is included for each
+identifiable first-order interaction of the form $X(i) Y(j)$, where $i$ is the
+sender and $j$ is the receiver; the covariate counts the number of edges $i
+\to j$ with $X(i) Y(j) = 1$.  These effects correspond to the group-level
+effects in our model.  We would have liked to include second-order
+interactions as well, but (for computational reasons) were unable to fit the model with higher-order
+effects.
+
+  \item Outdegree/density endowment (\texttt{outendow}).  This statistic counts the number of deleted outgoing ties; it corresponds to the
+negative of the $\textbf{send}$ term in our model.
+
+  \item Reciprocity (\texttt{recip}).  This statistic counts the number of
+    reciprocal ties; i.e., edge sets of the form $\{ i \to j, j \to i \}$.  It
+corresponds to the $\textbf{receive}$ term in our model.
+
+  \item 3-cycles (\texttt{3cycle}).  This statistic counts the number of cyclic
+triples; i.e., edge sets of the form $\{ h \to i, i \to j, j \to h\}$.  It
+corresponds to the $\textbf{2-receive}$ term in our model.
+
+  \item Transitive triplets (\texttt{ttriple}).  This statistic counts the
+number of transitive triples; i.e., edge sets of the form $\{ h \to i, i \to h, h
+\to j \}$.  It corresponds to the $\textbf{2-send}$, $\textbf{sibling},$
+and $\textbf{cosibling}$ terms in our model.
+
+\end{enumerate}
+
+\noindent
+Note that after binning the interaction counts to form network snapshots as
+required by the actor-oriented model, it is impossible to separate the
+$\textbf{2-send}$, $\textbf{sibling}$, and $\textbf{cosibling}$ effects.
+Further, the first-order Markov nature of the model restricts
+our ability to quantify the time decay of the dynamic network effects.  Additionally, as we were unable to include second-order interactions
+between the group-level effects in this setting, we cannot compare the estimated coefficients
+for the first-order interactions with those obtained from the proportional
+intensity model.  However, including these first-order interactions in the model mediates the confounding
+role of homophily in estimating the network effects, our primary focus for
+this comparison.
+
+Figure~\ref{F:enron-actor} shows the fitted coefficients for the
+actor-oriented model.  We can see that the estimated network effects agree
+qualitatively with those in Fig.~\ref{F:enron-net-indicator}, as
+outdegree/density endowment has a negative coefficient while reciprocity and
+transitive triplets have positive coefficients.  Further, the dyadic
+coefficients are larger than the triadic coefficients.  A discrepancy between
+the two models is that $\textbf{2-receive}$ had a negligible effect in the
+proportional intensity model, while its analogue (\texttt{3cycle}) had a small
+negative effect in the actor-oriented model.  One possible explanation for
+this discrepancy is that treating all ties as binary forces a negative bias in
+otherwise-unimportant network effects.  With the limitation that ties are
+binary, when actor $i$ tries to maximize his stochastic utility, he is
+forbidden from reinforcing an existing $i \to j$ link; he is more
+likely to link to an actor $j'$ for which link $i \to j'$ is absent.
+To counteract this tendency, the coefficient of $\texttt{3cycle}$ is
+forced to be negative.
+
+
+\begin{figure}
+\centering
+\subfloat[Trait effects (\texttt{traits})]{\label{F:actor-trait}
+\begin{tabular}{rrrrr}
+\toprule
+&\multicolumn{4}{c}{Receiver} \\
+\cmidrule(l){2-5}
+Sender & L & T & J & F \\
+\midrule
+\multirow{2}{*}{1}
+& -0.65  & -0.10  &  0.13  &  0.21  \\
+& \tiny{(0.12)} & \tiny{(0.07)} & \tiny{(0.07)} & \tiny{(0.09)} \\
+\multirow{2}{*}{L}
+&  \cellcolor{Gray} 0.62  & -0.28  & -0.11  & -0.16  \\
+& \cellcolor{Gray} \tiny{(0.13)} & \tiny{(0.10)} & \tiny{(0.09)} & \tiny{(0.11)} \\
+\multirow{2}{*}{T}
+&  0.46  &  \cellcolor{Gray} 0.45  & -0.15  & -0.46  \\
+& \tiny{(0.16)} & \cellcolor{Gray} \tiny{(0.06)} & \tiny{(0.07)} & \tiny{(0.10)} \\
+\multirow{2}{*}{J}
+&  0.00  &  0.15  &  \cellcolor{Gray} 0.10  & -0.21  \\
+& \tiny{(0.11)} & \tiny{(0.06)} & \cellcolor{Gray} \tiny{(0.06)} & \tiny{(0.09)} \\
+\multirow{2}{*}{F}
+&  0.19  &  0.33  &  0.08  &  \cellcolor{Gray} 0.13  \\
+& \tiny{(0.12)} & \tiny{(0.06)} & \tiny{(0.07)} & \cellcolor{Gray} \tiny{(0.08)} \\
+\bottomrule
+\end{tabular}
+}
+\qquad
+\subfloat[Network effects]{\label{F:actor-network}
+\begin{tabular}{lrrrrr}
+\toprule
+Variate & \texttt{out} & \texttt{outendow} & \texttt{recip} & \texttt{3cycle} & \texttt{ttriple} \\
+\midrule
+Coefficient & -1.94 & -0.94 &  2.02 & -0.26 & 0.30 \\
+(SE) & \tiny{(0.02)} & \tiny{(0.01)} & \tiny{(0.06)} & \tiny{(0.03)} & \tiny{(0.01)} \\
+\bottomrule
+\end{tabular}
+}
+\caption{
+  Estimated effects for the actor-oriented model of Section~\ref{sec:actor-oriented}
+}
+\label{F:enron-actor}
+\end{figure}
+
+
+\subsection{Exponential random graph model analysis}\label{S:ERGM}
+
+As a final comparison, we fit an exponential random graph model to our data.  This class of models---one of the more popular for estimating the importance of network effects---specifies a probability
+distribution for a single directed graph represented by a binary matrix $G$.
+It supposes that
+\(
+  \Prob\{ G = g \} \propto \exp\{ \sum_{s=1}^S T_s(g) \},
+\)
+where $T_s(g)$ is a network statistic, for example the number of transitive
+triples in the graph.  (See \cite{anderson1999pstar} for a detailed survey.)
+
+To apply this form of model, we employed a reduction of our data to obtain
+a single directed graph $G$ as follows.  Based on an ``elbow'' in the empirical cumulative distribution function of message counts $N_\infty(i,j)$ in our data, we chose a threshold of $10$ sent messages and defined $G$  by
+\[
+  G(i,j) = 1\{ N_\infty(i,j) \geq 10 \}.
+\]
+Next, as in our comparison to the actor-oriented model, we chose terms in the
+model to mimic the covariates from Section~\ref{S:enron-covariates}.
+We used the \texttt{ergm} software package to fit the
+model~\citep{ergm2011}, based on a Markov chain Monte Carlo sample size of
+$10^5$ following a burn-in period of $10^6$ iterates.  The covariates were as
+follows:
+
+\begin{enumerate}
+  \item Sender effects (\texttt{sender}).  One covariate is included for each sender,
+  measuring the outdegree of the sender.  The corresponding coefficient plays the role of $\bar \lambda_t(i)$ in our model.
+
+  \item Group-level edge effects (\texttt{edgecov}).  One covariate is included for each
+identifiable first-order interaction of the form $X(i) Y(j)$, where $i$ is the
+sender and $j$ is the receiver; the covariate counts the number of edges $i
+\to j$ with $X(i) Y(j) = 1$.  These effects correspond to the group-level
+effects in our model.  We attempted to include second-order
+interactions as well, but were unable (for computational reasons) to fit the model with these terms.
+
+  \item Mutuality (\texttt{mutual}).  This statistic counts the number of
+mutual ties; i.e., edge sets of the form $\{ i \to j, j \to i \}$, and corresponds to the
+$\textbf{receive}$ term in our model.
+
+  \item Cyclic triples (\texttt{ctriple}).  This statistic counts the number of
+cyclic triples; i.e., edge sets of the form $\{ h \to i, i \to j, j \to h \}$, and
+corresponds to the $\textbf{2-receive}$ term in our model.
+
+  \item Transitive triples (\texttt{ttriple}).  This statistic counts the
+number of transitive triples; i.e., edge sets of the form $\{ h \to i, i \to j, h
+\to j \}$.  It corresponds to the $\textbf{2-send},$ $\textbf{sibling},$
+and $\textbf{cosibling}$ terms in our model.
+\end{enumerate}
+
+\noindent
+Note that reducing the interaction data to a single directed graph has
+important modeling consequences.  As with the case of the snapshot-based
+actor-oriented model detailed above, it is impossible to separate the
+$\textbf{2-send}$, $\textbf{sibling}$, and $\textbf{cosibling}$ effects, and the inability to include second-order interactions between group-level effects precludes a direct comparison with the estimated group-level effects from the proportional intensity model.
+Further, for a single directed graph, there is no possibility of including a
+term corresponding to $\textbf{send}$, and it is impossible to quantify the
+time-dependence of the network effects.
+
+Figure~\ref{F:enron-ergm} shows the fitted coefficients for the exponential
+random graph model.  As with the case of the actor-oriented model considered
+in Section~\ref{sec:actor-oriented} above, the
+estimated network effects agree qualitatively with those of
+Fig.~\ref{F:enron-net-indicator}.  Specifically, mutuality and transitive
+triples have positive effects, while cyclic triples have a negligible effect
+(in contrast to the case of Fig.~\ref{F:enron-actor} from
+Section~\ref{sec:actor-oriented}).
+
+
+\begin{figure}\label{F:enron-ergm}
+\centering
+%\subfloat[Estimated group effects for $G^{(1)}$]{
+%  \centering
+%  \footnotesize
+%  \begin{tabular}{lrrrr}
+%  \toprule
+%  & \multicolumn{4}{c}{Receiver} \\
+%  \cmidrule(l){2-5}
+%  Sender &    L  &  T    &   J   &  F \\
+%  \midrule
+%  1 & -1.03 & -0.62 & -0.15 & -0.21 \\
+%  L &  \cellcolor{Gray} 1.17 &  0.54 & -0.08 & -0.19 \\
+%  T &  0.03 &  \cellcolor{Gray} 0.25 & -0.41 & -0.39 \\
+%  J &  0.37 &  0.78 &  \cellcolor{Gray} 0.62 &  0.02 \\
+%  F &  0.03 &  0.24 &  0.13 &  \cellcolor{Gray} 0.50 \\
+%  \bottomrule
+%  \end{tabular}
+%}
+%\qquad
+\subfloat[Trait effects]{ % for $G^{(10)}$]{
+  \centering
+%  \footnotesize
+  \begin{tabular}{lrrrr}
+  \toprule
+  & \multicolumn{4}{c}{Receiver} \\
+  \cmidrule(l){2-5}
+  Sender &    L  &  T    &   J   &  F \\
+  \midrule
+  1      & -2.61 & -1.49 & -0.87 & -0.55 \\
+  L      &  \cellcolor{Gray} 2.60 &  0.77 & -0.09 &  0.12 \\
+  T      &  0.63 &  \cellcolor{Gray} 0.69 & -0.60 & -0.32 \\
+  J      &  0.13 &  1.04 &  \cellcolor{Gray} 1.15 &  0.27 \\
+  F      &  0.25 &  0.49 &  0.49 &  \cellcolor{Gray} 0.79 \\
+  \bottomrule
+  \end{tabular}
+}
+%\\
+%\vspace{1em}
+%\subfloat[Estimated network effects for $G^{(1)}$]{
+%  \centering
+%  \footnotesize
+%  \begin{tabular}{lrrr}
+%  \toprule
+%  Variate
+%  & \textbf{mutual}
+%  & \textbf{ctriple}
+%  & \textbf{ttriple}
+%  \\
+%  \midrule
+%  Coefficient
+%  &  3.13
+%  & -0.15
+%  &  0.18
+%  \\
+%  (SE)
+%  & \tiny{(NA)}
+%  & \tiny{(NA)}
+%  & \tiny{(NA)}
+%  \\
+%  \bottomrule
+%  \end{tabular}
+%}
+%\qquad
+\\
+\subfloat[Network effects]{ % for $G^{(10)}$]{
+  \centering
+%  \footnotesize
+  \begin{tabular}{lrrr}
+  \toprule
+  Variate
+  & \texttt{mutual}
+  & \texttt{ctriple}
+  & \texttt{ttriple}
+  \\
+  \midrule
+  Coefficient
+  & 4.49
+  & \textcolor{LightGray}{0.15}
+  & 0.42
+  \\
+  (SE)
+  & \tiny{(0.003)}
+  & \textcolor{LightGray}{\tiny{(0.290)}}
+  & \tiny{(0.060)}
+  \\
+  \bottomrule
+  \end{tabular}
+}
+%\normalsize
+\caption{Estimated coefficients for the exponential random graph model of Section~\ref{S:ERGM}.  The model also included a term for each sender (not shown); furthermore, standard errors returned for the group-level edge effects were nonsensical, and so are not reported.
+}
+\end{figure}
 
 
 \bibliographystyle{Chicago}
