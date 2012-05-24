@@ -528,13 +528,10 @@ Gaussian, as shown by the following two theorems.
     \end{enumerate}
 \end{theorem}
 
-\noindent
 We don't actually require convergence of the whole sample path, but
 it turns out to be just as much effort to prove as convergence of the
 endpoint.
-
-Consistency is a direct consequence of Theorem~\ref{T:score-fisher},
-and is proved in Appendix~\ref{S:MPLE-consistency-proofs}.
+Consistency is a direct consequence of Theorem~\ref{T:score-fisher}.
 
 \begin{theorem}\label{T:consistency}
     Let $N$ be a multivariate counting process with stochastic
@@ -561,6 +558,9 @@ and is proved in Appendix~\ref{S:MPLE-consistency-proofs}.
             $[\Sigma_1(\beta_0)]^{-1}$.
     \end{enumerate}
 \end{theorem}
+
+We prove Theorems~\ref{T:score-fisher}~and~\ref{T:consistency} in
+Appendix~\ref{S:MPLE-consistency-proofs}.
 
 
 \section{Multicast interactions}\label{S:multiple-receivers}
@@ -714,9 +714,10 @@ sublinear growth.  For example, the Cauchy-Schwartz inequality gives
                     \frac{1\{|J_m| > 1\}}{|\mathcal{J}_{t_m}(i_m)|^2}
             \bigg]^{1/2},
 \]
-so if $|\mathcal{J}_{t_m}(i_m)| = \omega(\sqrt{m})$, then
-$G_n = \Oh(\sqrt{n})$.  Theorem~\ref{T:log-pl-multiple-approx-error} bounds
-the approximation error in terms of $G_n$.
+so if $|\mathcal{J}_{t_m}(i_m)|/\sqrt{m} \to \infty$, then
+$G_n = \Oh(\sqrt{n})$.  Theorem~\ref{T:log-pl-multiple-approx-error} 
+(proved in Appendix~\ref{S:multiple-recipient-proofs})
+bounds the approximation error in terms of $G_n$.
 
 \begin{theorem}\label{T:log-pl-multiple-approx-error}
     Let $(t_m, i_m, J_m)$ be a sequence of observations from a multivariate
@@ -756,205 +757,6 @@ the approximation error in terms of $G_n$.
     \]
 \end{theorem}
 
-\begin{proof}
-
-When $J \subseteq \mathcal{J}_t(i)$, set
-\(
-    X_t(i, J) = \sum_{j \in J} x_t(i,j)
-\)
-and
-\(
-    w_t(\beta, i, J)
-        = \exp\{ \beta^\trans X_t(i,J) \}.
-\)
-As a slight abuse of notation, when $j$ is an element of $\mathcal{J}_t(i)$,
-take ``$w_t(\beta, i, j)$'' to mean $w_t(\beta, i, \{j\})$.  Define weights
-\begin{subequations}
-\begin{gather*}
-    W_t(\beta, i; L)
-        = \sum_{\substack{J \subseteq \mathcal{J}_t(i), \\
-                          |J| = L}}
-              w_t(\beta,i,J), \\
-    \widetilde W_t(\beta, i; L)
-        =
-            \Big[ \sum_{j \in \mathcal{J}_t(i)} w_t(\beta, i, j) \Big]^L,
-\end{gather*}
-\end{subequations}
-and note that the approximation error in
-$\log \widetilde{\mathit{PL}}_t(\beta)$ comes from replacing
-$W$ with $\widetilde W$.
-
-The gradients of the weights are
-\begin{subequations}
-\begin{gather*}
-    E_t(\beta, i; L)
-        = \nabla \big[ \log W_t(\beta, i; L) \big]
-        =
-        \frac{1}{W_t(\beta, i; L)}
-        \sum_{\substack{J \subseteq \mathcal{J}_t(i), \\
-                        |J| = L}}\!
-            w_t(i,J)
-            \,
-            X_t(i,J), \\
-    \widetilde E_t(\beta, i; L)
-        = \nabla \big[ \log \widetilde W_t(\beta, i; L) \big]
-        =
-        L
-        \cdot
-        \frac{
-            \sum_{j \in \mathcal{J}_t(i)}
-                w_t(\beta, i, j) \, x_t(i,j)
-        }{
-            \sum_{j \in \mathcal{J}_t(i)}
-                w_t(\beta, i, j)
-        }.
-\end{gather*}
-\end{subequations}
-The second is the expectation of $\sum_{l = 1}^L x_t(i, j_l)$ when
-$j_1, \ldots, j_L$ are drawn independently and identically from
-$\mathcal{J}_t(i)$ with weights $w_t(\beta, i, \cdot)$; the first is the same
-expectation, conditional on the event that $j_1, \ldots, j_L$ are all unique.
-Let $\tilde{\mathbb{P}}_{t,\beta,i;L}$ and $\mathbb{P}_{t,\beta,i;L}$
-denote the two probability laws for $j_1, \ldots, j_L$, and let
-$\tilde{\mathbb{E}}_{t,\beta,i;L}$ and $\mathbb{E}_{t,\beta,i;L}$ denote
-expectations with respect to them, so that
-\(
-    E_t(\beta,i;L)
-        =
-        \mathbb{E}_{t,\beta,i;L} \big[ \sum_{l=1}^L x_t(i,j_l)\big]
-\)
-and
-\(
-    \widetilde E_t(\beta,i;L)
-    =
-    \tilde{\mathbb{E}}_{t,\beta,i;L} \big[ \sum_{l=1}^L x_t(i,j_l)\big].
-\)
-
-The bound on
-\(
-    \nabla [\log \mathit{PL}_{t_n}(\beta) ]
-    -
-    \nabla [\log \widetilde{\mathit{PL}}_{t_n}(\beta) ]
-\)
-derives from a bound on
-\(
-    E_t(\beta,i;L)
-    -
-    \widetilde E_t(\beta,i;L).
-\)
-Write
-\[
-    E_{t}(\beta, i; L) - \widetilde{E}_t(\beta, i; L)
-        =
-        \mathbb{E}_{t,\beta,i;L}
-            \Big[ \sum_{l=1}^L x_t(i,j_l) \Big]
-        -
-        \widetilde{\mathbb{E}}_{t,\beta,i;L}
-            \Big[ \sum_{l=1}^L x_t(i,j_l) \Big].
-\]
-We define probability law $\mathbb{P}^\ast_{t,\beta,i;L}$ and
-associated random variables $j_1, \ldots, j_L$ and
-$\tilde \jmath_1, \ldots, \tilde \jmath_L$, such that marginally
-$j_1, \ldots, j_L$ are distributed according to $\mathbb{P}_{t,\beta,i;L}$
-and $\tilde \jmath_1, \ldots, \tilde \jmath_L$ are distributed according
-to $\tilde{\mathbb{P}}_{t,\beta,i;L}$, but the variables are coupled to have
-nontrivial chance of agreeing.  Then,
-\begin{align*}
-    \Big\| E_{t}(\beta, i; L) - \widetilde{E}_t(\beta, i; L) \Big\|
-        &=
-            \Big\|
-            \mathbb{E}_{t,\beta,i;L}^\ast
-            \Big[
-                \sum_{l=1}^L x_t(i,j_l)
-                -
-                \sum_{l=1}^L x_t(i, \tilde \jmath_l)
-            \Big]
-            \Big\| \\
-        &\leq
-            2 L
-            \cdot
-            \Big[
-                \sup_{j \in \mathcal{J}_t(i)}
-                \| x_t(i,j) \|
-            \Big]
-            \cdot
-            \mathbb{P}^\ast_{t,\beta,i;L}
-            \Big\{
-                (j_1, \ldots, j_L)
-                    \neq
-                    (\tilde \jmath_1, \ldots, \tilde \jmath_L)
-            \Big\}
-\end{align*}
-The coupling is as follows:
-\begin{enumerate}
-    \item Draw $(\tilde \jmath_1, \ldots, \tilde \jmath_L)$ according to
-        $\tilde{\mathbb{P}}_{t,\beta,i;L}$.
-    \item If $(\tilde \jmath_1, \ldots, \tilde \jmath_L)$ are all unique,
-        set $(j_1, \ldots, j_L) = (\tilde \jmath_1, \ldots, \tilde \jmath_L)$,
-        otherwise draw $(j_1, \ldots, j_L)$ independently according to
-        $\mathbb{P}_{t,\beta,i;L}$.
-\end{enumerate}
-With $K = \sup_{j \in \mathcal{J}_t(i)} \| x_t(i,j) \|$,
-Lemma~\ref{L:coupling-prob-bound} shows
-\[
-    \mathbb{P}^\ast_{t,\beta,i;L}
-    \Big\{
-        (j_1, \ldots, j_L)
-            \neq
-            (\tilde \jmath_1, \ldots, \tilde \jmath_L)
-    \Big\}
-        \leq
-        \binom{L}{2}
-        \cdot
-        \frac{\exp\{4 K \, \| \beta \|\}}{| \mathcal{J}_t(i) |}.
-\]
-The resulting bound on
-\(
-    \|
-    \nabla [\log \mathit{PL}_{t}(\beta) ]
-    -
-    \nabla [\log \widetilde{\mathit{PL}}_{t}(\beta) ]
-    \|
-\)
-now follows by expressing
-\[
-    \nabla \big[ \log \widetilde{\mathit{PL}}_t(\beta) \big]
-    -
-    \nabla \big[ \log \mathit{PL}_t(\beta )\big]
-        =
-        \sum_{t_m \leq t}
-            E_{t_m}\!(\beta, i_m; |J_m|)
-            -
-            \widetilde{E}_{t_m}\!(\beta, i_m; |J_m|).
-\]
-Using
-\(
-    \big\| E_{t}(\beta, i; L) - \widetilde{E}_t(\beta, i; L) \big\|
-        \leq
-        K \, L^2 \, (L - 1)
-        \,
-        \frac{\exp\{4 K \, \| \beta \|\}}{| \mathcal{J}_t(i) |},
-\)
-we get
-\[
-    \Big\|
-        \nabla\big[ \log \widetilde{\mathit{PL}}_t( \beta ) \big]
-        -
-        \nabla\big[ \log {\mathit{PL}}_t( \beta ) \big]
-    \Big\| \\
-        \leq
-            K
-            \exp\{4 K \| \beta \|\}
-            \cdot
-            \sum_{t_m \leq t}
-                \frac{|J_m|^2(|J_m| - 1)}{|\mathcal{J}_{t_m}(i_m)|}.
-\]
-We get the final bound for the gradients by replacing the numerators of the
-summands with $\sup_m |J_m|$.
-
-Using the same methods, Lemma~\ref{L:hessian-approx-bound} derives the bound
-on the difference in Hessians.
-\end{proof}
 
 \subsection{Bias correction from the approximate partial likelihood}
 \label{S:approximation-bias}
@@ -988,8 +790,8 @@ $\beta_0$.  Theorem~\ref{T:mple-approx-error} (proved in Appendix~\ref{S:multipl
     \]
 \end{theorem}
 
-It remains to be shown that $\hat \beta_n$ is a consistent estimator of
-$\beta_0$.  This follows directly from the theory in Section~\ref{S:MPLE-consistency},
+That $\hat \beta_n$ is a consistent estimator of
+$\beta_0$ follows directly from the theory in Section~\ref{S:MPLE-consistency},
 since the multicast case can be considered as a special case of
 the single receiver case:  Consider the product $\mathcal{I} \times \mathbb{N}_+$
 as the sender set, and the power set $\mathcal{P}(\mathcal{J})$ as the
@@ -1599,8 +1401,7 @@ of the network effects.
 
 Given the model fitting procedure and results described above, we may now
 evaluate the strength of homophily and network effects in predicting the
-interaction behavior observed in our data.  Along the way, we compare the
-results to those obtained from alternative data analysis methods.
+interaction behavior observed in our data.
 
 \subsection{Assessing evidence for homophily in the Enron data}\label{S:enron-homophily}
 
@@ -1649,6 +1450,12 @@ employees in the Legal group exhibited anti-homophilic behavior.
   \label{T:group-dynamic}
 \end{figure}
 
+Were we interested only in homophily, we might be tempted to forgo
+the proportional intensity model of~\eqref{E:cox-intensity}, and instead
+perform a contingency table analysis.  Appendix~\ref{sec:contin-analysis}
+explores this approach in detail.  The major problem with the contingency
+table approach is that it assumes that the messages are independent, which
+leads to bias in the parameter estimates.
 
 \subsection{Evaluating the importance of network effects}
 \label{S:enron-network}
@@ -1770,6 +1577,11 @@ $\textbf{sibling}_t^{(2,3)}$ ($0.14$).  We may interpret these coefficients as f
 
 Given the emphasis on transitivity in the networks literature, it may at first seem disconcerting that most of the estimated coefficients for the time-dependent triadic effects are found to be insignificant in this analysis.  However, one must bear in mind that, except for  messages sent to them directly, individuals likely have no knowledge of their colleagues' e-mail activities, and therefore there is no reason why this activity should directly affect sending behaviors.  Any predictive power the triadic effects have, then, must be due to correlation with
 exogenous factors.  In this light, it is not surprising that the triadic effects are small and have small time horizons.
+
+Appendix~\ref{S:actor-ergm-comparison} contains comparative analyses based on
+an actor-oriented model and an exponential random graph model.  These analyses
+further bolster our confidence in the results of this section.
+
 
 \FloatBarrier
 
@@ -2342,7 +2154,7 @@ assumption~A\ref{A:integrated-cov-limit}, thereby concluding the proof.
 
 %\end{proof}
 
-\subsection{Supporting Lemmas for Theorem~\ref{T:score-fisher}}
+\subsection{Supporting lemmas for Theorem~\ref{T:score-fisher}}
 
 \begin{lemma}\label{L:adapted-martingale}
 Using the notation of Theorem~\ref{T:score-fisher}, under assumption
@@ -2590,6 +2402,210 @@ and $\sqrt{n} \, Z_n$ converge weakly to the same limit.
 \section{Results from Section~\protect\multiplereceiverssection{}}
 \label{S:multiple-recipient-proofs}
 
+\subsection{Proof of Theorem~\ref{T:log-pl-multiple-approx-error}}
+
+\begin{proof}[Theorem~\ref{T:log-pl-multiple-approx-error}]
+
+When $J \subseteq \mathcal{J}_t(i)$, set
+\(
+    X_t(i, J) = \sum_{j \in J} x_t(i,j)
+\)
+and
+\(
+    w_t(\beta, i, J)
+        = \exp\{ \beta^\trans X_t(i,J) \}.
+\)
+As a slight abuse of notation, when $j$ is an element of $\mathcal{J}_t(i)$,
+take ``$w_t(\beta, i, j)$'' to mean $w_t(\beta, i, \{j\})$.  Define weights
+\begin{subequations}
+\begin{gather*}
+    W_t(\beta, i; L)
+        = \sum_{\substack{J \subseteq \mathcal{J}_t(i), \\
+                          |J| = L}}
+              w_t(\beta,i,J), \\
+    \widetilde W_t(\beta, i; L)
+        =
+            \Big[ \sum_{j \in \mathcal{J}_t(i)} w_t(\beta, i, j) \Big]^L,
+\end{gather*}
+\end{subequations}
+and note that the approximation error in
+$\log \widetilde{\mathit{PL}}_t(\beta)$ comes from replacing
+$W$ with $\widetilde W$.
+
+The gradients of the weights are
+\begin{subequations}
+\begin{gather*}
+    E_t(\beta, i; L)
+        = \nabla \big[ \log W_t(\beta, i; L) \big]
+        =
+        \frac{1}{W_t(\beta, i; L)}
+        \sum_{\substack{J \subseteq \mathcal{J}_t(i), \\
+                        |J| = L}}\!
+            w_t(i,J)
+            \,
+            X_t(i,J), \\
+    \widetilde E_t(\beta, i; L)
+        = \nabla \big[ \log \widetilde W_t(\beta, i; L) \big]
+        =
+        L
+        \cdot
+        \frac{
+            \sum_{j \in \mathcal{J}_t(i)}
+                w_t(\beta, i, j) \, x_t(i,j)
+        }{
+            \sum_{j \in \mathcal{J}_t(i)}
+                w_t(\beta, i, j)
+        }.
+\end{gather*}
+\end{subequations}
+The second is the expectation of $\sum_{l = 1}^L x_t(i, j_l)$ when
+$j_1, \ldots, j_L$ are drawn independently and identically from
+$\mathcal{J}_t(i)$ with weights $w_t(\beta, i, \cdot)$; the first is the same
+expectation, conditional on the event that $j_1, \ldots, j_L$ are all unique.
+Let $\tilde{\mathbb{P}}_{t,\beta,i;L}$ and $\mathbb{P}_{t,\beta,i;L}$
+denote the two probability laws for $j_1, \ldots, j_L$, and let
+$\tilde{\mathbb{E}}_{t,\beta,i;L}$ and $\mathbb{E}_{t,\beta,i;L}$ denote
+expectations with respect to them, so that
+\(
+    E_t(\beta,i;L)
+        =
+        \mathbb{E}_{t,\beta,i;L} \big[ \sum_{l=1}^L x_t(i,j_l)\big]
+\)
+and
+\(
+    \widetilde E_t(\beta,i;L)
+    =
+    \tilde{\mathbb{E}}_{t,\beta,i;L} \big[ \sum_{l=1}^L x_t(i,j_l)\big].
+\)
+
+The bound on
+\(
+    \nabla [\log \mathit{PL}_{t_n}(\beta) ]
+    -
+    \nabla [\log \widetilde{\mathit{PL}}_{t_n}(\beta) ]
+\)
+derives from a bound on
+\(
+    E_t(\beta,i;L)
+    -
+    \widetilde E_t(\beta,i;L).
+\)
+Write
+\[
+    E_{t}(\beta, i; L) - \widetilde{E}_t(\beta, i; L)
+        =
+        \mathbb{E}_{t,\beta,i;L}
+            \Big[ \sum_{l=1}^L x_t(i,j_l) \Big]
+        -
+        \widetilde{\mathbb{E}}_{t,\beta,i;L}
+            \Big[ \sum_{l=1}^L x_t(i,j_l) \Big].
+\]
+We define probability law $\mathbb{P}^\ast_{t,\beta,i;L}$ and
+associated random variables $j_1, \ldots, j_L$ and
+$\tilde \jmath_1, \ldots, \tilde \jmath_L$, such that marginally
+$j_1, \ldots, j_L$ are distributed according to $\mathbb{P}_{t,\beta,i;L}$
+and $\tilde \jmath_1, \ldots, \tilde \jmath_L$ are distributed according
+to $\tilde{\mathbb{P}}_{t,\beta,i;L}$, but the variables are coupled to have
+nontrivial chance of agreeing.  Then,
+\begin{align*}
+    \Big\| E_{t}(\beta, i; L) - \widetilde{E}_t(\beta, i; L) \Big\|
+        &=
+            \Big\|
+            \mathbb{E}_{t,\beta,i;L}^\ast
+            \Big[
+                \sum_{l=1}^L x_t(i,j_l)
+                -
+                \sum_{l=1}^L x_t(i, \tilde \jmath_l)
+            \Big]
+            \Big\| \\
+        &\leq
+            2 L
+            \cdot
+            \Big[
+                \sup_{j \in \mathcal{J}_t(i)}
+                \| x_t(i,j) \|
+            \Big]
+            \cdot
+            \mathbb{P}^\ast_{t,\beta,i;L}
+            \Big\{
+                (j_1, \ldots, j_L)
+                    \neq
+                    (\tilde \jmath_1, \ldots, \tilde \jmath_L)
+            \Big\}
+\end{align*}
+The coupling is as follows:
+\begin{enumerate}
+    \item Draw $(\tilde \jmath_1, \ldots, \tilde \jmath_L)$ according to
+        $\tilde{\mathbb{P}}_{t,\beta,i;L}$.
+    \item If $(\tilde \jmath_1, \ldots, \tilde \jmath_L)$ are all unique,
+        set $(j_1, \ldots, j_L) = (\tilde \jmath_1, \ldots, \tilde \jmath_L)$,
+        otherwise draw $(j_1, \ldots, j_L)$ independently according to
+        $\mathbb{P}_{t,\beta,i;L}$.
+\end{enumerate}
+With $K = \sup_{j \in \mathcal{J}_t(i)} \| x_t(i,j) \|$,
+Lemma~\ref{L:coupling-prob-bound} shows
+\[
+    \mathbb{P}^\ast_{t,\beta,i;L}
+    \Big\{
+        (j_1, \ldots, j_L)
+            \neq
+            (\tilde \jmath_1, \ldots, \tilde \jmath_L)
+    \Big\}
+        \leq
+        \binom{L}{2}
+        \cdot
+        \frac{\exp\{4 K \, \| \beta \|\}}{| \mathcal{J}_t(i) |}.
+\]
+The resulting bound on
+\(
+    \|
+    \nabla [\log \mathit{PL}_{t}(\beta) ]
+    -
+    \nabla [\log \widetilde{\mathit{PL}}_{t}(\beta) ]
+    \|
+\)
+now follows by expressing
+\[
+    \nabla \big[ \log \widetilde{\mathit{PL}}_t(\beta) \big]
+    -
+    \nabla \big[ \log \mathit{PL}_t(\beta )\big]
+        =
+        \sum_{t_m \leq t}
+            E_{t_m}\!(\beta, i_m; |J_m|)
+            -
+            \widetilde{E}_{t_m}\!(\beta, i_m; |J_m|).
+\]
+Using
+\(
+    \big\| E_{t}(\beta, i; L) - \widetilde{E}_t(\beta, i; L) \big\|
+        \leq
+        K \, L^2 \, (L - 1)
+        \,
+        \frac{\exp\{4 K \, \| \beta \|\}}{| \mathcal{J}_t(i) |},
+\)
+we get
+\[
+    \Big\|
+        \nabla\big[ \log \widetilde{\mathit{PL}}_t( \beta ) \big]
+        -
+        \nabla\big[ \log {\mathit{PL}}_t( \beta ) \big]
+    \Big\| \\
+        \leq
+            K
+            \exp\{4 K \| \beta \|\}
+            \cdot
+            \sum_{t_m \leq t}
+                \frac{|J_m|^2(|J_m| - 1)}{|\mathcal{J}_{t_m}(i_m)|}.
+\]
+We get the final bound for the gradients by replacing the numerators of the
+summands with $\sup_m |J_m|$.
+
+Using the same methods, Lemma~\ref{L:hessian-approx-bound} derives the bound
+on the difference in Hessians.
+\end{proof}
+
+\subsection{Supporting lemmas for Theorem~\ref{T:log-pl-multiple-approx-error}}
+
 \begin{lemma}\label{L:coupling-prob-bound}
 Using the notation and assumptions of
 Theorem~\ref{T:log-pl-multiple-approx-error},
@@ -2730,6 +2746,7 @@ The relevant intermediate bound is
 \]
 \end{proof}
 
+\subsection{Proof of Theorem~\ref{T:mple-approx-error}}
 
 \begin{proof}[Theorem~\ref{T:mple-approx-error}]
 
@@ -2776,7 +2793,8 @@ large enough,
 \]
 \end{proof}
 
-\section{A comparative analysis based on contingency tables}\label{sec:contin-analysis}
+\section{A comparative analysis based on contingency tables}
+\label{sec:contin-analysis}
 
 Were we interested only in homophily, we might be tempted to forgo
 the proportional intensity model of~\eqref{E:cox-intensity}, and instead
@@ -2866,6 +2884,7 @@ making inferences about the predictive strength of other covariates.
 
 
 \section{Comparative analyses using actor-oriented and exponential random graph models}
+\label{S:actor-ergm-comparison}
 
 The results of Section~\ref{S:enron-network} provide a detailed view of the
 ways in which network effects can manifest themselves in data.  To further
