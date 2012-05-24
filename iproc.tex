@@ -39,10 +39,10 @@
     Patrick J.\ Wolfe
 }
 
-\address{School of Engineering and Applied Sciences, Harvard University, USA}
+\address{Department of Statistical Science, University College London, UK}
 
 \received{November 2010}
-\revised{October 2011}
+\revised{May 2012}
 
 \runauthor{%
     P.\ O.\ Perry and P.\ J.\ Wolfe
@@ -158,9 +158,9 @@ process model for directed pairwise interactions, along with the resultant
 inference procedures. Section~\ref{S:MPLE-consistency} proves consistency
 and asymptotic normality of the corresponding maximum partial likelihood
 estimator, and Section~\ref{S:multiple-receivers} extends our framework to
-the case of multiple-receiver interactions.  Section~\ref{S:enron-modeling} employs this framework to model message sending behavior in a corporate e-mail network.  Section~\ref{S:strength-of-effects} evaluates the strength of homophily and network effects in explaining these data, and discusses the results of three comparative analyses.  Section~\ref{S:discussion} concludes the main body of the article, and Appendices~\ref{S:implementation}--%
-\ref{S:multiple-recipient-proofs} contain implementation details and
-technical lemmas.
+the case of multiple-receiver interactions.  Section~\ref{S:enron-modeling} employs this framework to model message sending behavior in a corporate e-mail network.  Section~\ref{S:strength-of-effects} evaluates the strength of homophily and network effects in explaining these data, and Section~\ref{S:discussion} concludes the main body of the article. Appendices~\ref{S:implementation}--%
+\ref{S:comparative} contain respectively implementation details,
+technical results from Sections~\ref{S:MPLE-consistency} and~\ref{S:multiple-receivers}, respectively, and comparative analyses based on related network models in the literature.
 
 
 \section{A point process model and partial likelihood inference}
@@ -1599,8 +1599,7 @@ of the network effects.
 
 Given the model fitting procedure and results described above, we may now
 evaluate the strength of homophily and network effects in predicting the
-interaction behavior observed in our data.  Along the way, we compare the
-results to those obtained from alternative data analysis methods.
+interaction behavior observed in our data.
 
 \subsection{Assessing evidence for homophily in the Enron data}\label{S:enron-homophily}
 
@@ -1771,6 +1770,10 @@ $\textbf{sibling}_t^{(2,3)}$ ($0.14$).  We may interpret these coefficients as f
 Given the emphasis on transitivity in the networks literature, it may at first seem disconcerting that most of the estimated coefficients for the time-dependent triadic effects are found to be insignificant in this analysis.  However, one must bear in mind that, except for  messages sent to them directly, individuals likely have no knowledge of their colleagues' e-mail activities, and therefore there is no reason why this activity should directly affect sending behaviors.  Any predictive power the triadic effects have, then, must be due to correlation with
 exogenous factors.  In this light, it is not surprising that the triadic effects are small and have small time horizons.
 
+The results above provide a detailed view of the
+ways in which network effects can manifest themselves in data.  These results are reinforced by a set of complementary analyses in Appendix~\ref{S:comparative}, where the corresponding
+parameter estimates are compared to those obtained using related network models in the literature.
+
 \FloatBarrier
 
 \section{Conclusion}\label{S:discussion}
@@ -1799,7 +1802,7 @@ associated theory in two directions: first, we have provided results
 that are asymptotic in time rather than in the size of the population
 under study; and second, we have shown that treating multicast
 interactions via duplication leads to bias in the parameter estimates
-(which can in turn be corrected in certain regimes).  
+(which can in turn be corrected in certain regimes).
 
 We find the
 proportional intensity model with time-varying covariates to be particularly
@@ -2776,7 +2779,9 @@ large enough,
 \]
 \end{proof}
 
-\section{A comparative analysis based on contingency tables}\label{sec:contin-analysis}
+\section{Comparative analyses}\label{S:comparative}
+
+\subsection{A comparative analysis based on contingency tables}\label{sec:contin-analysis}
 
 Were we interested only in homophily, we might be tempted to forgo
 the proportional intensity model of~\eqref{E:cox-intensity}, and instead
@@ -2865,12 +2870,7 @@ are not the object of primary interest, it is important to account for them when
 making inferences about the predictive strength of other covariates.
 
 
-\section{Comparative analyses using actor-oriented and exponential random graph models}
-
-The results of Section~\ref{S:enron-network} provide a detailed view of the
-ways in which network effects can manifest themselves in data.  To further
-bolster our confidence in these results, we compare our corresponding
-parameter estimates to those obtained using related network models.
+\subsection{Comparative analyses using actor-oriented and exponential random graph models}
 
 A number of dynamic network models exist in the literature, including
 \citefullauthor{hanneke2010discrete}'s~(\citeyear{hanneke2010discrete})
@@ -2883,12 +2883,12 @@ activity at the level of the individual using a hidden Markov model, and of
 \citet{heard2010bayesian}, who work at the level of the dyad, assuming a
 piecewise-constant interaction rate.  The closest match to our approach is
 given by the actor-oriented model of
-\citet{snijders2001statistical,snijders2005models}, which we now detail in 
+\citet{snijders2001statistical,snijders2005models}, which we now detail in
 Section~\ref{sec:actor-oriented}.
 Then, in Section~\ref{S:ERGM}, we provide a comparison to a static network
 analysis based on an exponential random graph model.
 
-\subsection{Actor-oriented model analysis}\label{sec:actor-oriented}
+\subsubsection{Actor-oriented model analysis}\label{sec:actor-oriented}
 
 The actor-oriented model is designed for a sequence of snapshots $G_1$,
 $G_2,\dotsc,$ of network activity, where each $G_t$ is an $I \times J$ binary
@@ -3043,7 +3043,7 @@ Coefficient & -1.94 & -0.94 &  2.02 & -0.26 & 0.30 \\
 \end{figure}
 
 
-\subsection{Exponential random graph model analysis}\label{S:ERGM}
+\subsubsection{Exponential random graph model analysis}\label{S:ERGM}
 
 As a final comparison, we fit an exponential random graph model to our data.  This class of models---one of the more popular for estimating the importance of network effects---specifies a probability
 distribution for a single directed graph represented by a binary matrix $G$.
