@@ -270,6 +270,18 @@ Tyler, J.~R., D.~M. Wilkinson, and B.~A. Huberman (2005).
   within organizations.
 \newblock {\em Inform. Soc.\/}~{\em 21}, 143--153.
 
+\bibitem[\protect\citeauthoryear{Vu, Asuncion, Hunter, and Smyth}{Vu
+  et~al.}{2011a}]{vu2011continuous}
+Vu, D.~Q., A.~U. Asuncion, D.~R. Hunter, and P.~Smyth (2011a).
+\newblock Continuous-time regression models for longitudinal networks.
+\newblock {\em Adv. Neur. In.\/}~{\em 24}, 2492--2500.
+
+\bibitem[\protect\citeauthoryear{Vu, Asuncion, Hunter, and Smyth}{Vu
+  et~al.}{2011b}]{vu2011dynamic}
+Vu, D.~Q., A.~U. Asuncion, D.~R. Hunter, and P.~Smyth (2011b).
+\newblock Dynamic egocentric models for citation networks.
+\newblock In {\em Proc. 28th Intl. Conf. Machine Learning}, pp.\  857--864.
+
 \bibitem[\protect\citeauthoryear{Wong}{Wong}{1986}]{wong1986theory}
 Wong, W.~H. (1986).
 \newblock Theory of partial likelihood.
