@@ -231,7 +231,8 @@ down according to the pair's covariate vector, $x_t(i,j)$.  As
 $\exp\{ \beta_0^\trans x_t(i,j) \}$ is not central to the theoretical
 analysis, but this choice is amenable to computation and gives
 the parameter vector $\beta_0$ a straightforward interpretation.
-\citet{butts2008relational} used a variant of this model to analyze
+\citet{butts2008relational}, \citet{vu2011continuous}, and
+\citet{vu2011dynamic} used variants of this model to analyze
 repeated directed actions within social settings.
 
 The form of~\eqref{E:cox-intensity} is deceptively simple but remains
@@ -1424,6 +1425,9 @@ $\textbf{sibling}$, and $\textbf{cosibling}$ covariates, although the exact defi
 defined as $\sum_{h} \min[ \#\{ i \to h \text{ in } (-\infty, t) \}, \,
 \#\{ h \to j \text{ in } (-\infty, t) \} ]$.)  The versions of these covariates that we have introduced above, however, are designed to enable a more precise quantification of the time-dependence of network effects, as well as a more straightforward interpretation of the corresponding coefficients.
 
+In related models, \cite{vu2011continuous} and \cite{vu2011dynamic} use
+covariates related to ours, except that they do not partition $[-\infty, t)$
+into sub-intervals.
 
 \subsection{Bootstrap bias correction}\label{S:enron-bootstrap}
 
