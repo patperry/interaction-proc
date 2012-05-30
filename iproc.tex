@@ -1602,6 +1602,12 @@ network effects to get more reliable estimates of homophily, and by using
 continuous-time information we get precise quantification on the
 time-dependent behavior of the network effects.
 
+In this work, the focus has been on the coefficient vector $\beta$.  Since we
+have used partial likelihood for the estimation, it has not been necessary to
+the baseline intensity $\bar \lambda_t(i)$.  Were we to use the model for
+prediction, we would need to estimate the baseline intensities.  This could be
+done using a Nelson-Aalen estimator as in~\citet{andersen1993statistical}.  
+
 The foundation of our work is Cox's \citeyearpar{cox1972regression}
 proportional intensity model and partial likelihood theory, tools
 which he first introduced almost forty years ago and which have been
