@@ -155,7 +155,7 @@ intensity model incorporating both static and history-dependent covariates
 to address the first of these two questions, and a parametric bootstrap to
 address the third. Section~\ref{S:point-process-model} presents our point
 process model for directed pairwise interactions, along with the resultant
-inference procedures. Section~\ref{S:MPLE-consistency} proves consistency
+inference procedures. Section~\ref{S:MPLE-consistency} establishes consistency
 and asymptotic normality of the corresponding maximum partial likelihood
 estimator, and Section~\ref{S:multiple-receivers} extends our framework to
 the case of multiple-receiver interactions.  Section~\ref{S:enron-modeling} employs this framework to model message sending behavior in a corporate e-mail network.  Section~\ref{S:strength-of-effects} evaluates the strength of homophily and network effects in explaining these data, and Section~\ref{S:discussion} concludes the main body of the article. Appendices~\ref{S:implementation}--%
@@ -531,9 +531,7 @@ Gaussian, as shown by the following two theorems.
 
 We don't actually require convergence of the whole sample path, but
 it turns out to be just as much effort to prove as convergence of the
-endpoint.
-
-Consistency is a direct consequence of Theorem~\ref{T:score-fisher}.
+endpoint.  Consistency is a direct consequence of Theorem~\ref{T:score-fisher}.
 
 \begin{theorem}\label{T:consistency}
     Let $N$ be a multivariate counting process with stochastic
@@ -717,7 +715,7 @@ sublinear growth.  For example, the Cauchy-Schwartz inequality gives
 so if $|\mathcal{J}_{t_m}(i_m)|/\sqrt{m} \to \infty$, then
 $G_n = \Oh(\sqrt{n})$.  Theorem~\ref{T:log-pl-multiple-approx-error}
 (proved in Appendix~\ref{S:multiple-recipient-proofs})
-bounds the approximation error in terms of $G_n$. 
+bounds the approximation error in terms of $G_n$.
 
 \begin{theorem}\label{T:log-pl-multiple-approx-error}
     Let $(t_m, i_m, J_m)$ be a sequence of observations from a multivariate
@@ -861,7 +859,7 @@ $\tilde \beta_n - \widehat{\mathrm{bias}}$.
 
 \subsection{Simulation}
 
-We used a simulation study to empirically verify the result of
+We show a simulation study to empirically verify the result of
 Theorem~\ref{T:mple-approx-error}.  In the study, we have one sender,
 and a receiver count $|\mathcal{J}|$ ranging from $32$ to $1000$.  Each
 receiver was assigned a constant coefficient vector $x(j)$ whose elements were
@@ -914,7 +912,7 @@ the theorem, since $G_n = \sqrt{n}$ in this situation.
 
 \section{Fitting the model to a corporate e-mail network}\label{S:enron-modeling}
 
-Recall from Section~\ref{S:introduction} that, given a set of interaction data triples $(t,i,j)$, a primary modeling goal lies in determining which characteristics and behaviors of the senders and receivers are predictive of interaction.  The modeling and inference framework introduced above enables us to directly address these concerns, as we now demonstrate through the analysis corporate e-mail network consisting of a large subset of the e-mail messages sent within the Enron corporation between 1998 and 2002.  These e-mail interaction data give rise to the following questions:
+Recall from Section~\ref{S:introduction} that, given a set of interaction data triples $(t,i,j)$, a primary modeling goal lies in determining which characteristics and behaviors of the senders and receivers are predictive of interaction.  The modeling and inference framework introduced above enables us to directly address these concerns, as we now demonstrate through the analysis of a corporate e-mail network consisting of a large subset of the e-mail messages sent within the Enron corporation between 1998 and 2002.  These e-mail interaction data give rise to the following questions:
 
 \begin{description}
     \item[Homophily] To what extent are traits shared between individuals (gender, department, or seniority) predictive of interaction behaviors?
@@ -1223,10 +1221,8 @@ covariates are analogous to the $\textbf{2-send}$, $\textbf{2-receive}$,
 $\textbf{sibling}$, and $\textbf{cosibling}$ covariates, although the exact definitions differ slightly.
 (For example, $\textrm{OTP}_t(i,j)$ is
 defined as $\sum_{h} \min[ \#\{ i \to h \text{ in } (-\infty, t) \}, \,
-\#\{ h \to j \text{ in } (-\infty, t) \} ]$.)  The versions of these covariates that we have introduced above, however, are designed to enable a more precise quantification of the time-dependence of network effects, as well as a more straightforward interpretation of the corresponding coefficients.
-
-In related models, \cite{vu2011continuous} and \cite{vu2011dynamic} use
-covariates related to ours, except that they do not partition $[-\infty, t)$
+\#\{ h \to j \text{ in } (-\infty, t) \} ]$.)  The versions of these covariates that we have introduced above, however, are designed to enable a more precise quantification of the time-dependence of network effects, as well as a more straightforward interpretation of the corresponding coefficients.  In related models, \cite{vu2011continuous} and \cite{vu2011dynamic} use related
+covariates, except that they do not partition $[-\infty, t)$
 into sub-intervals.
 
 \subsection{Bootstrap bias correction}\label{S:enron-bootstrap}
@@ -1606,7 +1602,7 @@ In this work, the focus has been on the coefficient vector $\beta$.  Since we
 have used partial likelihood for the estimation, it has not been necessary to
 the baseline intensity $\bar \lambda_t(i)$.  Were we to use the model for
 prediction, we would need to estimate the baseline intensities.  This could be
-done using a Nelson-Aalen estimator as in~\citet{andersen1993statistical}.  
+done using a Nelson-Aalen estimator as in~\citet{andersen1993statistical}.
 
 The foundation of our work is Cox's \citeyearpar{cox1972regression}
 proportional intensity model and partial likelihood theory, tools
