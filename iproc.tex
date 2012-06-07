@@ -42,7 +42,7 @@
 \address{Department of Statistical Science, University College London, UK}
 
 \received{November 2010}
-\revised{May 2012}
+\revised{June 2012}
 
 \runauthor{%
     P.\ O.\ Perry and P.\ J.\ Wolfe
@@ -870,7 +870,7 @@ from the standard normal distribution.
 We chose sample sizes $n$ ranging from 32 to 100,000.  For each receiver count
 $|\mathcal{J}|$, we drew $n$ multicast messages, with the receiver set $J_m$ for
 message $m$ determined as follows:
-we determined the size, $|J_m|$ by drawing from a geometric distribution
+we determined the size, $|J_m|$, by drawing from a geometric distribution
 with success probability $p = 0.4$, so that $\mathbb{P}\{|J_m| = L\} = (1 - p)^{L -
 1} \, p$ for $L \geq 1$; once $|J_m|$ was determined, we chose among
 all receiver sets with cardinality $|J_m|$, with
@@ -883,7 +883,7 @@ to~\eqref{E:log-pl-multiple-approx}.  Finally, we computed $\|\beta - \tilde
 We repeated this procedure for 100 random replicates at each receiver count
 and sample size, and computed the mean squared error of $\tilde \beta$ by
 averaging the value of $\|\beta - \tilde \beta\|^2$ over all replicates.
-Fig.~\ref{F:multicast-error} displays the results.  From the spacings of the
+Figure~\ref{F:multicast-error} displays the results.  From the spacings of the
 asymptotes of the solid lines in the figure, we can see that if
 $|\mathcal{J}|$ does not grow with $n$, then the error $\|\beta - \tilde
 \beta\|^2$ is roughly $\Oh(|\mathcal{J}|^{-2})$ for large $n$; strictly
@@ -1011,7 +1011,7 @@ $JF(i)$ & $J(i) \cdot F(i)$               & 27 \\
 \bottomrule
 \end{tabular}
 \caption{
-  Actor-specific traits, with counts of how many actors share each trait
+  Actor-specific traits, with counts of how many of the 156 actors share each trait
 }
 \label{F:enron-actors}
 \end{figure}
@@ -1221,7 +1221,7 @@ covariates are analogous to the $\textbf{2-send}$, $\textbf{2-receive}$,
 $\textbf{sibling}$, and $\textbf{cosibling}$ covariates, although the exact definitions differ slightly.
 (For example, $\textrm{OTP}_t(i,j)$ is
 defined as $\sum_{h} \min[ \#\{ i \to h \text{ in } (-\infty, t) \}, \,
-\#\{ h \to j \text{ in } (-\infty, t) \} ]$.)  The versions of these covariates that we have introduced above, however, are designed to enable a more precise quantification of the time-dependence of network effects, as well as a more straightforward interpretation of the corresponding coefficients.  In related models, \cite{vu2011continuous} and \cite{vu2011dynamic} use related
+\#\{ h \to j \text{ in } (-\infty, t) \} ]$.)  The versions of these covariates that we have introduced above, however, are designed to enable a more precise quantification of the time-dependence of network effects, as well as a more straightforward interpretation of the corresponding coefficients.  In related models, \cite{vu2011continuous, vu2011dynamic} use similar
 covariates, except that they do not partition $[-\infty, t)$
 into sub-intervals.
 
@@ -1451,7 +1451,7 @@ employees in the Legal group exhibited anti-homophilic behavior.
 Were we interested only in homophily, we might be tempted to forgo
 the proportional intensity model of~\eqref{E:cox-intensity}, and instead
 perform a contingency table analysis.  Appendix~\ref{sec:contin-analysis}
-explores this approach in detail.  The major problem with the contingency
+explores this approach in detail.  The major shortcoming of the contingency
 table approach is that it assumes that the messages are independent, which
 leads to bias in the parameter estimates.
 
@@ -1598,10 +1598,8 @@ network effects to get more reliable estimates of homophily, and by using
 continuous-time information we get precise quantification on the
 time-dependent behavior of the network effects.
 
-In this work, the focus has been on the coefficient vector $\beta$.  Since we
-have used partial likelihood for the estimation, it has not been necessary to
-the baseline intensity $\bar \lambda_t(i)$.  Were we to use the model for
-prediction, we would need to estimate the baseline intensities.  This could be
+In this work, our focus has been on the coefficient vector $\beta$.  We have used partial likelihood for its estimation, enabling us to treat each sender-specific baseline intensity $\bar \lambda_t(i)$ as a nuisance parameter.  Were we to use the model for
+prediction, we would need to estimate baseline intensities; this could be
 done using a Nelson-Aalen estimator as in~\citet{andersen1993statistical}.
 
 The foundation of our work is Cox's \citeyearpar{cox1972regression}
