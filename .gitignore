@@ -2,10 +2,13 @@
 *.blg
 *.log
 *.out
+*.bbl
+*.synctex
 *.synctex.gz
 *~
 .Rapp.history
 arXiv
 iproc.pdf
+iproc_supplementary.pdf
 figures/recipient-counts.pdf
 
