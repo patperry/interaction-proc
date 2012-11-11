@@ -2,19 +2,19 @@
 # ------------------
 
 
-source("code/process.R")
+source("code/utils.R")
 
 orange <- rgb(253, 141,  60, max = 255)
 purple <- rgb(158, 154, 200, max = 255)
 col <- rgb(253, 141, 60, 128, max=255)
 palette(c(orange, purple))
 
-fit <- fromJSON("output/fit-dynamic.json")
-fit.s <- fromJSON("output/fit-static.json")
+fit <- read.h5out("output/fit-dynamic.h5")
+fit.s <- read.h5out("output/fit-static.h5")
 
-nobs <- jmat(fit$observed)
-nexp <- jmat(fit$expected)
-nexp.s <- jmat(fit.s$expected)
+nobs <- fit$observed
+nexp <- fit$fitted
+nexp.s <- fit.s$fitted
 
 ix <- row(nobs) != col(nobs)
 nobs <- nobs[ix]
