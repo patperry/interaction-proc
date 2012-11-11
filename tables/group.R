@@ -1,36 +1,32 @@
 # tables/group.R
 # --------------
 
-source("code/process.R")
+source("code/utils.R")
 
 nrecv <- 9
 nsend <- 10
 
-fit.s <- fromJSON("output/fit-static.json")
-fit <- fromJSON("output/fit-dynamic.json")
+fit.s <- read.h5out("output/fit-static.h5")
+fit <- read.h5out("output/fit-dynamic.h5")
 load("output/boot.rda")
 
 cov.s <- get.cov(fit.s)
 cov <- get.cov(fit)
 
-tx <- get.transform()
-coef.s <- (get.coefs(fit.s) %*% tx)[1:nrecv, 1:nsend]
-coef <- (get.coefs(fit) %*% tx)[1:nrecv,1:nsend]
+coef.s <- matrix(fit.s$coef[seq_len(nsend * nrecv)], nsend, nrecv, byrow=TRUE)
+coef <- matrix(fit$coef[seq_len(nsend * nrecv)], nsend, nrecv, byrow=TRUE)
 
-vtx <- get.transform(TRUE)
-ix0 <- rep(1:11, 12) + rep((1:12 - 1) * nrow(coef), each=11)
-cov.coef.s <- vtx %*% cov.s %*% t(vtx)
-cov.coef <- vtx %*% cov[ix0, ix0] %*% t(vtx)
-se.coef.s <- matrix(sqrt(pmax(0, diag(cov.coef.s))), 11, 12)[1:nrecv, 1:nsend]
-se.coef <- matrix(sqrt(pmax(0, diag(cov.coef))), 11, 12)[1:nrecv, 1:nsend]
+ix0 <- seq_len(nsend * nrecv)
+cov.coef.s <- cov.s[ix0,ix0]
+cov.coef <- cov[ix0, ix0]
+se.coef.s <- matrix(sqrt(pmax(0, diag(cov.coef.s))), nsend, nrecv, byrow=TRUE)
+se.coef <- matrix(sqrt(pmax(0, diag(cov.coef))), nsend, nrecv, byrow=TRUE)
 
 
 recvnames <- list("L", "T", "J", "F", "LJ", "TJ", "LF", "TF", "JF")
 sendnames <- c("1", recvnames)
 
 print.coefs <- function(coef, se, include.se = TRUE) {
-    coef <- t(coef)
-    se <- t(se)
     zstat <- abs(coef / se)
     coef <- formatC(coef, format="f", digits=2)
     se <- formatC(se, format="f", digits=2)
