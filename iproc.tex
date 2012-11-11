@@ -977,13 +977,13 @@ Newton's method.  Our implementation exploits structure in the covariates to
 make the computational complexity of the fitting procedure roughly linear in
 the number of messages and the number of actors.
 Appendix~\ref{S:implementation} describes the fitting procedure in detail.  It
-took approximately 70 minutes to fit the full model using a standard desktop
+took approximately 20 minutes to fit the full model using a standard desktop
 computer with a 2.4 GHz processor and 4GB of RAM.  Each bootstrap replicate
-took approximately 20 minutes to generate and fit, using the original estimate
+took approximately 10 minutes to generate and fit, using the original estimate
 as a starting point for the fitting algorithm.  Most of the complexity in the
 fitting procedure is due to the inclusion of triadic covariates as described
-below; including only dyadic covariates reduces the fitting time to less than
-10 seconds.
+below; including only dyadic covariates reduces the fitting time to
+approximately 1 minute.
 
 \subsection{Covariates}\label{S:enron-covariates}
 
@@ -1244,7 +1244,7 @@ we can correct this bias using the parametric bootstrap outlined at the
 end of Section~\ref{S:multiple-receivers}.
 
 Fig.~\ref{F:boot-resid} summarizes the corresponding bootstrap residuals (from
-$300$ replicates) for each component of the estimated parameter vector
+$500$ replicates) for each component of the estimated parameter vector
 $\beta_0$; we can see from this figure that treating messages with multiple
 recipients as multiple single-recipient messages introduces bias on the order of the
 standard error for most of the coefficients.  There is a pronounced negative
@@ -1304,14 +1304,14 @@ The full model accounts for $54\%$ of the null deviance.
         & \textbf{Resid. Df}
         & \textbf{Resid. Dev} \\
     \midrule
-    Null &  &  & 32261 & 325412 \\
-    Static & 90 & 59920 & 32171 & 265492 \\
-    Send & 8 & 100758 & 32163 & 164734 \\
-    Receive & 8 & 5396 & 32155 & 159338 \\
-    Sibling & 50 & 3532 & 32105 & 155806 \\
-    2-Send & 50 & 836 & 32055 & 154970 \\
-    Cosibling & 50 & 1387 & 32005 & 153583 \\
-    2-Receive & 50 & 299 & 31955 & 153284 \\
+    Null      &    &        & 32261 & 325412 \\
+    Static    & 90 &  59920 & 32171 & 265492 \\
+    Send      &  8 & 100758 & 32163 & 164734 \\
+    Receive   &  8 &   5396 & 32155 & 159338 \\
+    Sibling   & 50 &   3228 & 32105 & 156110 \\
+    2-Send    & 50 &    468 & 32055 & 155642 \\
+    Cosibling & 50 &   1425 & 32005 & 154217 \\
+    2-Receive & 50 &    169 & 31955 & 154048 \\
     \bottomrule
 \end{tabular}
     \caption{
@@ -1380,24 +1380,22 @@ observed and expected interaction counts being roughly linear.
 \end{figure}
 
 Fig.~\ref{F:resid-by-nexp} shows the Pearson residuals.  For the full model,
-more than 95\% are less than $1.15$ in absolute value, and the maximum
-absolute residual is $21.8$.  In contrast, the 95\% quantile for the absolute
+more than 95\% are less than $1.22$ in absolute value, and the maximum
+absolute residual is $24.4$.  In contrast, the 95\% quantile for the absolute
 residuals in the static model is at $3.7$, and the maximum absolute residual
-is $125.0$.  The sum of squares if the residuals ($X^2$) is $16498$ in the
-full model, over $29$ times lower than that for the static model ($480661$).
+is $125.0$.  The sum of squares if the residuals ($X^2$) is $17055$ in the
+full model, over $28$ times lower than that for the static model ($480661$).
 We don't know what a ``reasonable'' value for $X^2$ is; an ad-hoc degrees of
 freedom calculation suggests that for the full number this should be roughly
-equal to $23974 = 156 \cdot 155 - (90 + 2 \cdot 8 + 2 \cdot 50)$, which
+equal to $24306 = 156 \cdot 155 - (90 + 2 \cdot 8 + 4 \cdot 50)$, which
 suggests that the full model is too aggressive.  The bootstrap simulations
-confirm this, with $23974$ being $5.2$ standard deviances below the mean
+confirm this, with $17055$ being $12.7$ standard deviances below the mean
 value $X^2$ for the bootstrap replicates.
 
 For a more parsimonious model, we might drop most of the triadic effects.
-Indeed, the model which only uses dyadic effects has a $X^2$ value of $23785$,
-which is very close to $24074 = 156 \cdot 155 - (90 + 2 \cdot 8)$, the
-approximate $X^2$ degrees of freedom for that model.  However, at this stage
-we desire a model with the lowest possible bias, and also wish to acquire estimates for all
-of the network effects.
+Indeed, the model which only uses dyadic effects has a $X^2$ value of $20702$.
+However, at this stage we desire a model with the lowest possible bias, and
+also wish to acquire estimates for all of the network effects.
 
 \section{Evaluating the strength of homophily and network effects}\label{S:strength-of-effects}
 
