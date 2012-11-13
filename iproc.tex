@@ -1247,20 +1247,16 @@ Fig.~\ref{F:boot-resid} summarizes the corresponding bootstrap residuals (from
 $500$ replicates) for each component of the estimated parameter vector
 $\beta_0$; we can see from this figure that treating messages with multiple
 recipients as multiple single-recipient messages introduces bias on the order of the
-standard error for most of the coefficients.  There is a pronounced negative
-bias in coefficient estimates for the dyadic effects, which is representative
-of a more general phenomenon.  Sparsity in the components of $x_{t}(i,j)$
-(when considered as a function of $j$), when combined with high values of the
-corresponding entries $\beta$, leads to negative bias in the coefficient
-estimates when there are messages with multiple recipients.  The approximation
-in~\eqref{E:log-pl-multiple} is worst when for some $j^\ast$, weight
-$w_{t_m}(i_m,j^\ast)$ far exceeds all other values of $w_{t_m}(i_m,j)$, so
-that $w_{t_m}(i_m, j^\ast) \approx W_{t_m}(i_m)$; when $|J_m|$ is large, the
+standard error for most of the coefficients.  For most of the coefficients,
+the bias has the same sign as the estimated coefficient; using the approximate
+partial likelihood instead of the true partial likelihood shrinks the
+coefficients towards zero.  The root cause of this phenomenon is that
+the approximation in~\eqref{E:log-pl-multiple} is worst when the weight
+$w_{t_m}(i_m,j)$, considered as a function of $j$, is unbalanced.  This
+happens when there is a large spread in the $\beta^\trans x_{t_m}(i_m, j)$
+values.  When $|J_m|$ is large, the
 maximum of $\widetilde{\mathrm{PL}}$ will avoid this situation by shrinking
-$\beta$ where $x_{t_m}(i_m, j)$ is sparse.  The dyadic covariates are
-particularly sparse, so the estimates for their coefficients are particularly
-vulnerable to this bias.
-
+$\beta$ towards zero.
 
 \begin{figure}
     \centering
