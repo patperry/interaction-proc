@@ -1469,11 +1469,11 @@ To begin our analysis, Fig.~\ref{F:enron-net-indicator} shows the estimated coef
 network indicator effects, giving a crude picture of the predictive importance
 of each network effect.  The estimated coefficients are all positive,
 indicating that network effects strengthen the ties between individuals.  The
-estimated coefficient for $1\{\textbf{send}\}$ is almost four times larger
+estimated coefficient for $1\{\textbf{send}\}$ is almost over three times larger
 than the other coefficients, agreeing with the general notion that one is most likely
 to do today the things one did yesterday.  The next tier of indicator effects
 comprises $1\{\textbf{receive}\}$, $1\{\textbf{sibling}\}$, and
-$1\{\textbf{2-send}\}$, whose estimated coefficients are each around $0.80$.
+$1\{\textbf{2-send}\}$, whose estimated coefficients range from $0.66$ to $1.03$.
 Two triadic effects, $1\{\textbf{2-receive}\}$ and
 $1\{\textbf{cosibling}\}$, are not significantly predictive of sending behavior.
 
@@ -1521,12 +1521,12 @@ persist for over three weeks from the time a message is sent.  The decay of
 the estimated coefficients is roughly exponential in the time elapsed,
 corresponding to a super-exponential decay in the relative sending rate.  For 30
 minutes after $i$ sends a message to $j$, our estimated model predicts that
-the rate at which $i$ sends to $j$ will be multiplied by $\exp(1.10) \approx
-3.01$, and the rate at which $j$ sends to $i$ will be multiplied by $\exp(1.73)
-\approx 5.66$; then, between 30 minutes and 2 hours, the rates will be
-multiplied by $\exp(0.50) \approx 1.65$ and $\exp(0.69) \approx 1.99$,
+the rate at which $i$ sends to $j$ will be multiplied by $\exp(0.90) \approx
+2.45$, and the rate at which $j$ sends to $i$ will be multiplied by $\exp(1.56)
+\approx 4.77$; then, between 30 minutes and 2 hours, the rates will be
+multiplied by $\exp(0.41) \approx 1.51$ and $\exp(0.56) \approx 1.75$,
 respectively; this proceeds similarly until after 21.3 days, when the rates
-will be multiplied by $\exp(0.003) \approx 1.003$ and $\exp(0.001) \approx
+will be multiplied by $\exp(0.002) \approx 1.002$ and $\exp(0.001) \approx
 1.001$.
 
 \begin{figure}
