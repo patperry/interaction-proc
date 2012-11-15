@@ -861,57 +861,57 @@ $\tilde \beta_n - \widehat{\mathrm{bias}}$.  The supplementary material
 details a short simulation study empirically verifying the result of
 Theorem~\ref{T:mple-approx-error}.
 
-%\subsection{Simulation}
-%
-%We show a simulation study to empirically verify the result of
-%Theorem~\ref{T:mple-approx-error}.  In the study, we have one sender,
-%and a receiver count $|\mathcal{J}|$ ranging from $32$ to $1000$.  Each
-%receiver was assigned a constant coefficient vector $x(j)$ whose elements were
-%independent Bernouli random variables with success probability $\tfrac{1}{2}$.
-%The components of the true coefficient vector $\beta$ were drawn independently
-%from the standard normal distribution.
-%
-%We chose sample sizes $n$ ranging from 32 to 100,000.  For each receiver count
-%$|\mathcal{J}|$, we drew $n$ multicast messages, with the receiver set $J_m$ for
-%message $m$ determined as follows:
-%we determined the size, $|J_m|$, by drawing from a geometric distribution
-%with success probability $p = 0.4$, so that $\mathbb{P}\{|J_m| = L\} = (1 - p)^{L -
-%1} \, p$ for $L \geq 1$; once $|J_m|$ was determined, we chose among
-%all receiver sets with cardinality $|J_m|$, with
-%$\mathbb{P}\{ J_m = J \} \propto \exp\{ \sum_{j \in J} \beta^\trans x(j)\}$.
-%Once we generated the message data, we computed $\tilde \beta$ by maximizing
-%the approximate log partial likelihood analogous
-%to~\eqref{E:log-pl-multiple-approx}.  Finally, we computed $\|\beta - \tilde
-%\beta\|$.
-%
-%We repeated this procedure for 100 random replicates at each receiver count
-%and sample size, and computed the mean squared error of $\tilde \beta$ by
-%averaging the value of $\|\beta - \tilde \beta\|^2$ over all replicates.
-%Figure~\ref{F:multicast-error} displays the results.  From the spacings of the
-%asymptotes of the solid lines in the figure, we can see that if
-%$|\mathcal{J}|$ does not grow with $n$, then the error $\|\beta - \tilde
-%\beta\|^2$ is roughly $\Oh(|\mathcal{J}|^{-2})$ for large $n$; strictly
-%speaking, the assumptions of Theorem~\ref{T:mple-approx-error} do not hold in
-%this scenario since $G_n = \OhP(n / |\mathcal{J}|)$, but nevertheless the
-%theorem predicts an error rate of $\Oh(|\mathcal{J}|^{-2})$.  For the
-%Theorem~\ref{T:mple-approx-error} to apply, we require that $|\mathcal{J}|$
-%grow with $n$.  From the slope of the dashed line in
-%Fig.~\ref{F:multicast-error}, we can see that if $|\mathcal{J}| = \sqrt{n}$,
-%then $\|\beta - \tilde \beta\|^2$ is roughly $\OhP(n^{-1})$; this agrees with
-%the theorem, since $G_n = \sqrt{n}$ in this situation.
-%
-%
-%
-%\begin{figure}[!t]
-%  \centering
-%  \makebox{\includegraphics[scale=0.6]{figures/multicast-error}}
-%  \caption{
-%	\captiontitle{Multicast coefficient estimation error with approximate MPLE}
-%	Receiver count~$|\mathcal{J}|$ is equal to the square root of sample size~$n$
-%	along the dashed line.
-%  }\label{F:multicast-error}
-%\end{figure}
-%
+\subsection{Simulation}
+
+We show a simulation study to empirically verify the result of
+Theorem~\ref{T:mple-approx-error}.  In the study, we have one sender,
+and a receiver count $|\mathcal{J}|$ ranging from $32$ to $1000$.  Each
+receiver was assigned a constant coefficient vector $x(j)$ whose elements were
+independent Bernouli random variables with success probability $\tfrac{1}{2}$.
+The components of the true coefficient vector $\beta$ were drawn independently
+from the standard normal distribution.
+
+We chose sample sizes $n$ ranging from 32 to 100,000.  For each receiver count
+$|\mathcal{J}|$, we drew $n$ multicast messages, with the receiver set $J_m$ for
+message $m$ determined as follows:
+we determined the size, $|J_m|$, by drawing from a geometric distribution
+with success probability $p = 0.4$, so that $\mathbb{P}\{|J_m| = L\} = (1 - p)^{L -
+1} \, p$ for $L \geq 1$; once $|J_m|$ was determined, we chose among
+all receiver sets with cardinality $|J_m|$, with
+$\mathbb{P}\{ J_m = J \} \propto \exp\{ \sum_{j \in J} \beta^\trans x(j)\}$.
+Once we generated the message data, we computed $\tilde \beta$ by maximizing
+the approximate log partial likelihood analogous
+to~\eqref{E:log-pl-multiple-approx}.  Finally, we computed $\|\beta - \tilde
+\beta\|$.
+
+We repeated this procedure for 100 random replicates at each receiver count
+and sample size, and computed the mean squared error of $\tilde \beta$ by
+averaging the value of $\|\beta - \tilde \beta\|^2$ over all replicates.
+Figure~\ref{F:multicast-error} displays the results.  From the spacings of the
+asymptotes of the solid lines in the figure, we can see that if
+$|\mathcal{J}|$ does not grow with $n$, then the error $\|\beta - \tilde
+\beta\|^2$ is roughly $\Oh(|\mathcal{J}|^{-2})$ for large $n$; strictly
+speaking, the assumptions of Theorem~\ref{T:mple-approx-error} do not hold in
+this scenario since $G_n = \OhP(n / |\mathcal{J}|)$, but nevertheless the
+theorem predicts an error rate of $\Oh(|\mathcal{J}|^{-2})$.  For the
+Theorem~\ref{T:mple-approx-error} to apply, we require that $|\mathcal{J}|$
+grow with $n$.  From the slope of the dashed line in
+Fig.~\ref{F:multicast-error}, we can see that if $|\mathcal{J}| = \sqrt{n}$,
+then $\|\beta - \tilde \beta\|^2$ is roughly $\OhP(n^{-1})$; this agrees with
+the theorem, since $G_n = \sqrt{n}$ in this situation.
+
+
+
+\begin{figure}[!t]
+  \centering
+  \makebox{\includegraphics[scale=0.6]{figures/multicast-error}}
+  \caption{
+	\captiontitle{Multicast coefficient estimation error with approximate MPLE}
+	Receiver count~$|\mathcal{J}|$ is equal to the square root of sample size~$n$
+	along the dashed line.
+  }\label{F:multicast-error}
+\end{figure}
+
 
 
 \section{Fitting the model to a corporate e-mail network}\label{S:enron-modeling}
@@ -1818,12 +1818,11 @@ $\Delta \pi_t(i,j)$ as $j$ varies.
 
 \subsection{Computing the gradient}
 
-In evaluating the gradient of the log partial likelihood as given by~\eqref{eq:grad-MPLE}, the sum $\sum_m x_{t_m}(i, j_m)$ can be computed in time $\Oh(n \, p)$, while the computationally
-expensive term is
-\(
-   \sum_{m} E_{t_m}(\beta, i_m).
-\)
-In the sequel we show how to exploit sparsity in $x$ to reduce the associated computational overhead.
+In evaluating the gradient of the log partial likelihood as given
+by~\eqref{eq:grad-MPLE}, the sum $\sum_m x_{t_m}(i, j_m)$ can be computed in
+time $\Oh(n \, p)$, while the computationally expensive term is \( \sum_{m}
+E_{t_m}(\beta, i_m).  \) In the sequel we show how to exploit sparsity in $x$
+to reduce the associated computational overhead.
 
 To simplify the notation, we suppress the dependence of all quantities on $\beta$ and $i$.
 Consider $\pi_t$ and $\Delta \pi_t$ to be vectors of length $J$, and write
@@ -1917,6 +1916,7 @@ the gradient computation, we compute the sums separately for each $i$ and then
 sum over all $i$, so that the total computation time is
 $\Oh(n \, \bar J \, d \, p^2 + I \, p^2)$.
 
+
 \subsection{Total computation time}
 
 To perform one Newton step in maximization of the log partial likelihood of~\eqref{E:log-pl}, we must first compute the gradient and Hessian of the
@@ -1990,8 +1990,8 @@ a simple representation in terms of these processes:
         \sum_{i \in \mathcal{I}}
         \sum_{j \in \mathcal{J}}
         \int_0^t
-            H_s(i,j) \, dN_s(i,j) \\
-        &=
+            H_s(i,j) \, dN_s(i,j) 
+        =
         \sum_{i \in \mathcal{I}}
         \sum_{j \in \mathcal{J}}
         \int_0^t
@@ -2041,8 +2041,8 @@ locally square integrable with predictable variation
             \sum_{j \in \mathcal{J}}
             \int_0^t
                 \big[ H_s(i,j) \big]^{\otimes 2} \,
-                d\Lambda_s(i,j) \\
-        &=
+                d\Lambda_s(i,j)
+        =
             \sum_{i \in \mathcal{I}}
             \int_0^t
                 V_s(\beta_0, i) \,
@@ -2119,13 +2119,13 @@ inequality to
 \]
 using the relation of~\eqref{E:var-estimate-relation} yields
 \begin{align*}
-    \left\|
+    \Big\|
         \tfrac{1}{n} I_{t_{\lfloor \alpha n \rfloor}}(\hat \beta_n)
         -
         \Sigma_{\alpha} (\beta_0)
-    \right\|
+    \Big\|
         &\leq
-        \left\|
+        \Big\|
             \frac{1}{n}
             \sum_i
             \int_0^{t_{\lfloor \alpha n \rfloor}}
@@ -2134,16 +2134,16 @@ using the relation of~\eqref{E:var-estimate-relation} yields
                     -
                     V_s(\beta_0, i)
                 \} \, dN_s(i)
-        \right\| \\
+        \Big\| \\
         &\quad+
-        \left\|
+        \Big\|
             \frac{1}{n}
             \sum_i
             \int_0^{t_{\lfloor \alpha n \rfloor}}
                 V_s(\beta_0, i) \, dM_s(i)
-        \right\| \\
+        \Big\| \\
         &\quad+
-        \left\|
+        \Big\|
             \frac{1}{n}
             \sum_i
             \int_0^{t_{\lfloor \alpha n \rfloor}}
@@ -2151,7 +2151,7 @@ using the relation of~\eqref{E:var-estimate-relation} yields
                 \, d\Lambda_s(i)
             -
             \Sigma_{\alpha}(\beta_0)
-        \right\|.
+        \Big\|.
 \end{align*}
 We show that all three terms converge to zero in probability.
 The first term above is uniformly bounded by
@@ -2191,7 +2191,7 @@ from~\eqref{E:score-time-scaled} is a square-integrable martingale adapted to
 \begin{proof}
 The conditional expectation property holds provided
 \(
-    \E[ U_{t_{n}}(\beta_0) \mid \mathcal{F}_{t_{n-1}} ]
+    \E[ U_{t_{n}}(\beta_0) \!\mid\! \mathcal{F}_{t_{n-1}} ]
         = U_{t_{n-1}}(\beta_0).
 \)
 Define $K = \sup_{t,i,j} \| x_{t}(i,j) \|$.
@@ -2270,7 +2270,7 @@ converges to zero in probability.  Thus, the Lindeberg condition is satisfied.
 \begin{lemma}\label{L:Lenglart}
 Using the notation of Theorem~\ref{T:score-fisher}, under assumptions
 A\ref{A:square-int}~and~A\ref{A:message-times-finite} we have that
-\[
+\(
     \left\|
             \frac{1}{n}
             \sum_i
@@ -2278,7 +2278,7 @@ A\ref{A:square-int}~and~A\ref{A:message-times-finite} we have that
                 V_s(\beta_0, i) \, dM_s(i)
     \right\|
         \toP 0
-\]
+\)
 uniformly in $\alpha$.
 \end{lemma}
 
@@ -2286,20 +2286,20 @@ uniformly in $\alpha$.
 Lenglart's \citeyearpar{lenglart1977relation} Inequality and assumption~A\ref{A:message-times-finite} imply that
 for any positive $\rho$ and $\delta$,
 \begin{equation*}
-    \mathbb{P}\left\{
+    \mathbb{P}\Big\{
         \sup_{t \in [0,t_n]}
-        \left\|
+        \Big\|
             \frac{1}{n}
             \sum_{i}
             \int_{0}^{t}
                 V_s(\beta_0, i) \, dM_s(i)
-        \right\|
+        \Big\|
         \geq \rho
-    \right\}
+    \Big\}
     \leq
     \frac{\delta}{\rho^2}
     +
-    \mathbb{P}\left\{
+    \mathbb{P}\Big\{
         \frac{1}{n^2}
         \sum_{i}
         \int_{0}^{t_n}
@@ -2307,7 +2307,7 @@ for any positive $\rho$ and $\delta$,
             \, d\Lambda_s(i)
         \geq
         \delta
-    \right\}.
+    \Big\}.
 \end{equation*}
 (see \citet[Cor.~3.4.1]{fleming1991counting} for a related proof).  As in the proof of
 Lemma~\ref{L:adapted-martingale}, set $K = \sup_{t,i,j} \| x_t(i,j) \|$.
@@ -2325,37 +2325,39 @@ We follow Haberman's \citeyearpar{haberman1977maximum} approach to proving
 consistency, which relies on Kantorovich's \citeyearpar{kantorovich1952functional} analysis
 of Newton's method.  \citet{tapia1971kantorovich} gives an elementary proof of the Kantorovich
 Theorem.
-We state a weak form of the result as a lemma.
 
-\begin{lemma}[Kantorovich Theorem]\label{L:kantorovich}
-    Let $P(x) = 0$ be a general system of nonlinear equations, where $P$ is
-    a map between two Banach spaces.  Let $P'(x)$ denote the Jacobian
-    (Fr\'echet differential) of $P$ at $x$, assumed to exist in $D_0$,
-    a convex open neighborhood of $x_0$.  Assume the following:
-    \begin{enumerate}
-        \item $\| [P'(x_0)]^{-1} \| \leq B$,
-        \item $\| [P'(x_0)]^{-1} P(x_0) \| \leq \eta$,
-        \item $\| P'(x) - P'(y) \| \leq K \| x - y \|$,\quad
-            for all $x$ and $y$ in $D_0$,
-    \end{enumerate}
-    with $h = B K \eta \leq \tfrac{1}{2}$.
-
-    Let $\Omega_\ast = \{ x : \| x - x_0 \| \leq 2 \eta \}$.
-    If $\Omega_\ast \subset D_0$, then the Newton iterates,
-    $x_{k+1} = x_k - [P'(x_k)]^{-1} P(x_k)$, are well defined, remain
-    in $\Omega_\ast$, and converge to $x^\ast$ in $\Omega_\ast$ such
-    that $P(x^\ast) = 0$.  In addition,
-    \[
-        \| x^\ast - x_k \|
-            \leq
-                \frac{\eta}{h}
-                \frac{(2h)^{2^k}}{2^k},
-        \qquad
-        k = 0, 1, 2, \ldots.
-    \]
-\end{lemma}
+%We state a weak form of the result as a lemma.
+%
+%\begin{lemma}[Kantorovich Theorem]\label{L:kantorovich}
+%    Let $P(x) = 0$ be a general system of nonlinear equations, where $P$ is
+%    a map between two Banach spaces.  Let $P'(x)$ denote the Jacobian
+%    (Fr\'echet differential) of $P$ at $x$, assumed to exist in $D_0$,
+%    a convex open neighborhood of $x_0$.  Assume the following:
+%    \begin{enumerate}
+%        \item $\| [P'(x_0)]^{-1} \| \leq B$,
+%        \item $\| [P'(x_0)]^{-1} P(x_0) \| \leq \eta$,
+%        \item $\| P'(x) - P'(y) \| \leq K \| x - y \|$,\quad
+%            for all $x$ and $y$ in $D_0$,
+%    \end{enumerate}
+%    with $h = B K \eta \leq \tfrac{1}{2}$.
+%
+%    Let $\Omega_\ast = \{ x : \| x - x_0 \| \leq 2 \eta \}$.
+%    If $\Omega_\ast \subset D_0$, then the Newton iterates,
+%    $x_{k+1} = x_k - [P'(x_k)]^{-1} P(x_k)$, are well defined, remain
+%    in $\Omega_\ast$, and converge to $x^\ast$ in $\Omega_\ast$ such
+%    that $P(x^\ast) = 0$.  In addition,
+%    \[
+%        \| x^\ast - x_k \|
+%            \leq
+%                \frac{\eta}{h}
+%                \frac{(2h)^{2^k}}{2^k},
+%        \qquad
+%        k = 0, 1, 2, \ldots.
+%    \]
+%\end{lemma}
 
 \begin{proof}[Theorem~\ref{T:consistency}]
+
 Set $U_t(\cdot)$ and $I_t(\cdot)$ to be the gradient and negative
 Hessian of the log partial likelihood, as defined in
 (\ref{E:log-pl-gradient}--\ref{E:log-pl-neg-hessian}).  Since
@@ -2369,9 +2371,9 @@ local maximum in that neighborhood then it must be the unique global maximum.
 We find the local maximum by applying Newton's method to the
 gradient of $\tfrac{1}{n} \log \mathit{PL}_{t_n}(\cdot)$, taking
 $\beta_0$ as the initial iterate.  Define
-\[
+\(
    Z_n = -[\tfrac{1}{n} I_{t_n}(\beta_0)]^{-1} [ \tfrac{1}{n} U_{t_n}(\beta_0)].
-\]
+\)
 The first Newton iterate, $\beta_{n,1}$, is equal to $\beta_0 - Z_n$.
 Part (b) of Theorem~\ref{T:score-fisher} and the
 assumptions of the theorem imply $[\tfrac{1}{n} I_{t_n}(\beta_0)]^{-1}$
@@ -2438,17 +2440,16 @@ and
 \)
 As a slight abuse of notation, when $j$ is an element of $\mathcal{J}_t(i)$,
 take ``$w_t(\beta, i, j)$'' to mean $w_t(\beta, i, \{j\})$.  Define weights
-\begin{subequations}
-\begin{gather*}
+\[
     W_t(\beta, i; L)
         = \sum_{\substack{J \subseteq \mathcal{J}_t(i), \\
                           |J| = L}}
-              w_t(\beta,i,J), \\
+              w_t(\beta,i,J),
+  \qquad
     \widetilde W_t(\beta, i; L)
         =
             \Big[ \sum_{j \in \mathcal{J}_t(i)} w_t(\beta, i, j) \Big]^L,
-\end{gather*}
-\end{subequations}
+\]
 and note that the approximation error in
 $\log \widetilde{\mathit{PL}}_t(\beta)$ comes from replacing
 $W$ with $\widetilde W$.
@@ -2645,25 +2646,28 @@ Theorem~\ref{T:log-pl-multiple-approx-error},
 where $K = \sup_t \| x_t(i,j) \|$.
 \end{lemma}
 \begin{proof}
+The left hand side is bounded by the probability that the samples
+$\tilde \jmath_1, \dotsc, \tilde \jmath_L$ are all
+unique, which can be bounded by
 \begin{align*}
-    \mathbb{P}^\ast_{t,\beta,i;L}
-    \Big\{
-        (j_1, \ldots, j_L)
-            \neq
-            (\tilde \jmath_1, \ldots, \tilde \jmath_L)
-    \Big\}
-        &=
-        \mathbb{P}^\ast_{t,\beta,i;L}
-        \Big\{
-            \text{$\tilde \jmath_1, \ldots, \tilde \jmath_L$ has a duplicate}
-        \} \\
-        &\leq
+    %\mathbb{P}^\ast_{t,\beta,i;L}
+    %\Big\{
+    %    (j_1, \ldots, j_L)
+    %        \neq
+    %        (\tilde \jmath_1, \ldots, \tilde \jmath_L)
+    %\Big\}
+    %    &=
+   %     \mathbb{P}^\ast_{t,\beta,i;L}
+   %     \{
+   %         \text{$\tilde \jmath_1, \ldots, \tilde \jmath_L$ has a duplicate}
+   %     \}
+   %     &\leq
         \sum_{k < l}
             \mathbb{P}^\ast_{t,\beta,i;L}
-            \Big\{
+            \{
                 \tilde \jmath_k = \tilde \jmath_l
-            \Big\} \\
-        &=
+            \} 
+        =
             \binom{L}{2}
             \sum_{j \in \mathcal{J}_t(i)}
                 \Big[
@@ -2722,8 +2726,8 @@ the weights are
     \begin{split}
     V_t(\beta,i;L)
         &=
-        \nabla^2 \big[  \log W_t(\beta, i; L) \big] \\
-        &=
+        \nabla^2 \big[  \log W_t(\beta, i; L) \big]
+        =
         \frac{1}{W_t(\beta,i;L)}
         \sum_{\substack{J \subseteq \mathcal{J}_t(i), \\
                         |J| = L}}
@@ -2737,8 +2741,8 @@ the weights are
     \begin{split}
     \widetilde V_t(\beta,i;L)
         &=
-        \nabla^2 \big[ \log \widetilde W_t(\beta,i;L) \big] \\
-        &=
+        \nabla^2 \big[ \log \widetilde W_t(\beta,i;L) \big]
+        =
         L
         \cdot
         \frac{
@@ -2774,7 +2778,7 @@ The relevant intermediate bound is
 We know that Newton's method applied to
 $\tfrac{1}{n}\log \widetilde{\mathit{PL}}_{t_n}(\cdot)$ converges to
 $\tilde \beta_n$ after sufficiently many iterations.  We employ $\hat \beta_n$ as the
-initial iterate and use the Kantorovich Theorem (Lemma~\ref{L:kantorovich})
+initial iterate and use the Kantorovich Theorem %(Lemma~\ref{L:kantorovich})
 to bound $\|\tilde \beta_n - \hat \beta_n\|$.
 
 In the notation of the lemma, $P(\cdot)$ is the gradient of
