@@ -22,9 +22,9 @@
 \newlabel{T:mple-approx-error}{{4.2}{8}}
 \newlabel{E:log-pl-multiple-approx}{{8}{7}}
 \newlabel{E:cox-intensity}{{1}{3}}
-\newlabel{T:group-dynamic}{{6}{16}}
-\newlabel{S:enron-covariates}{{5.2}{10}}
-\newlabel{F:enron-net-indicator}{{7}{17}}
+\newlabel{T:group-dynamic}{{7}{17}}
+\newlabel{S:enron-covariates}{{5.2}{11}}
+\newlabel{F:enron-net-indicator}{{8}{18}}
 
 \definecolor{Gray}{gray}{0.9}
 \definecolor{LightGray}{gray}{0.5}
@@ -50,7 +50,7 @@
 \address{Department of Statistical Science, University College London, UK}
 
 \received{November 2010}
-\revised{October 2012}
+\revised{November 2012}
 
 \runauthor{%
     P.\ O.\ Perry and P.\ J.\ Wolfe
@@ -70,9 +70,9 @@ New York, NY 10012,~USA
 \begin{document}
 
 
-\section{Comparative analyses}\label{S:comparative}
+%\section{Comparative analyses}\label{S:comparative}
 
-\subsection{A comparative analysis based on contingency tables}
+\section{A comparative analysis based on contingency tables}
 \label{sec:contin-analysis}
 
 Were we interested only in homophily, we might be tempted to forgo
@@ -162,7 +162,7 @@ are not the object of primary interest, it is important to account for them when
 making inferences about the predictive strength of other covariates.
 
 
-\subsection{Comparative analyses using actor-oriented and exponential random graph models}
+\section{Comparative analyses using actor-oriented and exponential random graph models}
 \label{S:actor-ergm-comparison}
 
 A number of dynamic network models exist in the literature, including
@@ -181,7 +181,7 @@ Section~\ref{sec:actor-oriented} below.
 Then, in Section~\ref{S:ERGM}, we provide a comparison to a static network
 analysis based on an exponential random graph model.
 
-\subsubsection{Actor-oriented model analysis}\label{sec:actor-oriented}
+\subsection{Actor-oriented model analysis}\label{sec:actor-oriented}
 
 The actor-oriented model is designed for a sequence of snapshots $G_1$,
 $G_2,\dotsc,$ of network activity, where each $G_t$ is an $I \times J$ binary
@@ -335,7 +335,7 @@ likely to link to an actor $j'$ for which link $i \to j'$ is absent.
 To counteract this tendency, the coefficient of $\texttt{3cycle}$ is
 forced to be negative.
 
-\subsubsection{Exponential random graph model analysis}\label{S:ERGM}
+\subsection{Exponential random graph model analysis}\label{S:ERGM}
 
 As a final comparison, we fit an exponential random graph model to our data.  This class of models---one of the more popular for estimating the importance of network effects---specifies a probability
 distribution for a single directed graph represented by a binary matrix $G$.
@@ -399,32 +399,13 @@ estimated network effects agree qualitatively with those of
 Fig.~\ref{F:enron-net-indicator} from the main text.  Specifically, mutuality and transitive
 triples have positive effects, while cyclic triples have a negligible effect
 (in contrast to the case of Fig.~\ref{F:enron-actor} from
-Section~\ref{sec:actor-oriented}).
+Section~\ref{sec:actor-oriented} above).
 
 
 \begin{figure}
 \centering
-%\subfloat[Estimated group effects for $G^{(1)}$]{
-%  \centering
-%  \footnotesize
-%  \begin{tabular}{lrrrr}
-%  \toprule
-%  & \multicolumn{4}{c}{Receiver} \\
-%  \cmidrule(l){2-5}
-%  Sender &    L  &  T    &   J   &  F \\
-%  \midrule
-%  1 & -1.03 & -0.62 & -0.15 & -0.21 \\
-%  L &  \cellcolor{Gray} 1.17 &  0.54 & -0.08 & -0.19 \\
-%  T &  0.03 &  \cellcolor{Gray} 0.25 & -0.41 & -0.39 \\
-%  J &  0.37 &  0.78 &  \cellcolor{Gray} 0.62 &  0.02 \\
-%  F &  0.03 &  0.24 &  0.13 &  \cellcolor{Gray} 0.50 \\
-%  \bottomrule
-%  \end{tabular}
-%}
-%\qquad
-\subfloat[Trait effects]{ % for $G^{(10)}$]{
+\subfloat[Trait effects]{ %
   \centering
-%  \footnotesize
   \begin{tabular}{lrrrr}
   \toprule
   & \multicolumn{4}{c}{Receiver} \\
@@ -439,37 +420,9 @@ Section~\ref{sec:actor-oriented}).
   \bottomrule
   \end{tabular}
 }
-%\\
-%\vspace{1em}
-%\subfloat[Estimated network effects for $G^{(1)}$]{
-%  \centering
-%  \footnotesize
-%  \begin{tabular}{lrrr}
-%  \toprule
-%  Variate
-%  & \textbf{mutual}
-%  & \textbf{ctriple}
-%  & \textbf{ttriple}
-%  \\
-%  \midrule
-%  Coefficient
-%  &  3.13
-%  & -0.15
-%  &  0.18
-%  \\
-%  (SE)
-%  & \tiny{(NA)}
-%  & \tiny{(NA)}
-%  & \tiny{(NA)}
-%  \\
-%  \bottomrule
-%  \end{tabular}
-%}
-%\qquad
 \\
-\subfloat[Network effects]{ % for $G^{(10)}$]{
+\subfloat[Network effects]{ %
   \centering
-%  \footnotesize
   \begin{tabular}{lrrr}
   \toprule
   Variate
@@ -491,15 +444,9 @@ Section~\ref{sec:actor-oriented}).
   \bottomrule
   \end{tabular}
 }
-%\normalsize
 \caption{\label{F:enron-ergm}Estimated coefficients for the exponential random graph model of Section~\ref{S:ERGM}.  The model also included a term for each sender (not shown); furthermore, standard errors returned for the group-level edge effects were nonsensical, and so are not reported.
 }
 \end{figure}
-
-
-%\bibliographystyle{Chicago}
-%\bibliography{iproc-sources}
-%\bibitem[ --> \vspace{-0.6\baselineskip}\bibitem[ for all but 1st ref
 
 \begin{thebibliography}{}
 

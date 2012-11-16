@@ -5,6 +5,8 @@
 *.bbl
 *.synctex
 *.synctex.gz
+*.bak
+*.sav
 *~
 .Rapp.history
 arXiv
