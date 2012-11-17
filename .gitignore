@@ -6,9 +6,12 @@
 *.synctex
 *.synctex.gz
 *.bak
+*.Rout
 *.sav
 *~
 .Rapp.history
+.RData
+.Rhistory
 arXiv
 iproc.pdf
 iproc_supplementary.pdf

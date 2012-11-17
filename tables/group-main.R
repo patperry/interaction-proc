@@ -3,12 +3,12 @@
 
 source("code/utils.R")
 
-nrecv <- 9
-nsend <- 10
+nrecv <- 4
+nsend <- 5
 
-fit.s <- read.h5out("output/fit-static.h5")
-fit <- read.h5out("output/fit-dynamic.h5")
-load("output/boot.rda")
+fit.s <- read.h5out("output/fit-static-main.h5")
+fit <- read.h5out("output/fit-dynamic-main.h5")
+load("output/boot-main.rda")
 
 cov.s <- get.cov(fit.s)
 cov <- get.cov(fit)
@@ -23,7 +23,7 @@ se.coef.s <- matrix(sqrt(pmax(0, diag(cov.coef.s))), nsend, nrecv, byrow=TRUE)
 se.coef <- matrix(sqrt(pmax(0, diag(cov.coef))), nsend, nrecv, byrow=TRUE)
 
 
-recvnames <- list("L", "T", "J", "F", "LJ", "TJ", "LF", "TF", "JF")
+recvnames <- list("L", "T", "J", "F")
 sendnames <- c("1", recvnames)
 
 print.coefs <- function(coef, se, include.se = TRUE) {
@@ -68,11 +68,11 @@ print.coefs <- function(coef, se, include.se = TRUE) {
     cat("\\end{tabular}\n")
 }
 
-sink(file = "tables/group-static.tex")
+sink(file = "tables/group-static-main.tex")
 print.coefs(coef.s, se.coef.s, TRUE)
 sink()
 
-sink(file = "tables/group-dynamic.tex")
+sink(file = "tables/group-dynamic-main.tex")
 print.coefs(coef - bias.mean[1:(nsend*nrecv)], se.coef, TRUE)
 sink()
 

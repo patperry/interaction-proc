@@ -9,8 +9,8 @@ purple <- rgb(158, 154, 200, max = 255)
 col <- rgb(253, 141, 60, 128, max=255)
 palette(c(orange, purple))
 
-fit <- read.h5out("output/fit-dynamic.h5")
-fit.s <- read.h5out("output/fit-static.h5")
+fit <- read.h5out("output/fit-dynamic-main.h5")
+fit.s <- read.h5out("output/fit-static-main.h5")
 
 nobs <- fit$observed
 nexp <- fit$fitted
@@ -35,7 +35,7 @@ g.s <- 1 + floor(ng * o.s / (n + 1))
 
 ylim <- range(c(resid, resid.s), na.rm=TRUE)
 
-pdf("figures/nobs-by-nexp.pdf", 8, 4.5)
+pdf("figures/nobs-by-nexp-main.pdf", 8, 4.5)
 par(mfrow=c(1, 2))
 par(mar=c(5.1, 4.1, 4.1, 1.1))
 plot(nexp.s + 1, nobs + 1, log="xy", col=col, xlab="", ylab="Observed Count + 1", main="Static")
@@ -51,7 +51,7 @@ axis(4, labels=FALSE)
 mtext("Expected Count + 1", side=1, line=3, at=0.5)
 dev.off()
 
-pdf("figures/resid-by-nexp.pdf", 8, 4.5)
+pdf("figures/resid-by-nexp-main.pdf", 8, 4.5)
 par(mfrow=c(1, 2))
 par(mar=c(5.1, 4.1, 4.1, 1.1))
 plot(order(nexp.s), resid.s, ylim=ylim, col=col, axes=FALSE, xlab="", ylab="Pearson Residual", main="Static")

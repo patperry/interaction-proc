@@ -1238,7 +1238,7 @@ vulnerable to this bias.
 
 \begin{figure}
     \centering
-    \makebox{\includegraphics[scale=0.6]{figures/boot-resid}}
+    \makebox{\includegraphics[scale=0.6]{figures/boot-resid-main}}
     \caption{
         \captiontitle{Enron bootstrap residuals}
         Summary of bootstrap residuals
@@ -1279,13 +1279,13 @@ model accounts for $53\%$ of the null deviance.
         & \textbf{Resid. Dev} \\
     \midrule
     Null      &    &        & 32261 & 325412 \\
-    Static    & 90 &  59920 & 32171 & 265492 \\
-    Send      &  8 & 100758 & 32163 & 164734 \\
-    Receive   &  8 &   5396 & 32155 & 159338 \\
-    Sibling   & 50 &   3228 & 32105 & 156110 \\
-    2-Send    & 50 &    468 & 32055 & 155642 \\
-    Cosibling & 50 &   1425 & 32005 & 154217 \\
-    2-Receive & 50 &    169 & 31955 & 154048 \\
+    Static    & 20 &  50365 & 32241 & 275047 \\
+    Send      &  8 & 107942 & 32233 & 167105 \\
+    Receive   &  8 &   5919 & 32225 & 161186 \\
+    Sibling   & 50 &   3601 & 32175 & 157585 \\
+    2-Send    & 50 &    516 & 32125 & 157069 \\
+    Cosibling & 50 &   1641 & 32075 & 155428 \\
+    2-Receive & 50 &    158 & 32025 & 155270 \\
     \bottomrule
 \end{tabular}
     \caption{
@@ -1302,12 +1302,12 @@ The residual deviance for the full model is approximately $4.8$ times the
 residual degrees of freedom, and so an ad-hoc adjustment for this over-dispersion
 is to multiply the calculated standard errors by $\sqrt{4.8} \approx 2.2$.
 
-Note, however, that the residual deviance by itself is not adequate as a goodness-of-fit measure,
-as it depends only on the estimated coefficients (see Section~4.4.5 of
-\cite{mccullagh1989generalized} for discussion of a related problem for logistic
-regression with sparse data).  To shed more light on how well the model fits
-these data, we use a normalized version of the martingale residual from
-\cite{therneau1990martingale}, which we call a Pearson residual.
+Note, however, that the residual deviance by itself is not adequate as a
+goodness-of-fit measure, as it depends only on the estimated coefficients (see
+Section~4.4.5 of \cite{mccullagh1989generalized} for discussion of a related
+problem for logistic regression with sparse data).  To shed more light on how
+well the model fits these data, we use a normalized version of the martingale
+residual from \cite{therneau1990martingale}, which we call a Pearson residual.
 Specifically, given $\hat \beta$, we define
 \[
   \hat N_{t}(i,j)
@@ -1340,34 +1340,34 @@ observed and expected interaction counts being roughly linear.
     Observed count $N_{\infty}(i,j)$ plotted against
     expected count $\hat N_{\infty}(i,j)$
   ]{\label{F:nobs-by-nexp}
-    \makebox{\includegraphics[scale=0.55]{figures/nobs-by-nexp}}}
+    \makebox{\includegraphics[scale=0.55]{figures/nobs-by-nexp-main}}}
   \\
   \subfloat[
     Pearson residual
     $(N_\infty(i,j) - \hat N_\infty(i,j)) / \{\hat N_\infty(i,j)\}^{1/2}$
     vs.~expected count
   ]{\label{F:resid-by-nexp}
-    \makebox{\includegraphics[scale=0.55]{figures/resid-by-nexp}}}
+    \makebox{\includegraphics[scale=0.55]{figures/resid-by-nexp-main}}}
   \caption{\label{F:goodness}
     Goodness of fit plots for two models
   }
 \end{figure}
 
 Fig.~\ref{F:resid-by-nexp} shows the Pearson residuals.  For the full model,
-more than 95\% are less than $1.22$ in absolute value, and the maximum
-absolute residual is $24.4$.  In contrast, the 95\% quantile for the absolute
-residuals in the static model is at $3.7$, and the maximum absolute residual
-is $125.0$.  The sum of squares if the residuals ($X^2$) is $17055$ in the
-full model, over $28$ times lower than that for the static model ($480661$).
+more than 95\% are less than $1.21$ in absolute value, and the maximum
+absolute residual is $18.7$.  In contrast, the 95\% quantile for the absolute
+residuals in the static model is at $3.5$, and the maximum absolute residual
+is $182.7$.  The sum of squares if the residuals ($X^2$) is $17281$ in the
+full model, over $34$ times lower than that for the static model ($596253$).
 We don't know what a ``reasonable'' value for $X^2$ is; an ad-hoc degrees of
 freedom calculation suggests that for the full number this should be roughly
-equal to $24306 = 156 \cdot 155 - (90 + 2 \cdot 8 + 4 \cdot 50)$, which
+equal to $23944 = 156 \cdot 155 - (20 + 2 \cdot 8 + 4 \cdot 50)$, which
 suggests that the full model is too aggressive.  The bootstrap simulations
-confirm this, with $17055$ being $5.4$ standard deviances below the mean
+confirm this, with $17055$ being $5.6$ standard deviances below the mean
 value $X^2$ for the bootstrap replicates.
 
 For a more parsimonious model, we might drop most of the triadic effects.
-Indeed, the model which only uses dyadic effects has a $X^2$ value of $20702$.
+Indeed, the model which only uses dyadic effects has a $X^2$ value of $21094$.
 However, at this stage we desire a model with the lowest possible bias, and
 also wish to acquire estimates for all of the network effects.
 
@@ -1412,7 +1412,7 @@ employees in the Legal group exhibited anti-homophilic behavior.
   \centering
   \makebox[\textwidth]{
     \scriptsize
-    \input{tables/group-dynamic.tex}
+    \input{tables/group-dynamic-main.tex}
   }
   \caption{
     Estimated coefficients and standard errors for group-level covariates
@@ -1448,7 +1448,7 @@ estimated coefficient for $1\{\textbf{send}\}$ is almost over three times larger
 than the other coefficients, agreeing with the general notion that one is most likely
 to do today the things one did yesterday.  The next tier of indicator effects
 comprises $1\{\textbf{receive}\}$, $1\{\textbf{sibling}\}$, and
-$1\{\textbf{2-send}\}$, whose estimated coefficients range from $0.66$ to $1.03$.
+$1\{\textbf{2-send}\}$, whose estimated coefficients range from $0.65$ to $1.01$.
 Two triadic effects, $1\{\textbf{2-receive}\}$ and
 $1\{\textbf{cosibling}\}$, are not significantly predictive of sending behavior.
 
@@ -1468,11 +1468,11 @@ Variate
 \midrule
 Coefficient
 & 3.21
-& 0.95
-& 0.66
-& \textcolor{LightGray}{0.01}
-& 1.03
-& \textcolor{LightGray}{0.07}
+& 0.93
+& 0.65
+& \textcolor{LightGray}{0.03}
+& 1.01
+& \textcolor{LightGray}{0.08}
 \\
 (SE)
 & \tiny{(0.03)}
@@ -1496,24 +1496,24 @@ persist for over three weeks from the time a message is sent.  The decay of
 the estimated coefficients is roughly exponential in the time elapsed,
 corresponding to a super-exponential decay in the relative sending rate.  For 30
 minutes after $i$ sends a message to $j$, our estimated model predicts that
-the rate at which $i$ sends to $j$ will be multiplied by $\exp(0.90) \approx
-2.45$, and the rate at which $j$ sends to $i$ will be multiplied by $\exp(1.56)
-\approx 4.77$; then, between 30 minutes and 2 hours, the rates will be
-multiplied by $\exp(0.41) \approx 1.51$ and $\exp(0.56) \approx 1.75$,
+the rate at which $i$ sends to $j$ will be multiplied by $\exp(0.91) \approx
+2.49$, and the rate at which $j$ sends to $i$ will be multiplied by $\exp(1.58)
+\approx 4.85$; then, between 30 minutes and 2 hours, the rates will be
+multiplied by $\exp(0.42) \approx 1.52$ and $\exp(0.57) \approx 1.77$,
 respectively; this proceeds similarly until after 21.3 days, when the rates
-will be multiplied by $\exp(0.002) \approx 1.002$ and $\exp(0.001) \approx
-1.001$.
+will be multiplied by $\exp(0.002) \approx 1.002$ and $\exp(0.002) \approx
+1.002$.
 
 \begin{figure}
   \centering
-  \makebox{\includegraphics[scale=0.6]{figures/dyad}}
+  \makebox{\includegraphics[scale=0.6]{figures/dyad-main}}
   \caption{Estimated coefficients for dyadic effects, with standard errors}
   \label{F:enron-dyad}
 \end{figure}
 
 \begin{figure}
   \centering
-  \makebox{\includegraphics[scale=0.6]{figures/triad}}
+  \makebox{\includegraphics[scale=0.6]{figures/triad-main}}
   \caption{Estimated coefficients for triadic effects, with standard errors}
   \label{F:enron-triad}
 \end{figure}
@@ -1529,12 +1529,12 @@ during which reciprocation is more important than past habit is less than 8 hour
 
 From Fig.~\ref{F:enron-triad}, we can see that the triadic effects are in general less
 pronounced and are much more short-lived than the dyadic effects.  About
-92\% of the estimated coefficients are within $3$ standard errors of
+91\% of the estimated coefficients are within $3$ standard errors of
 $0$; even those that are significantly nonzero mostly lie between $-0.05$ and
 $+0.05$.  The exceptions are the coefficients for
-$\textbf{sibling}_t^{(1,1)}$ ($0.41$),
-$\textbf{sibling}_t^{(2,2)}$ ($-0.10$),
-$\textbf{cosibling}_t^{(1,2)}$ ($0.22$),
+$\textbf{sibling}_t^{(1,1)}$ ($0.42$),
+$\textbf{sibling}_t^{(2,2)}$ ($-0.11$),
+$\textbf{cosibling}_t^{(1,2)}$ ($0.25$),
 and
 $\textbf{cosibling}_t^{(1,4)}$ ($-0.09$).
 We may interpret these coefficients as follows:

@@ -9,8 +9,8 @@ orange <- rgb(253, 141,  60, max = 255)
 purple <- rgb(158, 154, 200, max = 255)
 palette(c(orange, purple))
 
-fit <- read.h5out("output/fit-dynamic.h5")
-load("output/boot.rda")
+fit <- read.h5out("output/fit-dynamic-main.h5")
+load("output/boot-main.rda")
 cov <- get.cov(fit)
 
 intvl <- c(fit$intervals)
@@ -117,7 +117,7 @@ plot.dyad <- function() {
     grid.text("Time Elapsed", y=unit(1, "lines"))
 }
 
-pdf("figures/dyad.pdf", 8, 4.5)
+pdf("figures/dyad-main.pdf", 8, 4.5)
 palette(c(orange, purple))
 grid.newpage()
 plot.dyad()
@@ -240,7 +240,7 @@ plot.triad <- function() {
 
 
 
-pdf("figures/triad.pdf", 8, 6)
+pdf("figures/triad-main.pdf", 8, 6)
 palette(c(orange, purple))
 grid.newpage()
 plot.triad()
