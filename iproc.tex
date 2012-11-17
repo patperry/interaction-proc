@@ -987,11 +987,6 @@ $L(i)$ & member of the Legal department   & 25 \\
 $T(i)$ & member of the Trading department & 60 \\
 $J(i)$ & seniority is Junior              & 82 \\
 $F(i)$ & gender is Female                 & 43 \\
-$LJ(i)$ & $L(i) \cdot J(i)$               & 12 \\
-$TJ(i)$ & $T(i) \cdot J(i)$               & 24 \\
-$LF(i)$ & $L(i) \cdot F(i)$               & 13 \\
-$TF(i)$ & $T(i) \cdot F(i)$               & 10 \\
-$JF(i)$ & $J(i) \cdot F(i)$               & 27 \\
 \bottomrule
 \end{tabular}
 \caption{
@@ -1000,16 +995,16 @@ $JF(i)$ & $J(i) \cdot F(i)$               & 27 \\
 \label{F:enron-actors}
 \end{figure}
 
-We encode all 90 identifiable second-order interactions between the traits of
+We encode all 20 identifiable first-order interactions between the traits of
 sender $i$ and receiver $j$ as components of $x_t(i,j)$.  We do this by using
 variates of the form $Y(j)$ and $X(i)\cdot Y(j)$, where $X$ and $Y$ are chosen
-from the list of 9 actor-dependent variates ($L$, $T$, $J$, $F$, $LJ$, etc.).
+from the list of 4 actor-dependent variates ($L$, $T$, $J$, $F$).  We also
+include 4 receiver-specific covariates of the form $1 \cdot Y(j)$.
 We cannot identify the coefficients for covariates of the form $X(i) \cdot 1$;
 if a component of $x_t(i,j)$ is the same for all values of $j$, then the
 corresponding component of $\beta$ will not be identifiable since the product
 of the two can be absorbed into $\bar \lambda_t(i)$ without changing the
-likelihood.  Covariates of the form $1 \cdot Y(j)$ pose no identifiability
-problems.
+likelihood.
 
 \subsubsection{Dynamic covariates to measure network effects}
 
