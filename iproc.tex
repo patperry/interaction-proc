@@ -1006,6 +1006,12 @@ corresponding component of $\beta$ will not be identifiable since the product
 of the two can be absorbed into $\bar \lambda_t(i)$ without changing the
 likelihood.
 
+We measure homophily by way of the estimated coefficients for covariates of
+the form $X(i) \cdot X(j)$.  For example, if the sum of the coefficients of
+$1 \cdot J(j)$ and $J(i) \cdot J(j)$ is large and positive, this tells us that
+Junior employees exhibit homophily in their choice of message recipients.
+
+
 \subsubsection{Dynamic covariates to measure network effects}
 
 Static effects are useful for determining which traits are predictive of the
@@ -1383,25 +1389,28 @@ corresponding covariates.
 
 Our first task is to gauge the predictive strength of homophily.  To this end,
 Fig.~\ref{T:group-dynamic} shows the estimated group-level coefficients for
-our model.  Notably, homophily appears present for almost all main effects
+our model.  Notably, homophily is evident for all almost all main effects
 (Department, Seniority, and Gender): the estimated coefficients of $L(j)$,
-$T(j)$, $J(j)$, and $F(j)$ are all negative, while the sums of the estimated
-coefficients of the following pairs are all positive:
-$T(j)$ and $T(i) \cdot T(j)$;
-$J(j)$ and $J(i) \cdot J(j)$;
-$F(j)$ and $F(i) \cdot F(j)$.
-Taking Gender as an example, the way this homophily
-effect manifests is as follows: if $i$ is sending a message at time $t$, and
-person $j$ is identical to person $j'$ except for Gender, then $i$ is more
-likely to send to the similarly-gendered individual.  The relative rate
-is $\exp(-0.08 + 0.41) \approx 1.4$ if $i$ is Female, and $\exp(0.08) \approx
-1.1$ if $i$ is Male.  The characterization for other types of homophily is
-similar.
+$T(j)$, and $J(j)$ are all negative, while the sum of the estimated
+coefficients of $F(j)$ and $F(i) \cdot F(j)$ is positive.
+Antihomophily is evidenced in that the sum of the coefficients for
+$L(j)$ and $L(i) \cdot L(j)$ is negative.
+The coefficient of $F(j)$ and the sum of the coefficients for
+$T(j)$ and $T(i) \cdot T(j)$; and
+$J(j)$ and $J(i)\cdot J(j)$ are not significant.
 
-Conspicuously, the only trait for which first-order homophily was
-absent was for the Legal group: the sum of the estimated coefficients of
-$L(j)$ and $L(i) \cdot L(j)$ was negative ($-0.30)$, indicating that
-employees in the Legal group exhibited anti-homophilic behavior.
+Taking Gender as an example, the way the homophily effect manifests is as
+follows: if $i$ is a Female sending a message at time $t$, and person $j$ is
+identical to person $j'$ except for Gender, then $i$ is more likely to send to
+the similarly-gendered individual.  The relative rate is $\exp(0.04 + 0.15)
+\approx 1.2$.  The characterization for other types of homophily is similar.
+
+Conspicuously, the only example of antihomophily is when the sender $i$ is in
+the Legal department.  In this case, if person $j$ is identical to person $j'$
+except for Department, then $i$ is more likely to send to an individual in a
+different department.  The relative rates for the three departments are
+$\exp(.63 - .91) \approx .76$ for the Legal department, $\exp(.28-.36) \approx
+.92$ for the Trading department, and $\exp(0) = 1$ for any Other department.
 
 \begin{figure}
   \centering
