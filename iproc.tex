@@ -1239,7 +1239,7 @@ vulnerable to this bias.
 
 \begin{figure}
     \centering
-    \makebox{\includegraphics[scale=0.6]{figures/boot-resid-main}}
+    \makebox{\includegraphics[scale=0.75]{figures/boot-resid-main}}
     \caption{
         \captiontitle{Enron bootstrap residuals}
         Summary of bootstrap residuals
@@ -1341,14 +1341,14 @@ observed and expected interaction counts being roughly linear.
     Observed count $N_{\infty}(i,j)$ plotted against
     expected count $\hat N_{\infty}(i,j)$
   ]{\label{F:nobs-by-nexp}
-    \makebox{\includegraphics[scale=0.55]{figures/nobs-by-nexp-main}}}
+    \makebox{\includegraphics[scale=0.59]{figures/nobs-by-nexp-main}}}
   \\
   \subfloat[
     Pearson residual
     $(N_\infty(i,j) - \hat N_\infty(i,j)) / \{\hat N_\infty(i,j)\}^{1/2}$
     vs.~expected count
   ]{\label{F:resid-by-nexp}
-    \makebox{\includegraphics[scale=0.55]{figures/resid-by-nexp-main}}}
+    \makebox{\includegraphics[scale=0.59]{figures/resid-by-nexp-main}}}
   \caption{\label{F:goodness}
     Goodness of fit plots for two models
   }
@@ -1393,7 +1393,7 @@ our model.  Notably, homophily is evident for all almost all main effects
 (Department, Seniority, and Gender): the estimated coefficients of $L(j)$,
 $T(j)$, and $J(j)$ are all negative, while the sum of the estimated
 coefficients of $F(j)$ and $F(i) \cdot F(j)$ is positive.
-Antihomophily is evidenced in that the sum of the coefficients for
+Negative homophily is evidenced in that the sum of the coefficients for
 $L(j)$ and $L(i) \cdot L(j)$ is negative.
 The coefficient of $F(j)$ and the sum of the coefficients for
 $T(j)$ and $T(i) \cdot T(j)$; and
@@ -1405,17 +1405,17 @@ identical to person $j'$ except for Gender, then $i$ is more likely to send to
 the similarly-gendered individual.  The relative rate is $\exp(0.04 + 0.15)
 \approx 1.2$.  The characterization for other types of homophily is similar.
 
-Conspicuously, the only example of antihomophily is when the sender $i$ is in
+Conspicuously, the only example of negative homophily is when the sender $i$ is in
 the Legal department.  In this case, if person $j$ is identical to person $j'$
 except for Department, then $i$ is more likely to send to an individual in a
 different department.  The relative rates for the three departments are
-$\exp(.63 - .91) \approx .76$ for the Legal department, $\exp(.28-.36) \approx
-.92$ for the Trading department, and $\exp(0) = 1$ for any Other department.
+$\exp(0.63 - 0.91) \approx 0.76$ for the Legal department, $\exp(0.28-0.36) \approx
+0.92$ for the Trading department, and $\exp(0) = 1$ for any Other department.
 
 \begin{figure}
   \centering
   \makebox[\textwidth]{
-    \scriptsize
+    %\scriptsize
     \input{tables/group-dynamic-main.tex}
   }
   \caption{
@@ -1479,12 +1479,12 @@ Coefficient
 & \textcolor{LightGray}{0.08}
 \\
 (SE)
-& \tiny{(0.03)}
-& \tiny{(0.02)}
-& \tiny{(0.05)}
-& \textcolor{LightGray}{\tiny{(0.04)}}
-& \tiny{(0.05)}
-& \textcolor{LightGray}{\tiny{(0.04)}}
+& \scriptsize{(0.03)}
+& \scriptsize{(0.02)}
+& \scriptsize{(0.05)}
+& \textcolor{LightGray}{\scriptsize{(0.04)}}
+& \scriptsize{(0.05)}
+& \textcolor{LightGray}{\scriptsize{(0.04)}}
 \\
 \bottomrule
 \end{tabular}
@@ -1510,14 +1510,14 @@ will be multiplied by $\exp(0.002) \approx 1.002$ and $\exp(0.002) \approx
 
 \begin{figure}
   \centering
-  \makebox{\includegraphics[scale=0.6]{figures/dyad-main}}
+  \makebox{\includegraphics[scale=0.62]{figures/dyad-main}}
   \caption{Estimated coefficients for dyadic effects, with standard errors}
   \label{F:enron-dyad}
 \end{figure}
 
 \begin{figure}
   \centering
-  \makebox{\includegraphics[scale=0.6]{figures/triad-main}}
+  \makebox{\includegraphics[scale=0.62]{figures/triad-main}}
   \caption{Estimated coefficients for triadic effects, with standard errors}
   \label{F:enron-triad}
 \end{figure}
