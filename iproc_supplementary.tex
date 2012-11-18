@@ -132,13 +132,13 @@ $\lambda_t(i,j) = \bar \lambda_t(i) \exp\{ \beta_J J(j) + \beta_{JJ} J(i) J(j)
 One problem with this analysis is that we have marginalized over the
 other covariates (Gender and Department), potentially introducing a Simpson's
 paradox.  This issue is easily rectified, however, by introducing covariates for senders and
-receivers, along with the corresponding second-order covariate interactions;
+receivers;
 Fig.~\ref{T:group-static} above shows the resulting coefficient estimates.
 
 \begin{figure}
   \centering
   \makebox[\textwidth]{
-    \scriptsize
+    %\scriptsize
     \input{tables/group-static-main.tex}
   }
   \caption{
@@ -239,9 +239,7 @@ the rate is the same for each sender.
 identifiable first-order interaction of the form $X(i) Y(j)$, where $i$ is the
 sender and $j$ is the receiver; the covariate counts the number of edges $i
 \to j$ with $X(i) Y(j) = 1$.  These effects correspond to the group-level
-effects in our model.  We would have liked to include second-order
-interactions as well, but (for computational reasons) were unable to fit the model with higher-order
-effects.
+effects in our model.
 
   \item Outdegree/density endowment (\texttt{outendow}).  This statistic counts the number of deleted outgoing ties; it corresponds to the
 negative of the $\textbf{send}$ term in our model.
@@ -266,13 +264,7 @@ Note that after binning the interaction counts to form network snapshots as
 required by the actor-oriented model, it is impossible to separate the
 $\textbf{2-send}$, $\textbf{sibling}$, and $\textbf{cosibling}$ effects.
 Further, the first-order Markov nature of the model restricts
-our ability to quantify the time decay of the dynamic network effects.  Additionally, as we were unable to include second-order interactions
-between the group-level effects in this setting, we cannot compare the estimated coefficients
-for the first-order interactions with those obtained from the proportional
-intensity model.  However, including these first-order interactions in the model mediates the confounding
-role of homophily in estimating the network effects, our primary focus for
-this comparison.
-
+our ability to quantify the time decay of the dynamic network effects.
 
 \begin{figure}
 \centering
@@ -301,7 +293,7 @@ Sender & L & T & J & F \\
 \bottomrule
 \end{tabular}
 }
-\qquad
+\\
 \subfloat[Network effects]{\label{F:actor-network}
 \begin{tabular}{lrrrrr}
 \toprule
@@ -392,15 +384,6 @@ Further, for a single directed graph, there is no possibility of including a
 term corresponding to $\textbf{send}$, and it is impossible to quantify the
 time-dependence of the network effects.
 
-Figure~\ref{F:enron-ergm} overleaf shows the fitted coefficients for the exponential
-random graph model.  As with the case of the actor-oriented model considered
-in Section~\ref{sec:actor-oriented} above, the
-estimated network effects agree qualitatively with those of
-Fig.~\ref{F:enron-net-indicator} from the main text.  Specifically, mutuality and transitive
-triples have positive effects, while cyclic triples have a negligible effect
-(in contrast to the case of Fig.~\ref{F:enron-actor} from
-Section~\ref{sec:actor-oriented} above).
-
 
 \begin{figure}
 \centering
@@ -447,6 +430,15 @@ Section~\ref{sec:actor-oriented} above).
 \caption{\label{F:enron-ergm}Estimated coefficients for the exponential random graph model of Section~\ref{S:ERGM}.  The model also included a term for each sender (not shown); furthermore, standard errors returned for the group-level edge effects were nonsensical, and so are not reported.
 }
 \end{figure}
+
+Figure~\ref{F:enron-ergm} overleaf shows the fitted coefficients for the exponential
+random graph model.  As with the case of the actor-oriented model considered
+in Section~\ref{sec:actor-oriented} above, the
+estimated network effects agree qualitatively with those of
+Fig.~\ref{F:enron-net-indicator} from the main text.  Specifically, mutuality and transitive
+triples have positive effects, while cyclic triples have a negligible effect
+(in contrast to the case of Fig.~\ref{F:enron-actor} from
+Section~\ref{sec:actor-oriented} above).
 
 \begin{thebibliography}{}
 
