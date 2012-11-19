@@ -848,9 +848,7 @@ replicates, we estimate the bias by
             \frac{1}{R} \sum_{r=1}^{R} \tilde \beta_n^{(r)} - \tilde \beta_n.
 \]
 We adjust for estimator bias by replacing $\tilde \beta_n$ with
-$\tilde \beta_n - \widehat{\mathrm{bias}}$.  The supplementary material
-details a short simulation study empirically verifying the result of
-Theorem~\ref{T:mple-approx-error}.
+$\tilde \beta_n - \widehat{\mathrm{bias}}$.
 
 \subsection{Simulation}
 
@@ -860,7 +858,7 @@ and a receiver count $|\mathcal{J}|$ ranging from $32$ to $1000$.  Each
 receiver was assigned a constant coefficient vector $x(j)$ whose elements were
 independent Bernouli random variables with success probability $\tfrac{1}{2}$.
 The components of the true coefficient vector $\beta$ were drawn independently
-from the standard normal distribution.
+from the standard Normal distribution.
 
 We chose sample sizes $n$ ranging from 32 to 100,000.  For each receiver count
 $|\mathcal{J}|$, we drew $n$ multicast messages, with the receiver set $J_m$ for
