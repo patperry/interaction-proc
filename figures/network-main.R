@@ -130,8 +130,8 @@ plot.triad1 <- function(beta, beta.se, name="") {
 
     for (j in 1:ncol(beta)) {
         for (i in 1:nrow(beta)) {
-            x <- i
-            y <- ncol(beta) + 1 - j
+            x <- j
+            y <- ncol(beta) + 1 - i
             w <- 0.5
             h <- beta[i,j] / scale
             s <- beta.se[i,j] / scale

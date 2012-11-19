@@ -1469,12 +1469,12 @@ Variate
 \\
 \midrule
 Coefficient
-& 3.21
-& 0.93
-& 0.65
-& \textcolor{LightGray}{0.03}
-& 1.01
-& \textcolor{LightGray}{0.08}
+& 3.26
+& 0.97
+& 0.67
+& \textcolor{LightGray}{0.01}
+& 1.06
+& \textcolor{LightGray}{0.09}
 \\
 (SE)
 & \scriptsize{(0.03)}
@@ -1498,12 +1498,12 @@ persist for over three weeks from the time a message is sent.  The decay of
 the estimated coefficients is roughly exponential in the time elapsed,
 corresponding to a super-exponential decay in the relative sending rate.  For 30
 minutes after $i$ sends a message to $j$, our estimated model predicts that
-the rate at which $i$ sends to $j$ will be multiplied by $\exp(0.91) \approx
-2.49$, and the rate at which $j$ sends to $i$ will be multiplied by $\exp(1.58)
-\approx 4.85$; then, between 30 minutes and 2 hours, the rates will be
-multiplied by $\exp(0.42) \approx 1.52$ and $\exp(0.57) \approx 1.77$,
+the rate at which $i$ sends to $j$ will be multiplied by $\exp(1.11) \approx
+3.05$, and the rate at which $j$ sends to $i$ will be multiplied by $\exp(1.85)
+\approx 6.39$; then, between 30 minutes and 2 hours, the rates will be
+multiplied by $\exp(0.51) \approx 1.67$ and $\exp(0.70) \approx 2.02$,
 respectively; this proceeds similarly until after 21.3 days, when the rates
-will be multiplied by $\exp(0.002) \approx 1.002$ and $\exp(0.002) \approx
+will be multiplied by $\exp(0.003) \approx 1.002$ and $\exp(0.002) \approx
 1.002$.
 
 \begin{figure}
@@ -1531,28 +1531,35 @@ during which reciprocation is more important than past habit is less than 8 hour
 
 From Fig.~\ref{F:enron-triad}, we can see that the triadic effects are in general less
 pronounced and are much more short-lived than the dyadic effects.  About
-91\% of the estimated coefficients are within $3$ standard errors of
+86\% of the estimated coefficients are within $3$ standard errors of
 $0$; even those that are significantly nonzero mostly lie between $-0.05$ and
 $+0.05$.  The exceptions are the coefficients for
-$\textbf{sibling}_t^{(1,1)}$ ($0.42$),
-$\textbf{sibling}_t^{(2,2)}$ ($-0.11$),
-$\textbf{cosibling}_t^{(1,2)}$ ($0.25$),
+$\textbf{sibling}_t^{(1,1)}$ ($0.51$),
+$\textbf{sibling}_t^{(2,2)}$ ($-0.14$),
+$\textbf{sibling}_t^{(3,2)}$ ($0.15$),
+$\textbf{cosibling}_t^{(1,2)}$ ($0.32$),
+$\textbf{2-receive}_t^{(4,1)}$ ($-0.21$),
 and
-$\textbf{cosibling}_t^{(1,4)}$ ($-0.09$).
+$\textbf{2-receive}_t^{(4,2)}$ ($0.09$).
 We may interpret these coefficients as follows:
 
 \begin{description}
 
-\item[sibling] If $B$ sent $A$ and $C$ messages in the last 30 minutes, then
-$A$ and $C$ are more likely to send messages to each other; however, if $B$
-sent $A$ and $C$ messages between 30 minutes and two hours ago, then $A$ and
-$C$ are less likely to send messages to each other.
+\item[sibling] If $B$ sent $A$ and $C$ messages in the last 30 minutes or
+between two and eight hours ago, then $A$ and $C$ are more likely to send
+messages to each other; however, if $B$ sent $A$ and $C$ messages between 30
+minutes and two hours ago, then $A$ and $C$ are less likely to send messages
+to each other.
 
 \item[cosibling] If $A$ sent a message to $B$ in the last 30 minutes, and $C$
 sent a message to $B$ between 30 minutes and two hours ago, then $A$ will send
-to $B$ at a higher rate;  however, if $A$ sent a message to $B$ in the last 30
-minutes, and $C$ sent a message to $B$ between 8 hours and 32 hours, then $A$
-will sent to $B$ at a lower rate.
+to $B$ at a higher rate.
+
+\item[2-receive] If $A$ sent a message to $B$ in the last 30 minutes, and $B$
+sent a message to $C$ between 8 hours and 32 hours ago, then $C$ will send
+to $A$ at a lower rate; if however, the message from $A$ to $B$ was sent 
+between 30 minutes and two hours ago, then $C$ will send to $A$ at a higher
+rate.
 
 \end{description}
 
