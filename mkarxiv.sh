@@ -6,17 +6,19 @@ TITLE=iproc
 
 FILES=( \
     iproc.tex \
+    iproc_supplementary.pdf \
     iproc.bbl \
     iproc-macros.sty \
     statsoc.cls \
     figures/recipient-counts.png \
-    figures/boot-resid.pdf \
-    figures/nobs-by-nexp.png \
-    figures/resid-by-nexp.png \
-    figures/dyad.pdf \
-    figures/triad.pdf \
-    tables/group-dynamic.tex \
-    tables/group-static.tex
+    figures/boot-resid-main.pdf \
+    figures/nobs-by-nexp-main.png \
+    figures/resid-by-nexp-main.png \
+    figures/dyad-main.pdf \
+    figures/triad-main.pdf \
+    figures/multicast-error.pdf \
+    tables/group-dynamic-main.tex \
+    tables/group-static-main.tex
 )
 
 DISTDIR=${ARXIV}/${TITLE}
