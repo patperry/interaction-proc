@@ -155,7 +155,8 @@ and asymptotic normality of the corresponding maximum partial likelihood
 estimator, and Section~\ref{S:multiple-receivers} extends our framework to
 the case of multiple-receiver interactions.  Section~\ref{S:enron-modeling} employs this framework to model message sending behavior in a corporate e-mail network.  Section~\ref{S:strength-of-effects} evaluates the strength of homophily and network effects in explaining these data, and Section~\ref{S:discussion} concludes the main body of the article. Appendices~\ref{S:implementation}--%
 \ref{S:multiple-recipient-proofs} contain respectively implementation details and
-technical results from Sections~\ref{S:MPLE-consistency} and~\ref{S:multiple-receivers}.  Supplementary material provides comparative analyses based on related network models in the literature.
+technical results from Sections~\ref{S:MPLE-consistency}
+and~\ref{S:multiple-receivers}.  The supplementary material provides comparative analyses based on related network models in the literature.
 
 \section{A point process model and partial likelihood inference}
 \label{S:point-process-model}
@@ -198,7 +199,7 @@ We will model $N$ through $\lambda$ using a version of the \citet{cox1972regress
 proportional intensity model.
 
 Let $\mathcal{I}$ be a set of senders and $\mathcal{J}$ be a (not necessarily disjoint) set of receivers.
-For each sender $i$, let $\bar \lambda_t(i)$ be a non-negative predictable
+For each sender~$i$, let $\bar \lambda_t(i)$ be a non-negative predictable
 process called the baseline intensity of sender $i$; let $\mathcal{J}_t(i)$ be
 a predictable finite subset of $\mathcal{J}$ called the receiver set of sender $i$.
 For each sender-receiver pair $(i,j)$, let $x_t(i,j)$ be a predictable
@@ -855,7 +856,7 @@ $\tilde \beta_n - \widehat{\mathrm{bias}}$.
 We show a simulation study to empirically verify the result of
 Theorem~\ref{T:mple-approx-error}.  In the study, we have one sender,
 and a receiver count $|\mathcal{J}|$ ranging from $32$ to $1000$.  Each
-receiver was assigned a constant coefficient vector $x(j)$ whose elements were
+receiver was assigned a constant covariate vector $x(j)$ whose elements were
 independent Bernouli random variables with success probability $\tfrac{1}{2}$.
 The components of the true coefficient vector $\beta$ were drawn independently
 from the standard Normal distribution.
