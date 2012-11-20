@@ -83,7 +83,6 @@ network effects are predictive of message recipient selection.
 Partial likelihood inference; Point processes}
 \end{abstract}
 
-
 \section{Introduction}
 \label{S:introduction}
 
@@ -894,7 +893,7 @@ the theorem, since $G_n = \sqrt{n}$ in this situation.
 
 \begin{figure}[!t]
   \centering
-  \makebox{\includegraphics[scale=0.6]{figures/multicast-error}}
+  \makebox{\includegraphics[scale=0.55]{figures/multicast-error}}
   \caption{
 	\captiontitle{Multicast coefficient estimation error with approximate MPLE}
 	Receiver count~$|\mathcal{J}|$ is equal to the square root of sample size~$n$
@@ -1238,7 +1237,7 @@ vulnerable to this bias.
 
 \begin{figure}
     \centering
-    \makebox{\includegraphics[scale=0.75]{figures/boot-resid-main}}
+    \makebox{\includegraphics[scale=0.67]{figures/boot-resid-main}}
     \caption{
         \captiontitle{Enron bootstrap residuals}
         Summary of bootstrap residuals
@@ -1447,11 +1446,11 @@ To begin our analysis, Fig.~\ref{F:enron-net-indicator} shows the estimated coef
 network indicator effects, giving a crude picture of the predictive importance
 of each network effect.  The estimated coefficients are all positive,
 indicating that network effects strengthen the ties between individuals.  The
-estimated coefficient for $1\{\textbf{send}\}$ is almost over three times larger
+estimated coefficient for $1\{\textbf{send}\}$ is over three times larger
 than the other coefficients, agreeing with the general notion that one is most likely
 to do today the things one did yesterday.  The next tier of indicator effects
 comprises $1\{\textbf{receive}\}$, $1\{\textbf{sibling}\}$, and
-$1\{\textbf{2-send}\}$, whose estimated coefficients range from $0.65$ to $1.01$.
+$1\{\textbf{2-send}\}$, whose estimated coefficients range from $0.67$ to $1.06$.
 Two triadic effects, $1\{\textbf{2-receive}\}$ and
 $1\{\textbf{cosibling}\}$, are not significantly predictive of sending behavior.
 
@@ -1558,7 +1557,7 @@ to $B$ at a higher rate.
 
 \item[2-receive] If $A$ sent a message to $B$ in the last 30 minutes, and $B$
 sent a message to $C$ between 8 hours and 32 hours ago, then $C$ will send
-to $A$ at a lower rate; if however, the message from $A$ to $B$ was sent 
+to $A$ at a lower rate; if, however, the message from $A$ to $B$ was sent
 between 30 minutes and two hours ago, then $C$ will send to $A$ at a higher
 rate.
 
@@ -2096,13 +2095,14 @@ inequality to
     \right\|
 \]
 using the relation of~\eqref{E:var-estimate-relation} yields
-\begin{align*}
+\begin{multline*}
     \Big\|
         \tfrac{1}{n} I_{t_{\lfloor \alpha n \rfloor}}(\hat \beta_n)
         -
         \Sigma_{\alpha} (\beta_0)
     \Big\|
-        &\leq
+        %&
+        \leq
         \Big\|
             \frac{1}{n}
             \sum_i
@@ -2113,14 +2113,16 @@ using the relation of~\eqref{E:var-estimate-relation} yields
                     V_s(\beta_0, i)
                 \} \, dN_s(i)
         \Big\| \\
-        &\quad+
+        %&\quad
+        +
         \Big\|
             \frac{1}{n}
             \sum_i
             \int_0^{t_{\lfloor \alpha n \rfloor}}
                 V_s(\beta_0, i) \, dM_s(i)
-        \Big\| \\
-        &\quad+
+        \Big\| %\\
+        %&\quad 
+        +
         \Big\|
             \frac{1}{n}
             \sum_i
@@ -2130,7 +2132,7 @@ using the relation of~\eqref{E:var-estimate-relation} yields
             -
             \Sigma_{\alpha}(\beta_0)
         \Big\|.
-\end{align*}
+\end{multline*}
 We show that all three terms converge to zero in probability.
 The first term above is uniformly bounded by
 \(
@@ -2181,7 +2183,7 @@ Note that $\|H_{t}(i,j)\| \leq 2 K$.  Thus,
                 +
                 \Lambda_{t \wedge t_n}
             \big), \\
-\intertext{so that}
+%\intertext{so that}
     \E \left[
         \sup_t
         \| U_{t \wedge t_n} (\beta_0) \|^2
@@ -2259,8 +2261,8 @@ uniformly in $\alpha$.
 \end{lemma}
 
 \begin{proof}
-Lenglart's \citeyearpar{lenglart1977relation} Inequality and assumption~A\ref{A:message-times-finite} imply that
-for any positive $\rho$ and $\delta$,
+$\!$Lenglart's \citeyearpar{lenglart1977relation} Inequality and assumption~A\ref{A:message-times-finite} imply that
+for any positive $\rho$ and $\delta$,$\!$
 \begin{equation*}
     \mathbb{P}\Big\{
         \sup_{t \in [0,t_n]}
@@ -2299,38 +2301,37 @@ must converge to zero.
 
 We follow Haberman's \citeyearpar{haberman1977maximum} approach to proving
 consistency, which relies on Kantorovich's \citeyearpar{kantorovich1952functional} analysis
-of Newton's method.  We refer the reader to \citet{tapia1971kantorovich} for a statement and elementary proof of the Kantorovich
-Theorem.
+of Newton's method.  \citet{tapia1971kantorovich} gives an elementary proof of the Kantorovich
+Theorem.  We state a weak form of the result as a lemma.
 
-%We state a weak form of the result as a lemma.
-%
-%\begin{lemma}[Kantorovich Theorem]\label{L:kantorovich}
-%    Let $P(x) = 0$ be a general system of nonlinear equations, where $P$ is
-%    a map between two Banach spaces.  Let $P'(x)$ denote the Jacobian
-%    (Fr\'echet differential) of $P$ at $x$, assumed to exist in $D_0$,
-%    a convex open neighborhood of $x_0$.  Assume the following:
-%    \begin{enumerate}
-%        \item $\| [P'(x_0)]^{-1} \| \leq B$,
-%        \item $\| [P'(x_0)]^{-1} P(x_0) \| \leq \eta$,
-%        \item $\| P'(x) - P'(y) \| \leq K \| x - y \|$,\quad
-%            for all $x$ and $y$ in $D_0$,
-%    \end{enumerate}
-%    with $h = B K \eta \leq \tfrac{1}{2}$.
-%
-%    Let $\Omega_\ast = \{ x : \| x - x_0 \| \leq 2 \eta \}$.
-%    If $\Omega_\ast \subset D_0$, then the Newton iterates,
-%    $x_{k+1} = x_k - [P'(x_k)]^{-1} P(x_k)$, are well defined, remain
-%    in $\Omega_\ast$, and converge to $x^\ast$ in $\Omega_\ast$ such
-%    that $P(x^\ast) = 0$.  In addition,
-%    \[
-%        \| x^\ast - x_k \|
-%            \leq
-%                \frac{\eta}{h}
-%                \frac{(2h)^{2^k}}{2^k},
-%        \qquad
-%        k = 0, 1, 2, \ldots.
-%    \]
-%\end{lemma}
+\begin{lemma}[Kantorovich Theorem]\label{L:kantorovich}
+    Let $P(x) = 0$ be a general system of nonlinear equations, where $P$ is
+    a map between two Banach spaces.  Let $P'(x)$ denote the Jacobian
+    (Fr\'echet differential) of $P$ at $x$, assumed to exist in $D_0$,
+    a convex open neighborhood of $x_0$.
+    Assume that
+    \begin{enumerate}
+        \item $\| [P'(x_0)]^{-1} \| \leq B$,
+        \item $\| [P'(x_0)]^{-1} P(x_0) \| \leq \eta$,
+        \item $\| P'(x) - P'(y) \| \leq K \| x - y \|$,\quad
+            for all $x$ and $y$ in $D_0$,
+    \end{enumerate}
+    with $h = B K \eta \leq \tfrac{1}{2}$.
+
+    Let $\Omega_\ast = \{ x : \| x - x_0 \| \leq 2 \eta \}$.
+    If $\Omega_\ast \subset D_0$, then the Newton iterates,
+    $x_{k+1} = x_k - [P'(x_k)]^{-1} P(x_k)$, are well defined, remain
+    in $\Omega_\ast$, and converge to $x^\ast$ in $\Omega_\ast$ such
+    that $P(x^\ast) = 0$.  In addition,
+    \[
+        \| x^\ast - x_k \|
+            \leq
+                \frac{\eta}{h}
+                \frac{(2h)^{2^k}}{2^k},
+        \qquad
+        k = 0, 1, 2, \ldots.
+    \]
+\end{lemma}
 
 \begin{proof}[Theorem~\ref{T:consistency}]
 
@@ -2742,7 +2743,7 @@ The relevant intermediate bound is
 We know that Newton's method applied to
 $\tfrac{1}{n}\log \widetilde{\mathit{PL}}_{t_n}(\cdot)$ converges to
 $\tilde \beta_n$ after sufficiently many iterations.  We employ $\hat \beta_n$ as the
-initial iterate and use the Kantorovich Theorem %(Lemma~\ref{L:kantorovich})
+initial iterate and use the Kantorovich Theorem (Lemma~\ref{L:kantorovich})
 to bound $\|\tilde \beta_n - \hat \beta_n\|$.
 
 In the notation of the lemma, $P(\cdot)$ is the gradient of
